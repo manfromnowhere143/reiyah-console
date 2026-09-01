@@ -17,6 +17,7 @@ export interface StationDef {
 
 export const STATIONS: StationDef[] = [
   { id: "harbor", num: "ST–00", name: "Harbor", desc: "the living engine", row: 1, col: 1 },
+  { id: "system", num: "ST–09", name: "The Seeing", desc: "the whole of Reiyah, one mandala", row: 0, col: 0 },
   { id: "ledger", num: "ST–01", name: "Ledger", desc: "every artifact digest-bound", row: 0, col: 0 },
   { id: "lineage", num: "ST–02", name: "Lineage", desc: "releases as chain of custody", row: 0, col: 1 },
   { id: "encounter", num: "ST–03", name: "Encounter", desc: "the six-kind chain, alive", row: 0, col: 2 },

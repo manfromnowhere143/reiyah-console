@@ -137,11 +137,31 @@ button:focus-visible, a:focus-visible { outline: 2px solid var(--ink-soft); outl
   display: flex; flex-direction: column; gap: 0.65rem;
   padding: calc(2.5rem + var(--safe-t)) clamp(0.9rem, 2.5vw, 2.6rem) calc(0.5rem + var(--safe-b));
 }
+/* the ambient: a breathing field behind the glass, so the material lenses
+   something real. Whisper-level, compositor-only, off under reduced motion. */
+.viewport.stage::before {
+  content: ""; position: absolute; inset: -15%;
+  background:
+    radial-gradient(42% 52% at 72% 16%, color-mix(in srgb, var(--accent) 8%, transparent), transparent 62%),
+    radial-gradient(55% 60% at 18% 85%, color-mix(in srgb, var(--ink) 7%, transparent), transparent 62%);
+  pointer-events: none;
+}
+@media (prefers-reduced-motion: no-preference) {
+  .viewport.stage::before { animation: ambientDrift 46s ease-in-out infinite alternate; }
+  @keyframes ambientDrift { to { transform: translate(3.5%, -2.5%) scale(1.05); } }
+}
 .stagepanel {
   flex: 1; min-height: 0; position: relative;
-  border: 1px solid var(--line); border-radius: 16px; background: var(--field);
+  border: 1px solid var(--glass-rim); border-radius: 16px;
+  background: color-mix(in srgb, var(--field) 84%, transparent);
+  backdrop-filter: blur(22px) saturate(1.15);
+  -webkit-backdrop-filter: blur(22px) saturate(1.15);
+  box-shadow: inset 0 1px 0 var(--sheen), 0 24px 60px -28px var(--shadow);
   view-transition-name: stage-panel;
   overflow: hidden;
+}
+@media (prefers-reduced-transparency: reduce) {
+  .stagepanel { background: var(--field); backdrop-filter: none; -webkit-backdrop-filter: none; }
 }
 .panelcontent {
   position: absolute; inset: 0;
@@ -396,6 +416,71 @@ button:focus-visible, a:focus-visible { outline: 2px solid var(--ink-soft); outl
 }
 .fieldlegend span { display: inline-flex; align-items: center; gap: 0.35rem; }
 .fieldlegend i { width: 5px; height: 5px; border-radius: 50%; background: var(--ink); display: inline-block; }
+
+/* ============================================================
+   THE SEEING — the mandala of sight
+   ============================================================ */
+.mandala {
+  height: 100%; min-height: 0;
+  display: grid; gap: 0.6rem;
+  grid-template-columns: 1fr minmax(14rem, 1.25fr) 1fr;
+  grid-template-rows: auto 1fr auto;
+  grid-template-areas: "nw n ne" "w c e" "sw s se";
+  align-items: stretch;
+}
+.mcell { display: flex; min-height: 0; }
+.m-n { grid-area: n; align-items: flex-start; justify-content: center; }
+.m-ne { grid-area: ne; } .m-nw { grid-area: nw; }
+.m-w { grid-area: w; } .m-c { grid-area: c; } .m-e { grid-area: e; }
+.m-sw { grid-area: sw; } .m-s { grid-area: s; } .m-se { grid-area: se; }
+.mmotto {
+  font-family: var(--mono); font-size: 0.6rem; letter-spacing: 0.1em;
+  color: var(--ink-faint); text-align: center; max-width: 26rem; line-height: 1.7;
+}
+.mcard {
+  flex: 1; border: 1px solid var(--line); border-radius: 12px;
+  background: var(--veil); padding: 0.9rem 1rem;
+  display: flex; flex-direction: column; gap: 0.3rem; justify-content: center;
+}
+.mcard[data-dark="true"] {
+  border-style: dashed; border-color: var(--line-soft);
+  background: transparent; opacity: 0.85;
+}
+.mcard[data-dark="true"] .mname { color: var(--ink-faint); }
+.mglyph { color: var(--ink); opacity: 0.85; }
+.mbig { font-family: var(--mono); font-size: 1.7rem; font-weight: 700; font-variant-numeric: tabular-nums; line-height: 1; }
+.mbig em { font-style: normal; color: var(--ok); font-size: 1.1rem; }
+.mname { font-family: var(--mono); font-size: 0.6rem; letter-spacing: 0.16em; color: var(--ink); }
+.mline { font-size: 0.74rem; color: var(--ink-soft); line-height: 1.45; }
+.mline b { font-family: var(--mono); }
+.mline.dim { color: var(--ink-faint); font-size: 0.66rem; }
+.mline.red { color: var(--accent); font-family: var(--mono); font-size: 0.64rem; }
+.mchips { display: flex; flex-wrap: wrap; gap: 0.3rem; margin: 0.2rem 0; }
+.mchips span {
+  font-family: var(--mono); font-size: 0.56rem; letter-spacing: 0.06em;
+  border: 1px solid var(--line-soft); border-radius: 999px; padding: 0.12rem 0.45rem;
+  color: var(--ink-soft);
+}
+.msaga { font-family: var(--mono); font-size: 0.7rem; color: var(--ink-soft); }
+.miris {
+  flex: 1; display: flex; align-items: center; justify-content: center;
+  color: var(--ink); min-height: 0;
+}
+.miris svg { max-height: 100%; }
+@media (prefers-reduced-motion: no-preference) {
+  .miris .mring { transform-origin: 120px 120px; animation: irisBreathe 7s ease-in-out infinite; }
+  @keyframes irisBreathe {
+    0%, 100% { transform: rotate(-20deg) scale(1); }
+    50% { transform: rotate(-20deg) scale(1.025); }
+  }
+  .miris .mrays { animation: raysBreathe 7s ease-in-out infinite; }
+  @keyframes raysBreathe { 0%, 100% { opacity: 0.16; } 50% { opacity: 0.3; } }
+}
+@media (max-width: 900px) {
+  .mandala { grid-template-columns: 1fr 1fr; grid-template-rows: none;
+    grid-template-areas: "n n" "c c" "nw ne" "w e" "sw se" "s s"; overflow-y: auto; }
+  .miris svg { max-height: 11rem; }
+}
 
 /* the correction saga */
 .saga { border-left: 2px solid var(--line); padding-left: 1rem; display: flex; flex-direction: column; gap: 0.8rem; }
