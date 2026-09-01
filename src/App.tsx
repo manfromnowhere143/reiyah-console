@@ -19,6 +19,7 @@ import { Estimands } from "./stations/Estimands";
 import { Adversaries } from "./stations/Adversaries";
 import { Chair } from "./stations/Chair";
 import { Frontier } from "./stations/Frontier";
+import { SystemAtlas } from "./stations/SystemAtlas";
 
 export default function App() {
   const [evidence, setEvidence] = useState<VerifiedEvidence | null>(null);
@@ -109,6 +110,7 @@ function Stage({ ev, onEvidence }: { ev: VerifiedEvidence; onEvidence: (e: Verif
       case "adversaries": return <Adversaries />;
       case "chair": return <Chair />;
       case "frontier": return <Frontier />;
+      case "system": return <SystemAtlas ev={ev} />;
       default: return null;
     }
   };

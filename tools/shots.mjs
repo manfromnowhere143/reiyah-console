@@ -8,7 +8,7 @@ const MOBILE = process.argv.includes("--mobile");
 const DARK = process.argv.includes("--dark");
 const BASE = "http://localhost:4600";
 const CHROME = "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome";
-const STATIONS = ["harbor", "ledger", "lineage", "encounter", "controls", "estimands", "adversaries", "chair", "frontier"];
+const STATIONS = ["harbor", "ledger", "lineage", "encounter", "controls", "estimands", "adversaries", "chair", "frontier", "system"];
 
 import { mkdirSync } from "node:fs";
 mkdirSync(OUT, { recursive: true });

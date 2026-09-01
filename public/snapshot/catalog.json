@@ -205,6 +205,10 @@
    "bytes": 65633
   },
   {
+   "path": "validation/operator-decision-interface-toolchain-lock-1.2.7.json",
+   "bytes": 62653
+  },
+  {
    "path": "validation/toolchain-lock-1.2.0.json",
    "bytes": 7337
   },
