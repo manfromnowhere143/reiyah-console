@@ -618,17 +618,40 @@ button:focus-visible, a:focus-visible { outline: 2px solid var(--ink-soft); outl
   color: var(--ink-ghost);
 }
 
-@media (max-width: 640px) {
+/* seamless content arrival, with or without View Transitions */
+.panelcontent { animation: contentIn 0.34s var(--ease) both; }
+@media (prefers-reduced-motion: reduce) { .panelcontent { animation: none; } }
+@keyframes contentIn { from { opacity: 0; transform: translateY(6px); } }
+
+@media (max-width: 700px) {
   .sthead .stsub { display: none; }
   .bar { grid-template-columns: 7.5rem 1fr 3rem; }
-  .hudid { display: none; }
-  .panelcontent { padding: 0.9rem 1rem 0.7rem; }
-  .fieldwrap { margin: -0.9rem -1rem -0.7rem; }
-  .dock .navcard { flex: 1 0 8rem; }
+  .hudid, .brandfull, .pilldate { display: none; }
+  .hud { padding-left: 0.9rem; padding-right: 0.9rem; gap: 0.5rem; }
+  .hud > div:first-child { margin-left: 2.4rem; }
+  .pill { font-size: 0.54rem; padding: 0.26rem 0.55rem; letter-spacing: 0.08em; }
+  .groundtoggle { left: 0.6rem; width: 27px; height: 27px; }
+  .viewport.stage { padding: calc(2.3rem + var(--safe-t)) 0.6rem calc(0.4rem + var(--safe-b)); gap: 0.5rem; }
+  .panelcontent { padding: 0.85rem 0.9rem 0.6rem; }
+  .fieldwrap { margin: -0.85rem -0.9rem -0.6rem; }
+  .harbortitle {
+    font-size: 0.52rem; letter-spacing: 0.1em; right: 0.9rem;
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  }
+  .dock .navcard { flex: 0 0 7.6rem; padding: 0.55rem 0.7rem; }
   .dock .navcard .nds { display: none; }
-  .fieldhud { flex-direction: column; align-items: stretch; }
+  .fieldhud { flex-direction: column; align-items: flex-start; }
   .fieldlegend { display: none; }
-  .fieldhud .authwall { max-width: 100%; grid-template-columns: 1fr; gap: 0.3rem; }
-  .fieldhud .authwall .authrow { padding: 0.35rem 0.6rem; }
-  .sthead h2 { font-size: 1.7rem; }
+  .fieldhud .authwall { display: none; } /* the wall lives in The Seeing and Controls */
+  .sthead h2 { font-size: 1.55rem; }
+  .sthead { margin-bottom: 0.7rem; }
+  .grid2, .grid3 { grid-template-columns: 1fr; }
+  .mandala {
+    height: auto; min-height: 100%;
+    grid-template-rows: repeat(6, auto);
+  }
+  .mcard { padding: 0.8rem 0.85rem; }
+  .miris { min-height: 9rem; }
+  .miris svg { max-height: 10rem; }
+  .nonclaim.shell { font-size: 0.48rem; letter-spacing: 0.06em; }
 }

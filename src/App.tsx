@@ -120,7 +120,7 @@ function Stage({ ev, onEvidence }: { ev: VerifiedEvidence; onEvidence: (e: Verif
       <div className="hud">
         <div style={{ display: "flex", alignItems: "center", gap: "0.55rem" }}>
           <span style={{ color: "var(--ink)" }}><Mark /></span>
-          <span><b>REIYAH</b> <span className="dot">//</span> HARBOR INSTRUMENT</span>
+          <span style={{ whiteSpace: "nowrap" }}><b>REIYAH</b><span className="brandfull"> <span className="dot">//</span> HARBOR INSTRUMENT</span></span>
         </div>
         <div style={{ display: "flex", gap: "0.6rem", alignItems: "center" }}>
           {idn.state === "observed" && (
@@ -130,7 +130,7 @@ function Stage({ ev, onEvidence }: { ev: VerifiedEvidence; onEvidence: (e: Verif
           )}
           <TruthPill lastEventAt={lastEventAt} connected={connected} sealed={sealed} violated={violated} />
           {active !== "harbor" ? (
-            <button className="hudbtn" onClick={() => go("harbor")}>⌂ HARBOR · ESC</button>
+            <button className="hudbtn" onClick={() => go("harbor")}>⌂<span className="brandfull"> HARBOR · ESC</span></button>
           ) : (
             <span className="hudid" style={{ color: "var(--ink-ghost)" }}>⇄ ARROWS · ESC HOME</span>
           )}
