@@ -117,7 +117,7 @@ export function TruthPill({ lastEventAt, connected, sealed, violated }: {
     return (
       <span className="pill" data-state="sealed">
         <span className="ind" />
-        SEALED · {sealed.head.slice(0, 8)} · {sealed.sealedAt.slice(0, 10)}
+        SEALED · {sealed.head.slice(0, 8)}<span className="pilldate"> · {sealed.sealedAt.slice(0, 10)}</span>
       </span>
     );
   }
