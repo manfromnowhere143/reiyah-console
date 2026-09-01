@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 240" role="img" aria-label="Reiyah mark: an open iris whose pupil gazes toward its own opening">
+  <!-- REIYAH · The Aware Iris
+       One idea: the eye that declares its own blind spot, and looks at it.
+       Geometry (write-downable): ring r=84, stroke 22, round caps;
+       one 50° opening centered 45° above the horizon (the catchlight);
+       pupil r=24 offset 13 units toward the opening; pupil in signal red.
+       The ring inherits currentColor so the mark lives on any ground.
+       Never rotate: the opening faces the light. -->
+  <circle cx="120" cy="120" r="84"
+    fill="none" stroke="currentColor" stroke-width="22" stroke-linecap="round"
+    stroke-dasharray="454.5 73.3" transform="rotate(-20 120 120)" />
+  <circle cx="133" cy="107" r="24" fill="#E31937" />
+</svg>

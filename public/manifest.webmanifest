@@ -1,0 +1,13 @@
+{
+  "name": "Reiyah Harbor Instrument",
+  "short_name": "Harbor",
+  "description": "The Reiyah evidence engine control panel. Renders only digest-verified machine records.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#050507",
+  "theme_color": "#050507",
+  "icons": [
+    { "src": "/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "/apple-touch-icon.png", "sizes": "256x256", "type": "image/png", "purpose": "any" }
+  ]
+}

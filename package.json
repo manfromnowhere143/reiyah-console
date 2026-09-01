@@ -1,0 +1,28 @@
+{
+  "name": "reiyah-console",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "description": "Harbor Instrument: the Reiyah control panel. Reads the Reiyah repository as evidence; holds no authority over it.",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc --noEmit && vite build",
+    "preview": "vite preview",
+    "serve": "node server/evidence-server.mjs",
+    "seal": "node tools/seal-snapshot.mjs",
+    "shots": "node tools/shots.mjs",
+    "test:hangar": "node tools/hangar-test.mjs"
+  },
+  "dependencies": {
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0"
+  },
+  "devDependencies": {
+    "@types/react": "^19.0.0",
+    "@types/react-dom": "^19.0.0",
+    "@vitejs/plugin-react": "^4.3.4",
+    "puppeteer-core": "^24.43.1",
+    "typescript": "^5.6.3",
+    "vite": "^6.0.7"
+  }
+}

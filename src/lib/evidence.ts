@@ -1,0 +1,190 @@
+/* Evidence client with two honest sources and no third option:
+   - LIVE: the evidence server (/api), digests recomputed at read time, SSE.
+   - SEALED: a static snapshot bundle (/snapshot) written by seal-snapshot.mjs,
+     with the seal time and commit identity on its face.
+   The client tries live first, falls back to sealed, and otherwise blocks.
+   In both modes WebCrypto re-verification works on the exact bytes; the mode
+   is always displayed, never blended. */
+
+export type SurfaceState<T = unknown> =
+  | { state: "loading" }
+  | { state: "observed"; meta: SurfaceMeta; data: T }
+  | { state: "blocked"; reason: string };
+
+export interface SurfaceMeta {
+  id: string;
+  path: string;
+  sha256: string;
+  bytes: number;
+  readAt: string;
+}
+
+export interface SurfaceRow {
+  id: string;
+  path: string;
+  bytes?: number;
+  sha256?: string;
+  state: "observed" | "blocked";
+  reason?: string;
+}
+
+export interface Summary {
+  instrument: string;
+  generatedAt: string;
+  identity:
+    | { state: "observed"; head: string; branch: string; worktree_clean: boolean; root: string }
+    | { state: "blocked"; reason: string };
+  surfaces: SurfaceRow[];
+}
+
+export type SourceMode = "live" | "sealed";
+export interface SealedInfo { sealedAt: string; head: string; branch: string }
+
+let mode: SourceMode = "live";
+let sealedManifest: {
+  sealedAt: string;
+  identity: Summary["identity"];
+  surfaces: SurfaceRow[];
+} | null = null;
+
+export function getMode(): SourceMode { return mode; }
+export function getSealedInfo(): SealedInfo | null {
+  if (!sealedManifest || sealedManifest.identity.state !== "observed") return null;
+  return {
+    sealedAt: sealedManifest.sealedAt,
+    head: sealedManifest.identity.head,
+    branch: sealedManifest.identity.branch,
+  };
+}
+
+async function loadSealed(): Promise<boolean> {
+  try {
+    const r = await fetch("/snapshot/manifest.json");
+    if (!r.ok) return false;
+    const m = await r.json();
+    if (m?.kind !== "sealed_snapshot") return false;
+    sealedManifest = m;
+    mode = "sealed";
+    return true;
+  } catch {
+    return false;
+  }
+}
+
+export async function fetchSummary(): Promise<Summary> {
+  try {
+    const r = await fetch("/api/summary");
+    if (r.ok) {
+      mode = "live";
+      return await r.json();
+    }
+  } catch { /* fall through to sealed */ }
+  if (await loadSealed()) {
+    return {
+      instrument: "reiyah-console (sealed snapshot)",
+      generatedAt: sealedManifest!.sealedAt,
+      identity: sealedManifest!.identity,
+      surfaces: sealedManifest!.surfaces,
+    };
+  }
+  throw new Error("no_evidence_source: live api unreachable and no sealed snapshot present");
+}
+
+export interface RawResult {
+  bytes: ArrayBuffer;
+  path: string;
+  serverSha256: string;
+  byteLength: number;
+}
+
+export async function fetchRaw(id: string): Promise<RawResult> {
+  if (mode === "sealed") {
+    const row = sealedManifest?.surfaces.find((s) => s.id === id);
+    if (!row) throw new Error("unknown_sealed_surface");
+    const r = await fetch(`/snapshot/raw/${id}`);
+    if (!r.ok) throw new Error(`sealed_raw_http_${r.status}`);
+    const bytes = await r.arrayBuffer();
+    return { bytes, path: row.path, serverSha256: row.sha256 ?? "unknown", byteLength: bytes.byteLength };
+  }
+  const r = await fetch(`/api/raw/${id}`);
+  if (!r.ok) throw new Error(`raw_http_${r.status}`);
+  const bytes = await r.arrayBuffer();
+  return {
+    bytes,
+    path: r.headers.get("X-Source-Path") ?? "unknown",
+    serverSha256: r.headers.get("X-Source-Sha256") ?? "unknown",
+    byteLength: bytes.byteLength,
+  };
+}
+
+export async function fetchSurface<T = unknown>(id: string): Promise<SurfaceState<T>> {
+  try {
+    if (mode === "sealed") {
+      const raw = await fetchRaw(id);
+      const text = new TextDecoder().decode(raw.bytes);
+      const data = (raw.path.endsWith(".json") ? JSON.parse(text) : text) as T;
+      return {
+        state: "observed",
+        meta: { id, path: raw.path, sha256: raw.serverSha256, bytes: raw.byteLength, readAt: sealedManifest!.sealedAt },
+        data,
+      };
+    }
+    const r = await fetch(`/api/surface/${id}`);
+    const body = await r.json();
+    if (!r.ok || body.state !== "observed") {
+      return { state: "blocked", reason: body?.reason ?? `http_${r.status}` };
+    }
+    return { state: "observed", meta: body.meta, data: body.data as T };
+  } catch (e) {
+    return { state: "blocked", reason: String((e as Error)?.message ?? e) };
+  }
+}
+
+export async function sha256Hex(bytes: ArrayBuffer): Promise<string> {
+  const digest = await crypto.subtle.digest("SHA-256", bytes);
+  return (
+    "sha256:" +
+    Array.from(new Uint8Array(digest))
+      .map((b) => b.toString(16).padStart(2, "0"))
+      .join("")
+  );
+}
+
+export interface Proof {
+  path: string;
+  byteLength: number;
+  serverSha256: string;
+  clientSha256: string;
+  equal: boolean;
+  provedAt: string;
+}
+
+/** Press to prove: refetch the exact bytes and recompute their digest here. */
+export async function prove(id: string): Promise<Proof> {
+  const raw = await fetchRaw(id);
+  const clientSha256 = await sha256Hex(raw.bytes);
+  return {
+    path: raw.path,
+    byteLength: raw.byteLength,
+    serverSha256: raw.serverSha256,
+    clientSha256,
+    equal: clientSha256 === raw.serverSha256,
+    provedAt: new Date().toISOString(),
+  };
+}
+
+export type LiveState = "live" | "stale" | "offline" | "sealed";
+
+export function subscribeEvents(onEvent: (kind: string, at: number) => void): () => void {
+  if (mode === "sealed") {
+    onEvent("sealed", Date.now());
+    return () => {};
+  }
+  const es = new EventSource("/api/events");
+  const mark = (kind: string) => onEvent(kind, Date.now());
+  es.addEventListener("evidence", () => mark("evidence"));
+  es.addEventListener("heartbeat", () => mark("heartbeat"));
+  es.onopen = () => mark("open");
+  es.onerror = () => onEvent("error", Date.now());
+  return () => es.close();
+}
