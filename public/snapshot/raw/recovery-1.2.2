@@ -1,0 +1,116 @@
+{
+  "schema_id": "https://schemas.reiyah.invalid/gate-a/1.2.3/historical-development-checkpoint-recovery.schema.json",
+  "schema_version": "1.2.3",
+  "schema_binding_state": "bound_to_versioned_schema",
+  "artifact_id": "reiyah.artifact.gate-a-1.2.2-development-checkpoint-recovery-1.2.3",
+  "record_id": "reiyah.history.gate-a-1.2.2-development-checkpoint-recovery",
+  "version": "1.2.3",
+  "as_of_date": "2026-08-28",
+  "record_kind": "historical_development_checkpoint_recovery",
+  "lifecycle_status": "proposed",
+  "subject": {
+    "gate_version": "1.2.2",
+    "checkpoint_class": "committed_development_only_architecture_candidate",
+    "commit": "c083a8b061bf583099c12f8668286db385346d13",
+    "tree": "850439f5e014da25cdcd078263b823e0058029f5",
+    "first_parent": "215c64ced5132799f07204f244d418a4dbd15a2b",
+    "file_count": 892,
+    "commit_subject": "docs(gate-a): establish 1.2.2 governance and inference controls",
+    "author": {
+      "name": "Daniel Wahnich",
+      "email": "cogitoergosum143@gmail.com"
+    },
+    "committer": {
+      "name": "Daniel Wahnich",
+      "email": "cogitoergosum143@gmail.com"
+    },
+    "committed_at": "2026-08-28T22:17:57+03:00"
+  },
+  "source_repository": {
+    "canonical_root": "/Users/danielwahnich/workspace/reiyah",
+    "configured_distribution_remote": "https://github.com/manfromnowhere143/reiyah.git",
+    "git_object_format": "sha1",
+    "remote_authority": "distribution_channel_only"
+  },
+  "recovery_method": "exact_git_identity_and_external_locked_stdout_observation_binding",
+  "artifact_copy": {
+    "performed": false,
+    "copied_artifact_count": 0,
+    "reason": "Gate A 1.2.2 emitted no canonical index, sidecar, or retained canonical report; this record binds the exact committed checkpoint without fabricating or copying absent release outputs."
+  },
+  "postcommit_development_observation": {
+    "observation_class": "locked_launcher_stdout_integrity_signal",
+    "observation_recording_basis": "postcommit_observation_reported_outside_the_repository_after_the_handoff_self_reference_boundary",
+    "entrypoint": "tools/gate_a_1_2_2.sh",
+    "snapshot_mode": "development",
+    "invocation_count": 2,
+    "stdout_reports_byte_identical": true,
+    "stdout_report_retention_state": "not_retained_in_repository",
+    "stdout_report_repository_path": null,
+    "stdout_report_sha256": "sha256:749253bcb41a2b313790b47233b31a5e05a0115bb033cec04e2fc070509277cf",
+    "stdout_report_byte_size": 12665,
+    "status": "pass",
+    "exit_code": 0,
+    "diagnostics": [],
+    "architecture_status": "candidate_under_gate_a_review",
+    "release_eligible": false,
+    "public_distribution_eligible": false,
+    "candidate_projection": {
+      "serialization": "sorted_path_nul_sha256_nul_mode_nul_byte_count_lf",
+      "sha256": "sha256:b4351c72dd2ba302e00fb7b7ae488e7762c87da66e5d74cc0bf99bf78b281e21",
+      "byte_size": 9719376,
+      "artifact_count": 892,
+      "git_branch_at_observation": "gate-a-1.2.2-governance-inference",
+      "git_head": "c083a8b061bf583099c12f8668286db385346d13",
+      "uncommitted_path_count": 0
+    },
+    "fixture_summary": {
+      "suite_count": 2,
+      "fixture_count": 46,
+      "known_good_passed": 9,
+      "known_bad_rejected": 37,
+      "resolved_mutation_descriptor_count": 44
+    },
+    "control_summary": {
+      "required_control_count": 8,
+      "passed_control_count": 8,
+      "failed_control_count": 0
+    },
+    "capabilities": {
+      "real_public_ref_snapshot_resolution_implemented": false,
+      "real_git_object_byte_resolution_implemented": false,
+      "real_evidence_reference_resolution_implemented": false,
+      "real_dependence_analysis_resolution_implemented": false
+    }
+  },
+  "canonical_output_state": {
+    "gate_a_1_2_2_evidence_index_emitted": false,
+    "gate_a_1_2_2_evidence_index_path": null,
+    "gate_a_1_2_2_sidecar_emitted": false,
+    "gate_a_1_2_2_sidecar_path": null,
+    "gate_a_1_2_2_canonical_report_emitted": false,
+    "gate_a_1_2_2_canonical_report_path": null,
+    "root_index_subject_remains": "gate-a-1.2.1",
+    "root_index_sha256": "sha256:91d2b7edeaf97becf01027cddf9967a6cd9bd9917dd0ccadf42567b08513e545",
+    "root_index_byte_size": 186478,
+    "root_index_artifact_count": 821
+  },
+  "authority_nonclaims": {
+    "operator_acceptance_state": "unaccepted",
+    "ga_17_state": "not_evaluated",
+    "scientific_evidence_created": false,
+    "scientific_claim_authority": false,
+    "public_distribution_authorized": false,
+    "publication_acceptance_authorized": false,
+    "runtime_authorized": false,
+    "gate_b_authorized": false,
+    "transport_verification_state": "not_evaluated"
+  },
+  "limitations": [
+    "The stdout report digest binds an externally emitted development observation whose report bytes are not retained in the repository.",
+    "Development replay is an integrity signal only and is not release evidence, a canonical report, operator acceptance, scientific evidence, publication authority, or transport verification.",
+    "The configured remote and local remote-tracking observations do not establish current remote state or independent transport.",
+    "This recovery record does not emit or reconstruct any absent Gate A 1.2.2 canonical index, sidecar, validation report, decision record, rights record, or publisher receipt.",
+    "Gate B, runtime, deployment, private-data ingestion, model execution, cloud execution, and physical control remain unauthorized."
+  ]
+}

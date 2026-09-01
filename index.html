@@ -1,0 +1,104 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <meta name="theme-color" content="#f4f3ee" />
+    <script>
+      /* ground restore, before first paint — no flash, ever */
+      (function () {
+        try {
+          var g = localStorage.getItem("harbor-ground") || "light";
+          document.documentElement.dataset.ground = g;
+          var m = document.querySelector('meta[name="theme-color"]');
+          if (m) m.content = g === "dark" ? "#050507" : "#f4f3ee";
+        } catch (e) {
+          document.documentElement.dataset.ground = "light";
+        }
+      })();
+    </script>
+    <link rel="manifest" href="/manifest.webmanifest" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="icon" type="image/png" href="/icon-512.png" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta name="apple-mobile-web-app-title" content="Harbor" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Big+Shoulders:wght@500;600;700&family=Instrument+Sans:wght@400;500;600&family=B612+Mono:wght@400;700&display=swap"
+    />
+    <title>Reiyah // Harbor Instrument</title>
+
+    <!-- SEO · house pattern (brand → metadata → JSON-LD graph) · every claim
+         bounded by the Reiyah non-claims register -->
+    <meta name="description" content="The control panel of the Reiyah evidence engine: an open research architecture for driver-vehicle belief, human-automation readiness, and joint silent-miss measurement. Renders only digest-verified machine records — what is known, unknown, and refused." />
+    <meta name="author" content="Daniel Wahnich" />
+    <link rel="canonical" href="https://reiyah.danielwahnich.dev/" />
+    <meta name="robots" content="index, follow, max-image-preview:large" />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Reiyah" />
+    <meta property="og:title" content="Reiyah // Harbor Instrument" />
+    <meta property="og:description" content="The instrument that renders honesty. An evidence-engine control panel for driver-vehicle belief, human-automation readiness, and joint silent misses — every pixel bound to a verified digest." />
+    <meta property="og:url" content="https://reiyah.danielwahnich.dev/" />
+    <meta property="og:image" content="https://reiyah.danielwahnich.dev/og.png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="The Reiyah mark: an open iris with a red pupil, beside the wordmark REIYAH" />
+
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Reiyah // Harbor Instrument" />
+    <meta name="twitter:description" content="The instrument that renders honesty. Evidence engine // Harbor console." />
+    <meta name="twitter:image" content="https://reiyah.danielwahnich.dev/og.png" />
+
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@graph": [
+        {
+          "@type": "ResearchProject",
+          "@id": "https://reiyah.danielwahnich.dev/#project",
+          "name": "Reiyah",
+          "alternateName": "HARBOR (proposed working name)",
+          "url": "https://reiyah.danielwahnich.dev/",
+          "logo": "https://reiyah.danielwahnich.dev/icon-512.png",
+          "description": "An evidence and benchmark architecture for object-level driver-vehicle belief, human-automation readiness, recoverability, joint silent misses, causal policy effects, explicit unknowns, transfer, and worst-group validation. A research architecture; not a driver-monitoring product.",
+          "founder": { "@id": "https://danielwahnich.dev/#person" }
+        },
+        {
+          "@type": "WebSite",
+          "@id": "https://reiyah.danielwahnich.dev/#site",
+          "url": "https://reiyah.danielwahnich.dev/",
+          "name": "Reiyah // Harbor Instrument",
+          "publisher": { "@id": "https://reiyah.danielwahnich.dev/#project" }
+        },
+        {
+          "@type": "WebApplication",
+          "@id": "https://reiyah.danielwahnich.dev/#app",
+          "name": "Harbor Instrument",
+          "url": "https://reiyah.danielwahnich.dev/",
+          "applicationCategory": "Research console",
+          "operatingSystem": "Any (web)",
+          "description": "One-page control panel that renders only digest-verified machine records of the Reiyah evidence engine: the evidence ledger, release lineage, validation controls, estimand registry, adversarial fixture wall, and operator decision interface.",
+          "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+          "image": "https://reiyah.danielwahnich.dev/og.png",
+          "creator": { "@id": "https://danielwahnich.dev/#person" }
+        },
+        {
+          "@type": "Person",
+          "@id": "https://danielwahnich.dev/#person",
+          "name": "Daniel Wahnich",
+          "url": "https://danielwahnich.dev/"
+        }
+      ]
+    }
+    </script>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>

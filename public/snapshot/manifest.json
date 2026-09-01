@@ -1,0 +1,208 @@
+{
+ "kind": "sealed_snapshot",
+ "sealedAt": "2026-09-01T07:59:51.072Z",
+ "identity": {
+  "state": "observed",
+  "head": "7ed76fa8a7a2a82fda5396a0ae63ceee4e0f8bc8",
+  "branch": "gate-a-1.2.7-readiness-r0-correction",
+  "worktree_clean": false,
+  "root": "/Users/danielwahnich/workspace/reiyah"
+ },
+ "authority_nonclaims": {
+  "holds_authority_over_reiyah": false,
+  "creates_operator_acceptance": false,
+  "creates_scientific_evidence": false,
+  "is_driver_monitoring_system": false
+ },
+ "surfaces": [
+  {
+   "id": "index",
+   "path": "gate/GATE_A_EVIDENCE_INDEX.json",
+   "bytes": 505497,
+   "sha256": "sha256:998f953fa35c908206cf93bd21d3000f96caf6ae044b7424d8dccf4826223af8",
+   "state": "observed"
+  },
+  {
+   "id": "index-sidecar",
+   "path": "gate/GATE_A_EVIDENCE_INDEX.sha256",
+   "bytes": 105,
+   "sha256": "sha256:5b72c1933a178e0481f258b9aef1f3e176b440e409066e113cb8dd10f27617c0",
+   "state": "observed"
+  },
+  {
+   "id": "protocol",
+   "path": "manifests/protocol/harbor-gate-a-protocol-1.2.0.json",
+   "bytes": 63718,
+   "sha256": "sha256:d282e8a58de6a207129079498343b23bb634b45eaa38697794b77b9dadbad7ad",
+   "state": "observed"
+  },
+  {
+   "id": "mission",
+   "path": "manifests/mission/reiyah-mission-1.1.0.json",
+   "bytes": 5597,
+   "sha256": "sha256:1d49a990391c8629c4dd919e73786f12de6c63092e43608d53d41dee4f52d4ed",
+   "state": "observed"
+  },
+  {
+   "id": "fixtures",
+   "path": "fixtures/fixture-catalog.json",
+   "bytes": 425947,
+   "sha256": "sha256:daa3765dbf93191f164ad7c6e3a582a8b8d32e84bff3a4112ec6c6c5222c977d",
+   "state": "observed"
+  },
+  {
+   "id": "frontier",
+   "path": "evidence/frontier-discovery-register-1.2.0.json",
+   "bytes": 119407,
+   "sha256": "sha256:e5e7f68c3f93d43553408873ca4ab4f9eb93ae5cd637c473b4f847a458000fac",
+   "state": "observed"
+  },
+  {
+   "id": "decision-template",
+   "path": "gate/decisions/OPERATOR_DECISION-1.2.5.template.json",
+   "bytes": 4583,
+   "sha256": "sha256:9eedad4f5d3ddf4cb1484e9474ab26093965f83807c80277f855fcd35baab3e4",
+   "state": "observed"
+  },
+  {
+   "id": "odi",
+   "path": "gate/operator-decision-interfaces/reiyah.operator-decision-interface-1.2.4.json",
+   "bytes": 47157,
+   "sha256": "sha256:c719fbc041eb9e9e480e973ac576595114f6f1df6d018910fa820556fc87dfc1",
+   "state": "observed"
+  },
+  {
+   "id": "chain-observation",
+   "path": "manifests/examples/object-chain/observation.json",
+   "bytes": 2311,
+   "sha256": "sha256:02353ddd3f5f07db29266ee835961607e5151c1426f909e70dbc375e8fab1b58",
+   "state": "observed"
+  },
+  {
+   "id": "chain-belief",
+   "path": "manifests/examples/object-chain/latent-belief.json",
+   "bytes": 2364,
+   "sha256": "sha256:edfa22b055055b330ce4e665b831d3a570e02ad9f8c09ca7ba17b4d0d6d0e86d",
+   "state": "observed"
+  },
+  {
+   "id": "chain-decision",
+   "path": "manifests/examples/object-chain/decision.json",
+   "bytes": 2273,
+   "sha256": "sha256:4d9097609fbbd097131b6067278260cb70b72baf2d41ef6f7e8f18391fc019f3",
+   "state": "observed"
+  },
+  {
+   "id": "chain-intervention",
+   "path": "manifests/examples/object-chain/intervention.json",
+   "bytes": 2552,
+   "sha256": "sha256:9545edb9335c2a873a562e8d30654464d4d2aa73f52ab0d0cc6f9a0362a320a8",
+   "state": "observed"
+  },
+  {
+   "id": "chain-outcome",
+   "path": "manifests/examples/object-chain/outcome.json",
+   "bytes": 2699,
+   "sha256": "sha256:a10f770744f7fedd94796ad55bab4e9f5a35ffe68f724a386e125ec95147ec97",
+   "state": "observed"
+  },
+  {
+   "id": "chain-evidence",
+   "path": "manifests/examples/object-chain/evidence.json",
+   "bytes": 1946,
+   "sha256": "sha256:1c1695f5c4cdab8b220b5055957b24597d227c204a6f9fd5156ea013245ea2b1",
+   "state": "observed"
+  },
+  {
+   "id": "report-1.0.0",
+   "path": "gate/validation-reports/gate-a-validation-1.0.0.json",
+   "bytes": 2513,
+   "sha256": "sha256:19c624a97ff6518863e83fa9de8a383cca72003521dc1aac55f63e8574bbeaab",
+   "state": "observed"
+  },
+  {
+   "id": "report-1.1.0",
+   "path": "gate/validation-reports/gate-a-validation-1.1.0.json",
+   "bytes": 2826,
+   "sha256": "sha256:89d96c947f909782c0a5ccc4f677114a8a2c9dd2f24e6a342a667f6526144db0",
+   "state": "observed"
+  },
+  {
+   "id": "report-1.1.1",
+   "path": "gate/validation-reports/gate-a-validation-1.1.1.json",
+   "bytes": 2826,
+   "sha256": "sha256:76c0dcce583beb02b121776e14bc9df41833a26c5c49488270d96861b3e33806",
+   "state": "observed"
+  },
+  {
+   "id": "report-1.1.2",
+   "path": "gate/validation-reports/gate-a-validation-1.1.2.json",
+   "bytes": 2826,
+   "sha256": "sha256:06fc3114522c16625da337fe25c71b1fd53abeeaf9c31a11748afc06eb5d66d8",
+   "state": "observed"
+  },
+  {
+   "id": "report-1.2.0",
+   "path": "gate/validation-reports/gate-a-validation-1.2.0.json",
+   "bytes": 257357,
+   "sha256": "sha256:79d6f3578630994c54cbe341e2c62b79fe4606b4645b85499bcb76f018ad1961",
+   "state": "observed"
+  },
+  {
+   "id": "report-1.2.1",
+   "path": "gate/validation-reports/gate-a-validation-1.2.1.json",
+   "bytes": 20406,
+   "sha256": "sha256:e0f26625402447c5157409a039195a7aa1911a925e9ec548c37d3346d2b33099",
+   "state": "observed"
+  },
+  {
+   "id": "report-1.2.3",
+   "path": "gate/validation-reports/gate-a-validation-1.2.3.json",
+   "bytes": 17292,
+   "sha256": "sha256:24357b380dc1dd9d551cbbd06f421c44806a15845f4c27adb8fd731d65843333",
+   "state": "observed"
+  },
+  {
+   "id": "report-operator-decision-interface-readiness-route-activation-contract-1.2.6",
+   "path": "gate/validation-reports/operator-decision-interface-readiness-route-activation-contract-1.2.6.json",
+   "bytes": 6852,
+   "sha256": "sha256:0d441a40418ec839bd99e018ae71fd24f56497833853cc7e02541c22fa7891c4",
+   "state": "observed"
+  },
+  {
+   "id": "recovery-1.0.0",
+   "path": "history/gate-a-1.0.0/RECOVERY.json",
+   "bytes": 4483,
+   "sha256": "sha256:79f28e226740987c5ad0fcdf3831fde8874e71acdfc810ea206a50b32dc1e87e",
+   "state": "observed"
+  },
+  {
+   "id": "recovery-1.1.2",
+   "path": "history/gate-a-1.1.2/RECOVERY.json",
+   "bytes": 10774,
+   "sha256": "sha256:ff98c40648d18c931c1198c97c430f5ce31eb93f0738126b7ca60f43440d02da",
+   "state": "observed"
+  },
+  {
+   "id": "recovery-1.2.0",
+   "path": "history/gate-a-1.2.0/RECOVERY.json",
+   "bytes": 5219,
+   "sha256": "sha256:79bb30e5bafda0b3b40d7a6f898e10b5785006a272630ec3f8d470a84875a36a",
+   "state": "observed"
+  },
+  {
+   "id": "recovery-1.2.1",
+   "path": "history/gate-a-1.2.1/RECOVERY.json",
+   "bytes": 4065,
+   "sha256": "sha256:970fdb2e331973e4243443bcb8c2acc9b31fd19ac6d4fb624511f48c64391bb4",
+   "state": "observed"
+  },
+  {
+   "id": "recovery-1.2.2",
+   "path": "history/gate-a-1.2.2/RECOVERY.json",
+   "bytes": 5451,
+   "sha256": "sha256:b9dbddc43c63b07dc40ef9a2ac73e49123e2e02be34c5ca9d22d252041b2da71",
+   "state": "observed"
+  }
+ ]
+}

@@ -1,0 +1,92 @@
+{
+  "schema_id": "https://schemas.reiyah.invalid/gate-a/1.2.2/historical-packet-recovery.schema.json",
+  "schema_version": "1.2.2",
+  "artifact_id": "reiyah.artifact.gate-a-1.2.1-recovery-1.2.2",
+  "record_id": "reiyah.history.gate-a-1.2.1-recovery",
+  "version": "1.2.2",
+  "as_of_date": "2026-08-28",
+  "subject_release": {
+    "artifact_id": "reiyah.artifact.gate-a-index-1.2.1",
+    "release_id": "reiyah.gate-a-evidence-index@1.2.1",
+    "version": "1.2.1",
+    "validation_status": "pass",
+    "release_eligible": true,
+    "public_distribution_eligible": false,
+    "operator_acceptance_state": "unaccepted",
+    "transport_verification_state": "not_evaluated",
+    "scientific_claim_authority": false,
+    "publication_acceptance_authorized": false,
+    "runtime_authorized": false,
+    "gate_b_authorized": false
+  },
+  "recovery_method": "exact_git_object_copy_from_released_packet",
+  "source_repository": {
+    "canonical_root": "/Users/danielwahnich/workspace/reiyah",
+    "distribution_remote": "https://github.com/manfromnowhere143/reiyah.git",
+    "git_object_format": "sha1",
+    "remote_authority": "distribution_only"
+  },
+  "release_commit": {
+    "commit": "215c64ced5132799f07204f244d418a4dbd15a2b",
+    "tree": "8946f696c1abbd2c715e3473fa8d119b064a8e6a",
+    "file_count": 828
+  },
+  "snapshot_policy": {
+    "collision_prone_root_artifacts_copied": true,
+    "copied_artifact_count": 2,
+    "versioned_validation_report_copied": false,
+    "rationale": "The root index and sidecar are collision-prone packet outputs. Their exact 1.2.1 Git-object bytes are preserved under history; the version-qualified report remains at its canonical path and is exact-bound rather than duplicated."
+  },
+  "snapshot_artifacts": [
+    {
+      "artifact_id": "reiyah.artifact.historical-gate-a-index-1.2.1",
+      "source_commit": "215c64ced5132799f07204f244d418a4dbd15a2b",
+      "source_path": "gate/GATE_A_EVIDENCE_INDEX.json",
+      "snapshot_path": "history/gate-a-1.2.1/gate/GATE_A_EVIDENCE_INDEX.json",
+      "sha256": "sha256:91d2b7edeaf97becf01027cddf9967a6cd9bd9917dd0ccadf42567b08513e545",
+      "byte_size": 186478,
+      "copy_class": "byte_identical_git_object_copy"
+    },
+    {
+      "artifact_id": "reiyah.artifact.historical-gate-a-index-sidecar-1.2.1",
+      "source_commit": "215c64ced5132799f07204f244d418a4dbd15a2b",
+      "source_path": "gate/GATE_A_EVIDENCE_INDEX.sha256",
+      "snapshot_path": "history/gate-a-1.2.1/gate/GATE_A_EVIDENCE_INDEX.sha256",
+      "sha256": "sha256:0d570f04fd0bf7a747c1f77cbcc8a7c0bee0cdfe25a83e6dd495dd638ec49133",
+      "byte_size": 105,
+      "bound_index_sha256": "sha256:91d2b7edeaf97becf01027cddf9967a6cd9bd9917dd0ccadf42567b08513e545",
+      "copy_class": "byte_identical_git_object_copy"
+    }
+  ],
+  "canonical_report": {
+    "source_commit": "215c64ced5132799f07204f244d418a4dbd15a2b",
+    "path": "gate/validation-reports/gate-a-validation-1.2.1.json",
+    "sha256": "sha256:e0f26625402447c5157409a039195a7aa1911a925e9ec548c37d3346d2b33099",
+    "byte_size": 20406,
+    "mode": "release",
+    "status": "pass",
+    "release_eligible": true,
+    "public_distribution_eligible": false
+  },
+  "governance_event": {
+    "document_id": "reiyah.governance-event.public-ref-exposure-2026-08-28",
+    "path": "docs/GOVERNANCE_EVENT_2026-08-28_PUBLIC_REF_EXPOSURE.md",
+    "version": "0.1.0",
+    "lifecycle_status": "proposed",
+    "sha256": "sha256:73217cd9332793be0a0ac80e48f8c957d8e55c9a5ab74fd21da43946c421e997",
+    "byte_size": 4516,
+    "observation_class": "publisher_side_local_git_observation",
+    "independent_transport_verification": "not_evaluated"
+  },
+  "dispositions": {
+    "exact_released_bytes_bound": true,
+    "publisher_side_public_ref_event_recorded": true,
+    "external_transport_verification_state": "not_evaluated",
+    "new_scientific_evidence_created": false,
+    "operator_acceptance_created": false,
+    "gate_a_acceptance_conferred": false,
+    "publication_acceptance_authorized": false,
+    "runtime_execution_authorized": false,
+    "gate_b_authorized": false
+  }
+}

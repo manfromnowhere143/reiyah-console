@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 240">
+  <!-- REIYAH favicon: the Aware Iris. The ring adapts to the tab's theme;
+       the pupil is always the one red. -->
+  <style>
+    .ring { stroke: #101215; }
+    @media (prefers-color-scheme: dark) { .ring { stroke: #f2f1ed; } }
+  </style>
+  <circle class="ring" cx="120" cy="120" r="84"
+    fill="none" stroke-width="28" stroke-linecap="round"
+    stroke-dasharray="454.5 73.3" transform="rotate(-20 120 120)" />
+  <circle cx="133" cy="107" r="28" fill="#E31937" />
+</svg>
