@@ -1,0 +1,249 @@
+{
+  "schema_id": "https://schemas.reiyah.invalid/gate-a/1.2.7/operator-decision-interface-readiness-worker-liveness-correction.schema.json",
+  "artifact_id": "reiyah.artifact.operator-decision-interface-readiness-worker-liveness-correction-1.2.7",
+  "contract_id": "reiyah.contract.operator-decision-interface-readiness-worker-liveness-correction@1.2.7",
+  "record_kind": "operator_decision_interface_readiness_worker_liveness_correction",
+  "version": "1.2.7",
+  "lifecycle_status": "proposed",
+  "as_of_date": "2026-09-01",
+  "stage_id": "DI127-readiness-worker-liveness-incident-contract",
+  "supersedes_for_current_route_eligibility": "reiyah.contract.operator-decision-interface-readiness-route-activation@1.2.6",
+  "retained_incident": {
+    "path": "gate/operator-decision-interface-incidents/reiyah.operator-decision-interface-readiness-worker-liveness-1.2.7.json",
+    "git_mode": "100644",
+    "byte_size": 10479,
+    "sha256": "sha256:ed05486d39a0fcf740a0c58266a773f53c8073b69cc3a88828d75881e3168cd2",
+    "artifact_id": "reiyah.artifact.operator-decision-interface-readiness-worker-liveness-incident-1.2.7",
+    "incident_id": "reiyah.incident.operator-decision-interface-readiness-worker-liveness@1.2.7"
+  },
+  "subject": {
+    "N126_commit": "7ed76fa8a7a2a82fda5396a0ae63ceee4e0f8bc8",
+    "N126_tree": "4d04d9ccf3ec36909989dc9f4c2d99fef942519a",
+    "N126_sole_parent": "f8e15ec9402245b189b3ac36ed81e50ef7bf6bb7",
+    "DI126_implementation_commit": "f8e15ec9402245b189b3ac36ed81e50ef7bf6bb7",
+    "DI126_implementation_tree": "debc32435a8a262d6db176a16cf0161d616cce73",
+    "DI126_implementation_parent": "9bb566f99693736711fad142bd028cff77e23939",
+    "failed_route": "readiness/readiness-report/raw",
+    "failed_source_state": "R0",
+    "failure_before_readiness_input_consumer_state": "supported_source_trace_hypothesis_not_retained_observation",
+    "retained_1_2_6_bytes_may_change": false,
+    "retained_core_1_0_0_may_change": false
+  },
+  "correction_obligations": {
+    "single_bootstrap_free_raw_subject_resolver": {
+      "required": true,
+      "shared_by_full_resolver_and_all_quorum_recaptures": true,
+      "allowed_operations": [
+        "bounded_raw_git_and_administration_capture",
+        "raw_index_and_status_identity_capture",
+        "linear_stage_topology_and_delta_validation",
+        "route_cardinality_and_worktree_state_validation",
+        "immutable_implementation_snapshot_reconstruction",
+        "executed_evaluator_and_core_binding"
+      ],
+      "forbidden_operations": [
+        "schema_bootstrap",
+        "toolchain_lock_render",
+        "readiness_record_parse",
+        "schema_runtime_construction",
+        "admission_token_creation",
+        "route_dispatch"
+      ],
+      "cached_live_identity_may_satisfy_recapture": false
+    },
+    "exact_schema_finder_lifecycle": {
+      "required": true,
+      "baseline_meta_path_recorded": true,
+      "owned_finder_object_identity_required": true,
+      "exact_position_and_tail_required": true,
+      "remove_only_owned_finder": true,
+      "post_release_equals_baseline": true,
+      "success_and_exception_cleanup_required": true,
+      "missing_displaced_duplicated_foreign_or_double_release_rejected": true,
+      "DI124_guard_weakened": false,
+      "bootstrap_made_generally_reentrant": false,
+      "third_party_modules_unloaded": false,
+      "secure_module_object_identities_rechecked": true
+    },
+    "bounded_typed_worker_failure_custody": {
+      "required_worker_kinds": [
+        "implementation_worker",
+        "quorum_probe_worker",
+        "readiness_worker"
+      ],
+      "success_exit_codes": [
+        0
+      ],
+      "typed_failure_exit_codes": [
+        1,
+        2
+      ],
+      "success_requires_empty_stderr": true,
+      "failure_requires_empty_stdout": true,
+      "failure_record_maximum_byte_size": 16384,
+      "failure_record_canonical_closed_json": true,
+      "worker_kind_role_and_status_must_join": true,
+      "nonzero_status_may_enter_success_parser": false,
+      "timeout_signal_stream_cleanup_group_and_reap_failures_remain_distinct": true,
+      "diagnostic_may_select_admission_or_authority": false
+    },
+    "fresh_worker_schedule_and_budget": {
+      "worker_count": 2,
+      "roles": [
+        "worker_alpha",
+        "worker_beta"
+      ],
+      "distinct_processes_required": true,
+      "schedule": "serial_alpha_reap_recapture_then_beta_reap",
+      "worker_overlap_allowed": false,
+      "complete_payload_byte_equality_required": true,
+      "process_or_wall_clock_in_comparable_payload_allowed": false,
+      "per_worker_timeout_seconds": 360,
+      "between_worker_recapture_and_cleanup_margin_seconds": 60,
+      "pair_supervisor_timeout_seconds": 840,
+      "outer_launcher_cleanup_margin_seconds": 60,
+      "outer_launcher_timeout_seconds": 960,
+      "pair_budget_exceeds_worker_sum_plus_margin": true,
+      "outer_budget_exceeds_pair_plus_margin": true
+    },
+    "population_preservation": {
+      "inherited_adversaries": 201,
+      "historical_readiness_adversaries": 20,
+      "historical_successor_consumer_canaries": 5,
+      "schema_known_bads": 7,
+      "DI126_adversaries": 72,
+      "finding_closed_count": 0,
+      "catalog_expectations_loaded_after_actual_freeze": true,
+      "population_reduction_allowed": false
+    },
+    "replacement_readiness_inputs": {
+      "release": "1.2.7",
+      "N126_may_satisfy_current_admission": false,
+      "N126_remains_historical": true,
+      "N127_direct_sole_parent_is_DI127_implementation": true,
+      "changed_existing_paths": [],
+      "added_paths": [
+        "gate/operator-decision-interface-reviews/reiyah.operator-decision-interface-implementation-review-1.2.7.json",
+        "gate/operator-decision-interface-reviews/reiyah.operator-decision-interface-mapping-review-1.2.7.json",
+        "validation/operator-decision-interface-ready-plan-1.2.7.json"
+      ],
+      "removed_paths": [],
+      "executable_paths": [],
+      "git_mode": "100644"
+    }
+  },
+  "required_positive_regressions": [
+    "DI125_oracle_then_two_bootstrap_free_readiness_subject_recaptures",
+    "exact_meta_path_baseline_restored_after_each_owned_bootstrap",
+    "operation_exception_still_releases_exact_owned_finder",
+    "all_201_20_5_7_72_populations_preserved_and_zero_findings_closed",
+    "two_distinct_serial_fresh_workers_produce_equal_complete_payloads",
+    "real_N127_admitted_and_consume_readiness_inputs_127_reached",
+    "clean_immutable_R0_exit_zero_empty_stderr_canonical_report",
+    "R0_pre_post_repository_index_status_and_administration_equal",
+    "R1_P_R2_C_Q_absent"
+  ],
+  "required_negative_regressions": [
+    "raw_subject_wrong_head_parent_delta_mode_index_status_or_administration",
+    "raw_subject_wrong_evaluator_or_core_binding",
+    "raw_subject_attempts_schema_bootstrap_or_admission",
+    "finder_missing_extra_displaced_duplicated_foreign_or_double_release",
+    "malformed_noncanonical_oversized_or_mismatched_child_failure",
+    "zero_exit_with_stderr_or_nonzero_exit_with_stdout",
+    "foreign_exception_timeout_signal_stream_cleanup_group_or_reap_failure",
+    "worker_overlap_order_reversal_PID_reuse_or_incomplete_reap",
+    "timeout_budget_algebra_substitution",
+    "population_truncation_finding_laundering_or_cached_expectations",
+    "N126_reuse_wrong_N127_parent_extra_path_wrong_mode_or_merge",
+    "self_reference_future_commit_identity_R1_P_R2_C_Q_injection",
+    "acceptance_science_distribution_runtime_gate_b_main_merge_or_push_promotion"
+  ],
+  "review_contract": {
+    "review_kind": "role_separated_read_only_internal_advisory_review",
+    "required_roles": [
+      "schema_runtime_lifecycle_reviewer",
+      "raw_git_topology_and_transition_reviewer",
+      "worker_process_framing_and_deadline_reviewer",
+      "adversarial_population_and_authority_reviewer"
+    ],
+    "required_distinct_role_count": 4,
+    "author_and_reviewer_role_overlap_allowed": false,
+    "go_requires_all_checks_pass_and_zero_blockers": true,
+    "no_go_requires_typed_open_blocker": true,
+    "independent_external_review_completed": false,
+    "review_confers_operator_acceptance": false,
+    "review_confers_implementation_authority": false
+  },
+  "future_transition_model": {
+    "ordered_stages": [
+      "DI127-readiness-worker-liveness-incident-contract",
+      "DI127-readiness-worker-liveness-review",
+      "DI127-readiness-worker-liveness-implementation",
+      "DI127-readiness-inputs",
+      "DI127-R0-external-observation"
+    ],
+    "every_commit_edge_direct_single_parent": true,
+    "review_NO_GO_stops_before_implementation": true,
+    "replacement_seal_requires_retained_GO_and_immutable_DI127_implementation": true,
+    "R0_creates_commit": false,
+    "R0_report_installed": false,
+    "current_authorized_stop_after": "DI127-R0-external-observation",
+    "hard_stop_before": [
+      "R1",
+      "P",
+      "R2",
+      "C",
+      "Q",
+      "main",
+      "merge",
+      "push"
+    ],
+    "maximum_R0_result": "R0_reproduced_pending_R1"
+  },
+  "result_contract": {
+    "contract_result": "readiness_worker_liveness_correction_contracted_not_reviewed_not_implemented",
+    "review_GO_ceiling": "internal_review_go_correction_not_implemented",
+    "implementation_ceiling": "readiness_worker_liveness_corrected_N127_absent_not_ready",
+    "N127_ceiling": "readiness_inputs_statically_sealed_not_evaluated",
+    "R0_ceiling": "R0_reproduced_pending_R1",
+    "interface_ready_result_allowed": false,
+    "scientific_or_benchmark_result_created": false
+  },
+  "nonclaims": [
+    "contract_is_not_implementation",
+    "contract_is_not_independent_external_review",
+    "contract_does_not_create_readiness_or_acceptance",
+    "contract_does_not_close_the_incident",
+    "contract_does_not_create_scientific_or_benchmark_evidence",
+    "contract_does_not_authorize_R1_P_R2_C_Q_main_merge_or_push"
+  ],
+  "authority": {
+    "correction_contract_state": "proposed",
+    "correction_review_state": "not_reviewed",
+    "correction_implementation_state": "not_implemented",
+    "replacement_readiness_inputs_state": "absent",
+    "interface_readiness_state": "not_ready",
+    "operator_acceptance_state": "unaccepted",
+    "ga_17_state": "not_evaluated",
+    "transport_verification_state": "not_evaluated",
+    "independent_external_review_completed": false,
+    "scientific_evidence_created": false,
+    "scientific_claim_authority": false,
+    "publication_acceptance_authorized": false,
+    "public_distribution_eligible": false,
+    "public_distribution_authorized": false,
+    "runtime_authorized": false,
+    "cloud_execution_authorized": false,
+    "private_data_ingestion_authorized": false,
+    "physical_control_authorized": false,
+    "gate_b_authorized": false,
+    "R1_authorized": false,
+    "P_authorized": false,
+    "R2_authorized": false,
+    "C_authorized": false,
+    "Q_authorized": false,
+    "main_ref_change_authorized": false,
+    "merge_commit_authorized": false,
+    "public_push_authorized": false
+  }
+}

@@ -16,15 +16,15 @@ export interface StationDef {
 }
 
 export const STATIONS: StationDef[] = [
-  { id: "ledger", num: "ST–01", name: "Ledger", desc: "934 artifacts, every one digest-bound", row: 0, col: 0 },
+  { id: "harbor", num: "ST–00", name: "Harbor", desc: "the living engine", row: 1, col: 1 },
+  { id: "ledger", num: "ST–01", name: "Ledger", desc: "every artifact digest-bound", row: 0, col: 0 },
   { id: "lineage", num: "ST–02", name: "Lineage", desc: "releases as chain of custody", row: 0, col: 1 },
   { id: "encounter", num: "ST–03", name: "Encounter", desc: "the six-kind chain, alive", row: 0, col: 2 },
-  { id: "controls", num: "ST–04", name: "Controls", desc: "34 controls, twin evaluations", row: 1, col: 0 },
-  { id: "harbor", num: "ST–00", name: "Harbor", desc: "overview", row: 1, col: 1 },
-  { id: "estimands", num: "ST–05", name: "Estimands", desc: "ten instruments awaiting first light", row: 1, col: 2 },
-  { id: "adversaries", num: "ST–06", name: "Adversaries", desc: "the 511-fixture wall", row: 2, col: 0 },
-  { id: "chair", num: "ST–07", name: "The Chair", desc: "the seat no tool may take", row: 2, col: 1, red: true },
-  { id: "frontier", num: "ST–08", name: "Frontier", desc: "54 pointers, honestly ineligible", row: 2, col: 2 },
+  { id: "controls", num: "ST–04", name: "Controls", desc: "controls, twin evaluations", row: 1, col: 0 },
+  { id: "estimands", num: "ST–05", name: "Estimands", desc: "instruments awaiting first light", row: 1, col: 2 },
+  { id: "adversaries", num: "ST–06", name: "Adversaries", desc: "the known-bad wall", row: 2, col: 0 },
+  { id: "chair", num: "ST–07", name: "The Chair", desc: "the correction engine · the seat", row: 2, col: 1, red: true },
+  { id: "frontier", num: "ST–08", name: "Frontier", desc: "pointers, honestly ineligible", row: 2, col: 2 },
 ];
 
 export function stationById(id: string | null): StationDef {

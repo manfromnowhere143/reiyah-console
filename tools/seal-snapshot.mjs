@@ -58,6 +58,38 @@ for (const [id, rel] of SURFACES) {
   surfaces.push({ id, path: rel, bytes: bytes.length, sha256, state: "observed" });
 }
 
+/* path-addressed extras: the correction saga and every governed plan/report,
+   so the sealed static deploy can render the full living state */
+const EXTRA_GLOBS = [
+  "gate/operator-decision-interface-corrections",
+  "gate/operator-decision-interface-reviews",
+  "gate/operator-decision-interfaces",
+  "gate/operator-decision-inventories",
+  "gate/decisions",
+  "gate/validation-reports",
+  "gate/public-distribution-receipts",
+  "validation",
+  "manifests/mission",
+  "manifests/protocol",
+  "manifests/scientific",
+];
+fs.mkdirSync(path.join(OUT, "p"), { recursive: true });
+const catalogEntries = [];
+for (const dir of EXTRA_GLOBS) {
+  let files = [];
+  try { files = fs.readdirSync(path.join(REPO, dir)); } catch { continue; }
+  for (const f of files) {
+    if (!f.endsWith(".json")) continue;
+    const rel = `${dir}/${f}`;
+    try {
+      const bytes = fs.readFileSync(path.join(REPO, rel));
+      fs.writeFileSync(path.join(OUT, "p", rel.replaceAll("/", "__")), bytes);
+      catalogEntries.push({ path: rel, bytes: bytes.length });
+    } catch { /* transient */ }
+  }
+}
+fs.writeFileSync(path.join(OUT, "catalog.json"), JSON.stringify({ entries: catalogEntries }, null, 1));
+
 const manifest = {
   kind: "sealed_snapshot",
   sealedAt: new Date().toISOString(),

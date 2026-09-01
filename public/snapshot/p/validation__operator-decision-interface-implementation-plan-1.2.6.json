@@ -1,0 +1,538 @@
+{
+  "schema_id": "https://schemas.reiyah.invalid/gate-a/1.2.6/operator-decision-interface-implementation-plan.schema.json",
+  "artifact_id": "reiyah.artifact.operator-decision-interface-implementation-plan-1.2.6",
+  "plan_id": "reiyah.validation-plan.operator-decision-interface-route-activation-implementation@1.2.6",
+  "record_kind": "operator_decision_interface_route_activation_implementation_plan",
+  "version": "1.2.6",
+  "lifecycle_status": "proposed",
+  "as_of_date": "2026-09-01",
+  "stage_id": "DI126-route-activation-implementation",
+  "repository_identity": {
+    "project": "Reiyah",
+    "canonical_root": "/Users/danielwahnich/workspace/reiyah",
+    "git_root": "/Users/danielwahnich/workspace/reiyah",
+    "configured_remote": "https://github.com/manfromnowhere143/reiyah.git",
+    "authoring_branch_context": "gate-a-1.2.6-readiness-route-activation",
+    "branch_is_scientific_safety_acceptance_or_publication_authority": false
+  },
+  "contract_checkpoint": {
+    "stage_id": "DI126-route-activation-contract",
+    "commit": "cf547a3d1a7d8bd2ff8fd772802a20adab36f15b",
+    "tree": "aa3195f1bb443f1f8bcfd670cfe1200c1926b11c",
+    "sole_parent": "b54f719f29682d191ddf489e58fa5f95cbe0aa5c",
+    "result": "real_route_correction_contract_validated_not_implemented",
+    "transition_aggregate_byte_size": 330540,
+    "transition_descriptor_byte_size": 1785,
+    "transition_descriptor_sha256": "sha256:97815b046bf1a1dd687fc51f93ea58ddfa46fb2b4ccda71c832cd17b19365513"
+  },
+  "predecessor_review_checkpoint": {
+    "stage_id": "DI126-route-activation-review",
+    "commit": "9bb566f99693736711fad142bd028cff77e23939",
+    "tree": "6e8a763947401f1d8b36a24355be5c2a91c9e5d1",
+    "sole_parent": "cf547a3d1a7d8bd2ff8fd772802a20adab36f15b",
+    "parent_tree": "aa3195f1bb443f1f8bcfd670cfe1200c1926b11c",
+    "result": "internal_advisory_review_go_validated_correction_not_implemented",
+    "review_verdict": "go",
+    "review_gate_satisfied": true,
+    "blocker_count": 0,
+    "delta": {
+      "changed_existing_paths": [
+        "docs/SESSION_HANDOFF.md"
+      ],
+      "added_paths": [
+        "gate/operator-decision-interface-reviews/reiyah.operator-decision-interface-readiness-route-activation-contract-review-1.2.6.json",
+        "gate/validation-reports/operator-decision-interface-readiness-route-activation-contract-1.2.6.json",
+        "schemas/operator-decision-interface-readiness-route-activation-contract-review-1.2.6.schema.json",
+        "schemas/operator-decision-interface-readiness-route-activation-contract-review-plan-1.2.6.schema.json",
+        "schemas/operator-decision-interface-readiness-route-activation-contract-review-report-1.2.6.schema.json",
+        "tools/gate_a_1_2_6_route_activation_review.py",
+        "tools/gate_a_1_2_6_route_activation_review.sh",
+        "validation/operator-decision-interface-readiness-route-activation-contract-review-plan-1.2.6.json"
+      ],
+      "removed_paths": [],
+      "executable_paths": [
+        "tools/gate_a_1_2_6_route_activation_review.py",
+        "tools/gate_a_1_2_6_route_activation_review.sh"
+      ],
+      "changed_path_count": 1,
+      "added_path_count": 8,
+      "removed_path_count": 0,
+      "total_delta_path_count": 9
+    },
+    "transition_aggregate_byte_size": 416230,
+    "transition_descriptor_byte_size": 1879,
+    "transition_descriptor_sha256": "sha256:d36ad675d5310022068d7276c4f947143a14a70fd31d9ece6fa6f4f3e5d4a051",
+    "immutable_report_observations": {
+      "equal_capture_count": 2,
+      "byte_size": 8596,
+      "sha256": "sha256:a59d2aac733484a7153fb68f26e16f0cc50cc6dca92b5ffe7094755d7201d7c2",
+      "exit_code": 0,
+      "stderr_empty": true,
+      "retained_as_repository_artifact": false,
+      "observation_is_independent_external_attestation": false
+    }
+  },
+  "preservation_contract": {
+    "predecessor_handoff_blob_oid": "310b5beb9fe2e95f2db3682ba9f3bce2b57c8ca6",
+    "predecessor_handoff_byte_size": 186943,
+    "predecessor_handoff_sha256": "sha256:b0b5e0e9dfee69fbb951dc5d147b25bd4bcdb894dfd4dddaf8866a0f0a0ebc9c",
+    "handoff_must_be_exact_predecessor_prefix": true,
+    "all_other_predecessor_tree_entries_must_be_identical": true,
+    "all_retained_1_2_5_bytes_must_be_identical": true,
+    "contract_and_review_artifacts_must_be_identical": true,
+    "readme_and_architecture_must_be_unchanged": true,
+    "removed_renamed_or_predecessor_mode_changed_path_allowed": false
+  },
+  "incoming_transition_contract": {
+    "transition_id": "reiyah.transition.DI126-route-activation-review-to-implementation",
+    "from_stage": "DI126-route-activation-review",
+    "to_stage": "DI126-route-activation-implementation",
+    "baseline_commit": "9bb566f99693736711fad142bd028cff77e23939",
+    "baseline_tree": "6e8a763947401f1d8b36a24355be5c2a91c9e5d1",
+    "direct_single_parent_required": true,
+    "changed_existing_paths": [
+      "docs/SESSION_HANDOFF.md"
+    ],
+    "added_paths": [
+      "docs/OPERATOR_DECISION_INTERFACE_READINESS_ROUTE_ACTIVATION_1_2_6_IMPLEMENTATION.md",
+      "fixtures/v1.2.6/operator-decision-interface-fixture-catalog.json",
+      "gate/decisions/OPERATOR_DECISION-1.2.6.template.json",
+      "schemas/composite-evaluation-1.2.6.schema.json",
+      "schemas/composite-resolution-record-1.2.6.schema.json",
+      "schemas/human-authority-verification-record-1.2.6.schema.json",
+      "schemas/human-identity-verification-record-1.2.6.schema.json",
+      "schemas/operator-decision-interface-boundary-failure-1.2.6.schema.json",
+      "schemas/operator-decision-interface-clean-closeout-replay-observation-1.2.6.schema.json",
+      "schemas/operator-decision-interface-fixture-catalog-1.2.6.schema.json",
+      "schemas/operator-decision-interface-implementation-plan-1.2.6.schema.json",
+      "schemas/operator-decision-interface-implementation-review-1.2.6.schema.json",
+      "schemas/operator-decision-interface-mapping-review-1.2.6.schema.json",
+      "schemas/operator-decision-interface-readiness-closeout-1.2.6.schema.json",
+      "schemas/operator-decision-interface-readiness-report-1.2.6.schema.json",
+      "schemas/operator-decision-interface-ready-plan-1.2.6.schema.json",
+      "schemas/operator-decision-interface-toolchain-lock-1.2.6.schema.json",
+      "schemas/operator-decision-interface-validation-report-1.2.6.schema.json",
+      "schemas/operator-decision-record-1.2.6.schema.json",
+      "tools/gate_a_1_2_6_decision_interface.py",
+      "tools/gate_a_1_2_6_decision_interface.sh",
+      "validation/operator-decision-interface-implementation-plan-1.2.6.json",
+      "validation/operator-decision-interface-toolchain-lock-1.2.6.json"
+    ],
+    "removed_paths": [],
+    "executable_paths": [
+      "tools/gate_a_1_2_6_decision_interface.py",
+      "tools/gate_a_1_2_6_decision_interface.sh"
+    ],
+    "changed_path_count": 1,
+    "added_path_count": 23,
+    "removed_path_count": 0,
+    "total_delta_path_count": 24,
+    "unknown_delta_policy": "reject",
+    "result_commit_binding_state": "deferred_to_post_commit_raw_git_observation_not_self_bound"
+  },
+  "correction_obligations": {
+    "finding_closed_count": 0,
+    "defect_count": 8,
+    "defect_ids": [
+      "DI126-LIVE-001",
+      "DI126-LIVE-002",
+      "DI126-LIVE-003",
+      "DI126-CLAIM-001",
+      "DI126-REPORT-001",
+      "DI126-CUSTODY-001",
+      "DI126-CLOSEOUT-001",
+      "DI126-Q-001"
+    ],
+    "required_capability_count": 16,
+    "required_capabilities": [
+      "byte_bound_launcher_enters_isolation_before_language_runtime",
+      "exact_raw_git_stage_resolver_for_implementation_N_P_C",
+      "registered_readiness_closeout_payload_and_q_cli_dispatch",
+      "reason_specific_pre_N_and_pre_C_dispatch_failures",
+      "R0_R1_R2_distinct_source_state_resolution_and_byte_equality",
+      "bounded_external_observation_and_capture_envelope_admission",
+      "real_scope_derived_from_route_and_exact_authorization_not_record",
+      "two_fresh_worker_complete_payload_quorum",
+      "digest_free_self_excluding_readiness_report",
+      "acyclic_closeout_handoff_marker_and_q_bindings",
+      "exact_201_20_5_7_population_separation",
+      "same_dispatcher_and_consumers_for_synthetic_nonpromotion_proof",
+      "new_self_excluding_DI126_toolchain_lock",
+      "exact_retained_core_1_0_0_binding",
+      "typed_reason_specific_boundary_failures",
+      "zero_authority_promotion_through_implementation"
+    ],
+    "capability_values_must_be_derived_from_execution": true,
+    "function_name_or_source_token_presence_counts_as_route_liveness": false
+  },
+  "route_contract": {
+    "exact_route_count": 7,
+    "routes": [
+      {
+        "route_id": "DI126-route-development-toolchain-lock",
+        "snapshot_mode": "development",
+        "render": "toolchain-lock",
+        "output": "raw",
+        "stdin_policy": "eof",
+        "consumer_id": "render_toolchain_lock_126"
+      },
+      {
+        "route_id": "DI126-route-development-implementation-report",
+        "snapshot_mode": "development",
+        "render": "implementation-report",
+        "output": "raw",
+        "stdin_policy": "eof",
+        "consumer_id": "render_implementation_report_126"
+      },
+      {
+        "route_id": "DI126-route-implementation-report",
+        "snapshot_mode": "implementation",
+        "render": "implementation-report",
+        "output": "raw",
+        "stdin_policy": "eof",
+        "consumer_id": "render_implementation_report_126"
+      },
+      {
+        "route_id": "DI126-route-readiness-report",
+        "snapshot_mode": "readiness",
+        "render": "readiness-report",
+        "output": "raw",
+        "stdin_policy": "eof",
+        "consumer_id": "render_readiness_report_126"
+      },
+      {
+        "route_id": "DI126-route-closeout-candidate",
+        "snapshot_mode": "closeout-candidate",
+        "render": "readiness-closeout",
+        "output": "raw",
+        "stdin_policy": "bounded_canonical_observation_bundle",
+        "consumer_id": "render_readiness_closeout_126"
+      },
+      {
+        "route_id": "DI126-route-clean-closeout-payload",
+        "snapshot_mode": "clean-closeout",
+        "render": "clean-closeout-replay-payload",
+        "output": "raw",
+        "stdin_policy": "eof",
+        "consumer_id": "render_clean_closeout_payload_126"
+      },
+      {
+        "route_id": "DI126-route-clean-closeout-observation",
+        "snapshot_mode": "clean-closeout",
+        "render": "clean-closeout-replay-observation",
+        "output": "raw",
+        "stdin_policy": "bounded_canonical_external_capture_envelope",
+        "consumer_id": "render_q_observation_126"
+      }
+    ],
+    "aliases_abbreviations_reordering_duplicates_terminators_and_unknown_output_rejected": true,
+    "argument_and_stdin_admission_precedes_repository_or_legacy_probe": true,
+    "missing_stage_resolution_precedes_semantic_observation_admission": true,
+    "pre_N_readiness_boundary": {
+      "route_id": "DI126-route-readiness-report",
+      "consumer_id": "render_readiness_report_126",
+      "code": "DI126R-N-MISSING",
+      "path": "/route/readiness_inputs",
+      "phase": "post_dispatch_stage_resolution",
+      "exit_code": 1,
+      "stdout_byte_size": 0
+    },
+    "pre_C_clean_payload_boundary": {
+      "route_id": "DI126-route-clean-closeout-payload",
+      "consumer_id": "render_clean_closeout_payload_126",
+      "code": "DI126R-C-MISSING",
+      "path": "/route/readiness_closeout",
+      "phase": "post_dispatch_stage_resolution",
+      "exit_code": 1,
+      "stdout_byte_size": 0
+    },
+    "pre_C_external_observation_boundary": {
+      "route_id": "DI126-route-clean-closeout-observation",
+      "consumer_id": "render_q_observation_126",
+      "code": "DI126R-C-MISSING",
+      "path": "/route/readiness_closeout",
+      "phase": "post_dispatch_stage_resolution",
+      "exit_code": 1,
+      "stdout_byte_size": 0
+    }
+  },
+  "sealed_admission_contract": {
+    "public_cli_admission": "public_real_route",
+    "implementation_report_harness_admission": "internal_synthetic_non_evidentiary",
+    "admission_seals_are_process_local_object_identities": true,
+    "public_synthetic_selector_exists": false,
+    "json_record_fixture_environment_and_stdin_can_select_admission": false,
+    "real_and_synthetic_routes_use_same_dispatch_table": true,
+    "real_and_synthetic_routes_use_same_production_consumers": true,
+    "admission_and_snapshot_provider_kind_must_match": true,
+    "synthetic_persistence_allowed": false,
+    "synthetic_readiness_promotion_allowed": false,
+    "synthetic_authority_promotion_allowed": false
+  },
+  "core_support": {
+    "core_id": "reiyah.core.gate-a@1.0.0",
+    "abi": 1,
+    "path": "tools/reiyah_gate_core_1_0_0.py",
+    "git_mode": "100644",
+    "blob_oid": "609c3dd16be1539518139754a63643c12a8ced71",
+    "byte_size": 112256,
+    "sha256": "sha256:ba257dcec605b2da59356a987ff1229bb61ba5fdffbf158ece2a420d6656225f",
+    "copy_or_readdition_allowed": false,
+    "load_policy": "launcher_descriptor_captured_exact_bytes_no_import_path_search"
+  },
+  "legacy_regression_oracle": {
+    "subject_commit": "1910afeff5ee625ab1a0295a271d4abe153e92c3",
+    "subject_tree": "f05d7ed103a8a27fcbcc5dfa2391696104fd5244",
+    "evaluator_path": "tools/gate_a_1_2_5_decision_interface.py",
+    "evaluator_blob_oid": "ec25ef80deb3d7c6a6d068ab8ff9d3d84f767754",
+    "evaluator_byte_size": 351237,
+    "evaluator_sha256": "sha256:8296cedc9457b660701171b13c7edece43e8ed294bb2441975f9b4621c6dc216",
+    "launcher_path": "tools/gate_a_1_2_5_decision_interface.sh",
+    "launcher_blob_oid": "df11fb70020b3459b5fadf251c053e43e0c57009",
+    "launcher_byte_size": 26230,
+    "launcher_sha256": "sha256:ff16764168cba25301128640783b3feae8475931617644963a4c681db33fe99f",
+    "implementation_plan_path": "validation/operator-decision-interface-implementation-plan-1.2.5.json",
+    "implementation_plan_blob_oid": "c93cf7a9649c543a7885151edf2894fcd0b6fa4c",
+    "implementation_plan_byte_size": 34041,
+    "implementation_plan_sha256": "sha256:794ecd214fcc3a8d3b6df0b450ce44ad3f036c932acc7222d4dcbb8a154c3596",
+    "toolchain_lock_path": "validation/operator-decision-interface-toolchain-lock-1.2.5.json",
+    "toolchain_lock_blob_oid": "34132af2b15a4c5b73f0664c624b47529fadee59",
+    "toolchain_lock_byte_size": 60627,
+    "toolchain_lock_sha256": "sha256:82c8941dbdd4a63945461ed239da4b6819ed4665f213297b68fab9d93d1f6652",
+    "admitted_role": "exact_historical_population_regression_oracle_only",
+    "may_supply_DI126_dispatch_readiness_closeout_Q_or_successor_semantics": false
+  },
+  "schema_and_artifact_contract": {
+    "schema_dialect": "https://json-schema.org/draft/2020-12/schema",
+    "new_schema_count": 16,
+    "new_schema_paths": [
+      "schemas/composite-evaluation-1.2.6.schema.json",
+      "schemas/composite-resolution-record-1.2.6.schema.json",
+      "schemas/human-authority-verification-record-1.2.6.schema.json",
+      "schemas/human-identity-verification-record-1.2.6.schema.json",
+      "schemas/operator-decision-interface-boundary-failure-1.2.6.schema.json",
+      "schemas/operator-decision-interface-clean-closeout-replay-observation-1.2.6.schema.json",
+      "schemas/operator-decision-interface-fixture-catalog-1.2.6.schema.json",
+      "schemas/operator-decision-interface-implementation-plan-1.2.6.schema.json",
+      "schemas/operator-decision-interface-implementation-review-1.2.6.schema.json",
+      "schemas/operator-decision-interface-mapping-review-1.2.6.schema.json",
+      "schemas/operator-decision-interface-readiness-closeout-1.2.6.schema.json",
+      "schemas/operator-decision-interface-readiness-report-1.2.6.schema.json",
+      "schemas/operator-decision-interface-ready-plan-1.2.6.schema.json",
+      "schemas/operator-decision-interface-toolchain-lock-1.2.6.schema.json",
+      "schemas/operator-decision-interface-validation-report-1.2.6.schema.json",
+      "schemas/operator-decision-record-1.2.6.schema.json"
+    ],
+    "schema_known_bad_count": 7,
+    "schema_known_bad_ids": [
+      "DI126SKB-001-remote-reference",
+      "DI126SKB-002-missing-fragment",
+      "DI126SKB-003-dynamic-reference",
+      "DI126SKB-004-nested-resource-rebase",
+      "DI126SKB-005-anchor-reference",
+      "DI126SKB-006-unknown-keyword",
+      "DI126SKB-007-scalar-fragment"
+    ],
+    "schemas_must_pass_metaschema": true,
+    "closed_local_registry_required": true,
+    "strict_duplicate_key_json_required": true,
+    "unknown_schema_properties_rejected_where_declared": true,
+    "schema_validity_alone_establishes_semantic_truth": false
+  },
+  "population_contract": {
+    "populations_must_remain_separate": true,
+    "inherited_adversary_count": 201,
+    "historical_readiness_adversary_count": 20,
+    "historical_successor_canary_count": 5,
+    "historical_schema_known_bad_count": 7,
+    "DI126_adversary_count": 72,
+    "DI126_family_count": 12,
+    "DI126_cases_per_family": 6,
+    "DI126_case_id_pattern": "^DI126A-(0[1-9]|1[0-2])-0[1-6]$",
+    "required_DI126_families": [
+      "cli_registration_and_exact_argument_grammar",
+      "bootstrap_isolation_and_executed_byte_substitution",
+      "git_administration_object_and_topology_substitution",
+      "N_P_C_stage_delta_and_parent_mutation",
+      "R0_R1_R2_source_state_and_installed_byte_mutation",
+      "worker_identity_payload_and_parent_drift",
+      "population_and_finding_evidence_laundering",
+      "report_closeout_handoff_and_q_self_reference",
+      "custody_subject_toolchain_chronology_and_payload_mutation",
+      "synthetic_to_real_scope_promotion",
+      "acceptance_science_distribution_runtime_and_gate_b_promotion",
+      "frozen_1_2_5_byte_mutation"
+    ],
+    "actual_outcomes_must_be_derived_before_expected_results_are_loaded": true,
+    "shadow_model_or_dictionary_only_mutation_allowed": false,
+    "finding_closed_count": 0
+  },
+  "synthetic_route_contract": {
+    "required": true,
+    "positive_route_spec_count": 1,
+    "positive_route_spec_id": "reiyah.fixture.di126.readiness.full-route.v1-2-6",
+    "resolver": "sealed_in_memory_content_addressed_raw_git_object_store",
+    "record_scope": "synthetic_capability_fixture_non_evidentiary",
+    "ordered_stages": [
+      "synthetic_route_activation_implementation_I",
+      "synthetic_readiness_inputs_N",
+      "synthetic_report_absent_render_R0",
+      "synthetic_post_install_reproduction_R1",
+      "synthetic_readiness_report_commit_P",
+      "synthetic_clean_report_commit_reproduction_R2",
+      "synthetic_readiness_closeout_commit_C",
+      "synthetic_external_clean_replay_Q",
+      "synthetic_successor_decision_D",
+      "synthetic_identity_verification_I",
+      "synthetic_authority_verification_A",
+      "synthetic_composite_evaluation_E",
+      "synthetic_composite_resolution_R"
+    ],
+    "report_stream_equality": "R0_equals_R1_equals_R2",
+    "same_dispatcher_and_production_consumers_as_real_route": true,
+    "synthetic_result": "synthetic_route_reaches_ready_transition_semantics_only",
+    "synthetic_stage_id": "DI126-synthetic-route-complete",
+    "real_interface_readiness_promoted": false,
+    "outer_authority_promoted": false,
+    "repository_persistence_performed": false
+  },
+  "future_transition_topology": {
+    "ordered_commit_stages": [
+      "DI126-route-activation-implementation",
+      "DI126-readiness-inputs",
+      "DI126-readiness-report",
+      "DI126-readiness-closeout"
+    ],
+    "optional_documentation_envelope_after_implementation": false,
+    "every_git_edge_direct_single_parent": true,
+    "readiness_inputs_delta": {
+      "changed_existing_paths": [],
+      "added_paths": [
+        "gate/operator-decision-interface-reviews/reiyah.operator-decision-interface-implementation-review-1.2.6.json",
+        "gate/operator-decision-interface-reviews/reiyah.operator-decision-interface-mapping-review-1.2.6.json",
+        "validation/operator-decision-interface-ready-plan-1.2.6.json"
+      ],
+      "removed_paths": [],
+      "executable_paths": []
+    },
+    "readiness_report_delta": {
+      "changed_existing_paths": [],
+      "added_paths": [
+        "gate/validation-reports/operator-decision-interface-readiness-1.2.6.json"
+      ],
+      "removed_paths": [],
+      "executable_paths": []
+    },
+    "readiness_closeout_delta": {
+      "changed_existing_paths": [
+        "docs/SESSION_HANDOFF.md"
+      ],
+      "added_paths": [
+        "gate/operator-decision-interface-closeouts/reiyah.operator-decision-interface-readiness-closeout-1.2.6.json"
+      ],
+      "removed_paths": [],
+      "executable_paths": [],
+      "handoff_append_marker": {
+        "raw_bytes": "\n<!-- reiyah:DI126-readiness-closeout-stage-handoff; append-only; Q-absent -->\n",
+        "serialization": "exact_ASCII_bytes_one_leading_LF_one_terminal_LF",
+        "byte_size": 79,
+        "sha256": "sha256:0e582084b2fcc542956c46306f86aa59795684a3586bcee194fbc70d0c5a2d80",
+        "base64": "CjwhLS0gcmVpeWFoOkRJMTI2LXJlYWRpbmVzcy1jbG9zZW91dC1zdGFnZS1oYW5kb2ZmOyBhcHBlbmQtb25seTsgUS1hYnNlbnQgLS0+Cg==",
+        "C_commit_tree_blob_or_digest_identity_asserted": false,
+        "Q_record_or_identity_asserted": false,
+        "future_identity_asserted": false
+      }
+    },
+    "external_Q_path": "gate/operator-decision-interface-observations/reiyah.operator-decision-interface-clean-closeout-replay-observation-1.2.6.json",
+    "external_Q_creates_commit": false,
+    "terminal_semantic_result": {
+      "stage_id": "DI124-ready",
+      "readiness_revision": "1.2.6",
+      "result": "interface_ready_for_separate_human_process"
+    },
+    "readiness_inputs_require_separate_explicit_authority": true
+  },
+  "validation_contract": {
+    "launcher_path": "tools/gate_a_1_2_6_decision_interface.sh",
+    "evaluator_path": "tools/gate_a_1_2_6_decision_interface.py",
+    "core_path": "tools/reiyah_gate_core_1_0_0.py",
+    "toolchain_lock_path": "validation/operator-decision-interface-toolchain-lock-1.2.6.json",
+    "implementation_report_schema_path": "schemas/operator-decision-interface-validation-report-1.2.6.schema.json",
+    "toolchain_lock_self_excluding": true,
+    "toolchain_lock_absent_render_then_exact_install_then_rerender": true,
+    "candidate_report_self_digest_allowed": false,
+    "candidate_future_commit_tree_or_blob_assertion_allowed": false,
+    "launcher_isolation_before_language_runtime": true,
+    "evaluator_source_byte_limit": 2097152,
+    "core_source_byte_limit": 1048576,
+    "closeout_observation_bundle_byte_limit": 8388608,
+    "external_capture_envelope_byte_limit": 8388608,
+    "stdout_byte_limit": 67108864,
+    "stderr_byte_limit": 1048576,
+    "whole_evaluator_timeout_seconds": 600,
+    "fresh_worker_timeout_seconds": 300,
+    "fresh_worker_count": 2,
+    "parent_capture_count": 2,
+    "complete_comparable_worker_payload_byte_equality_required": true,
+    "distinct_worker_processes_required": true,
+    "raw_git_commit_tree_blob_rehash_required": true,
+    "raw_index_and_git_administration_profile_bound": true,
+    "git_ignored_untracked_worktree_paths_must_be_absent": true,
+    "development_candidate_is_bounded_live_projection_not_commit": true,
+    "implementation_candidate_is_immutable_commit_projection": true,
+    "repository_write_allowed": false,
+    "network_used": false,
+    "two_unchanged_development_reports_must_be_byte_identical": true,
+    "two_clean_implementation_reports_must_be_byte_identical": true,
+    "all_expected_mutation_results_loaded_only_after_actuals_are_frozen": true
+  },
+  "result_contract": {
+    "successful_result": "real_route_implemented_not_ready",
+    "real_route_dispatch_implemented": true,
+    "typed_pre_N_and_pre_C_dispatch_boundaries_required": true,
+    "synthetic_full_route_required": true,
+    "real_readiness_evaluated": false,
+    "readiness_input_created": false,
+    "readiness_report_created": false,
+    "readiness_closeout_created": false,
+    "external_Q_created": false,
+    "decision_or_verification_record_created": false,
+    "finding_closed_count": 0,
+    "interface_readiness_state": "not_ready",
+    "operator_acceptance_state": "unaccepted",
+    "ga_17_state": "not_evaluated",
+    "implementation_report_is_internal_integrity_signal_only": true
+  },
+  "authority": {
+    "subject_architecture_status": "architecture_complete",
+    "route_activation_contract_state": "retained_validated_not_implemented",
+    "route_activation_review_state": "internal_advisory_go_retained",
+    "route_activation_implementation_state": "candidate_under_locked_validation",
+    "interface_readiness_state": "not_ready",
+    "operator_acceptance_state": "unaccepted",
+    "ga_17_state": "not_evaluated",
+    "independent_external_review_completed": false,
+    "human_decision_process_authorized": false,
+    "readiness_inputs_authorized": false,
+    "scientific_evidence_created": false,
+    "scientific_claim_authority": false,
+    "public_distribution_eligible": false,
+    "public_distribution_authorized": false,
+    "publication_acceptance_authorized": false,
+    "transport_verification_state": "not_evaluated",
+    "runtime_authorized": false,
+    "cloud_execution_authorized": false,
+    "private_data_ingestion_authorized": false,
+    "physical_control_authorized": false,
+    "gate_b_authorized": false,
+    "main_ref_change_authorized": false,
+    "merge_commit_authorized": false,
+    "public_push_authorized": false
+  },
+  "next_transition": {
+    "stage_id": "DI126-readiness-inputs",
+    "authorized": false,
+    "requires_separate_explicit_static_seal_instruction": true,
+    "maximum_current_result": "real_route_implemented_not_ready"
+  }
+}

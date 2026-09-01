@@ -1,0 +1,597 @@
+{
+  "schema_id": "https://schemas.reiyah.invalid/gate-a/1.2.5/operator-decision-interface-readiness-correction-contract-review.schema.json",
+  "artifact_id": "reiyah.artifact.operator-decision-interface-readiness-correction-contract-review-1.2.5",
+  "review_id": "reiyah.review.operator-decision-interface-readiness-correction-contract@1.2.5",
+  "record_kind": "operator_decision_interface_readiness_correction_contract_review",
+  "version": "1.2.5",
+  "lifecycle_status": "proposed",
+  "as_of_date": "2026-08-30",
+  "stage_id": "DI125-correction-review",
+  "repository_identity": {
+    "project": "Reiyah",
+    "canonical_root": "/Users/danielwahnich/workspace/reiyah",
+    "git_root": "/Users/danielwahnich/workspace/reiyah",
+    "configured_remote": "https://github.com/manfromnowhere143/reiyah.git",
+    "authoring_branch_context": "gate-a-1.2.5-readiness-correction-review",
+    "branch_name_is_scientific_or_acceptance_identity": false
+  },
+  "subject_contract": {
+    "stage_id": "DI125-correction-contract",
+    "commit": "ad6bd65fa23faebb002715c4a2ab2ec96f9a5429",
+    "tree": "edf45850905e29ca8b55053896ffaf802d44ae77",
+    "sole_parent": "858f394893055288db8772f758414c5c2653b1d7",
+    "parent_tree": "98012d9a66ed32b4e19d1eacfab62135ee26a83c",
+    "subject_lineage": "exact_direct_child_of_DI124_implementation",
+    "raw_commit_tree_and_blob_rehash_passed": true,
+    "subject_bytes_source": "rehash_verified_git_objects",
+    "delta": {
+      "changed_count": 1,
+      "added_count": 8,
+      "removed_count": 0,
+      "total_count": 9,
+      "executable_count": 2,
+      "exact_match": true
+    }
+  },
+  "subject_contract_bundle": {
+    "serialization_rule": "sorted_path_NUL_mode_NUL_byte_size_NUL_sha256_LF",
+    "serialization_byte_size": 1283,
+    "serialization_sha256": "sha256:1c97b49d0b684ff00e2c831f80e49c51efe7ae8d4b7af7cb6a4149e2e3e6ca3e",
+    "artifact_byte_size": 344594,
+    "path_count": 8,
+    "artifacts": [
+      {
+        "path": "docs/OPERATOR_DECISION_INTERFACE_READINESS_CORRECTION_1_2_5.md",
+        "git_mode": "100644",
+        "git_blob_oid": "6cebc35138ac16cd47d720cfe7c0cd4415815844",
+        "byte_size": 25375,
+        "sha256": "sha256:de1d7ea4b256e73974249cf3569035dac0e6832c8c9813fbb6060b91c1da887e"
+      },
+      {
+        "path": "gate/operator-decision-interface-corrections/reiyah.operator-decision-interface-readiness-correction-1.2.5.json",
+        "git_mode": "100644",
+        "git_blob_oid": "13468073dbf957aef95f1fc560a4c1d27c202788",
+        "byte_size": 20732,
+        "sha256": "sha256:651a4780cdbedf0a055cbcf70ec31eb8184fcc70e88900069627c45a560ad104"
+      },
+      {
+        "path": "schemas/operator-decision-interface-readiness-correction-1.2.5.schema.json",
+        "git_mode": "100644",
+        "git_blob_oid": "6f08a2f8b221f080f8ddda38606233d465d39bcf",
+        "byte_size": 32498,
+        "sha256": "sha256:13304da849e95b6cce3b5719684e9ba3377158ddab90a1dc061696298752c648"
+      },
+      {
+        "path": "schemas/operator-decision-interface-readiness-correction-plan-1.2.5.schema.json",
+        "git_mode": "100644",
+        "git_blob_oid": "2ebbf7920e687d00eb4f36483125d777018c6da5",
+        "byte_size": 11862,
+        "sha256": "sha256:ad0e7cd2d934872030824fa71a811dd0292cd6eebac22e5ee308d21a24a1da94"
+      },
+      {
+        "path": "schemas/operator-decision-interface-readiness-correction-validation-report-1.2.5.schema.json",
+        "git_mode": "100644",
+        "git_blob_oid": "6ff61ad1258ff8379da2ef80d1f5701875dbd1b9",
+        "byte_size": 16007,
+        "sha256": "sha256:0ef0d1e62f67ef4d9ecfdcbd1c5d8b1f582865558d6c96d194edbcc00951f109"
+      },
+      {
+        "path": "tools/gate_a_1_2_5_readiness_correction_contract.py",
+        "git_mode": "100755",
+        "git_blob_oid": "654b8a33cd23004dd3658f80ce71802bdf9f13a5",
+        "byte_size": 214306,
+        "sha256": "sha256:d80ae74ad55982e9d421351c8ddb214e310c32def2c1d4d772418b7e6ca59c99"
+      },
+      {
+        "path": "tools/gate_a_1_2_5_readiness_correction_contract.sh",
+        "git_mode": "100755",
+        "git_blob_oid": "b9c50c043914abe6b1149f0bf28afd425ec5cc9e",
+        "byte_size": 17839,
+        "sha256": "sha256:e361cb87076fb39c7093a8d2d9a24079fb6b93a4e8bdc3404da551c12da315c5"
+      },
+      {
+        "path": "validation/operator-decision-interface-readiness-correction-plan-1.2.5.json",
+        "git_mode": "100644",
+        "git_blob_oid": "c18b339bef5eaa63eb5164190e41796d031e7e15",
+        "byte_size": 5975,
+        "sha256": "sha256:ac8cbe36bbb1b37351dd0d3b40728a64b5d3181745231b0b64d90a81b3509853"
+      }
+    ]
+  },
+  "validation_observations": {
+    "development": {
+      "snapshot_mode": "development",
+      "run_count": 2,
+      "report_byte_size": 6060,
+      "report_sha256": "sha256:f6515359a924d879007dd3eda3b170f27d2d783f0a93e0073d606f3676a8d1bc",
+      "byte_identical": true,
+      "exit_code": 0,
+      "stderr_byte_size": 0,
+      "status": "pass",
+      "result": "correction_contract_validated_not_implemented"
+    },
+    "clean_contract": {
+      "snapshot_mode": "contract",
+      "run_count": 2,
+      "report_byte_size": 6062,
+      "report_sha256": "sha256:6facd66512cc5a9afb1d881f56e0f8a69de8cd59ffa41242ca0d032ca56116c1",
+      "byte_identical": true,
+      "exit_code": 0,
+      "stderr_byte_size": 0,
+      "status": "pass",
+      "result": "correction_contract_validated_not_implemented",
+      "observed_commit": "ad6bd65fa23faebb002715c4a2ab2ec96f9a5429",
+      "observed_tree": "edf45850905e29ca8b55053896ffaf802d44ae77",
+      "observed_sole_parent": "858f394893055288db8772f758414c5c2653b1d7"
+    },
+    "observation_authority": "internal_integrity_signal_not_independent_scientific_or_transport_evidence",
+    "report_bytes_committed": false,
+    "retention_state": "digest_size_and_semantic_assertions_only_report_bytes_not_repository_retained",
+    "clean_contract_regeneration_recipe": {
+      "source_commit": "ad6bd65fa23faebb002715c4a2ab2ec96f9a5429",
+      "source_tree": "edf45850905e29ca8b55053896ffaf802d44ae77",
+      "launcher_path": "tools/gate_a_1_2_5_readiness_correction_contract.sh",
+      "launcher_git_mode": "100755",
+      "launcher_git_blob_oid": "b9c50c043914abe6b1149f0bf28afd425ec5cc9e",
+      "launcher_byte_size": 17839,
+      "launcher_sha256": "sha256:e361cb87076fb39c7093a8d2d9a24079fb6b93a4e8bdc3404da551c12da315c5",
+      "argv": [
+        "tools/gate_a_1_2_5_readiness_correction_contract.sh",
+        "--snapshot-mode",
+        "contract",
+        "--output",
+        "raw"
+      ],
+      "required_preconditions": [
+        "canonical_root_exact",
+        "HEAD_equals_source_commit",
+        "index_and_worktree_clean",
+        "no_untracked_paths",
+        "repository_administration_passes_launcher_and_evaluator_checks"
+      ],
+      "expected_report_byte_size": 6062,
+      "expected_report_sha256": "sha256:6facd66512cc5a9afb1d881f56e0f8a69de8cd59ffa41242ca0d032ca56116c1",
+      "expected_exit_code": 0,
+      "expected_stderr_byte_size": 0,
+      "performed_by_review_stage": false
+    }
+  },
+  "review_requirements": {
+    "review_kind": "role_separated_read_only_internal_advisory_review",
+    "required_roles": [
+      "schema_and_contract_coherence_reviewer",
+      "security_and_authority_reviewer",
+      "transition_liveness_and_evidence_topology_reviewer"
+    ],
+    "required_review_count": 3,
+    "required_distinct_role_count": 3,
+    "all_reviews_bind_exact_subject": true,
+    "all_reviews_read_rehash_verified_git_object_bytes": true,
+    "reviewer_identity_state": "self_asserted_internal_model_roles_not_externally_verified",
+    "independent_external_review_completed": false,
+    "review_can_create_operator_acceptance": false,
+    "review_can_authorize_implementation": false,
+    "review_can_create_scientific_evidence": false,
+    "gate_a_release_validation_completed": false,
+    "exact_review_commit_must_be_revalidated_by_implementation_successor": true
+  },
+  "reviews": [
+    {
+      "review_id": "reiyah.review-observation.di125-correction-contract.schema-coherence.1",
+      "reviewer_self_identifier": "codex-agent.di125_schema_redteam",
+      "task_path": "/root/di125_schema_redteam",
+      "reviewer_kind": "model_assisted_internal_advisory",
+      "role": "schema_and_contract_coherence_reviewer",
+      "timestamp_basis": "session_date_only_not_external_time_attestation",
+      "subject_commit": "ad6bd65fa23faebb002715c4a2ab2ec96f9a5429",
+      "subject_tree": "edf45850905e29ca8b55053896ffaf802d44ae77",
+      "subject_sole_parent": "858f394893055288db8772f758414c5c2653b1d7",
+      "subject_contract_bundle_sha256": "sha256:1c97b49d0b684ff00e2c831f80e49c51efe7ae8d4b7af7cb6a4149e2e3e6ca3e",
+      "subject_artifact_count": 8,
+      "read_basis": "exact_retained_git_object_bytes_and_bound_local_integrity_observations",
+      "verdict": "pass_no_blocker",
+      "blocker_count": 0,
+      "challenge_coverage": [
+        "strict_json_and_draft_2020_12_metaschema",
+        "closed_local_reference_registry",
+        "schema_instance_and_report_validation",
+        "authority_capability_and_count_mirrors",
+        "frozen_defect_reproduction",
+        "raw_git_blob_and_bundle_rehash",
+        "diagnostic_path_totality"
+      ],
+      "rationale": "The exact retained commit, tree, parent, nine-path delta, eight contract artifacts, schema graph, prose markers, machine mirrors, and recorded clean-report observations reconcile. Three schemas are metaschema-valid, both repository instances validate, all four report byte streams observed during review validated but are not repository-retained, all 21 references remain local and resolvable, and the three frozen defects reproduce from exact bytes. The result ceiling and every authority nonclaim remain closed.",
+      "findings": [
+        {
+          "finding_id": "DI125R-SCHEMA-CLOSED",
+          "classification": "validated_strength",
+          "disposition": "retained",
+          "summary": "The closed Draft 2020-12 registry, strict duplicate-key profile, exact mirrors, and typed diagnostic paths reconcile across the frozen subject and retained integrity observations."
+        },
+        {
+          "finding_id": "DI125R-TEMP-REPORT-CUSTODY",
+          "classification": "residual_limitation",
+          "disposition": "explicit_nonclaim",
+          "summary": "Development and clean report bytes remain temporary local integrity observations rather than committed or independently transported evidence."
+        },
+        {
+          "finding_id": "DI125R-NO-IMPLEMENTATION",
+          "classification": "implementation_requirement",
+          "disposition": "required_before_readiness",
+          "summary": "The frozen correction contract is coherent but creates no successor readiness implementation or successful readiness-path evidence."
+        }
+      ],
+      "limitations": [
+        "not_independent_external_review",
+        "reviewer_did_not_execute_the_locked_launcher",
+        "temporary_reports_are_outside_the_subject_commit",
+        "executed_launcher_and_outer_supervision_not_independently_attested",
+        "mutation_cases_are_synthetic_not_live_substitutions"
+      ],
+      "repository_mutation_performed": false,
+      "network_used": false
+    },
+    {
+      "review_id": "reiyah.review-observation.di125-correction-contract.security-authority.1",
+      "reviewer_self_identifier": "codex-agent.di125_security_redteam",
+      "task_path": "/root/di125_security_redteam",
+      "reviewer_kind": "model_assisted_internal_advisory",
+      "role": "security_and_authority_reviewer",
+      "timestamp_basis": "session_date_only_not_external_time_attestation",
+      "subject_commit": "ad6bd65fa23faebb002715c4a2ab2ec96f9a5429",
+      "subject_tree": "edf45850905e29ca8b55053896ffaf802d44ae77",
+      "subject_sole_parent": "858f394893055288db8772f758414c5c2653b1d7",
+      "subject_contract_bundle_sha256": "sha256:1c97b49d0b684ff00e2c831f80e49c51efe7ae8d4b7af7cb6a4149e2e3e6ca3e",
+      "subject_artifact_count": 8,
+      "read_basis": "exact_retained_git_object_bytes_and_bound_local_integrity_observations",
+      "verdict": "pass_no_blocker",
+      "blocker_count": 0,
+      "challenge_coverage": [
+        "raw_git_subject_delta_and_projection",
+        "launcher_bootstrap_and_seatbelt_isolation",
+        "process_group_cleanup_and_output_totality",
+        "filesystem_and_git_capture_bounds",
+        "exception_and_resource_bounds",
+        "readiness_acceptance_separation",
+        "distribution_and_authority_ceilings",
+        "clean_replay_continuity",
+        "adversarial_closure"
+      ],
+      "rationale": "The exact commit, tree, parent, blobs, modes, candidate projection, and delta rehash. The launcher and evaluator preserve an empty-environment bootstrap, pre-runtime isolation, bounded descriptor and Git capture, typed exception translation, process cleanup, and contained output. Clean reports A and B are byte-identical and retain every nonclaim. No identified defect permits subject, readiness, acceptance, distribution, or runtime promotion.",
+      "findings": [
+        {
+          "finding_id": "DI125R-SECURITY-BOUNDARY",
+          "classification": "validated_strength",
+          "disposition": "retained",
+          "summary": "The frozen launcher and evaluator preserve their declared isolation, capture, exception, process, and authority boundaries under the exact closed command surface."
+        },
+        {
+          "finding_id": "DI125R-GIT-STDERR-OBSERVABILITY",
+          "classification": "implementation_requirement",
+          "disposition": "required_before_readiness",
+          "summary": "The successor should require successful Git stderr to be empty or retain its bounded digest so warnings cannot remain unobserved inside an otherwise successful command."
+        },
+        {
+          "finding_id": "DI125R-GIT-SUBPROCESS-GROUP",
+          "classification": "implementation_requirement",
+          "disposition": "required_before_readiness",
+          "summary": "The successor should give each Git command a dedicated bounded process-group cleanup boundary even though helpers and maintenance are closed in the present profile."
+        }
+      ],
+      "limitations": [
+        "not_independent_external_review",
+        "outer_launcher_execution_and_supervision_not_independently_attested",
+        "complete_frozen_1_2_4_launcher_runtime_not_replayed",
+        "mutation_cases_are_synthetic_not_live_substitutions",
+        "host_interpreter_and_seatbelt_provenance_outside_contract"
+      ],
+      "repository_mutation_performed": false,
+      "network_used": false
+    },
+    {
+      "review_id": "reiyah.review-observation.di125-correction-contract.transition-topology.1",
+      "reviewer_self_identifier": "codex-agent.di125_process_bounds",
+      "task_path": "/root/di125_process_bounds",
+      "reviewer_kind": "model_assisted_internal_advisory",
+      "role": "transition_liveness_and_evidence_topology_reviewer",
+      "timestamp_basis": "session_date_only_not_external_time_attestation",
+      "subject_commit": "ad6bd65fa23faebb002715c4a2ab2ec96f9a5429",
+      "subject_tree": "edf45850905e29ca8b55053896ffaf802d44ae77",
+      "subject_sole_parent": "858f394893055288db8772f758414c5c2653b1d7",
+      "subject_contract_bundle_sha256": "sha256:1c97b49d0b684ff00e2c831f80e49c51efe7ae8d4b7af7cb6a4149e2e3e6ca3e",
+      "subject_artifact_count": 8,
+      "read_basis": "exact_retained_git_object_bytes_and_bound_local_integrity_observations",
+      "verdict": "pass_no_blocker",
+      "blocker_count": 0,
+      "challenge_coverage": [
+        "three_frozen_defect_reproductions",
+        "acyclic_report_and_closeout_topology",
+        "finite_thirteen_role_successor_surface",
+        "successful_route_obligation",
+        "optional_documentation_envelope",
+        "explicit_static_seal_boundary",
+        "clean_closeout_replay_semantics",
+        "digest_bound_immutable_core_boundary",
+        "state_and_authority_ceilings"
+      ],
+      "rationale": "The three frozen defects are independently reproduced and the proposed replacement topology is a directed acyclic sequence. Report generation, installation, reproduction, closeout, and clean closeout replay are distinct; neither report nor closeout predicts its own final evidence. The finite thirteen-role successor obligation, successful-route proof, digest-bound immutable core, optional documentation envelope, explicit static-seal instruction, and later human-process boundary are mutually consistent.",
+      "findings": [
+        {
+          "finding_id": "DI125R-ACYCLIC-TOPOLOGY",
+          "classification": "validated_strength",
+          "disposition": "retained",
+          "summary": "The report and closeout topology removes the frozen self-reference while preserving a distinct post-commit clean replay as the only readiness-establishing condition."
+        },
+        {
+          "finding_id": "DI125R-ROLE-RESOLUTION",
+          "classification": "implementation_requirement",
+          "disposition": "required_before_readiness",
+          "summary": "All thirteen successor role categories and both new closeout operands must resolve to exact append-only artifact paths, identifiers, schemas, bytes, and consumers."
+        },
+        {
+          "finding_id": "DI125R-CLOSEOUT-OBSERVATION-CUSTODY",
+          "classification": "implementation_requirement",
+          "disposition": "required_before_readiness",
+          "summary": "The post-commit clean-closeout observation needs explicit digest, chronology, provenance, custody, and admission rules before any successor decision may consume it."
+        },
+        {
+          "finding_id": "DI125R-DOC-ENVELOPE-ALLOWLIST",
+          "classification": "implementation_requirement",
+          "disposition": "required_before_readiness",
+          "summary": "Any optional documentation envelope must enumerate exact allowed paths and cannot treat a supplied inventory as authority to modify arbitrary documentation."
+        },
+        {
+          "finding_id": "DI125R-DIGEST-BOUND-CORE",
+          "classification": "implementation_requirement",
+          "disposition": "required_before_readiness",
+          "summary": "Common canonical-JSON, raw-Git, bounded-subprocess, and exception-translation primitives should move to a versioned immutable core loaded from exact retained bytes and verified by digest."
+        }
+      ],
+      "limitations": [
+        "not_independent_external_review",
+        "reviewer_did_not_execute_the_locked_validator",
+        "successful_readiness_route_does_not_exist_at_contract_stage",
+        "candidate_launcher_execution_not_independently_attested",
+        "finite_surface_closure_is_not_global_consumer_completeness"
+      ],
+      "repository_mutation_performed": false,
+      "network_used": false
+    }
+  ],
+  "aggregate_review_result": {
+    "state": "recorded_role_separated_internal_advisory_no_blocker_pending_successor_validation",
+    "review_count": 3,
+    "distinct_role_count": 3,
+    "all_required_roles_present_exactly_once": true,
+    "all_reviews_bind_same_exact_subject_and_bundle": true,
+    "all_verdicts": "pass_no_blocker",
+    "total_blocker_count": 0,
+    "review_restart_required_on_subject_change": true,
+    "independent_external_review_completed": false,
+    "review_establishes_independence": false,
+    "review_confers_operator_acceptance": false,
+    "review_authorizes_implementation": false,
+    "review_creates_scientific_evidence": false,
+    "gate_a_release_validation_completed": false,
+    "successor_revalidation_required": true
+  },
+  "implementation_obligations": [
+    {
+      "obligation_id": "DI125-IMP-001-versioned-executable-route",
+      "state": "open_required_before_readiness",
+      "description": "Create a new append-only 1.2.5 evaluator and byte-bound launcher that enters isolation before the language runtime; no frozen 1.2.4 byte may change or be relabelled.",
+      "source_capability_ids": [
+        "byte_bound_launcher_enters_isolation_before_language_runtime"
+      ],
+      "source_finding_ids": []
+    },
+    {
+      "obligation_id": "DI125-IMP-002-successful-full-route",
+      "state": "open_required_before_readiness",
+      "description": "Exercise the complete successful synthetic inputs-to-report-to-closeout-to-clean-replay route, all six known-good witnesses, all 201 adversaries, the exact 10-positive and 31-negative finding join, and readiness-specific liveness and authority adversaries.",
+      "source_capability_ids": [
+        "six_known_good_witness_replay",
+        "exact_77_plus_124_equals_201_adversary_replay",
+        "exact_10_positive_and_31_negative_finding_evidence_join",
+        "readiness_specific_liveness_and_authority_adversaries"
+      ],
+      "source_finding_ids": [
+        "DI125R-NO-IMPLEMENTATION"
+      ]
+    },
+    {
+      "obligation_id": "DI125-IMP-003-acyclic-report-closeout",
+      "state": "open_required_before_readiness",
+      "description": "Keep report bytes digest-free and keep the closeout from embedding or asserting the outcome of its own post-commit replay.",
+      "source_capability_ids": [],
+      "source_finding_ids": []
+    },
+    {
+      "obligation_id": "DI125-IMP-004-exact-inherited-counts",
+      "state": "open_required_before_readiness",
+      "description": "Rehash the exact inherited DI124 28-path bundle, independently reconstruct the ordered 77-row mapping including RGA-020, and bind exactly 77 remove-one plus 124 named adversaries rather than a permissive minimum.",
+      "source_capability_ids": [
+        "exact_DI124_28_path_bundle_binding",
+        "independent_77_row_mapping_reconstruction"
+      ],
+      "source_finding_ids": []
+    },
+    {
+      "obligation_id": "DI125-IMP-005-thirteen-role-successor-family",
+      "state": "open_required_before_readiness",
+      "description": "Resolve the finite decision, verification, composite, fixture, registry, and route family across all thirteen successor roles and both new closeout operands to exact versioned paths, identifiers, schemas, bindings, and consumers.",
+      "source_capability_ids": [
+        "successor_finite_decision_verification_composite_fixture_registry_and_route_family_binds_closeout_and_clean_replay"
+      ],
+      "source_finding_ids": [
+        "DI125R-ROLE-RESOLUTION"
+      ]
+    },
+    {
+      "obligation_id": "DI125-IMP-006-typed-exception-translation",
+      "state": "open_required_before_readiness",
+      "description": "Translate every inherited or foreign exception into a reason-specific deterministic diagnostic with a nonempty source path.",
+      "source_capability_ids": [
+        "typed_translation_of_inherited_and_foreign_exceptions"
+      ],
+      "source_finding_ids": []
+    },
+    {
+      "obligation_id": "DI125-IMP-007-closed-schema-and-json-semantics",
+      "state": "open_required_before_readiness",
+      "description": "Retain a closed local schema registry, strict duplicate-key parsing, exact dynamic-reference rejection, and order-independent JSON object semantics.",
+      "source_capability_ids": [
+        "closed_local_schema_registry"
+      ],
+      "source_finding_ids": []
+    },
+    {
+      "obligation_id": "DI125-IMP-008-digest-bound-frozen-core",
+      "state": "open_required_before_readiness",
+      "description": "Extract canonical-JSON, raw-Git commit-tree-blob rehash, four-role capture quorum, inherited-evaluator loading, bounded-subprocess, Git-stderr observation, dedicated Git-process-group cleanup, and exception primitives into an append-only versioned core loaded from exact retained bytes and digest.",
+      "source_capability_ids": [
+        "raw_git_commit_tree_blob_rehash",
+        "four_role_parent_worker_capture_quorum",
+        "inherited_evaluator_loaded_from_exact_raw_git_blob_not_live_path"
+      ],
+      "source_finding_ids": [
+        "DI125R-GIT-STDERR-OBSERVABILITY",
+        "DI125R-GIT-SUBPROCESS-GROUP",
+        "DI125R-DIGEST-BOUND-CORE"
+      ]
+    },
+    {
+      "obligation_id": "DI125-IMP-009-post-install-reproduction",
+      "state": "open_required_before_readiness",
+      "description": "Require absent render, post-install reproduction A, and clean report-commit reproduction B to emit identical self-excluding report bytes.",
+      "source_capability_ids": [
+        "absent_install_and_two_post_install_report_byte_comparison"
+      ],
+      "source_finding_ids": []
+    },
+    {
+      "obligation_id": "DI125-IMP-010-clean-closeout-replay",
+      "state": "open_required_before_readiness",
+      "description": "Give the locked closeout consumer explicit custody, digest, chronology, provenance, and admission rules for the retained report and both reproductions; only that consumer after clean immutable post-commit replay may emit DI124-ready revision 1.2.5 without another commit.",
+      "source_capability_ids": [
+        "locked_closeout_consumer_validates_retained_report_and_two_reproductions",
+        "closeout_consumer_alone_emits_semantic_DI124_ready_revision_1_2_5",
+        "clean_immutable_closeout_replay_required_before_semantic_readiness"
+      ],
+      "source_finding_ids": [
+        "DI125R-CLOSEOUT-OBSERVATION-CUSTODY"
+      ]
+    },
+    {
+      "obligation_id": "DI125-IMP-011-optional-documentation-envelope",
+      "state": "open_required_before_readiness",
+      "description": "If used, constrain the optional documentation commit to an exact path allowlist, exact topology, unchanged implementation bytes, and no authority promotion.",
+      "source_capability_ids": [],
+      "source_finding_ids": [
+        "DI125R-DOC-ENVELOPE-ALLOWLIST"
+      ]
+    },
+    {
+      "obligation_id": "DI125-IMP-012-explicit-static-seal-authority",
+      "state": "open_required_before_readiness",
+      "description": "Stop before readiness inputs until a separate explicit DI124-ready static-seal instruction names readiness revision 1.2.5.",
+      "source_capability_ids": [],
+      "source_finding_ids": []
+    },
+    {
+      "obligation_id": "DI125-IMP-013-no-authority-promotion",
+      "state": "open_required_before_readiness",
+      "description": "Preserve not-ready, unaccepted, no-science, no-distribution, no-runtime, and no-Gate-B ceilings throughout implementation.",
+      "source_capability_ids": [],
+      "source_finding_ids": []
+    }
+  ],
+  "coverage_reconciliation": {
+    "required_capability_count": 17,
+    "covered_capability_count": 17,
+    "each_required_capability_covered_exactly_once": true,
+    "capability_to_obligation": [
+      { "capability_id": "byte_bound_launcher_enters_isolation_before_language_runtime", "obligation_id": "DI125-IMP-001-versioned-executable-route" },
+      { "capability_id": "raw_git_commit_tree_blob_rehash", "obligation_id": "DI125-IMP-008-digest-bound-frozen-core" },
+      { "capability_id": "exact_DI124_28_path_bundle_binding", "obligation_id": "DI125-IMP-004-exact-inherited-counts" },
+      { "capability_id": "independent_77_row_mapping_reconstruction", "obligation_id": "DI125-IMP-004-exact-inherited-counts" },
+      { "capability_id": "closed_local_schema_registry", "obligation_id": "DI125-IMP-007-closed-schema-and-json-semantics" },
+      { "capability_id": "six_known_good_witness_replay", "obligation_id": "DI125-IMP-002-successful-full-route" },
+      { "capability_id": "exact_77_plus_124_equals_201_adversary_replay", "obligation_id": "DI125-IMP-002-successful-full-route" },
+      { "capability_id": "exact_10_positive_and_31_negative_finding_evidence_join", "obligation_id": "DI125-IMP-002-successful-full-route" },
+      { "capability_id": "four_role_parent_worker_capture_quorum", "obligation_id": "DI125-IMP-008-digest-bound-frozen-core" },
+      { "capability_id": "absent_install_and_two_post_install_report_byte_comparison", "obligation_id": "DI125-IMP-009-post-install-reproduction" },
+      { "capability_id": "readiness_specific_liveness_and_authority_adversaries", "obligation_id": "DI125-IMP-002-successful-full-route" },
+      { "capability_id": "inherited_evaluator_loaded_from_exact_raw_git_blob_not_live_path", "obligation_id": "DI125-IMP-008-digest-bound-frozen-core" },
+      { "capability_id": "typed_translation_of_inherited_and_foreign_exceptions", "obligation_id": "DI125-IMP-006-typed-exception-translation" },
+      { "capability_id": "locked_closeout_consumer_validates_retained_report_and_two_reproductions", "obligation_id": "DI125-IMP-010-clean-closeout-replay" },
+      { "capability_id": "closeout_consumer_alone_emits_semantic_DI124_ready_revision_1_2_5", "obligation_id": "DI125-IMP-010-clean-closeout-replay" },
+      { "capability_id": "clean_immutable_closeout_replay_required_before_semantic_readiness", "obligation_id": "DI125-IMP-010-clean-closeout-replay" },
+      { "capability_id": "successor_finite_decision_verification_composite_fixture_registry_and_route_family_binds_closeout_and_clean_replay", "obligation_id": "DI125-IMP-005-thirteen-role-successor-family" }
+    ],
+    "required_finding_count": 7,
+    "covered_finding_count": 7,
+    "each_required_finding_covered_exactly_once": true,
+    "finding_to_obligation": [
+      { "finding_id": "DI125R-NO-IMPLEMENTATION", "obligation_id": "DI125-IMP-002-successful-full-route" },
+      { "finding_id": "DI125R-GIT-STDERR-OBSERVABILITY", "obligation_id": "DI125-IMP-008-digest-bound-frozen-core" },
+      { "finding_id": "DI125R-GIT-SUBPROCESS-GROUP", "obligation_id": "DI125-IMP-008-digest-bound-frozen-core" },
+      { "finding_id": "DI125R-ROLE-RESOLUTION", "obligation_id": "DI125-IMP-005-thirteen-role-successor-family" },
+      { "finding_id": "DI125R-CLOSEOUT-OBSERVATION-CUSTODY", "obligation_id": "DI125-IMP-010-clean-closeout-replay" },
+      { "finding_id": "DI125R-DOC-ENVELOPE-ALLOWLIST", "obligation_id": "DI125-IMP-011-optional-documentation-envelope" },
+      { "finding_id": "DI125R-DIGEST-BOUND-CORE", "obligation_id": "DI125-IMP-008-digest-bound-frozen-core" }
+    ]
+  },
+  "authority": {
+    "subject_architecture_status": "architecture_complete",
+    "correction_contract_review_state": "recorded_internal_advisory_no_blocker_pending_successor_validation",
+    "correction_implementation_state": "not_implemented",
+    "interface_readiness_state": "not_ready",
+    "operator_acceptance_state": "unaccepted",
+    "ga_17_state": "not_evaluated",
+    "independent_external_review_completed": false,
+    "scientific_evidence_created": false,
+    "scientific_claim_authority": false,
+    "public_distribution_eligible": false,
+    "public_distribution_authorized": false,
+    "publication_acceptance_authorized": false,
+    "transport_verification_state": "not_evaluated",
+    "runtime_authorized": false,
+    "cloud_execution_authorized": false,
+    "private_data_ingestion_authorized": false,
+    "physical_control_authorized": false,
+    "gate_b_authorized": false,
+    "human_decision_process_authorized": false,
+    "review_confers_implementation_authority": false
+  },
+  "next_transition": {
+    "stage_id": "DI125-correction-implementation",
+    "authorized_by_review": false,
+    "permitted_under_current_explicit_operator_instruction": true,
+    "requires_new_separate_explicit_operator_instruction": false,
+    "authority_basis": "live_session_operator_continuation_instruction_2026_08_30",
+    "authority_is_nontransferable": true,
+    "authority_scope": "DI125-correction-implementation-only",
+    "authorizes_readiness_inputs": false,
+    "authorizes_main_ref_change": false,
+    "authorizes_public_push": false,
+    "required_subject": "exact_review_commit_tree_parent_delta_and_immutable_contract_subject",
+    "maximum_result": "corrected_implementation_not_ready"
+  },
+  "nonclaims": [
+    "independent_external_review_not_completed",
+    "review_checkpoint_not_locked_release_validated",
+    "exact_review_commit_requires_successor_revalidation",
+    "correction_implementation_not_created",
+    "readiness_not_created",
+    "operator_decision_not_created",
+    "operator_acceptance_not_created",
+    "GA_17_not_evaluated",
+    "scientific_evidence_not_created",
+    "public_distribution_not_authorized",
+    "review_confers_no_commit_merge_or_push_authority",
+    "merge_commit_not_admitted",
+    "public_push_requires_exact_PD10_event_authority",
+    "runtime_cloud_private_data_physical_control_and_Gate_B_not_authorized"
+  ]
+}

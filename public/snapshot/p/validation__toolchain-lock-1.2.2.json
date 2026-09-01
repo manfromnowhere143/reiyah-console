@@ -1,0 +1,149 @@
+{
+  "schema_id": "https://schemas.reiyah.invalid/gate-a/1.2.2/toolchain-lock.schema.json",
+  "artifact_id": "reiyah.artifact.toolchain-lock-1.2.2",
+  "version": "1.2.2",
+  "runtime": {
+    "implementation": "cpython",
+    "version": "3.14.2",
+    "executable": "/opt/homebrew/bin/python3.14"
+  },
+  "platform": {
+    "system": "Darwin",
+    "machine": "arm64",
+    "kernel_release": "23.4.0",
+    "kernel_version": "Darwin Kernel Version 23.4.0: Wed Feb 21 21:44:43 PST 2024; root:xnu-10063.101.15~2/RELEASE_ARM64_T6000",
+    "product_version": "14.4",
+    "product_build_version": "23E214"
+  },
+  "isolation": {
+    "python_flags": ["-I", "-S", "-B"],
+    "network_policy": "denied_before_python_start",
+    "filesystem_write_policy": "denied_before_python_start_except_dev_null_data",
+    "seatbelt_profile_sha256": "38b55e492f288ac0c410d68a4420f0242d21020c45be6addb13ac068e9ba3313",
+    "denied_operations": [
+      "network-bind",
+      "network-outbound",
+      "file-write-create",
+      "file-write-data",
+      "file-write-mode",
+      "file-write-unlink",
+      "file-write-xattr"
+    ]
+  },
+  "stdlib": {
+    "root": "/opt/homebrew/Cellar/python@3.14/3.14.2_1/Frameworks/Python.framework/Versions/3.14/lib/python3.14",
+    "excluded_subtrees": ["config-3.14-darwin", "site-packages"],
+    "file_count": 2889,
+    "tree_sha256": "6c16d67e7b053e4a26cf18c518b5d726ac7031bc4688208320daf57c41c2f491",
+    "framework": {
+      "path": "/opt/homebrew/Cellar/python@3.14/3.14.2_1/Frameworks/Python.framework/Versions/3.14/Python",
+      "resolved_path": "/opt/homebrew/Cellar/python@3.14/3.14.2_1/Frameworks/Python.framework/Versions/3.14/Python",
+      "sha256": "19e926471e468a71c8d0c165af01b53dd08dcc590bcae7eff666ba200dc6a48f",
+      "byte_size": 5454960
+    }
+  },
+  "executables": [
+    {
+      "name": "env",
+      "path": "/usr/bin/env",
+      "resolved_path": "/usr/bin/env",
+      "sha256": "fe531da7d583d35e73ecf2a17aedf8ae4b2ff883de91b20fff5ad79dd7e1c723",
+      "byte_size": 102336
+    },
+    {
+      "name": "git",
+      "path": "/usr/bin/git",
+      "resolved_path": "/usr/bin/git",
+      "sha256": "878004e85c866251cb3941ad57c0e21e4e361b026e139c24eb9a170c46ec8e81",
+      "byte_size": 119008
+    },
+    {
+      "name": "python",
+      "path": "/opt/homebrew/bin/python3.14",
+      "resolved_path": "/opt/homebrew/Cellar/python@3.14/3.14.2_1/Frameworks/Python.framework/Versions/3.14/bin/python3.14",
+      "sha256": "3b6b69c61fd3765ab911d701cd17293b4a9154a0cb4973b546f05847f9a164c6",
+      "byte_size": 52640
+    },
+    {
+      "name": "sandbox_exec",
+      "path": "/usr/bin/sandbox-exec",
+      "resolved_path": "/usr/bin/sandbox-exec",
+      "sha256": "569aa2e95952f1a355c46f3de02574bc4a90b9d21ec4c3944001f611935ee5ad",
+      "byte_size": 118944
+    },
+    {
+      "name": "shell",
+      "path": "/bin/sh",
+      "resolved_path": "/bin/sh",
+      "sha256": "75fab21b84ad712398981e76b53721a6db46eb3cc39e85e0abac1bff01b30d3b",
+      "byte_size": 101232
+    }
+  ],
+  "inherited_lock": {
+    "path": "validation/toolchain-lock-1.2.1.json",
+    "sha256": "sha256:51dea8e6d5743f7da66173d9f1ed2694931343cb4ba4f7d20f2f756b26f84609",
+    "byte_size": 2423
+  },
+  "repository_bindings": [
+    {
+      "path": "tools/gate_a_1_2_2.sh",
+      "sha256": "sha256:1f531103779e90c8b93da34664bf8c9f82abac3652d170f25bb5204a13b27759",
+      "byte_size": 938
+    },
+    {
+      "path": "tools/gate_a_1_2_2.py",
+      "sha256": "sha256:e74cc1799e595a33aad16c165a6e5ac7ce0d44a90b2b66db7a1c0e51928fa8e3",
+      "byte_size": 204039
+    },
+    {
+      "path": "validation/validation-plan.json",
+      "sha256": "sha256:cb98a455da3e8d335cf24c34aceda68d4e5350285215a45542a588cdf393ff55",
+      "byte_size": 12435
+    },
+    {
+      "path": "schemas/validation-plan-1.2.2.schema.json",
+      "sha256": "sha256:f130fe63dba6a4d04c70e9475bf80a1ed519177c172781fccb135bec0dc50c22",
+      "byte_size": 17566
+    },
+    {
+      "path": "schemas/validation-report-1.2.2.schema.json",
+      "sha256": "sha256:216744102cffc40ff358354d4debe443f5dd95fa1761275931529d8efca8ce76",
+      "byte_size": 36076
+    },
+    {
+      "path": "schemas/toolchain-lock-1.2.2.schema.json",
+      "sha256": "sha256:d1a38422a2ff49b0b9040c6c53bb24d29fe8152a30c8df78bec0f920d6d933aa",
+      "byte_size": 7956
+    },
+    {
+      "path": "schemas/historical-packet-recovery-1.2.2.schema.json",
+      "sha256": "sha256:f087865d297916d13ab7255504b2b7d66496f053a64d80347613f89500c5c55c",
+      "byte_size": 8864
+    },
+    {
+      "path": "schemas/dependence-and-inference-contract-1.2.2.schema.json",
+      "sha256": "sha256:8946dd882ff2f60a1d54666a3a2739843eb12cc860ab74db1966fb03d64a9ce3",
+      "byte_size": 44604
+    },
+    {
+      "path": "schemas/public-distribution-snapshot-1.2.2.schema.json",
+      "sha256": "sha256:74849ed97a9e6241c4a8ac77556d953dbebd31ff4451a4cb4168a1fd7980a462",
+      "byte_size": 43139
+    },
+    {
+      "path": "fixtures/v1.2.2/dependence-fixture-catalog.json",
+      "sha256": "sha256:e556118a9d16d5ae51376278e8211753babaac0f5c2bc6c8b1a444292592ac0e",
+      "byte_size": 17440
+    },
+    {
+      "path": "fixtures/v1.2.2/distribution-fixture-catalog.json",
+      "sha256": "sha256:1f7e4e498472076db4542cff3b3343be147fe5b29c05b9c9317b217fc170d22c",
+      "byte_size": 16443
+    }
+  ],
+  "guarantee_boundaries": {
+    "covered": "Exact declared launcher, validator, plan, schema, fixture-catalog, executable, Python framework, and standard-library bytes on the named host; the launcher enters Seatbelt before CPython starts; concrete write, bind, and outbound probes must be denied.",
+    "conditional": "Isolation remains conditional on the exact macOS build, kernel, sandbox-exec and dyld-shared-cache Seatbelt implementation, shell, env, Git, Python, filesystem, and uncompromised operating system; dynamic libraries in the shared cache are outside individual file-digest closure.",
+    "externally_verified": "Nothing in this offline development replay independently proves GitHub transport, publisher assertions, operator acceptance, scientific validity, safety, runtime readiness, publication eligibility, or its own executable identity before first instruction."
+  }
+}

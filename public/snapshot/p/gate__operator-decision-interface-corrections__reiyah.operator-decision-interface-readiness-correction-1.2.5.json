@@ -1,0 +1,438 @@
+{
+  "schema_id": "https://schemas.reiyah.invalid/gate-a/1.2.5/operator-decision-interface-readiness-correction.schema.json",
+  "artifact_id": "reiyah.artifact.operator-decision-interface-readiness-correction-1.2.5",
+  "contract_id": "reiyah.contract.operator-decision-interface-readiness-correction@1.2.5",
+  "record_kind": "operator_decision_interface_readiness_correction",
+  "version": "1.2.5",
+  "lifecycle_status": "proposed",
+  "as_of_date": "2026-08-30",
+  "stage_id": "DI125-correction-contract",
+  "normative_prose_binding": {
+    "path": "docs/OPERATOR_DECISION_INTERFACE_READINESS_CORRECTION_1_2_5.md",
+    "git_mode": "100644",
+    "byte_size": 25375,
+    "sha256": "sha256:de1d7ea4b256e73974249cf3569035dac0e6832c8c9813fbb6060b91c1da887e"
+  },
+  "subject": {
+    "stage_id": "DI124-implementation",
+    "commit": "858f394893055288db8772f758414c5c2653b1d7",
+    "tree": "98012d9a66ed32b4e19d1eacfab62135ee26a83c",
+    "sole_parent": "148ed1a329bd14681bb35b0e7142c4772783df6d",
+    "parent_tree": "5e2755c965289331b16e845d077ca7fbd1b538e1",
+    "result_state": "implemented_not_ready",
+    "frozen_bytes_may_change": false
+  },
+  "defect_evidence": [
+    {
+      "finding_id": "DI125-LIVE-001",
+      "kind": "transition_liveness_contradiction",
+      "source": {
+        "path": "validation/operator-decision-interface-implementation-plan-1.2.4.json",
+        "git_mode": "100644",
+        "blob_oid": "ee674dfe89a0bc8ff9e379395ff2b3fc824fece4",
+        "byte_size": 16089,
+        "sha256": "sha256:ba74c3185d8b968759520e10a42bf7645e583d7997e66ecf757ae06eb04595e1"
+      },
+      "observations": [
+        "DI124-ready permits no executable path",
+        "DI124-ready requires two fresh locked readiness validations"
+      ],
+      "conflicting_source": {
+        "path": "tools/gate_a_1_2_4_decision_interface.py",
+        "git_mode": "100755",
+        "blob_oid": "49da73810c32880fa1c1bcd36543ffb7bc4f763d",
+        "byte_size": 341809,
+        "sha256": "sha256:b9f4febdc7ac19a020c143cafcd8604b6b6da3efda6a03a48a8e6982a8eedeee"
+      },
+      "conflicting_observations": [
+        "readiness_mode_implemented is false",
+        "every readiness or readiness-report invocation is rejected before plan evaluation"
+      ],
+      "conclusion": "the frozen 1.2.4 evaluator route cannot realize the declared record-only DI124-ready transition"
+    },
+    {
+      "finding_id": "DI125-COUNT-001",
+      "kind": "readiness_adversary_cardinality_underconstraint",
+      "source": {
+        "path": "schemas/operator-decision-interface-readiness-report-1.2.4.schema.json",
+        "git_mode": "100644",
+        "blob_oid": "60a0264b9ac398dc46268797f6ff2159125e2313",
+        "byte_size": 16667,
+        "sha256": "sha256:81e822a8cac45972688fd6b8dea2b94acbec199bb436f974cde7c4b82d78388a"
+      },
+      "observations": [
+        "required_count permits every integer greater than or equal to 78",
+        "rejected_count permits every integer greater than or equal to 78"
+      ],
+      "conflicting_source": {
+        "path": "validation/operator-decision-interface-implementation-plan-1.2.4.json",
+        "git_mode": "100644",
+        "blob_oid": "ee674dfe89a0bc8ff9e379395ff2b3fc824fece4",
+        "byte_size": 16089,
+        "sha256": "sha256:ba74c3185d8b968759520e10a42bf7645e583d7997e66ecf757ae06eb04595e1"
+      },
+      "conflicting_observations": [
+        "risk_remove_one_adversary_count is exactly 77",
+        "named_adversary_count is exactly 124",
+        "total_catalog_adversary_count is exactly 201"
+      ],
+      "conclusion": "the frozen readiness schema does not exact-bind required_count and rejected_count to the inherited total of 201"
+    },
+    {
+      "finding_id": "DI125-CYCLE-001",
+      "kind": "readiness_report_self_reference",
+      "source": {
+        "path": "schemas/operator-decision-interface-readiness-report-1.2.4.schema.json",
+        "git_mode": "100644",
+        "blob_oid": "60a0264b9ac398dc46268797f6ff2159125e2313",
+        "byte_size": 16667,
+        "sha256": "sha256:81e822a8cac45972688fd6b8dea2b94acbec199bb436f974cde7c4b82d78388a"
+      },
+      "observations": [
+        "each in-report validation observation requires report_byte_size",
+        "each in-report validation observation requires report_sha256"
+      ],
+      "conflicting_source": {
+        "path": "schemas/operator-decision-interface-ready-plan-1.2.4.schema.json",
+        "git_mode": "100644",
+        "blob_oid": "ff50f04fead755bc08462646d5573d1c649d1571",
+        "byte_size": 13791,
+        "sha256": "sha256:a1df1532216eb6fb512161188926c34c4b2b90d951961405c014775dda71250c"
+      },
+      "conflicting_observations": [
+        "readiness_report_can_hash_itself is false"
+      ],
+      "conclusion": "the frozen report observation requirements and frozen no-self-hash result contract are inconsistent under the intended final-report-byte semantics"
+    }
+  ],
+  "exact_inherited_population": {
+    "known_good_witness_count": 6,
+    "risk_remove_one_adversary_count": 77,
+    "named_adversary_count": 124,
+    "total_catalog_adversary_count": 201,
+    "positive_production_check_count": 10,
+    "finding_negative_requirement_count": 31,
+    "required_finding_count": 10,
+    "required_mapping_member": "RGA-020",
+    "capture_roles": [
+      "parent_pre",
+      "worker_alpha",
+      "worker_beta",
+      "parent_post"
+    ]
+  },
+  "compatibility_evidence": {
+    "source": {
+      "path": "schemas/operator-decision-record-1.2.4.schema.json",
+      "git_mode": "100644",
+      "blob_oid": "7d024e067ae1084d5cc824dc6a82e1f70db46a10",
+      "byte_size": 128890,
+      "sha256": "sha256:9ac298ea0244308d09133dbbaee5cfe861f4b109b660b5569c8e979f5bef3e95"
+    },
+    "interface_release_id": "reiyah.operator-decision-interface@1.2.4",
+    "required_semantic_stage_id": "DI124-ready",
+    "readiness_revision_location": "successor_readiness_closeout_and_successor_decision_binding",
+    "frozen_observation_basis": "exact_locked_readiness_report_and_raw_git_topology",
+    "frozen_required_operands": [
+      "decision_record_schema",
+      "invalid_decision_template",
+      "interface_manifest",
+      "interface_plan",
+      "implementation_plan",
+      "readiness_report",
+      "launcher",
+      "evaluator",
+      "toolchain_lock",
+      "fixture_catalog",
+      "inventory_ruleset",
+      "inventory_mapping"
+    ],
+    "frozen_binding_includes_readiness_closeout": false,
+    "frozen_dependent_schema_paths": [
+      "schemas/operator-decision-record-1.2.4.schema.json",
+      "schemas/human-identity-verification-record-1.2.4.schema.json",
+      "schemas/human-authority-verification-record-1.2.4.schema.json",
+      "schemas/composite-evaluation-1.2.4.schema.json",
+      "schemas/composite-resolution-record-1.2.4.schema.json"
+    ],
+    "frozen_dependent_schema_bindings": [
+      {"path":"schemas/operator-decision-record-1.2.4.schema.json","git_mode":"100644","blob_oid":"7d024e067ae1084d5cc824dc6a82e1f70db46a10","byte_size":128890,"sha256":"sha256:9ac298ea0244308d09133dbbaee5cfe861f4b109b660b5569c8e979f5bef3e95"},
+      {"path":"schemas/human-identity-verification-record-1.2.4.schema.json","git_mode":"100644","blob_oid":"6c518b0dce87c6dc70f3cdfa9269a97c2d2b8ce5","byte_size":39451,"sha256":"sha256:43c7a28872896691202096e5a675a51c491d4457a0efa23c296a704dc842fb47"},
+      {"path":"schemas/human-authority-verification-record-1.2.4.schema.json","git_mode":"100644","blob_oid":"1c26fc0dfdd9599dfc68be722e0da2a4dcd50bb3","byte_size":45711,"sha256":"sha256:47ab19124cbb2af9c934b1b45b616faf7fb7f136aa532526172977fc3e17d708"},
+      {"path":"schemas/composite-evaluation-1.2.4.schema.json","git_mode":"100644","blob_oid":"18e0e0f85d7bcdb5fe11858354600d9ac6063fc4","byte_size":131487,"sha256":"sha256:10bedc2e7704ec9c97b61c6b62879914b0734a8f59844d0dd38306f421d9aacf"},
+      {"path":"schemas/composite-resolution-record-1.2.4.schema.json","git_mode":"100644","blob_oid":"6d3a5ab42d2ad92df35ca3e95445ab8b1c0dde09","byte_size":29181,"sha256":"sha256:fa0748a2182b72877ffe3707bca6dcc62f1f5b432f652673f2490069ee66a535"}
+    ],
+    "frozen_ready_binding_token_paths": [
+      "schemas/operator-decision-record-1.2.4.schema.json",
+      "schemas/human-identity-verification-record-1.2.4.schema.json",
+      "schemas/human-authority-verification-record-1.2.4.schema.json",
+      "schemas/composite-evaluation-1.2.4.schema.json",
+      "schemas/composite-resolution-record-1.2.4.schema.json",
+      "schemas/operator-decision-interface-fixture-catalog-1.2.4.schema.json",
+      "fixtures/v1.2.4/operator-decision-interface-fixture-catalog.json",
+      "gate/decisions/OPERATOR_DECISION-1.2.4.template.json",
+      "tools/gate_a_1_2_4_decision_interface.py"
+    ],
+    "frozen_direct_reference_paths": [
+      "schemas/operator-decision-record-1.2.4.schema.json",
+      "schemas/human-identity-verification-record-1.2.4.schema.json",
+      "schemas/human-authority-verification-record-1.2.4.schema.json",
+      "schemas/composite-evaluation-1.2.4.schema.json",
+      "schemas/composite-resolution-record-1.2.4.schema.json",
+      "schemas/operator-decision-interface-fixture-catalog-1.2.4.schema.json",
+      "fixtures/v1.2.4/operator-decision-interface-fixture-catalog.json",
+      "gate/decisions/OPERATOR_DECISION-1.2.4.template.json",
+      "tools/gate_a_1_2_4_decision_interface.py",
+      "schemas/operator-decision-interface-implementation-plan-1.2.4.schema.json",
+      "schemas/operator-decision-interface-toolchain-lock-1.2.4.schema.json",
+      "schemas/operator-decision-interface-validation-report-1.2.4.schema.json",
+      "validation/operator-decision-interface-implementation-plan-1.2.4.json",
+      "validation/operator-decision-interface-toolchain-lock-1.2.4.json"
+    ],
+    "frozen_direct_reference_binding_count": 14,
+    "frozen_direct_reference_bindings_sha256": "sha256:c03820ec63b995e2a62073d32e1bcd79bb824aaee0cb6d1915cf2869eadfb4bf",
+    "frozen_indirect_execution_route_bindings": [
+      {"path":"tools/gate_a_1_2_4_decision_interface.sh","git_mode":"100755","blob_oid":"bc67b2bd13757bba1b03f9d7044e5abe1fb8d85b","byte_size":6315,"sha256":"sha256:2ccec307bcd508781272355a1e3b0f7dd6984e856464668a6540a570f66b06f7"}
+    ],
+    "successor_observation_basis": "exact_locked_readiness_report_closeout_clean_replay_and_raw_git_topology",
+    "successor_required_additional_operands": [
+      "readiness_closeout",
+      "clean_closeout_replay_observation"
+    ],
+    "successor_decision_binding_schema_required": true,
+    "successor_decision_consumer_required": true,
+    "successor_dependent_family_required": [
+      "decision_record_schema_and_consumer",
+      "human_identity_verification_schema_and_consumer",
+      "human_authority_verification_schema_and_consumer",
+      "composite_evaluation_schema_and_consumer",
+      "composite_resolution_schema_and_consumer",
+      "fixture_catalog_schema",
+      "fixture_catalog_instance",
+      "invalid_decision_template",
+      "decision_interface_evaluator",
+      "implementation_plan_schema_and_instance",
+      "toolchain_lock_schema_and_instance",
+      "validation_report_schema",
+      "decision_interface_launcher"
+    ],
+    "decision_schema_fork_required": true
+  },
+  "correction_contract": {
+    "current_result": "correction_contract_validated_not_implemented",
+    "implementation_result_ceiling": "corrected_implementation_not_ready",
+    "readiness_report_result_ceiling": "readiness_evaluation_pass_pending_closeout",
+    "readiness_result_ceiling": "interface_ready_for_separate_human_process",
+    "readiness_semantic_state": "DI124-ready",
+    "readiness_revision": "1.2.5",
+    "old_DI124_ready_route_superseded": true,
+    "old_artifacts_retracted_or_deleted": false,
+    "new_versioned_launcher_required": true,
+    "new_versioned_evaluator_required": true,
+    "future_readiness_route_must_be_implemented_before_record_only_seal": true,
+    "future_readiness_route_enabled_in_this_stage": false,
+    "exact_adversary_component_counts_required": true,
+    "exact_positive_and_negative_evidence_counts_required": true,
+    "development_report_may_be_relabelled_as_readiness": false,
+    "schema_definition_creates_plan_or_authority": false,
+    "branch_name_is_scientific_or_acceptance_identity": false,
+    "report_may_digest_or_validate_itself": false,
+    "only_closeout_transition_may_establish_semantic_readiness": true
+  },
+  "future_transition_model": {
+    "ordered_commit_stages": [
+      "DI125-correction-contract",
+      "DI125-correction-review",
+      "DI125-correction-implementation",
+      "DI125-documentation-update",
+      "DI125-readiness-inputs",
+      "DI125-readiness-report",
+      "DI125-readiness-closeout"
+    ],
+    "allowed_commit_edges": [
+      {
+        "from": "DI125-correction-contract",
+        "to": "DI125-correction-review",
+        "condition": "required"
+      },
+      {
+        "from": "DI125-correction-review",
+        "to": "DI125-correction-implementation",
+        "condition": "required"
+      },
+      {
+        "from": "DI125-correction-implementation",
+        "to": "DI125-documentation-update",
+        "condition": "optional_documentation_envelope_present"
+      },
+      {
+        "from": "DI125-correction-implementation",
+        "to": "DI125-readiness-inputs",
+        "condition": "optional_documentation_envelope_absent"
+      },
+      {
+        "from": "DI125-documentation-update",
+        "to": "DI125-readiness-inputs",
+        "condition": "required_when_documentation_envelope_present"
+      },
+      {
+        "from": "DI125-readiness-inputs",
+        "to": "DI125-readiness-report",
+        "condition": "required"
+      },
+      {
+        "from": "DI125-readiness-report",
+        "to": "DI125-readiness-closeout",
+        "condition": "required"
+      }
+    ],
+    "closeout_semantic_result": {
+      "stage_id": "DI124-ready",
+      "readiness_revision": "1.2.5",
+      "result": "interface_ready_for_separate_human_process",
+      "creates_additional_commit": false,
+      "established_only_after_clean_immutable_closeout_replay": true
+    },
+    "external_human_process_transition": {
+      "from_semantic_state": "DI124-ready",
+      "to_process": "separately_authorized_human_process",
+      "git_commit_transition": false,
+      "separate_explicit_authority_required": true
+    },
+    "documentation_update_stage_optional": true,
+    "readiness_subject_is_exact_correction_implementation_commit": true,
+    "readiness_inputs_direct_parent_is_implementation_or_exact_documentation_envelope": true,
+    "readiness_inputs_and_report_must_be_separate_commits": true,
+    "readiness_report_direct_parent_is_readiness_inputs": true,
+    "readiness_report_and_closeout_must_be_separate_commits": true,
+    "readiness_closeout_direct_parent_is_readiness_report": true,
+    "readiness_closeout_consumer_required": true,
+    "clean_immutable_closeout_replay_required": true,
+    "closeout_embedded_own_replay_assertion_allowed": false,
+    "report_embedded_run_observations_allowed": false,
+    "intervening_ancestry_policy": "zero_or_one_explicitly_enumerated_single_parent_DI125_documentation_update_envelope",
+    "administrative_envelope_position": "after_correction_implementation_before_readiness_inputs_only",
+    "report_projection_policy": "self_excluding_same_subject_projection_for_absent_render_installed_reproduction_and_clean_replay",
+    "report_forbidden_fields": [
+      "live_head",
+      "live_tree",
+      "branch_name",
+      "process_id",
+      "wall_clock",
+      "validation_observations",
+      "run_observations",
+      "report_byte_size",
+      "report_sha256"
+    ],
+    "administrative_envelope_requirements": [
+      "exact commit tree parent path mode blob and digest inventory",
+      "no implementation-bound path changes",
+      "no executable path changes",
+      "no readiness acceptance science runtime publication or Gate B promotion",
+      "separate validation under its own contract"
+    ],
+    "readiness_inputs_stage_required_operands": [
+      "exact correction implementation commit tree parent and delta",
+      "exact 77-row mapping review",
+      "exact implementation bundle review",
+      "separate explicit DI124-ready static-seal instruction naming readiness revision 1.2.5",
+      "closed ready plan"
+    ],
+    "readiness_report_stage_delta": {
+      "changed_existing_paths": [],
+      "added_paths": [
+        "gate/validation-reports/operator-decision-interface-readiness-1.2.5.json"
+      ],
+      "removed_paths": [],
+      "executable_paths": [],
+      "direct_single_parent_required": true
+    },
+    "readiness_report_stage_result": "readiness_evaluation_pass_pending_closeout",
+    "readiness_closeout_stage_delta": {
+      "changed_existing_paths": [
+        "docs/SESSION_HANDOFF.md"
+      ],
+      "added_paths": [
+        "gate/operator-decision-interface-closeouts/reiyah.operator-decision-interface-readiness-closeout-1.2.5.json"
+      ],
+      "removed_paths": [],
+      "executable_paths": [],
+      "direct_single_parent_required": true
+    },
+    "readiness_closeout_required_operands": [
+      "exact retained readiness report path mode bytes size and digest",
+      "two fresh byte-identical locked post-install reproduction observations",
+      "exact direct-parent readiness-report commit and tree",
+      "validated correction implementation and readiness-input ancestry"
+    ]
+  },
+  "required_implementation_capabilities": [
+    "byte_bound_launcher_enters_isolation_before_language_runtime",
+    "raw_git_commit_tree_blob_rehash",
+    "exact_DI124_28_path_bundle_binding",
+    "independent_77_row_mapping_reconstruction",
+    "closed_local_schema_registry",
+    "six_known_good_witness_replay",
+    "exact_77_plus_124_equals_201_adversary_replay",
+    "exact_10_positive_and_31_negative_finding_evidence_join",
+    "four_role_parent_worker_capture_quorum",
+    "absent_install_and_two_post_install_report_byte_comparison",
+    "readiness_specific_liveness_and_authority_adversaries",
+    "inherited_evaluator_loaded_from_exact_raw_git_blob_not_live_path",
+    "typed_translation_of_inherited_and_foreign_exceptions",
+    "locked_closeout_consumer_validates_retained_report_and_two_reproductions",
+    "closeout_consumer_alone_emits_semantic_DI124_ready_revision_1_2_5",
+    "clean_immutable_closeout_replay_required_before_semantic_readiness",
+    "successor_finite_decision_verification_composite_fixture_registry_and_route_family_binds_closeout_and_clean_replay"
+  ],
+  "required_contract_adversaries": [
+    "DI125A-001-record-only-route-without-consumer",
+    "DI125A-002-development-report-relabelled-readiness",
+    "DI125A-003-adversary-total-78",
+    "DI125A-004-adversary-total-197",
+    "DI125A-005-component-count-mismatch",
+    "DI125A-006-missing-RGA-020",
+    "DI125A-007-finding-evidence-count-downgrade",
+    "DI125A-008-direct-child-only-administrative-dead-end",
+    "DI125A-009-unbound-administrative-ancestry",
+    "DI125A-010-authority-promotion",
+    "DI125A-011-readiness-report-self-digest",
+    "DI125A-012-run-observation-embedded-in-subject-report",
+    "DI125A-013-incompatible-DI125-ready-semantic-state",
+    "DI125A-014-plan-review-report-coaddition",
+    "DI125A-015-live-path-inherited-evaluator",
+    "DI125A-016-foreign-exception-escape",
+    "DI125A-017-empty-path-inherited-exception-escape",
+    "DI125A-018-defect-source-role-swap",
+    "DI125A-019-defect-observation-substitution",
+    "DI125A-020-defect-conclusion-substitution",
+    "DI125A-021-precommit-closeout-readiness-promotion",
+    "DI125A-022-closeout-embeds-own-replay-outcome",
+    "DI125A-023-successor-dependent-family-member-omission",
+    "DI125A-024-decision-schema-fork-denial",
+    "DI125A-025-dependent-schema-binding-role-substitution",
+    "DI125A-026-direct-reference-binding-aggregate-substitution",
+    "DI125A-027-indirect-launcher-route-binding-substitution",
+    "DI125A-028-inherited-output-escape"
+  ],
+  "authority": {
+    "subject_architecture_status": "architecture_complete",
+    "correction_contract_state": "proposed",
+    "correction_implementation_state": "not_implemented",
+    "interface_readiness_state": "not_ready",
+    "operator_acceptance_state": "unaccepted",
+    "ga_17_state": "not_evaluated",
+    "human_decision_process_authorized": false,
+    "scientific_evidence_created": false,
+    "scientific_claim_authority": false,
+    "public_distribution_eligible": false,
+    "public_distribution_authorized": false,
+    "publication_acceptance_authorized": false,
+    "transport_verification_state": "not_evaluated",
+    "runtime_authorized": false,
+    "cloud_execution_authorized": false,
+    "private_data_ingestion_authorized": false,
+    "physical_control_authorized": false,
+    "gate_b_authorized": false
+  }
+}

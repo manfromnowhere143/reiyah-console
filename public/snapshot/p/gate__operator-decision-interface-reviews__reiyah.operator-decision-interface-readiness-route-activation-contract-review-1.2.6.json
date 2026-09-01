@@ -1,0 +1,478 @@
+{
+  "schema_id": "https://schemas.reiyah.invalid/gate-a/1.2.6/operator-decision-interface-readiness-route-activation-contract-review.schema.json",
+  "artifact_id": "reiyah.artifact.operator-decision-interface-readiness-route-activation-contract-review-1.2.6",
+  "review_id": "reiyah.review.operator-decision-interface-readiness-route-activation-contract@1.2.6",
+  "record_kind": "operator_decision_interface_readiness_route_activation_contract_review",
+  "version": "1.2.6",
+  "lifecycle_status": "proposed",
+  "as_of_date": "2026-09-01",
+  "stage_id": "DI126-route-activation-review",
+  "repository_identity": {
+    "project": "Reiyah",
+    "canonical_root": "/Users/danielwahnich/workspace/reiyah",
+    "git_root": "/Users/danielwahnich/workspace/reiyah",
+    "configured_remote": "https://github.com/manfromnowhere143/reiyah.git",
+    "authoring_branch_context": "gate-a-1.2.6-readiness-route-activation",
+    "branch_is_scientific_or_acceptance_identity": false
+  },
+  "subject_contract": {
+    "stage_id": "DI126-route-activation-contract",
+    "commit": "cf547a3d1a7d8bd2ff8fd772802a20adab36f15b",
+    "tree": "aa3195f1bb443f1f8bcfd670cfe1200c1926b11c",
+    "sole_parent": "b54f719f29682d191ddf489e58fa5f95cbe0aa5c",
+    "parent_tree": "dfd0d329b0f918edd650b6c2d0a7c639cbecff7b",
+    "subject_lineage": "exact_direct_single_parent_child_of_DI125_documentation_update",
+    "subject_bytes_source": "rehash_verified_git_commit_tree_and_blobs",
+    "raw_commit_tree_and_blob_rehash_required": true,
+    "delta": {
+      "changed_existing_paths": [
+        "docs/SESSION_HANDOFF.md"
+      ],
+      "added_paths": [
+        "docs/OPERATOR_DECISION_INTERFACE_READINESS_ROUTE_ACTIVATION_1_2_6.md",
+        "gate/operator-decision-interface-corrections/reiyah.operator-decision-interface-readiness-route-activation-1.2.6.json",
+        "schemas/operator-decision-interface-readiness-route-activation-1.2.6.schema.json",
+        "schemas/operator-decision-interface-readiness-route-activation-contract-report-1.2.6.schema.json",
+        "schemas/operator-decision-interface-readiness-route-activation-plan-1.2.6.schema.json",
+        "tools/gate_a_1_2_6_route_activation_contract.py",
+        "tools/gate_a_1_2_6_route_activation_contract.sh",
+        "validation/operator-decision-interface-readiness-route-activation-plan-1.2.6.json"
+      ],
+      "removed_paths": [],
+      "executable_paths": [
+        "tools/gate_a_1_2_6_route_activation_contract.py",
+        "tools/gate_a_1_2_6_route_activation_contract.sh"
+      ],
+      "changed_count": 1,
+      "added_count": 8,
+      "removed_count": 0,
+      "total_count": 9,
+      "executable_count": 2,
+      "exact_match_required": true
+    }
+  },
+  "subject_contract_artifact_bundle": {
+    "serialization_rule": "sorted_path_NUL_mode_NUL_git_blob_oid_NUL_byte_size_NUL_sha256_LF",
+    "path_count": 8,
+    "aggregate_byte_size": 150407,
+    "descriptor_byte_size": 1634,
+    "descriptor_sha256": "sha256:03e9026d6072f1c3b4458912e04ee7d102d79f51e17c77c7e516f56e92d977b0",
+    "artifacts": [
+      {
+        "path": "docs/OPERATOR_DECISION_INTERFACE_READINESS_ROUTE_ACTIVATION_1_2_6.md",
+        "git_mode": "100644",
+        "git_blob_oid": "57f7605640f627f180f05ba36904a688a32b7b3d",
+        "byte_size": 14031,
+        "sha256": "sha256:17aece13c3c458dc6af0cce6e5d114ad625e582be944494f1632af52ff60a582"
+      },
+      {
+        "path": "gate/operator-decision-interface-corrections/reiyah.operator-decision-interface-readiness-route-activation-1.2.6.json",
+        "git_mode": "100644",
+        "git_blob_oid": "64ad8d641dc60e74b5d5c6d53104544af348e1ee",
+        "byte_size": 12412,
+        "sha256": "sha256:0e4edbf2db169debebd7054184a978555f29ee6f70f635c8e1f15bdaad80d4e9"
+      },
+      {
+        "path": "schemas/operator-decision-interface-readiness-route-activation-1.2.6.schema.json",
+        "git_mode": "100644",
+        "git_blob_oid": "95d3766fdd1388b089041a40dff2410685fde69a",
+        "byte_size": 14535,
+        "sha256": "sha256:ff1b968dd931970c2b3dece37b63a79865ddfcd3bd10377213c648e15b89becd"
+      },
+      {
+        "path": "schemas/operator-decision-interface-readiness-route-activation-contract-report-1.2.6.schema.json",
+        "git_mode": "100644",
+        "git_blob_oid": "d158637be0cf4d9d428e367b0b6759ca88dff09d",
+        "byte_size": 15557,
+        "sha256": "sha256:7011e4bc7458d71a7d575dec571c51d77d3bbf041dbb5ccbbfc9dd554c4c25e7"
+      },
+      {
+        "path": "schemas/operator-decision-interface-readiness-route-activation-plan-1.2.6.schema.json",
+        "git_mode": "100644",
+        "git_blob_oid": "3acf009aff9aed1765aa77784833e33831a8d7f6",
+        "byte_size": 8974,
+        "sha256": "sha256:a8227b05f695055d2d9a143510a3645a835515d68092b7597d074f8bacf57ea6"
+      },
+      {
+        "path": "tools/gate_a_1_2_6_route_activation_contract.py",
+        "git_mode": "100755",
+        "git_blob_oid": "7795bdd5de7d6744743e79d68976c30b3f93fbec",
+        "byte_size": 67390,
+        "sha256": "sha256:2df71c55b3eb6cd62ab92230b8d1212c45c04788055ee6f3d16201ba9f012af3"
+      },
+      {
+        "path": "tools/gate_a_1_2_6_route_activation_contract.sh",
+        "git_mode": "100755",
+        "git_blob_oid": "40e3a0152e1f211f79216fee1078427d4f90c1a2",
+        "byte_size": 9424,
+        "sha256": "sha256:4ee93fcebe1a3bdfc69e4f301948f4b96d9e96f210ef7381a856337778955494"
+      },
+      {
+        "path": "validation/operator-decision-interface-readiness-route-activation-plan-1.2.6.json",
+        "git_mode": "100644",
+        "git_blob_oid": "75bfbad5dc42e318bfaf526c9efcf619be23f57b",
+        "byte_size": 8084,
+        "sha256": "sha256:fcb4972769e0a98145498c04fb1ca17d8d43693a74c3a8d55eb734923d8f5450"
+      }
+    ]
+  },
+  "subject_transition_projection": {
+    "serialization_rule": "sorted_path_NUL_mode_NUL_git_blob_oid_NUL_byte_size_NUL_sha256_LF",
+    "path_count": 9,
+    "aggregate_byte_size": 330540,
+    "descriptor_byte_size": 1785,
+    "descriptor_sha256": "sha256:97815b046bf1a1dd687fc51f93ea58ddfa46fb2b4ccda71c832cd17b19365513"
+  },
+  "retained_contract_report": {
+    "path": "gate/validation-reports/operator-decision-interface-readiness-route-activation-contract-1.2.6.json",
+    "git_mode": "100644",
+    "expected_git_blob_oid": "f6b3c30d2e38b40aa63adf5040c2de747f2dcb1e",
+    "byte_size": 6852,
+    "sha256": "sha256:0d441a40418ec839bd99e018ae71fd24f56497833853cc7e02541c22fa7891c4",
+    "schema_path": "schemas/operator-decision-interface-readiness-route-activation-contract-report-1.2.6.schema.json",
+    "schema_sha256": "sha256:7011e4bc7458d71a7d575dec571c51d77d3bbf041dbb5ccbbfc9dd554c4c25e7",
+    "snapshot_mode": "contract",
+    "status": "pass",
+    "result": "real_route_correction_contract_validated_not_implemented",
+    "subject_commit": "cf547a3d1a7d8bd2ff8fd772802a20adab36f15b",
+    "subject_tree": "aa3195f1bb443f1f8bcfd670cfe1200c1926b11c",
+    "subject_sole_parent": "b54f719f29682d191ddf489e58fa5f95cbe0aa5c",
+    "equal_external_capture_count": 2,
+    "external_captures_byte_identical": true,
+    "retention_role": "internal_subject_integrity_operand_not_independent_or_release_evidence",
+    "execution_independently_attested": false
+  },
+  "review_contract": {
+    "review_kind": "role_separated_read_only_internal_advisory_review",
+    "required_roles": [
+      "schema_contract_and_report_consumer_reviewer",
+      "bootstrap_git_security_and_authority_reviewer",
+      "route_liveness_evidence_topology_and_cycle_reviewer"
+    ],
+    "required_review_count": 3,
+    "required_distinct_role_count": 3,
+    "required_check_ids": [
+      "DI126R-CHECK-001-subject-git-object-and-delta",
+      "DI126R-CHECK-002-contract-schema-plan-joins",
+      "DI126R-CHECK-003-retained-contract-report-semantic-join",
+      "DI126R-CHECK-004-review-model-go-no-go-closure",
+      "DI126R-CHECK-005-bootstrap-isolation-and-process-bounds",
+      "DI126R-CHECK-006-git-object-index-profile-and-capture",
+      "DI126R-CHECK-007-dynamic-report-consumer-binding",
+      "DI126R-CHECK-008-authority-and-nonclaim-ceiling",
+      "DI126R-CHECK-009-selector-liveness-and-diagnostic-specificity",
+      "DI126R-CHECK-010-stage-topology-and-self-reference",
+      "DI126R-CHECK-011-population-separation-and-synthetic-nonpromotion",
+      "DI126R-CHECK-012-successor-stop-and-revalidation"
+    ],
+    "reviewer_identity_state": "self_asserted_internal_model_roles_not_externally_verified",
+    "all_reviews_bind_exact_subject": true,
+    "all_reviews_read_rehash_verified_subject_bytes": true,
+    "go_requires_all_checks_pass_and_zero_blockers": true,
+    "no_go_requires_at_least_one_typed_open_blocker": true,
+    "inability_to_complete_a_required_check_is_a_blocker": true,
+    "review_validity_is_distinct_from_go": true,
+    "subject_change_requires_review_restart": true,
+    "review_can_create_operator_acceptance": false,
+    "review_can_authorize_implementation": false,
+    "review_can_create_scientific_evidence": false,
+    "independent_external_review_completed": false
+  },
+  "defect_evidence_coverage": [
+    {
+      "finding_id": "DI126-LIVE-001",
+      "review_state": "reproduced_and_contract_consistent",
+      "blocker_ids": []
+    },
+    {
+      "finding_id": "DI126-LIVE-002",
+      "review_state": "reproduced_and_contract_consistent",
+      "blocker_ids": []
+    },
+    {
+      "finding_id": "DI126-LIVE-003",
+      "review_state": "reproduced_and_contract_consistent",
+      "blocker_ids": []
+    },
+    {
+      "finding_id": "DI126-CLAIM-001",
+      "review_state": "reproduced_and_contract_consistent",
+      "blocker_ids": []
+    },
+    {
+      "finding_id": "DI126-REPORT-001",
+      "review_state": "reproduced_and_contract_consistent",
+      "blocker_ids": []
+    },
+    {
+      "finding_id": "DI126-CUSTODY-001",
+      "review_state": "reproduced_and_contract_consistent",
+      "blocker_ids": []
+    },
+    {
+      "finding_id": "DI126-CLOSEOUT-001",
+      "review_state": "reproduced_and_contract_consistent",
+      "blocker_ids": []
+    },
+    {
+      "finding_id": "DI126-Q-001",
+      "review_state": "reproduced_and_contract_consistent",
+      "blocker_ids": []
+    }
+  ],
+  "reviews": [
+    {
+      "review_observation_id": "reiyah.review-observation.di126-route-activation.schema-report.1",
+      "reviewer_self_identifier": "codex-agent.di126_ready_schema_audit",
+      "task_path": "/root/di125_ready_schema_audit",
+      "reviewer_kind": "model_assisted_internal_advisory",
+      "role": "schema_contract_and_report_consumer_reviewer",
+      "timestamp_basis": "session_date_only_not_external_time_attestation",
+      "subject_commit": "cf547a3d1a7d8bd2ff8fd772802a20adab36f15b",
+      "subject_tree": "aa3195f1bb443f1f8bcfd670cfe1200c1926b11c",
+      "subject_sole_parent": "b54f719f29682d191ddf489e58fa5f95cbe0aa5c",
+      "read_basis": "rehash_verified_git_object_bytes_plus_retained_contract_report_operand",
+      "check_results": [
+        {
+          "check_id": "DI126R-CHECK-001-subject-git-object-and-delta",
+          "state": "pass",
+          "blocker_ids": [],
+          "summary": "The retained contract is the exact single-parent cf547a3d commit with the closed one-changed and eight-added path delta, modes, and raw object closure."
+        },
+        {
+          "check_id": "DI126R-CHECK-002-contract-schema-plan-joins",
+          "state": "pass",
+          "blocker_ids": [],
+          "summary": "The contract and plan equal their whole-object const schemas, and all three frozen schemas pass Draft 2020-12 metaschema validation."
+        },
+        {
+          "check_id": "DI126R-CHECK-003-retained-contract-report-semantic-join",
+          "state": "pass",
+          "blocker_ids": [],
+          "summary": "The retained 6852-byte report validates and its topology, projection, index, profile, tool-version, result, and authority facts join the independently recomputed subject."
+        },
+        {
+          "check_id": "DI126R-CHECK-004-review-model-go-no-go-closure",
+          "state": "pass",
+          "blocker_ids": [],
+          "summary": "The review record schema admits both coherent GO and coherent NO-GO states; aggregate validity does not structurally force success."
+        }
+      ],
+      "verdict": "go",
+      "blocker_ids": [],
+      "limitations": [
+        "not_independent_external_review",
+        "retained_contract_report_is_an_internal_integrity_operand",
+        "schema_validity_alone_does_not_establish_semantic_truth"
+      ],
+      "repository_mutation_performed": false,
+      "network_used": false
+    },
+    {
+      "review_observation_id": "reiyah.review-observation.di126-route-activation.bootstrap-security.1",
+      "reviewer_self_identifier": "codex-agent.di126_review_evaluator_audit",
+      "task_path": "/root/di125_ready_evaluator_audit",
+      "reviewer_kind": "model_assisted_internal_advisory",
+      "role": "bootstrap_git_security_and_authority_reviewer",
+      "timestamp_basis": "session_date_only_not_external_time_attestation",
+      "subject_commit": "cf547a3d1a7d8bd2ff8fd772802a20adab36f15b",
+      "subject_tree": "aa3195f1bb443f1f8bcfd670cfe1200c1926b11c",
+      "subject_sole_parent": "b54f719f29682d191ddf489e58fa5f95cbe0aa5c",
+      "read_basis": "rehash_verified_git_object_bytes_plus_locked_contract_control_flow",
+      "check_results": [
+        {
+          "check_id": "DI126R-CHECK-005-bootstrap-isolation-and-process-bounds",
+          "state": "pass",
+          "blocker_ids": [],
+          "summary": "The exact CLI and EOF gate precede predecessor probes; evaluator isolation, bounded streams, deadline, unconditional group-kill attempt, and direct-child wait policy reconcile with the contract without claiming observed descendant cleanup."
+        },
+        {
+          "check_id": "DI126R-CHECK-006-git-object-index-profile-and-capture",
+          "state": "pass",
+          "blocker_ids": [],
+          "summary": "Raw commit, tree, blob, index, Git-administration, ignored-path, and repeated capture joins fail closed and preserve the disclosed same-UID and host limitation."
+        },
+        {
+          "check_id": "DI126R-CHECK-007-dynamic-report-consumer-binding",
+          "state": "pass",
+          "blocker_ids": [],
+          "summary": "The semantic report consumer exact-binds the complete captured repository and projection plus CLI evidence, mutation identities, tool versions, and authority."
+        },
+        {
+          "check_id": "DI126R-CHECK-008-authority-and-nonclaim-ceiling",
+          "state": "pass",
+          "blocker_ids": [],
+          "summary": "No contract, report, validator, branch, review, or commit promotes readiness, acceptance, science, distribution, runtime, Gate B, main, merge, or push authority."
+        }
+      ],
+      "verdict": "go",
+      "blocker_ids": [],
+      "limitations": [
+          "not_independent_external_review",
+          "current_launcher_self_authentication_not_absolute",
+          "same_uid_debugger_or_host_interference_not_excluded",
+          "host_toolchain_custody_not_independently_attested",
+          "outer_supervisor_cleanup_execution_not_independently_attested"
+      ],
+      "repository_mutation_performed": false,
+      "network_used": false
+    },
+    {
+      "review_observation_id": "reiyah.review-observation.di126-route-activation.liveness-topology.1",
+      "reviewer_self_identifier": "codex-agent.di126_static_topology_audit",
+      "task_path": "/root/di125_static_topology_audit",
+      "reviewer_kind": "model_assisted_internal_advisory",
+      "role": "route_liveness_evidence_topology_and_cycle_reviewer",
+      "timestamp_basis": "session_date_only_not_external_time_attestation",
+      "subject_commit": "cf547a3d1a7d8bd2ff8fd772802a20adab36f15b",
+      "subject_tree": "aa3195f1bb443f1f8bcfd670cfe1200c1926b11c",
+      "subject_sole_parent": "b54f719f29682d191ddf489e58fa5f95cbe0aa5c",
+      "read_basis": "rehash_verified_git_object_bytes_plus_closed_stage_and_artifact_graph",
+      "check_results": [
+        {
+          "check_id": "DI126R-CHECK-009-selector-liveness-and-diagnostic-specificity",
+          "state": "pass",
+          "blocker_ids": [],
+          "summary": "The contract requires exact registered routes and reason-specific post-dispatch missing-stage failures; function-name presence is explicitly insufficient."
+        },
+        {
+          "check_id": "DI126R-CHECK-010-stage-topology-and-self-reference",
+          "state": "pass",
+          "blocker_ids": [],
+          "summary": "The contract-review-implementation spine and future N-P-C-external-Q topology are acyclic and forbid report, closeout, Q, and future-commit self-identity."
+        },
+        {
+          "check_id": "DI126R-CHECK-011-population-separation-and-synthetic-nonpromotion",
+          "state": "pass",
+          "blocker_ids": [],
+          "summary": "The 201 inherited, 20 readiness, 5 successor-canary, and 7 schema-negative populations remain distinct, and synthetic records cannot select real scope."
+        },
+        {
+          "check_id": "DI126R-CHECK-012-successor-stop-and-revalidation",
+          "state": "pass",
+          "blocker_ids": [],
+          "summary": "A zero-blocker review may feed only a separately retained implementation capped at real_route_implemented_not_ready, with exact review-commit revalidation and a stop before N."
+        }
+      ],
+      "verdict": "go",
+      "blocker_ids": [],
+      "limitations": [
+        "not_independent_external_review",
+        "successful_real_route_not_implemented_at_subject_stage",
+        "future_readiness_inputs_require_separate_explicit_authority"
+      ],
+      "repository_mutation_performed": false,
+      "network_used": false
+    }
+  ],
+  "blockers": [],
+  "implementation_capability_coverage": [
+    {"capability_id": "byte_bound_launcher_enters_isolation_before_language_runtime", "review_state": "coherent_required_implementation_capability", "blocker_ids": []},
+    {"capability_id": "exact_raw_git_stage_resolver_for_implementation_N_P_C", "review_state": "coherent_required_implementation_capability", "blocker_ids": []},
+    {"capability_id": "registered_readiness_closeout_payload_and_q_cli_dispatch", "review_state": "coherent_required_implementation_capability", "blocker_ids": []},
+    {"capability_id": "reason_specific_pre_N_and_pre_C_dispatch_failures", "review_state": "coherent_required_implementation_capability", "blocker_ids": []},
+    {"capability_id": "R0_R1_R2_distinct_source_state_resolution_and_byte_equality", "review_state": "coherent_required_implementation_capability", "blocker_ids": []},
+    {"capability_id": "bounded_external_observation_and_capture_envelope_admission", "review_state": "coherent_required_implementation_capability", "blocker_ids": []},
+    {"capability_id": "real_scope_derived_from_route_and_exact_authorization_not_record", "review_state": "coherent_required_implementation_capability", "blocker_ids": []},
+    {"capability_id": "two_fresh_worker_complete_payload_quorum", "review_state": "coherent_required_implementation_capability", "blocker_ids": []},
+    {"capability_id": "digest_free_self_excluding_readiness_report", "review_state": "coherent_required_implementation_capability", "blocker_ids": []},
+    {"capability_id": "acyclic_closeout_handoff_marker_and_q_bindings", "review_state": "coherent_required_implementation_capability", "blocker_ids": []},
+    {"capability_id": "exact_201_20_5_7_population_separation", "review_state": "coherent_required_implementation_capability", "blocker_ids": []},
+    {"capability_id": "same_dispatcher_and_consumers_for_synthetic_nonpromotion_proof", "review_state": "coherent_required_implementation_capability", "blocker_ids": []},
+    {"capability_id": "new_self_excluding_DI126_toolchain_lock", "review_state": "coherent_required_implementation_capability", "blocker_ids": []},
+    {"capability_id": "exact_retained_core_1_0_0_binding", "review_state": "coherent_required_implementation_capability", "blocker_ids": []},
+    {"capability_id": "typed_reason_specific_boundary_failures", "review_state": "coherent_required_implementation_capability", "blocker_ids": []},
+    {"capability_id": "zero_authority_promotion_through_implementation", "review_state": "coherent_required_implementation_capability", "blocker_ids": []}
+  ],
+  "adversary_family_coverage": [
+    {"family_id": "cli_registration_and_exact_argument_grammar", "review_state": "required_implementation_adversary_family", "blocker_ids": []},
+    {"family_id": "bootstrap_isolation_and_executed_byte_substitution", "review_state": "required_implementation_adversary_family", "blocker_ids": []},
+    {"family_id": "git_administration_object_and_topology_substitution", "review_state": "required_implementation_adversary_family", "blocker_ids": []},
+    {"family_id": "N_P_C_stage_delta_and_parent_mutation", "review_state": "required_implementation_adversary_family", "blocker_ids": []},
+    {"family_id": "R0_R1_R2_source_state_and_installed_byte_mutation", "review_state": "required_implementation_adversary_family", "blocker_ids": []},
+    {"family_id": "worker_identity_payload_and_parent_drift", "review_state": "required_implementation_adversary_family", "blocker_ids": []},
+    {"family_id": "population_and_finding_evidence_laundering", "review_state": "required_implementation_adversary_family", "blocker_ids": []},
+    {"family_id": "report_closeout_handoff_and_q_self_reference", "review_state": "required_implementation_adversary_family", "blocker_ids": []},
+    {"family_id": "custody_subject_toolchain_chronology_and_payload_mutation", "review_state": "required_implementation_adversary_family", "blocker_ids": []},
+    {"family_id": "synthetic_to_real_scope_promotion", "review_state": "required_implementation_adversary_family", "blocker_ids": []},
+    {"family_id": "acceptance_science_distribution_runtime_and_gate_b_promotion", "review_state": "required_implementation_adversary_family", "blocker_ids": []},
+    {"family_id": "frozen_1_2_5_byte_mutation", "review_state": "required_implementation_adversary_family", "blocker_ids": []}
+  ],
+  "aggregate_review_result": {
+    "state": "internal_advisory_go_zero_blockers",
+    "verdict": "go",
+    "review_count": 3,
+    "distinct_role_count": 3,
+    "required_check_count": 12,
+    "passed_check_count": 12,
+    "blocking_check_count": 0,
+    "blocker_count": 0,
+    "all_required_roles_present_exactly_once": true,
+    "all_required_checks_present_exactly_once": true,
+    "all_reviews_bind_same_exact_subject": true,
+    "implementation_gate_state": "review_go_condition_satisfied",
+    "review_restart_required_on_subject_change": true,
+    "independent_external_review_completed": false,
+    "review_establishes_independence": false,
+    "review_confers_operator_acceptance": false,
+    "review_authorizes_implementation": false,
+    "review_creates_scientific_evidence": false,
+    "successor_revalidation_required": true
+  },
+  "authority": {
+    "subject_architecture_status": "architecture_complete",
+    "route_activation_contract_state": "retained_validated_not_implemented",
+    "route_activation_review_state": "internal_advisory_go_recorded",
+    "route_activation_implementation_state": "not_implemented",
+    "interface_readiness_state": "not_ready",
+    "operator_acceptance_state": "unaccepted",
+    "ga_17_state": "not_evaluated",
+    "independent_external_review_completed": false,
+    "human_decision_process_authorized": false,
+    "readiness_inputs_authorized": false,
+    "scientific_evidence_created": false,
+    "scientific_claim_authority": false,
+    "public_distribution_eligible": false,
+    "public_distribution_authorized": false,
+    "publication_acceptance_authorized": false,
+    "transport_verification_state": "not_evaluated",
+    "runtime_authorized": false,
+    "cloud_execution_authorized": false,
+    "private_data_ingestion_authorized": false,
+    "physical_control_authorized": false,
+    "gate_b_authorized": false,
+    "main_ref_change_authorized": false,
+    "merge_commit_authorized": false,
+    "public_push_authorized": false,
+    "review_confers_implementation_authority": false
+  },
+  "next_transition": {
+    "stage_id": "DI126-route-activation-implementation",
+    "review_gate_satisfied": true,
+    "implementation_blocked_by_review": false,
+    "authorized_by_review": false,
+    "permitted_under_existing_explicit_operator_instruction": true,
+    "requires_exact_review_commit_tree_parent_delta_and_record_revalidation": true,
+    "review_result_commit_binding_state": "resolve_from_post_commit_raw_git_not_self_bound",
+    "authorizes_readiness_inputs": false,
+    "authorizes_main_ref_change": false,
+    "authorizes_merge_commit": false,
+    "authorizes_public_push": false,
+    "maximum_result": "real_route_implemented_not_ready"
+  },
+  "nonclaims": [
+    "review_is_not_independent_external_review",
+    "retained_contract_report_is_not_independent_execution_attestation",
+    "review_does_not_create_operator_acceptance",
+    "review_does_not_authorize_implementation",
+    "route_activation_implementation_not_created",
+    "readiness_inputs_and_DI124_ready_not_created",
+    "GA_17_not_evaluated",
+    "scientific_evidence_not_created",
+    "publication_and_public_distribution_not_authorized",
+    "transport_not_independently_verified",
+    "runtime_cloud_private_data_physical_control_and_Gate_B_not_authorized",
+    "main_merge_and_public_push_not_authorized",
+    "future_review_commit_tree_or_self_digest_not_asserted"
+  ]
+}

@@ -1,0 +1,972 @@
+{
+  "schema_id": "https://schemas.reiyah.invalid/gate-a/1.2.7/operator-decision-interface-implementation-plan.schema.json",
+  "artifact_id": "reiyah.artifact.operator-decision-interface-implementation-plan-1.2.7",
+  "plan_id": "reiyah.validation-plan.operator-decision-interface-readiness-worker-liveness-implementation@1.2.7",
+  "record_kind": "operator_decision_interface_readiness_worker_liveness_implementation_plan",
+  "version": "1.2.7",
+  "lifecycle_status": "proposed",
+  "as_of_date": "2026-09-01",
+  "stage_id": "DI127-readiness-worker-liveness-implementation",
+  "repository_identity": {
+    "project": "Reiyah",
+    "canonical_root": "/Users/danielwahnich/workspace/reiyah",
+    "git_root": "/Users/danielwahnich/workspace/reiyah",
+    "configured_remote": "https://github.com/manfromnowhere143/reiyah.git",
+    "authoring_branch_context": "gate-a-1.2.7-readiness-r0-correction",
+    "branch_is_scientific_safety_acceptance_or_review_identity": false
+  },
+  "authorization": {
+    "operator_instruction_scope": "append_only_DI127_incident_contract_review_implementation_replacement_readiness_input_seal_and_one_immutable_R0_stop_before_R1_P_R2_C_Q_main_merge_push",
+    "implementation_transition_authorized": true,
+    "replacement_N127_authorized_only_after_retained_reproduced_implementation": true,
+    "exactly_one_external_R0_authorized_only_after_valid_immutable_N127": true,
+    "R1_P_R2_C_Q_main_merge_and_push_authorized": false,
+    "implementation_may_modify_retained_bytes": false
+  },
+  "contract_checkpoint": {
+    "commit": "45e2126a35a2706d8cf922333f71f132ddce5491",
+    "tree": "5fb93f50420839c533b36fa28f8a362f0560bc16",
+    "sole_parent": "7ed76fa8a7a2a82fda5396a0ae63ceee4e0f8bc8",
+    "contract_result": "readiness_worker_liveness_correction_contracted_not_reviewed_not_implemented",
+    "retained_contract_report": {
+      "path": "gate/validation-reports/operator-decision-interface-readiness-worker-liveness-contract-1.2.7.json",
+      "git_mode": "100644",
+      "blob_oid": "76d0cb2faf3a1e24183d95eb1fe6aca9b285a1ea",
+      "byte_size": 10191,
+      "sha256": "sha256:97858ba30d5a399d70735f5c743a113675c05e441a6ff6a19db766f8cba70877"
+    }
+  },
+  "predecessor_review_checkpoint": {
+    "stage_id": "DI127-readiness-worker-liveness-review",
+    "commit": "4990a3d5700a48d2c5069267e6fc96f230c5d48d",
+    "tree": "611bc2fed98f2aab6262c4af48c360ec4c206620",
+    "sole_parent": "45e2126a35a2706d8cf922333f71f132ddce5491",
+    "parent_tree": "5fb93f50420839c533b36fa28f8a362f0560bc16",
+    "full_raw_closure": {
+      "file_count": 1071,
+      "tree_object_count": 72,
+      "aggregate_blob_byte_size": 18000550,
+      "descriptor_byte_size": 115562,
+      "descriptor_sha256": "sha256:ceb746a531cfb22fe036b549e30a9aa84b7df43bfccd7ba816ce0521a7f192e9"
+    },
+    "transition_projection": {
+      "paths": [
+        "docs/SESSION_HANDOFF.md",
+        "gate/operator-decision-interface-reviews/reiyah.operator-decision-interface-readiness-worker-liveness-contract-review-1.2.7.json",
+        "gate/validation-reports/operator-decision-interface-readiness-worker-liveness-contract-1.2.7.json",
+        "schemas/operator-decision-interface-readiness-worker-liveness-contract-review-1.2.7.schema.json",
+        "schemas/operator-decision-interface-readiness-worker-liveness-contract-review-plan-1.2.7.schema.json",
+        "schemas/operator-decision-interface-readiness-worker-liveness-contract-review-report-1.2.7.schema.json",
+        "tools/gate_a_1_2_7_readiness_worker_liveness_review.py",
+        "tools/gate_a_1_2_7_readiness_worker_liveness_review.sh",
+        "validation/operator-decision-interface-readiness-worker-liveness-contract-review-plan-1.2.7.json"
+      ],
+      "path_count": 9,
+      "changed_existing_path_count": 1,
+      "added_path_count": 8,
+      "aggregate_byte_size": 567714,
+      "descriptor_byte_size": 1894,
+      "descriptor_sha256": "sha256:c5eaa6b929d2c81648f563eb93b881da034fb7fa964b28db9356dbe7d96d4a2e"
+    },
+    "review_record": {
+      "path": "gate/operator-decision-interface-reviews/reiyah.operator-decision-interface-readiness-worker-liveness-contract-review-1.2.7.json",
+      "git_mode": "100644",
+      "blob_oid": "50fbddf822be10c59b1b92378660da7a3cfec736",
+      "byte_size": 29630,
+      "sha256": "sha256:cba48a34798715e9d20ed583f5e7423c0df205e8b5f7dc23da811c57918b1eb0",
+      "verdict": "go",
+      "result": "internal_review_go_correction_not_implemented",
+      "review_count": 4,
+      "required_check_count": 16,
+      "passed_check_count": 16,
+      "blocking_check_count": 0,
+      "blocker_count": 0,
+      "external_independence": false
+    },
+    "immutable_review_report_observation": {
+      "repository_path": null,
+      "capture_count": 2,
+      "byte_identical": true,
+      "byte_size": 18124,
+      "sha256": "sha256:6e49ede843c1d3dafded0b0f90ea716f308bd2e04b1171a7b188455ce977d212",
+      "exit_code": 0,
+      "stderr_byte_size": 0,
+      "record_verdict": "go",
+      "review_count": 4,
+      "passed_check_count": 16,
+      "blocker_count": 0,
+      "retention_role": "outside_repository_internal_integrity_observation_not_independent_attestation"
+    }
+  },
+  "preservation_contract": {
+    "exact_predecessor_tree_required": true,
+    "all_predecessor_paths_except_handoff_preserved": true,
+    "all_retained_1_2_6_bytes_preserved": true,
+    "all_DI127_contract_and_review_bytes_preserved": true,
+    "handoff_prefix": {
+      "path": "docs/SESSION_HANDOFF.md",
+      "git_mode": "100644",
+      "byte_size": 222541,
+      "sha256": "sha256:bce478dfea889dbd69b9272bb10eec039f5dd381013ff9d268a483063b6f1e47",
+      "rule": "exact_predecessor_bytes_prefix_plus_nonempty_implementation_suffix"
+    },
+    "unknown_removed_renamed_or_mode_changed_path_allowed": false
+  },
+  "incoming_transition_contract": {
+    "transition_id": "reiyah.transition.DI127-review-to-liveness-implementation",
+    "from_stage": "DI127-readiness-worker-liveness-review",
+    "to_stage": "DI127-readiness-worker-liveness-implementation",
+    "baseline_commit": "4990a3d5700a48d2c5069267e6fc96f230c5d48d",
+    "baseline_tree": "611bc2fed98f2aab6262c4af48c360ec4c206620",
+    "direct_single_parent_required": true,
+    "changed_existing_paths": [
+      "docs/SESSION_HANDOFF.md"
+    ],
+    "added_paths": [
+      "docs/OPERATOR_DECISION_INTERFACE_READINESS_WORKER_LIVENESS_CORRECTION_1_2_7_IMPLEMENTATION.md",
+      "fixtures/v1.2.7/operator-decision-interface-implementation-fixture-catalog.json",
+      "schemas/operator-decision-interface-boundary-failure-1.2.7.schema.json",
+      "schemas/operator-decision-interface-implementation-fixture-catalog-1.2.7.schema.json",
+      "schemas/operator-decision-interface-implementation-plan-1.2.7.schema.json",
+      "schemas/operator-decision-interface-implementation-report-1.2.7.schema.json",
+      "schemas/operator-decision-interface-implementation-review-1.2.7.schema.json",
+      "schemas/operator-decision-interface-mapping-review-1.2.7.schema.json",
+      "schemas/operator-decision-interface-readiness-input-seal-report-1.2.7.schema.json",
+      "schemas/operator-decision-interface-readiness-report-1.2.7.schema.json",
+      "schemas/operator-decision-interface-ready-plan-1.2.7.schema.json",
+      "schemas/operator-decision-interface-toolchain-lock-1.2.7.schema.json",
+      "schemas/operator-decision-interface-worker-outcome-1.2.7.schema.json",
+      "tools/gate_a_1_2_7_decision_interface.py",
+      "tools/gate_a_1_2_7_decision_interface.sh",
+      "validation/operator-decision-interface-implementation-plan-1.2.7.json",
+      "validation/operator-decision-interface-toolchain-lock-1.2.7.json"
+    ],
+    "removed_paths": [],
+    "executable_paths": [
+      "tools/gate_a_1_2_7_decision_interface.py",
+      "tools/gate_a_1_2_7_decision_interface.sh"
+    ],
+    "changed_path_count": 1,
+    "added_path_count": 17,
+    "removed_path_count": 0,
+    "total_delta_path_count": 18,
+    "executable_path_count": 2,
+    "all_nonexecutable_paths_mode": "100644",
+    "result_commit_binding_state": "deferred_to_post_commit_raw_git_observation_not_self_bound",
+    "unknown_delta_policy": "reject"
+  },
+  "self_excluding_lock_authoring_transition": {
+    "lock_path": "validation/operator-decision-interface-toolchain-lock-1.2.7.json",
+    "lock_path_state": "absent",
+    "changed_existing_paths": [
+      "docs/SESSION_HANDOFF.md"
+    ],
+    "added_paths": [
+      "docs/OPERATOR_DECISION_INTERFACE_READINESS_WORKER_LIVENESS_CORRECTION_1_2_7_IMPLEMENTATION.md",
+      "fixtures/v1.2.7/operator-decision-interface-implementation-fixture-catalog.json",
+      "schemas/operator-decision-interface-boundary-failure-1.2.7.schema.json",
+      "schemas/operator-decision-interface-implementation-fixture-catalog-1.2.7.schema.json",
+      "schemas/operator-decision-interface-implementation-plan-1.2.7.schema.json",
+      "schemas/operator-decision-interface-implementation-report-1.2.7.schema.json",
+      "schemas/operator-decision-interface-implementation-review-1.2.7.schema.json",
+      "schemas/operator-decision-interface-mapping-review-1.2.7.schema.json",
+      "schemas/operator-decision-interface-readiness-input-seal-report-1.2.7.schema.json",
+      "schemas/operator-decision-interface-readiness-report-1.2.7.schema.json",
+      "schemas/operator-decision-interface-ready-plan-1.2.7.schema.json",
+      "schemas/operator-decision-interface-toolchain-lock-1.2.7.schema.json",
+      "schemas/operator-decision-interface-worker-outcome-1.2.7.schema.json",
+      "tools/gate_a_1_2_7_decision_interface.py",
+      "tools/gate_a_1_2_7_decision_interface.sh",
+      "validation/operator-decision-interface-implementation-plan-1.2.7.json"
+    ],
+    "removed_paths": [],
+    "executable_paths": [
+      "tools/gate_a_1_2_7_decision_interface.py",
+      "tools/gate_a_1_2_7_decision_interface.sh"
+    ],
+    "changed_path_count": 1,
+    "added_path_count": 16,
+    "total_delta_path_count": 17,
+    "raw_git_index_must_equal_HEAD": true,
+    "unexpected_untracked_path_policy": "reject"
+  },
+  "implementation_obligations": {
+    "finding_closed_count": 0,
+    "obligation_ids": [
+      "DI127I-OBL-001-bootstrap-free-raw-subject-resolver",
+      "DI127I-OBL-002-owned-schema-finder-lease",
+      "DI127I-OBL-003-typed-worker-success-failure-separation",
+      "DI127I-OBL-004-evaluator-local-360-second-supervision",
+      "DI127I-OBL-005-serial-alpha-reap-recapture-beta",
+      "DI127I-OBL-006-complete-payload-byte-equality",
+      "DI127I-OBL-007-historical-population-preservation",
+      "DI127I-OBL-008-actual-before-expectations",
+      "DI127I-OBL-009-self-excluding-toolchain-lock",
+      "DI127I-OBL-010-I127-synthetic-and-pre-N127-only",
+      "DI127I-OBL-011-N127-three-record-direct-child",
+      "DI127I-OBL-012-one-external-R0-and-stop",
+      "DI127I-OBL-013-incident-retained-open",
+      "DI127I-OBL-014-zero-authority-promotion"
+    ],
+    "obligation_count": 14,
+    "all_must_pass_for_implementation_report": true
+  },
+  "raw_subject_resolver_contract": {
+    "function_id": "capture_raw_subject_127",
+    "raw_object_transport": "evaluator_owned_loose_object_reader_without_cat_file_subprocess",
+    "git_administration_transport": "evaluator_owned_bounded_runner_in_current_process_group",
+    "detached_session_creation_allowed": false,
+    "fresh_resolver_per_capture": true,
+    "shared_by_full_resolver_and_all_quorum_captures": true,
+    "cache_reuse_allowed": false,
+    "allowed_operations": [
+      "bounded_raw_git_commit_tree_blob_rehash",
+      "raw_index_parse_and_checksum",
+      "git_administration_and_reference_capture",
+      "status_and_untracked_capture",
+      "topology_delta_mode_and_blob_binding",
+      "immutable_implementation_byte_binding"
+    ],
+    "forbidden_operations": [
+      "schema_bootstrap",
+      "schema_runtime_construction",
+      "finder_installation",
+      "admission_token_creation",
+      "route_dispatch",
+      "readiness_input_consumption",
+      "cached_live_identity_trust"
+    ],
+    "forbidden_operation_count_required": 0
+  },
+  "legacy_subprocess_custody_contract": {
+    "original_DI126_DI125_DI124_evaluator_bytes_unchanged": true,
+    "all_nonsuppressed_historical_subprocesses_must_execute": true,
+    "all_transitive_git_and_quorum_children_must_join_outer_DI127_worker_process_group": true,
+    "start_new_session_allowed_inside_DI127_worker": false,
+    "unadapted_legacy_detached_session_surface_count_required": 0,
+    "retained_unchanged_DI124_subprocess_source_surface_count_required": 1,
+    "DI124_subprocess_dependency_must_use_owned_same_group_runner": true,
+    "DI124_scoped_subprocess_dependency_adapter": {
+      "fresh_exact_DI124_namespace_required": true,
+      "patched_surfaces": [
+        "DI125_global_load_frozen_di124_namespace",
+        "DI124_namespace_subprocess_dependency"
+      ],
+      "closed_subprocess_call_shape_required": true,
+      "runner": "DI127_owned_in_current_process_group_runner",
+      "hook_and_dependency_identity_restored_in_finally": true
+    },
+    "DI125_scoped_exact_exec_hook": {
+      "fresh_exact_DI125_namespace_required": true,
+      "patched_surfaces": [
+        "DI125_global_run_bounded_process",
+        "DI125_global_RawGitResolver",
+        "DI125_core_namespace_run_bounded_process",
+        "DI125_core_namespace_RawGitResolver"
+      ],
+      "runner": "DI127_owned_in_current_process_group_runner",
+      "resolver": "DI127_owned_loose_object_resolver",
+      "hook_identity_restored_in_finally": true
+    },
+    "DI126_72_case_scoped_hook": {
+      "patched_surfaces": [
+        "DI126_global_run_bounded_process",
+        "DI126_global_RawGitResolver",
+        "DI126_core_namespace_run_bounded_process",
+        "DI126_core_namespace_RawGitResolver"
+      ],
+      "runner": "DI127_owned_in_current_process_group_runner",
+      "resolver": "DI127_owned_loose_object_resolver",
+      "hook_identity_restored_in_finally": true
+    },
+    "DI126_quorum_bootstrap_adapter": {
+      "worker_count": 2,
+      "original_DI126_evaluator_source_bytes_preserved": true,
+      "exact_exec_precedes_adapter_injection": true,
+      "post_exact_exec_pre_envelope_owned_compatibility_injection_required": true,
+      "child_patched_surfaces": [
+        "DI126_global_run_bounded_process",
+        "DI126_global_RawGitResolver",
+        "DI126_core_namespace_run_bounded_process",
+        "DI126_core_namespace_RawGitResolver"
+      ],
+      "frozen_core_supervisor_invoked_after_injection": false,
+      "Popen_monkeypatch_beneath_frozen_supervisor_allowed": false,
+      "start_new_session_argument_rewrite_beneath_frozen_supervisor_allowed": false,
+      "transitive_git_joins_outer_worker_process_group": true
+    },
+    "suppressed_historical_checks_are_exactly_the_seven_named_DI125_core_process_self_tests": true
+  },
+  "schema_finder_lease_contract": {
+    "loader": "unchanged_DI124_load_schema_runtime",
+    "DI124_guard_must_remain_unchanged": true,
+    "baseline_sys_meta_path_sequence_captured": true,
+    "owned_finder_identity_required": true,
+    "owned_finder_exact_insertion_index_required": true,
+    "owned_finder_type_and_namespace_required": true,
+    "baseline_prefix_and_suffix_required": true,
+    "release_only_owned_object_by_identity": true,
+    "success_path_exact_baseline_restoration": true,
+    "exception_path_exact_baseline_restoration": true,
+    "missing_displaced_duplicated_foreign_wrong_namespace_wrong_tail_and_double_release_rejected": true,
+    "unrelated_module_unload_allowed": false
+  },
+  "worker_outcome_contract": {
+    "schema_path": "schemas/operator-decision-interface-worker-outcome-1.2.7.schema.json",
+    "protocol_id": "reiyah.protocol.operator-decision-interface-worker-outcome@1.2.7",
+    "worker_kinds": [
+      "implementation_worker",
+      "quorum_probe_worker",
+      "readiness_worker"
+    ],
+    "roles": [
+      "alpha",
+      "beta"
+    ],
+    "success": {
+      "exit_status": 0,
+      "stdout": "one_complete_canonical_payload",
+      "stderr": "empty",
+      "diagnostic_allowed": false
+    },
+    "failure": {
+      "exit_statuses": [
+        1,
+        2
+      ],
+      "stdout": "empty",
+      "stderr": "one_canonical_typed_failure_record",
+      "maximum_failure_record_byte_size": 16384,
+      "complete_payload_allowed": false
+    },
+    "complete_payload_decoded_byte_limit": 33554432,
+    "complete_payload_base64_character_limit": 44739244,
+    "whole_success_wire_stdout_byte_limit": 67108864,
+    "canonical_wire_overhead_must_fit_within_whole_stream_limit": true,
+    "parent_selects_branch_from_observed_exit_before_parsing": true,
+    "PID_wall_and_process_timing_excluded_from_complete_payload": true
+  },
+  "serial_worker_schedule": {
+    "ordered_events": [
+      "parent_pre_raw_capture",
+      "worker_alpha_start",
+      "worker_alpha_streams_closed",
+      "worker_alpha_fully_reaped",
+      "fresh_between_workers_raw_capture",
+      "worker_beta_start",
+      "worker_beta_streams_closed",
+      "worker_beta_fully_reaped",
+      "parent_post_raw_capture"
+    ],
+    "worker_count": 2,
+    "workers_must_be_distinct_processes": true,
+    "process_distinctness_basis": "two_separately_spawned_child_process_objects_with_nonoverlapping_lifecycles_alpha_fully_reaped_before_beta_spawn_PID_values_omitted_and_not_used_for_distinctness",
+    "PID_numeric_inequality_required": false,
+    "worker_overlap_allowed": false,
+    "complete_comparable_payload_byte_equality_required": true,
+    "immutable_core_process_timeout_seconds": 300,
+    "worker_supervisor_implementation": "evaluator_local_selector_drain_process_group_supervisor",
+    "immutable_core_run_bounded_process_used_for_360_second_worker_path": false,
+    "worker_timeout_seconds": 360,
+    "inter_worker_recapture_and_cleanup_margin_seconds": 60,
+    "pair_supervisor_timeout_seconds": 840,
+    "pair_lower_bound_seconds": 780,
+    "pair_strict_inequality_satisfied": true,
+    "outer_cleanup_margin_seconds": 65,
+    "launcher_timeout_seconds": 960,
+    "pre_N127_sibling_timeout_seconds": 30,
+    "evaluator_post_pair_report_margin_seconds": 60,
+    "launcher_cleanup_reserve_seconds": 5,
+    "launcher_post_pair_margin_seconds": 65,
+    "launcher_lower_bound_seconds": 935,
+    "launcher_timeout_scope": "internal_child_supervision_report_semantics_group_closure_and_reap_excluding_final_caller_delivery",
+    "final_caller_delivery_wall_clock_bounded": false,
+    "launcher_strict_inequality_satisfied": true,
+    "single_outer_launcher_monotonic_deadline_required": true,
+    "launcher_absolute_monotonic_deadline_injected_nonserialized": true,
+    "pair_admission_remaining_time_strictly_above_905_seconds": true,
+    "deadline_value_serialized": false
+  },
+  "route_contract": {
+    "exact_route_count": 6,
+    "routes": [
+      {
+        "route_id": "DI127-route-development-toolchain-lock",
+        "snapshot_mode": "development",
+        "render": "toolchain-lock",
+        "output": "raw",
+        "consumer_id": "render_toolchain_lock_127",
+        "stdin_policy": "eof"
+      },
+      {
+        "route_id": "DI127-route-development-implementation-report",
+        "snapshot_mode": "development",
+        "render": "implementation-report",
+        "output": "raw",
+        "consumer_id": "render_implementation_report_127",
+        "stdin_policy": "eof"
+      },
+      {
+        "route_id": "DI127-route-implementation-report",
+        "snapshot_mode": "implementation",
+        "render": "implementation-report",
+        "output": "raw",
+        "consumer_id": "render_implementation_report_127",
+        "stdin_policy": "eof"
+      },
+      {
+        "route_id": "DI127-route-readiness-input-seal-development",
+        "snapshot_mode": "readiness-input-seal-development",
+        "render": "readiness-input-seal-report",
+        "output": "raw",
+        "consumer_id": "render_readiness_input_seal_report_127",
+        "stdin_policy": "eof"
+      },
+      {
+        "route_id": "DI127-route-readiness-input-seal",
+        "snapshot_mode": "readiness-input-seal",
+        "render": "readiness-input-seal-report",
+        "output": "raw",
+        "consumer_id": "render_readiness_input_seal_report_127",
+        "stdin_policy": "eof"
+      },
+      {
+        "route_id": "DI127-route-readiness-R0",
+        "snapshot_mode": "readiness",
+        "render": "readiness-report",
+        "output": "raw",
+        "consumer_id": "render_readiness_report_127",
+        "stdin_policy": "eof"
+      }
+    ],
+    "aliases_abbreviations_reordering_duplicates_terminators_unknown_modes_and_unknown_output_rejected": true,
+    "argument_and_actual_EOF_admission_precedes_repository_or_legacy_probe": true,
+    "launcher_invocation_role_contract": {
+      "closed_role_count": 6,
+      "closed_roles": [
+        "public_non_R0_route",
+        "implementation_report_with_pre_N127_bundle",
+        "public_external_R0_candidate",
+        "pre_N127_probe_only",
+        "worker_internal",
+        "historical_quorum_adapter"
+      ],
+      "public_route_role_by_route_id": {
+        "DI127-route-development-toolchain-lock": "public_non_R0_route",
+        "DI127-route-development-implementation-report": "implementation_report_with_pre_N127_bundle",
+        "DI127-route-implementation-report": "implementation_report_with_pre_N127_bundle",
+        "DI127-route-readiness-input-seal-development": "public_non_R0_route",
+        "DI127-route-readiness-input-seal": "public_non_R0_route",
+        "DI127-route-readiness-R0": "public_external_R0_candidate"
+      },
+      "implementation_report_sibling_role": "pre_N127_probe_only",
+      "implementation_report_sibling_pair_authorized": false,
+      "public_external_R0_candidate_pair_authorized_only_after_valid_immutable_N127": true,
+      "role_consumed_immediately_after_exact_argv_and_EOF_admission": true,
+      "empty_unknown_or_route_mismatched_role_rejected_before_stage_resolution": true,
+      "evaluator_local_real_R0_admission_identity_required_by_serial_pair": true,
+      "pre_N127_probe_cannot_mint_real_R0_admission_at_any_repository_state": true,
+      "real_R0_admission_single_use": true,
+      "DI127IA_14_04_uses_same_production_role_consumer": true,
+      "readiness_invocation_role_consumer_precedes_public_route_token_topology_input_and_pair_consumers": true,
+      "boundary_only_and_real_N127_topology_candidate_capabilities_are_opaque_identity_scoped_and_single_use": true,
+      "boolean_capability_scope_substitution_allowed": false,
+      "launcher_absolute_monotonic_deadline_injected_as_nonserialized_capability": true,
+      "implementation_evaluator_must_not_reset_outer_deadline": true,
+      "pair_admission_requires_remaining_time_strictly_above_pair_plus_post_pair_margin": true
+    },
+    "pre_N127_boundary": {
+      "route_id": "DI127-route-readiness-R0",
+      "consumer_id": "render_readiness_report_127",
+      "code": "DI127R-N127-MISSING",
+      "path": "/route/readiness_inputs",
+      "phase": "post_dispatch_stage_resolution",
+      "exit_code": 1,
+      "stdout_byte_size": 0,
+      "route_dispatch_observed": true,
+      "readiness_input_consumer_entry_observed": false,
+      "launcher_sibling_observation_required": true,
+      "launcher_sibling_subject_modes": [
+        "bounded_live_I127_candidate",
+        "immutable_I127"
+      ],
+      "subject_observation_full_18_path_projection_required": true,
+      "subject_observation_raw_reference_index_and_closure_required": true,
+      "subject_observation_executed_evaluator_and_core_bindings_required": true,
+      "sibling_and_main_independent_raw_subject_equality_required": true,
+      "pre_and_post_repository_identity_equality_required": true,
+      "dedicated_process_group_stream_close_reap_and_absence_required": true,
+      "probe_role_is_structurally_ineligible_for_real_R0_pair": true,
+      "probe_role_at_N127_rejects_after_raw_stage_classification_before_topology_input_or_pair": true
+    }
+  },
+  "schema_and_artifact_contract": {
+    "schema_dialect": "https://json-schema.org/draft/2020-12/schema",
+    "new_schema_count": 11,
+    "new_schema_paths": [
+      "schemas/operator-decision-interface-boundary-failure-1.2.7.schema.json",
+      "schemas/operator-decision-interface-implementation-fixture-catalog-1.2.7.schema.json",
+      "schemas/operator-decision-interface-implementation-plan-1.2.7.schema.json",
+      "schemas/operator-decision-interface-implementation-report-1.2.7.schema.json",
+      "schemas/operator-decision-interface-implementation-review-1.2.7.schema.json",
+      "schemas/operator-decision-interface-mapping-review-1.2.7.schema.json",
+      "schemas/operator-decision-interface-readiness-input-seal-report-1.2.7.schema.json",
+      "schemas/operator-decision-interface-readiness-report-1.2.7.schema.json",
+      "schemas/operator-decision-interface-ready-plan-1.2.7.schema.json",
+      "schemas/operator-decision-interface-toolchain-lock-1.2.7.schema.json",
+      "schemas/operator-decision-interface-worker-outcome-1.2.7.schema.json"
+    ],
+    "repository_instance_paths": [
+      "fixtures/v1.2.7/operator-decision-interface-implementation-fixture-catalog.json",
+      "validation/operator-decision-interface-implementation-plan-1.2.7.json"
+    ],
+    "repository_instance_count": 2,
+    "synthetic_positive_schema_witness_count": 9,
+    "synthetic_positive_schema_witness_paths": [
+      "schemas/operator-decision-interface-boundary-failure-1.2.7.schema.json",
+      "schemas/operator-decision-interface-implementation-report-1.2.7.schema.json",
+      "schemas/operator-decision-interface-implementation-review-1.2.7.schema.json",
+      "schemas/operator-decision-interface-mapping-review-1.2.7.schema.json",
+      "schemas/operator-decision-interface-readiness-input-seal-report-1.2.7.schema.json",
+      "schemas/operator-decision-interface-readiness-report-1.2.7.schema.json",
+      "schemas/operator-decision-interface-ready-plan-1.2.7.schema.json",
+      "schemas/operator-decision-interface-toolchain-lock-1.2.7.schema.json",
+      "schemas/operator-decision-interface-worker-outcome-1.2.7.schema.json"
+    ],
+    "positive_witnesses_must_be_actual_in_memory_products": true,
+    "schema_extracted_default_or_placeholder_witness_synthesis_allowed": false,
+    "implementation_report_self_schema_check_is_final_post_build_witness": true,
+    "nine_of_nine_summary_allowed_only_after_all_nine_validations": true,
+    "all_schemas_must_pass_metaschema": true,
+    "closed_local_registry_required": true,
+    "strict_duplicate_key_json_required": true,
+    "unknown_schema_properties_rejected": true,
+    "schema_validity_alone_establishes_semantic_truth": false
+  },
+  "population_contract": {
+    "populations_must_remain_separate": true,
+    "inherited_adversaries": 201,
+    "historical_readiness_adversaries": 20,
+    "historical_successor_canaries": 5,
+    "schema_known_bads": 7,
+    "DI126_adversaries": 72,
+    "DI127_contract_adversaries": 53,
+    "DI127_implementation_adversaries": 91,
+    "finding_closed_count": 0,
+    "schema_known_bads_are_not_cataloged_negative_probes": true,
+    "negative_population_arithmetic_laundering_forbidden": true,
+    "actual_outcomes_must_be_derived_and_canonical_frozen_before_catalog_expectations_are_loaded": true
+  },
+  "transitive_historical_replay_contract": {
+    "historical_population_replay_exact_except_nested_process_self_tests_suppressed": true,
+    "preserved_population_counts": {
+      "inherited_adversaries": 201,
+      "historical_readiness_adversaries": 20,
+      "historical_successor_canaries": 5,
+      "schema_known_bads": 7
+    },
+    "suppression_scope": "only_DI125_immutable_core_1_0_0_process_self_test_block_inside_top_level_DI127_worker",
+    "suppression_reason": "prevent_detached_nested_process_sessions_outliving_top_level_DI127_worker_supervision",
+    "suppressed_process_self_test_count": 7,
+    "suppressed_process_self_test_ids": [
+      "RGCORE-T-GOOD-PROCESS",
+      "RGCORE-T-GOOD-STDERR-CUSTODY",
+      "RGCORE-T-GOOD-PROCESS-GROUP",
+      "RGCORE-T-BAD-SUCCESS-STDERR",
+      "RGCORE-T-BAD-STDOUT-LIMIT",
+      "RGCORE-T-BAD-TIMEOUT",
+      "RGCORE-T-BAD-PROCESS-SPAWN"
+    ],
+    "retained_prior_DI125_process_self_test_evidence": {
+      "capture_count": 2,
+      "byte_identical": true,
+      "byte_size": 38470,
+      "sha256": "sha256:249ccd91686d5fa25d167684d37e84eae28fb4050f378fe63c240876b93f8b26",
+      "exit_code": 0,
+      "stderr_byte_size": 0,
+      "custody_role": "historical_internal_integrity_only_not_current_rerun_or_external_attestation"
+    },
+    "full_historical_process_self_test_replay_claimed": false,
+    "DI127_top_level_supervisor_independent_exercise_required": true,
+    "DI127_top_level_supervisor_canary_ids_required": [
+      "clean_exit_post_reap_group_absence",
+      "announced_residual_descendant_group_termination",
+      "stdout_stream_limit_rejection",
+      "stderr_stream_limit_rejection",
+      "timeout_group_cleanup_and_reap"
+    ]
+  },
+  "implementation_adversary_contract": {
+    "catalog_path": "fixtures/v1.2.7/operator-decision-interface-implementation-fixture-catalog.json",
+    "family_count": 16,
+    "case_count": 91,
+    "families": [
+      {
+        "family_id": "DI127IA-FAMILY-01",
+        "family": "predecessor_review_and_report_binding",
+        "case_count": 4
+      },
+      {
+        "family_id": "DI127IA-FAMILY-02",
+        "family": "raw_git_identity_rehash_and_topology",
+        "case_count": 4
+      },
+      {
+        "family_id": "DI127IA-FAMILY-03",
+        "family": "raw_subject_resolver_purity_freshness_and_cache_exclusion",
+        "case_count": 4
+      },
+      {
+        "family_id": "DI127IA-FAMILY-04",
+        "family": "schema_finder_lease_ownership_position_and_namespace",
+        "case_count": 4
+      },
+      {
+        "family_id": "DI127IA-FAMILY-05",
+        "family": "schema_finder_success_exception_cleanup_and_DI124_guard",
+        "case_count": 4
+      },
+      {
+        "family_id": "DI127IA-FAMILY-06",
+        "family": "worker_success_channel_and_payload_framing",
+        "case_count": 4
+      },
+      {
+        "family_id": "DI127IA-FAMILY-07",
+        "family": "worker_failure_channel_status_and_typed_diagnostic_framing",
+        "case_count": 4
+      },
+      {
+        "family_id": "DI127IA-FAMILY-08",
+        "family": "evaluator_local_process_group_stream_deadline_and_reap_supervision",
+        "case_count": 4
+      },
+      {
+        "family_id": "DI127IA-FAMILY-09",
+        "family": "serial_alpha_reap_recapture_beta_order_and_budget_algebra",
+        "case_count": 4
+      },
+      {
+        "family_id": "DI127IA-FAMILY-10",
+        "family": "complete_payload_equality_and_PID_time_exclusion",
+        "case_count": 4
+      },
+      {
+        "family_id": "DI127IA-FAMILY-11",
+        "family": "historical_population_separation_and_zero_finding_closure",
+        "case_count": 4
+      },
+      {
+        "family_id": "DI127IA-FAMILY-12",
+        "family": "actual_freeze_before_expectation_admission",
+        "case_count": 4
+      },
+      {
+        "family_id": "DI127IA-FAMILY-13",
+        "family": "self_excluding_lock_absent_install_and_reproduction_lifecycle",
+        "case_count": 4
+      },
+      {
+        "family_id": "DI127IA-FAMILY-14",
+        "family": "N127_three_record_topology_N126_nonadmission_and_one_R0_stop",
+        "case_count": 4
+      },
+      {
+        "family_id": "DI127IA-FAMILY-15",
+        "family": "implementation_report_semantic_consumer_and_graph_isolation",
+        "case_count": 4
+      },
+      {
+        "family_id": "DI127IA-FAMILY-16",
+        "family": "authority_and_future_stage_promotion",
+        "case_count": 31
+      }
+    ],
+    "ordered_case_ids": [
+      "DI127IA-01-01",
+      "DI127IA-01-02",
+      "DI127IA-01-03",
+      "DI127IA-01-04",
+      "DI127IA-02-01",
+      "DI127IA-02-02",
+      "DI127IA-02-03",
+      "DI127IA-02-04",
+      "DI127IA-03-01",
+      "DI127IA-03-02",
+      "DI127IA-03-03",
+      "DI127IA-03-04",
+      "DI127IA-04-01",
+      "DI127IA-04-02",
+      "DI127IA-04-03",
+      "DI127IA-04-04",
+      "DI127IA-05-01",
+      "DI127IA-05-02",
+      "DI127IA-05-03",
+      "DI127IA-05-04",
+      "DI127IA-06-01",
+      "DI127IA-06-02",
+      "DI127IA-06-03",
+      "DI127IA-06-04",
+      "DI127IA-07-01",
+      "DI127IA-07-02",
+      "DI127IA-07-03",
+      "DI127IA-07-04",
+      "DI127IA-08-01",
+      "DI127IA-08-02",
+      "DI127IA-08-03",
+      "DI127IA-08-04",
+      "DI127IA-09-01",
+      "DI127IA-09-02",
+      "DI127IA-09-03",
+      "DI127IA-09-04",
+      "DI127IA-10-01",
+      "DI127IA-10-02",
+      "DI127IA-10-03",
+      "DI127IA-10-04",
+      "DI127IA-11-01",
+      "DI127IA-11-02",
+      "DI127IA-11-03",
+      "DI127IA-11-04",
+      "DI127IA-12-01",
+      "DI127IA-12-02",
+      "DI127IA-12-03",
+      "DI127IA-12-04",
+      "DI127IA-13-01",
+      "DI127IA-13-02",
+      "DI127IA-13-03",
+      "DI127IA-13-04",
+      "DI127IA-14-01",
+      "DI127IA-14-02",
+      "DI127IA-14-03",
+      "DI127IA-14-04",
+      "DI127IA-15-01",
+      "DI127IA-15-02",
+      "DI127IA-15-03",
+      "DI127IA-15-04",
+      "DI127IA-16-01",
+      "DI127IA-16-02",
+      "DI127IA-16-03",
+      "DI127IA-16-04",
+      "DI127IA-16-05",
+      "DI127IA-16-06",
+      "DI127IA-16-07",
+      "DI127IA-16-08",
+      "DI127IA-16-09",
+      "DI127IA-16-10",
+      "DI127IA-16-11",
+      "DI127IA-16-12",
+      "DI127IA-16-13",
+      "DI127IA-16-14",
+      "DI127IA-16-15",
+      "DI127IA-16-16",
+      "DI127IA-16-17",
+      "DI127IA-16-18",
+      "DI127IA-16-19",
+      "DI127IA-16-20",
+      "DI127IA-16-21",
+      "DI127IA-16-22",
+      "DI127IA-16-23",
+      "DI127IA-16-24",
+      "DI127IA-16-25",
+      "DI127IA-16-26",
+      "DI127IA-16-27",
+      "DI127IA-16-28",
+      "DI127IA-16-29",
+      "DI127IA-16-30",
+      "DI127IA-16-31"
+    ],
+    "actual_outcomes_derived_before_expected_results_loaded": true,
+    "actuals_canonical_serialization_frozen_before_expectations": true,
+    "actual_first_phase_sequence_required": [
+      "public_projection_validated",
+      "primary_mutations_executed",
+      "primary_actuals_frozen",
+      "replay_mutations_executed",
+      "replay_actuals_frozen",
+      "expectations_admitted",
+      "compared"
+    ],
+    "mutation_execution_after_expectation_admission_allowed": false,
+    "expected_values_may_not_drive_consumer_or_oracle": true,
+    "complete_report_consumer_comparison_required": true,
+    "precomparison_nonexportable_report_semantic_core_required": true,
+    "precomparison_core_may_assert_expectation_comparison_or_replay_facts": false,
+    "final_full_report_must_use_same_semantic_core_consumer": true,
+    "postcomparison_adversary_summary_consumed_separately": true,
+    "mutable_graph_aliasing_forbidden": true
+  },
+  "synthetic_and_pre_N_proof_contract": {
+    "I127_evidence_scope": "synthetic_capability_and_real_pre_N127_boundary_only",
+    "synthetic_route_uses_production_resolver_finder_worker_and_consumer_code": true,
+    "synthetic_N127_input_and_topology_core_derived_inside_each_existing_implementation_worker": true,
+    "synthetic_worker_cores_included_in_complete_byte_equal_alpha_beta_payloads": true,
+    "parent_reconsumes_both_synthetic_cores_before_building_report": true,
+    "second_serial_360_second_pair_required": false,
+    "shared_record_graph_consumer_uses_opaque_synthetic_or_real_admission_tokens": true,
+    "boolean_only_synthetic_or_real_scope_switch_allowed": false,
+    "synthetic_objects_are_permanently_non_evidentiary": true,
+    "synthetic_I127_commit_and_tree_must_be_null": true,
+    "synthetic_I127_subject_scope": "bounded_live_I127_candidate_projection_nonimmutable",
+    "synthetic_I127_retained_review_baseline_must_be_exact": true,
+    "synthetic_readiness_input_binding_scope": "synthetic_in_memory_nonrepository_operand",
+    "synthetic_readiness_input_blob_oid_must_be_null": true,
+    "synthetic_R0_invocation_eligibility": "blocked_pending_valid_immutable_N127",
+    "synthetic_pair_authorization_allowed": false,
+    "synthetic_readiness_report_must_be_schema_and_semantic_consumer_validated": true,
+    "real_immutable_I127_and_N127_identities_allowed_only_at_external_R0": true,
+    "real_N127_consumer_entry_may_be_claimed_at_I127": false,
+    "real_N127_consumer_entry_first_eligible_stage": "external_R0_after_immutable_N127",
+    "pre_N127_missing_boundary_required": true,
+    "root_cause_hypothesis_state": "provisional_source_supported_until_corrected_real_R0",
+    "isolated_regression_required": true,
+    "incident_record_rewrite_or_closure_allowed": false
+  },
+  "future_transition_topology": {
+    "ordered_stages": [
+      "DI127-readiness-worker-liveness-implementation",
+      "N127-replacement-readiness-input-seal",
+      "external-R0-reproduction",
+      "STOP-before-R1"
+    ],
+    "N127": {
+      "direct_single_parent_of_I127_required": true,
+      "changed_existing_paths": [],
+      "added_paths": [
+        "gate/operator-decision-interface-reviews/reiyah.operator-decision-interface-implementation-review-1.2.7.json",
+        "gate/operator-decision-interface-reviews/reiyah.operator-decision-interface-mapping-review-1.2.7.json",
+        "validation/operator-decision-interface-ready-plan-1.2.7.json"
+      ],
+      "removed_paths": [],
+      "executable_paths": [],
+      "added_path_count": 3,
+      "required_git_mode": "100644",
+      "N126_admission_role": "historical_only_nonadmitting"
+    },
+    "R0": {
+      "external_capture_only": true,
+      "creates_commit": false,
+      "installs_repository_report": false,
+      "exact_invocation_count": 1,
+      "retry_loop_authorized": false,
+      "requires_immutable_N127": true,
+      "requires_exit_code": 0,
+      "requires_empty_stderr": true,
+      "requires_repository_pre_post_identity": true,
+      "requires_readiness_input_consumer_entry": true,
+      "evaluator_proves_exactly_one_pair_per_authorized_invocation": true,
+      "stateless_evaluator_proves_cross_invocation_uniqueness": false,
+      "outer_capture_must_prove_only_one_external_invocation_executed": true,
+      "maximum_result": "R0_reproduced_pending_R1"
+    },
+    "stop_before": [
+      "R1",
+      "P",
+      "R2",
+      "C",
+      "Q",
+      "main",
+      "merge",
+      "push"
+    ]
+  },
+  "validation_contract": {
+    "launcher_path": "tools/gate_a_1_2_7_decision_interface.sh",
+    "evaluator_path": "tools/gate_a_1_2_7_decision_interface.py",
+    "core_path": "tools/reiyah_gate_core_1_0_0.py",
+    "toolchain_lock_path": "validation/operator-decision-interface-toolchain-lock-1.2.7.json",
+    "implementation_report_schema_path": "schemas/operator-decision-interface-implementation-report-1.2.7.schema.json",
+    "toolchain_lock_self_excluding": true,
+    "toolchain_lock_absent_render_twice_then_exact_install_then_installed_rerender": true,
+    "candidate_report_self_digest_allowed": false,
+    "candidate_future_commit_tree_or_blob_assertion_allowed": false,
+    "launcher_isolation_before_language_runtime": true,
+    "evaluator_source_byte_limit": 4194304,
+    "core_source_byte_limit": 1048576,
+    "stdout_byte_limit": 67108864,
+    "stderr_byte_limit": 4194304,
+    "launcher_timeout_seconds": 960,
+    "pre_N127_sibling_timeout_seconds": 30,
+    "pair_timeout_seconds": 840,
+    "evaluator_post_pair_report_margin_seconds": 60,
+    "launcher_cleanup_reserve_seconds": 5,
+    "launcher_post_pair_margin_seconds": 65,
+    "launcher_budget_lower_bound_seconds": 935,
+    "launcher_timeout_scope": "internal_child_supervision_report_semantics_group_closure_and_reap_excluding_final_caller_delivery",
+    "final_caller_delivery_wall_clock_bounded": false,
+    "launcher_budget_strict_inequality_satisfied": true,
+    "single_outer_launcher_monotonic_deadline_required": true,
+    "launcher_absolute_monotonic_deadline_injected_nonserialized": true,
+    "pair_admission_requires_more_than_905_seconds_remaining": true,
+    "implementation_evaluator_outer_deadline_reset_allowed": false,
+    "implementation_report_pre_N127_sibling_required": true,
+    "closed_launcher_invocation_role_contract_required": true,
+    "real_R0_pair_requires_single_use_public_external_admission": true,
+    "sibling_and_main_share_exact_captured_evaluator_and_core_bytes": true,
+    "sibling_boundary_bundle_is_canonical_bounded_and_injected_once": true,
+    "fresh_worker_timeout_seconds": 360,
+    "fresh_worker_count": 2,
+    "parent_raw_capture_count": 3,
+    "complete_comparable_worker_payload_byte_equality_required": true,
+    "raw_git_commit_tree_blob_rehash_required_in_implementation_mode": true,
+    "raw_index_and_git_administration_profile_bound": true,
+    "git_ignored_and_unexpected_untracked_worktree_paths_must_match_exact_declared_set": true,
+    "development_candidate_is_bounded_live_projection_not_commit": true,
+    "implementation_candidate_is_immutable_commit_projection": true,
+    "repository_write_allowed": false,
+    "network_used": false,
+    "two_unchanged_development_reports_must_be_byte_identical": true,
+    "two_clean_implementation_reports_must_be_byte_identical": true
+  },
+  "result_contract": {
+    "successful_result": "readiness_worker_liveness_corrected_N127_absent_not_ready",
+    "real_readiness_evaluated": false,
+    "replacement_N127_created_by_implementation": false,
+    "R0_created_by_implementation": false,
+    "finding_closed_count": 0,
+    "interface_readiness_state": "not_ready",
+    "operator_acceptance_state": "unaccepted",
+    "implementation_report_is_internal_integrity_signal_only": true,
+    "incident_record_remains_open_in_git": true
+  },
+  "authority": {
+    "subject_architecture_status": "architecture_complete",
+    "correction_contract_state": "retained_validated_not_implemented",
+    "correction_review_state": "internal_advisory_go_retained",
+    "correction_implementation_state": "candidate_under_locked_validation",
+    "incident_record_lifecycle_status": "failed",
+    "incident_resolution_state": "open_pending_corrected_real_R0_no_in_place_closure",
+    "replacement_readiness_inputs_state": "absent",
+    "interface_readiness_state": "not_ready",
+    "operator_acceptance_state": "unaccepted",
+    "ga_17_state": "not_evaluated",
+    "transport_verification_state": "not_evaluated",
+    "independent_external_review_completed": false,
+    "human_decision_process_authorized": false,
+    "scientific_evidence_created": false,
+    "scientific_claim_authority": false,
+    "publication_acceptance_authorized": false,
+    "public_distribution_eligible": false,
+    "public_distribution_authorized": false,
+    "runtime_authorized": false,
+    "cloud_execution_authorized": false,
+    "private_data_ingestion_authorized": false,
+    "physical_control_authorized": false,
+    "gate_b_authorized": false,
+    "R1_authorized": false,
+    "P_authorized": false,
+    "R2_authorized": false,
+    "C_authorized": false,
+    "Q_authorized": false,
+    "main_ref_change_authorized": false,
+    "merge_commit_authorized": false,
+    "public_push_authorized": false
+  },
+  "next_transition": {
+    "stage_id": "N127-replacement-readiness-input-seal",
+    "authorized_only_after_retained_reproduced_I127": true,
+    "current_stage_may_create_N127": false,
+    "maximum_current_result": "readiness_worker_liveness_corrected_N127_absent_not_ready",
+    "one_external_R0_then_stop": true,
+    "R1_P_R2_C_Q_main_merge_push_authorized": false
+  }
+}

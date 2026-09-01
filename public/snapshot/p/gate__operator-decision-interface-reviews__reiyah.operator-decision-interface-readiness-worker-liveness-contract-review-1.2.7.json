@@ -1,0 +1,526 @@
+{
+  "schema_id": "https://schemas.reiyah.invalid/gate-a/1.2.7/operator-decision-interface-readiness-worker-liveness-contract-review.schema.json",
+  "artifact_id": "reiyah.artifact.operator-decision-interface-readiness-worker-liveness-contract-review-1.2.7",
+  "review_id": "reiyah.review.operator-decision-interface-readiness-worker-liveness-contract@1.2.7",
+  "record_kind": "operator_decision_interface_readiness_worker_liveness_contract_review",
+  "version": "1.2.7",
+  "lifecycle_status": "proposed",
+  "as_of_date": "2026-09-01",
+  "stage_id": "DI127-readiness-worker-liveness-review",
+  "repository_identity": {
+    "project": "Reiyah",
+    "canonical_root": "/Users/danielwahnich/workspace/reiyah",
+    "git_root": "/Users/danielwahnich/workspace/reiyah",
+    "configured_remote": "https://github.com/manfromnowhere143/reiyah.git",
+    "authoring_branch_context": "gate-a-1.2.7-readiness-r0-correction",
+    "branch_is_scientific_safety_acceptance_or_review_identity": false
+  },
+  "subject_contract": {
+    "stage_id": "DI127-readiness-worker-liveness-incident-contract",
+    "commit": "45e2126a35a2706d8cf922333f71f132ddce5491",
+    "tree": "5fb93f50420839c533b36fa28f8a362f0560bc16",
+    "sole_parent": "7ed76fa8a7a2a82fda5396a0ae63ceee4e0f8bc8",
+    "parent_tree": "4d04d9ccf3ec36909989dc9f4c2d99fef942519a",
+    "result": "readiness_worker_liveness_correction_contracted_not_reviewed_not_implemented",
+    "snapshot_mode": "contract",
+    "subject_bytes_source": "rehash_verified_raw_git_commit_tree_and_blobs",
+    "full_raw_closure": {
+      "file_count": 1063,
+      "tree_object_count": 72,
+      "aggregate_blob_byte_size": 17648952,
+      "descriptor_byte_size": 114444,
+      "descriptor_sha256": "sha256:35b999e9d0ff9064be68641bbfb75ff2c40c1a79970748a1067a73791dba56b0"
+    }
+  },
+  "subject_contract_artifact_bundle": {
+    "serialization_rule": "sorted_path_NUL_mode_NUL_git_blob_oid_NUL_byte_size_NUL_sha256_LF",
+    "path_count": 12,
+    "aggregate_byte_size": 258330,
+    "descriptor_byte_size": 2598,
+    "descriptor_sha256": "sha256:1aea225f3419b38d764bf988dbb582b634849b350a47f379ded25e0a2ff50ca8",
+    "artifacts": [
+      {
+        "path": "docs/OPERATOR_DECISION_INTERFACE_READINESS_WORKER_LIVENESS_CORRECTION_1_2_7.md",
+        "git_mode": "100644",
+        "git_blob_oid": "f68fd2b2811ecb991ed0a098be52db3cdb1943c8",
+        "byte_size": 9079,
+        "sha256": "sha256:576b6756753d6c425f05095c995d7434a09056cdd4e478ad278e3d48ae6e2a09"
+      },
+      {
+        "path": "fixtures/v1.2.7/operator-decision-interface-readiness-worker-liveness-fixture-catalog.json",
+        "git_mode": "100644",
+        "git_blob_oid": "acfa66d553d7d830932e4694c8cbdcd67d0306f2",
+        "byte_size": 13459,
+        "sha256": "sha256:26c96625d606152bc26dc31223883c886fe6c2e5004afb382633f1dbca79b81a"
+      },
+      {
+        "path": "gate/operator-decision-interface-corrections/reiyah.operator-decision-interface-readiness-worker-liveness-correction-1.2.7.json",
+        "git_mode": "100644",
+        "git_blob_oid": "809e50aa027096b29ad087e8daf0602037f58568",
+        "byte_size": 10985,
+        "sha256": "sha256:51c2f0d8e94129a7dde4822ed2597e3e0392a4cef51454e3e7a6751f9ec6dd04"
+      },
+      {
+        "path": "gate/operator-decision-interface-incidents/reiyah.operator-decision-interface-readiness-worker-liveness-1.2.7.json",
+        "git_mode": "100644",
+        "git_blob_oid": "2f5c6c076eb428686df380c8c8d754ed82f15df1",
+        "byte_size": 10479,
+        "sha256": "sha256:ed05486d39a0fcf740a0c58266a773f53c8073b69cc3a88828d75881e3168cd2"
+      },
+      {
+        "path": "schemas/operator-decision-interface-readiness-worker-liveness-contract-report-1.2.7.schema.json",
+        "git_mode": "100644",
+        "git_blob_oid": "b376c97f70a0588d817797bdfdb46eb9eb854b95",
+        "byte_size": 20986,
+        "sha256": "sha256:11751d236cef851119b59662d33832337e4951d1da4108fc1728e2fdf8870aa9"
+      },
+      {
+        "path": "schemas/operator-decision-interface-readiness-worker-liveness-correction-1.2.7.schema.json",
+        "git_mode": "100644",
+        "git_blob_oid": "e982a64e5dbc58ee35ef2e1bcc59ac8d45e791f7",
+        "byte_size": 11754,
+        "sha256": "sha256:bd1ec7d681c3ee52740a3e9b88c44d5130c23233a6dd9d211d0e71bdf5fc4dc4"
+      },
+      {
+        "path": "schemas/operator-decision-interface-readiness-worker-liveness-correction-plan-1.2.7.schema.json",
+        "git_mode": "100644",
+        "git_blob_oid": "4b90e1d9476f76a6fa76f88ed3f5bb695dc02a42",
+        "byte_size": 10598,
+        "sha256": "sha256:9e6d66b6913798929c3d53a3d9f6ba12e96b5abbfd0f1186fff40adb872ab6e1"
+      },
+      {
+        "path": "schemas/operator-decision-interface-readiness-worker-liveness-fixture-catalog-1.2.7.schema.json",
+        "git_mode": "100644",
+        "git_blob_oid": "14be92d826171429daadf0213eeb92073fb77d74",
+        "byte_size": 14448,
+        "sha256": "sha256:21a3c3f21e7b31887ca600b6cad2b2ad39f719053d716160012adf2d95006e3e"
+      },
+      {
+        "path": "schemas/operator-decision-interface-readiness-worker-liveness-incident-1.2.7.schema.json",
+        "git_mode": "100644",
+        "git_blob_oid": "2a3cda2a2ab6c9ade5ac46a34f5e4911caaf389a",
+        "byte_size": 11220,
+        "sha256": "sha256:76e354a21fc8e3b90292d4857d749921ddfda3c3e5930112261e10f5da544bbe"
+      },
+      {
+        "path": "tools/gate_a_1_2_7_readiness_worker_liveness_contract.py",
+        "git_mode": "100755",
+        "git_blob_oid": "b0e794f77ab3791ab64d8c17b775b3225e7fd3fd",
+        "byte_size": 124347,
+        "sha256": "sha256:0905af184e2c76e42856e22b71616c73d8e2ad5483dd52c6f3363bf15b30c69a"
+      },
+      {
+        "path": "tools/gate_a_1_2_7_readiness_worker_liveness_contract.sh",
+        "git_mode": "100755",
+        "git_blob_oid": "f1473e047c22c7d863ac80e948ff94373908fad6",
+        "byte_size": 11036,
+        "sha256": "sha256:54b4adf7011bd876f9e7e7b41a182801c054ad909c5546cf39ec56f05d06dac9"
+      },
+      {
+        "path": "validation/operator-decision-interface-readiness-worker-liveness-correction-plan-1.2.7.json",
+        "git_mode": "100644",
+        "git_blob_oid": "96f07208eecc3cafba6883c84f0e9aa132c90281",
+        "byte_size": 9939,
+        "sha256": "sha256:88f7deea6347b33c6e4221dbe570e6b14b88f55ced4af5555e18f8f8b0d803d4"
+      }
+    ]
+  },
+  "subject_transition_projection": {
+    "serialization_rule": "sorted_path_NUL_mode_NUL_git_blob_oid_NUL_byte_size_NUL_sha256_LF",
+    "path_count": 13,
+    "aggregate_byte_size": 474446,
+    "descriptor_byte_size": 2749,
+    "descriptor_sha256": "sha256:0d9154edf53a571e50e687fde6965aae0296f3aea67c04e17022c0673477dac5",
+    "handoff_path": "docs/SESSION_HANDOFF.md",
+    "handoff_git_blob_oid": "e691b33012bac43986dc36ff34d11e3044b7cf5d",
+    "handoff_byte_size": 216116,
+    "handoff_sha256": "sha256:8f74c8637f408fa494442ea5135b6e22a91d7bb89a7d390ef211729031495b3e"
+  },
+  "retained_contract_report": {
+    "path": "gate/validation-reports/operator-decision-interface-readiness-worker-liveness-contract-1.2.7.json",
+    "git_mode": "100644",
+    "expected_git_blob_oid": "76d0cb2faf3a1e24183d95eb1fe6aca9b285a1ea",
+    "byte_size": 10191,
+    "sha256": "sha256:97858ba30d5a399d70735f5c743a113675c05e441a6ff6a19db766f8cba70877",
+    "schema_path": "schemas/operator-decision-interface-readiness-worker-liveness-contract-report-1.2.7.schema.json",
+    "schema_sha256": "sha256:11751d236cef851119b59662d33832337e4951d1da4108fc1728e2fdf8870aa9",
+    "snapshot_mode": "contract",
+    "status": "pass",
+    "result": "readiness_worker_liveness_correction_contracted_not_reviewed_not_implemented",
+    "equal_external_capture_count": 2,
+    "external_captures_byte_identical": true,
+    "retention_role": "internal_subject_integrity_operand_not_independent_or_release_evidence",
+    "execution_independently_attested": false
+  },
+  "review_contract": {
+    "review_kind": "role_separated_read_only_internal_advisory_review",
+    "required_roles": [
+      "schema_runtime_lifecycle_reviewer",
+      "raw_git_topology_and_transition_reviewer",
+      "worker_process_framing_and_deadline_reviewer",
+      "adversarial_population_and_authority_reviewer"
+    ],
+    "required_review_count": 4,
+    "required_distinct_role_count": 4,
+    "required_check_ids": [
+      "DI127R-CHECK-001-incident-correction-plan-schema-and-report-joins",
+      "DI127R-CHECK-002-owned-schema-finder-lifecycle-contract",
+      "DI127R-CHECK-003-bootstrap-free-raw-resolver-separation",
+      "DI127R-CHECK-004-review-go-no-go-lifecycle-closure",
+      "DI127R-CHECK-005-subject-raw-git-object-lineage-and-thirteen-path-delta",
+      "DI127R-CHECK-006-git-administration-index-status-and-reference-closure",
+      "DI127R-CHECK-007-fresh-parent-post-recapture-and-drift-closure",
+      "DI127R-CHECK-008-stage-topology-self-reference-and-successor-revalidation",
+      "DI127R-CHECK-009-locked-bootstrap-cli-eof-descriptor-and-outer-supervision",
+      "DI127R-CHECK-010-bounded-git-child-framing-deadline-and-cleanup",
+      "DI127R-CHECK-011-worker-outcome-framing-and-status-separation",
+      "DI127R-CHECK-012-serial-worker-liveness-recapture-reap-and-deadline-algebra",
+      "DI127R-CHECK-013-adversarial-population-and-diagnostic-closure",
+      "DI127R-CHECK-014-historical-population-preservation-and-zero-finding-closure",
+      "DI127R-CHECK-015-actual-before-expectations-and-synthetic-nonpromotion",
+      "DI127R-CHECK-016-authority-ceiling-review-independence-and-go-no-go-closure"
+    ],
+    "required_check_count": 16,
+    "subject_authoring_task_path": "/root",
+    "author_identity_state": "session_task_role_only_not_external_identity",
+    "author_and_reviewer_role_overlap_allowed": false,
+    "all_reviews_bind_exact_subject_and_report": true,
+    "go_requires_all_checks_pass_and_zero_blockers": true,
+    "no_go_requires_at_least_one_typed_open_blocker": true,
+    "inability_to_complete_required_check_is_typed_blocker": true,
+    "review_validity_is_distinct_from_go": true,
+    "subject_change_requires_review_restart": true,
+    "review_can_create_operator_acceptance": false,
+    "review_can_authorize_implementation": false,
+    "review_can_create_scientific_evidence": false,
+    "independent_external_review_completed": false
+  },
+  "incident_and_contract_coverage": {
+    "incident_confirmed": true,
+    "public_failure_streams_exactly_bound": true,
+    "original_route_exit_code_retention_state": "not_retained",
+    "exit_layers_not_coerced": true,
+    "causal_hypothesis_state": "supported_source_trace_requires_closed_regression_confirmation",
+    "diagnostic_followup_payload_retained": false,
+    "root_cause_closed": false,
+    "incident_closed": false,
+    "future_implementation_regressions_executed": false,
+    "schema_finder_lifecycle_obligations_reviewed": true,
+    "bootstrap_free_raw_resolver_obligations_reviewed": true,
+    "worker_framing_and_deadline_obligations_reviewed": true,
+    "replacement_N127_and_R0_topology_reviewed": true,
+    "population_counts": {
+      "inherited": 201,
+      "readiness": 20,
+      "successor_canaries": 5,
+      "schema_known_bads": 7,
+      "DI126": 72
+    },
+    "DI127_contract_mutation_case_count": 53,
+    "DI127_contract_mutation_family_count": 10,
+    "finding_closed_count": 0
+  },
+  "reviews": [
+    {
+      "review_observation_id": "reiyah.review-observation.di127-readiness-worker-liveness.schema-runtime-lifecycle.1",
+      "reviewer_self_identifier": "codex-agent.di127_schema_audit",
+      "task_path": "/root/di127_schema_audit",
+      "reviewer_kind": "model_assisted_internal_advisory",
+      "reviewer_identity_state": "self_asserted_internal_model_role_not_externally_verified",
+      "role": "schema_runtime_lifecycle_reviewer",
+      "observation_time": null,
+      "timestamp_basis": "session_date_only_not_external_time_attestation",
+      "subject_commit": "45e2126a35a2706d8cf922333f71f132ddce5491",
+      "subject_tree": "5fb93f50420839c533b36fa28f8a362f0560bc16",
+      "subject_sole_parent": "7ed76fa8a7a2a82fda5396a0ae63ceee4e0f8bc8",
+      "retained_contract_report_sha256": "sha256:97858ba30d5a399d70735f5c743a113675c05e441a6ff6a19db766f8cba70877",
+      "read_basis": "rehash_verified_git_object_bytes_plus_retained_contract_report_operand_and_transitive_DI124_source_trace",
+      "check_results": [
+        {
+          "check_id": "DI127R-CHECK-001-incident-correction-plan-schema-and-report-joins",
+          "state": "pass",
+          "blocker_ids": [],
+          "summary": "Five committed DI127 schemas strict-parse and pass Draft 2020-12 metaschema validation; four subject instances validate and equal their whole-document const schemas; exact incident, correction, plan, catalog, report, and identifier joins hold."
+        },
+        {
+          "check_id": "DI127R-CHECK-002-owned-schema-finder-lifecycle-contract",
+          "state": "pass",
+          "blocker_ids": [],
+          "summary": "The retained contract requires exact baseline meta-path capture, one owned finder by object identity and exact position, removal of only that finder, baseline equality after success and exception cleanup, rejection of missing displaced duplicated foreign or double release, and no weakening of the DI124 guard."
+        },
+        {
+          "check_id": "DI127R-CHECK-003-bootstrap-free-raw-resolver-separation",
+          "state": "pass",
+          "blocker_ids": [],
+          "summary": "The single raw subject resolver has a closed allowed-operation set, forbids schema bootstrap, lock rendering, readiness parsing, schema-runtime construction, admission-token creation, and dispatch, is shared by full resolution and recaptures, and cannot use cached live identity."
+        },
+        {
+          "check_id": "DI127R-CHECK-004-review-go-no-go-lifecycle-closure",
+          "state": "pass",
+          "blocker_ids": [],
+          "summary": "The retained four-role review contract admits GO only for all checks passing with zero blockers and requires typed open blockers for NO-GO; the ordered direct-child successor topology preserves review, implementation, N127, R0, and hard-stop lifecycle boundaries."
+        }
+      ],
+      "verdict": "go",
+      "blocker_ids": [],
+      "limitations": [
+        "not_independent_external_review",
+        "self_asserted_internal_model_role_not_identity_or_time_attested",
+        "retained_contract_report_is_internal_integrity_operand_not_independent_execution_attestation",
+        "schema_validity_and_contract_coherence_do_not_prove_future_implementation_behavior",
+        "causal_hypothesis_remains_provisional_until_closed_implementation_regressions"
+      ],
+      "repository_mutation_performed": false,
+      "network_used": false
+    },
+    {
+      "review_observation_id": "reiyah.review-observation.di127-readiness-worker-liveness.raw-git-topology.1",
+      "reviewer_self_identifier": "codex-agent:/root/di127_validator_audit/raw_git_topology_review",
+      "task_path": "/root/di127_validator_audit/raw_git_topology_review",
+      "reviewer_kind": "model_assisted_internal_advisory",
+      "reviewer_identity_state": "self_asserted_internal_model_role_not_externally_verified",
+      "role": "raw_git_topology_and_transition_reviewer",
+      "observation_time": "2026-09-01T08:51:22Z",
+      "timestamp_basis": "local_host_clock_observation_only_not_externally_attested",
+      "subject_commit": "45e2126a35a2706d8cf922333f71f132ddce5491",
+      "subject_tree": "5fb93f50420839c533b36fa28f8a362f0560bc16",
+      "subject_sole_parent": "7ed76fa8a7a2a82fda5396a0ae63ceee4e0f8bc8",
+      "retained_contract_report_sha256": "sha256:97858ba30d5a399d70735f5c743a113675c05e441a6ff6a19db766f8cba70877",
+      "read_basis": "independent_raw_git_commit_tree_blob_index_administration_status_and_reference_rehash_plus_two_equal_contract_report_captures",
+      "check_results": [
+        {
+          "check_id": "DI127R-CHECK-005-subject-raw-git-object-lineage-and-thirteen-path-delta",
+          "state": "pass",
+          "blocker_ids": [],
+          "summary": "Independent SHA-1 rehash of the complete subject and parent commit-tree-blob closures confirms the exact one-modified and twelve-added delta, modes, handoff prefix, preservation, and thirteen-binding projection."
+        },
+        {
+          "check_id": "DI127R-CHECK-006-git-administration-index-status-and-reference-closure",
+          "state": "pass",
+          "blocker_ids": [],
+          "summary": "Exact HEAD and ref state, closed Git administration, raw checksum-valid DIRC v2 index with 1063 stage-zero entries and no extended flags, exact tree equality, clean subject status, and absence of ignored or administration indirection all hold."
+        },
+        {
+          "check_id": "DI127R-CHECK-007-fresh-parent-post-recapture-and-drift-closure",
+          "state": "pass",
+          "blocker_ids": [],
+          "summary": "The retained report asserts equal parent-post capture; independent fresh A/B administration, index, status, ref, and object captures agree and reproduce the exact closures, while review development mode must separately admit only its declared untracked delta."
+        },
+        {
+          "check_id": "DI127R-CHECK-008-stage-topology-self-reference-and-successor-revalidation",
+          "state": "pass",
+          "blocker_ids": [],
+          "summary": "The subject contains no own commit, tree, or report digest; result identity is deferred; the contract-to-review-to-implementation-to-N127-to-one-external-R0 topology is acyclic and stops before R1, P, R2, C, Q, main, merge, and push with future raw revalidation."
+        }
+      ],
+      "verdict": "go",
+      "blocker_ids": [],
+      "limitations": [
+        "not_independent_external_review",
+        "self_asserted_internal_model_role_not_identity_or_time_attested",
+        "cat_file_payloads_independently_rehashed_without_direct_packfile_parser",
+        "launcher_not_replayed_by_this_role",
+        "fresh_recapture_cannot_externally_attest_historical_interval",
+        "host_timestamp_not_external_time_attestation"
+      ],
+      "repository_mutation_performed": false,
+      "network_used": false
+    },
+    {
+      "review_observation_id": "reiyah.review-observation.di127-readiness-worker-liveness.worker-process-framing-deadline.1",
+      "reviewer_self_identifier": "codex-agent.di127_validator_audit",
+      "task_path": "/root/di127_validator_audit",
+      "reviewer_kind": "model_assisted_internal_advisory",
+      "reviewer_identity_state": "self_asserted_internal_model_role_not_externally_verified",
+      "role": "worker_process_framing_and_deadline_reviewer",
+      "observation_time": null,
+      "timestamp_basis": "session_date_only_not_external_time_attestation",
+      "subject_commit": "45e2126a35a2706d8cf922333f71f132ddce5491",
+      "subject_tree": "5fb93f50420839c533b36fa28f8a362f0560bc16",
+      "subject_sole_parent": "7ed76fa8a7a2a82fda5396a0ae63ceee4e0f8bc8",
+      "retained_contract_report_sha256": "sha256:97858ba30d5a399d70735f5c743a113675c05e441a6ff6a19db766f8cba70877",
+      "read_basis": "rehash_verified_git_object_bytes_plus_locked_contract_control_flow_and_two_equal_retained_report_source_captures",
+      "check_results": [
+        {
+          "check_id": "DI127R-CHECK-009-locked-bootstrap-cli-eof-descriptor-and-outer-supervision",
+          "state": "pass",
+          "blocker_ids": [],
+          "summary": "Exact CLI gating and actual EOF precede Git probing; the deny-network and deny-write sandbox precedes evaluator CPython; bounded no-follow descriptor capture feeds the isolated evaluator child; both streams are drained under the declared whole-evaluator bounds with canonical success and failure framing."
+        },
+        {
+          "check_id": "DI127R-CHECK-010-bounded-git-child-framing-deadline-and-cleanup",
+          "state": "pass",
+          "blocker_ids": [],
+          "summary": "Sanitized exact Git execution uses null stdin, simultaneous selector drain, bounded streams and deadline, allowed-status and empty-stderr enforcement, typed direct-child kill and reap failures, and process-group containment under the outer supervisor."
+        },
+        {
+          "check_id": "DI127R-CHECK-011-worker-outcome-framing-and-status-separation",
+          "state": "pass",
+          "blocker_ids": [],
+          "summary": "The contract separates exit-zero success with empty stderr from exit-one-or-two bounded canonical typed failure with empty stdout; worker kind, role, status, code, message, and path must join, and nonzero outcomes cannot enter the success parser."
+        },
+        {
+          "check_id": "DI127R-CHECK-012-serial-worker-liveness-recapture-reap-and-deadline-algebra",
+          "state": "pass",
+          "blocker_ids": [],
+          "summary": "The contract requires alpha to stream, close, and reap before fresh raw recapture and beta; workers cannot overlap, processes are distinct, comparable complete payloads exclude PID and time, and the strict inequalities 840 > 2*360+60 and 960 > 840+60 hold."
+        }
+      ],
+      "verdict": "go",
+      "blocker_ids": [],
+      "limitations": [
+        "not_independent_external_review",
+        "current_launcher_self_authentication_not_absolute",
+        "same_uid_debugger_or_host_interference_not_excluded",
+        "host_toolchain_custody_not_independently_attested",
+        "process_group_kill_attempt_does_not_independently_observe_descendant_extinction",
+        "final_output_forwarding_outside_evaluator_deadline_assumes_consuming_caller",
+        "future_360_840_960_worker_behavior_is_contracted_not_implemented_or_observed",
+        "retained_contract_report_is_internal_integrity_operand_not_independent_attestation"
+      ],
+      "repository_mutation_performed": false,
+      "network_used": false
+    },
+    {
+      "review_observation_id": "reiyah.review-observation.di127-readiness-worker-liveness.adversarial-population-authority.1",
+      "reviewer_self_identifier": "codex-agent.di127_adversarial_population_authority_audit",
+      "task_path": "/root/di127_schema_audit/report_consumer_redteam",
+      "reviewer_kind": "model_assisted_internal_advisory",
+      "reviewer_identity_state": "self_asserted_internal_model_role_not_externally_verified",
+      "role": "adversarial_population_and_authority_reviewer",
+      "observation_time": null,
+      "timestamp_basis": "session_date_only_not_external_time_attestation",
+      "subject_commit": "45e2126a35a2706d8cf922333f71f132ddce5491",
+      "subject_tree": "5fb93f50420839c533b36fa28f8a362f0560bc16",
+      "subject_sole_parent": "7ed76fa8a7a2a82fda5396a0ae63ceee4e0f8bc8",
+      "retained_contract_report_sha256": "sha256:97858ba30d5a399d70735f5c743a113675c05e441a6ff6a19db766f8cba70877",
+      "read_basis": "rehash_verified_git_object_bytes_plus_two_byte_identical_contract_report_captures",
+      "check_results": [
+        {
+          "check_id": "DI127R-CHECK-013-adversarial-population-and-diagnostic-closure",
+          "state": "pass",
+          "blocker_ids": [],
+          "summary": "The source, catalog, mutation targets, and independent semantic registry contain the same exact 53 ordered unique cases across ten families; all 53 reject with exact diagnostics and the report binds the 20145-byte actual map digest."
+        },
+        {
+          "check_id": "DI127R-CHECK-014-historical-population-preservation-and-zero-finding-closure",
+          "state": "pass",
+          "blocker_ids": [],
+          "summary": "The exact N126 catalog blob is unchanged; retained populations reconcile to 201 inherited, 20 readiness, 5 successor canaries, 7 schema known-bads, and 72 DI126 adversaries, with population reduction forbidden and zero findings closed."
+        },
+        {
+          "check_id": "DI127R-CHECK-015-actual-before-expectations-and-synthetic-nonpromotion",
+          "state": "pass",
+          "blocker_ids": [],
+          "summary": "The evaluator derives and canonical-freezes all 53 actual outcomes before constructing the expectation runtime or parsing the catalog; exact expected code, path, status, and ordering then join, while N126 remains historical and synthetic records cannot select readiness or authority."
+        },
+        {
+          "check_id": "DI127R-CHECK-016-authority-ceiling-review-independence-and-go-no-go-closure",
+          "state": "pass",
+          "blocker_ids": [],
+          "summary": "Incident, correction, plan, and report preserve the complete authority ceiling; review requires all checks and zero blockers for GO or a typed open blocker for NO-GO, forbids author-reviewer overlap, and confers neither acceptance nor implementation authority."
+        }
+      ],
+      "verdict": "go",
+      "blocker_ids": [],
+      "limitations": [
+        "not_independent_external_review",
+        "self_asserted_internal_model_role_not_identity_or_time_attested",
+        "retained_contract_report_is_internal_integrity_operand_not_independent_execution_attestation",
+        "historical_populations_preserved_and_counted_not_replayed_at_contract_stage",
+        "mutation_builder_and_semantic_consumer_share_one_evaluator_despite_separate_registries",
+        "DI127C_032_uses_R1_as_representative_collective_authority_probe_while_exact_const_consumers_close_other_fields_and_implementation_requires_per_field_regressions",
+        "go_validates_contract_coherence_only_not_root_cause_closure_liveness_implementation_readiness_or_science"
+      ],
+      "repository_mutation_performed": false,
+      "network_used": false
+    }
+  ],
+  "blockers": [],
+  "aggregate_review_result": {
+    "state": "internal_advisory_go_zero_blockers",
+    "verdict": "go",
+    "result": "internal_review_go_correction_not_implemented",
+    "review_count": 4,
+    "distinct_role_count": 4,
+    "required_check_count": 16,
+    "passed_check_count": 16,
+    "blocking_check_count": 0,
+    "blocker_count": 0,
+    "all_required_roles_present_exactly_once": true,
+    "all_required_checks_present_exactly_once": true,
+    "all_reviewer_self_identifiers_unique": true,
+    "all_reviewer_task_paths_unique": true,
+    "all_reviewers_distinct_from_subject_authoring_task_path": true,
+    "all_reviews_bind_same_exact_subject_and_report": true,
+    "implementation_gate_state": "review_go_condition_satisfied",
+    "review_restart_required_on_subject_change": true,
+    "independent_external_review_completed": false,
+    "review_establishes_external_independence": false,
+    "review_confers_operator_acceptance": false,
+    "review_authorizes_implementation": false,
+    "review_creates_scientific_evidence": false,
+    "successor_revalidation_required": true
+  },
+  "authority": {
+    "subject_architecture_status": "architecture_complete",
+    "correction_contract_state": "retained_validated_not_implemented",
+    "correction_review_state": "internal_advisory_go_recorded",
+    "correction_implementation_state": "not_implemented",
+    "replacement_readiness_inputs_state": "absent",
+    "interface_readiness_state": "not_ready",
+    "operator_acceptance_state": "unaccepted",
+    "ga_17_state": "not_evaluated",
+    "transport_verification_state": "not_evaluated",
+    "independent_external_review_completed": false,
+    "human_decision_process_authorized": false,
+    "scientific_evidence_created": false,
+    "scientific_claim_authority": false,
+    "publication_acceptance_authorized": false,
+    "public_distribution_eligible": false,
+    "public_distribution_authorized": false,
+    "runtime_authorized": false,
+    "cloud_execution_authorized": false,
+    "private_data_ingestion_authorized": false,
+    "physical_control_authorized": false,
+    "gate_b_authorized": false,
+    "R1_authorized": false,
+    "P_authorized": false,
+    "R2_authorized": false,
+    "C_authorized": false,
+    "Q_authorized": false,
+    "main_ref_change_authorized": false,
+    "merge_commit_authorized": false,
+    "public_push_authorized": false,
+    "review_confers_operator_acceptance": false,
+    "review_confers_implementation_authority": false
+  },
+  "next_transition": {
+    "stage_id": "DI127-readiness-worker-liveness-implementation",
+    "review_gate_satisfied": true,
+    "implementation_blocked_by_review": false,
+    "authorized_by_review": false,
+    "permitted_under_existing_explicit_operator_instruction": true,
+    "requires_exact_review_commit_tree_parent_delta_and_record_revalidation": true,
+    "review_result_commit_binding_state": "resolve_from_post_commit_raw_git_not_self_bound",
+    "maximum_result": "readiness_worker_liveness_corrected_N127_absent_not_ready",
+    "replacement_readiness_inputs_authorized_at_review_stage": false,
+    "R0_authorized_at_review_stage": false,
+    "R1_P_R2_C_Q_main_merge_and_push_authorized": false
+  },
+  "nonclaims": [
+    "review_is_internal_model_assisted_advisory_not_independent_external_review",
+    "reviewer_identities_and_times_are_not_externally_attested",
+    "retained_contract_report_is_not_independent_execution_attestation",
+    "schema_validity_and_contract_coherence_do_not_prove_future_implementation_behavior",
+    "causal_hypothesis_remains_provisional_and_incident_remains_open",
+    "review_does_not_create_operator_acceptance_or_authorize_implementation",
+    "DI127_implementation_N127_and_R0_not_created",
+    "readiness_remains_not_ready_and_GA_17_not_evaluated",
+    "scientific_or_benchmark_evidence_not_created",
+    "publication_distribution_and_transport_not_authorized_or_verified",
+    "runtime_cloud_private_data_physical_control_and_Gate_B_not_authorized",
+    "R1_P_R2_C_Q_main_merge_and_public_push_not_authorized",
+    "future_review_commit_tree_or_self_digest_not_asserted"
+  ]
+}

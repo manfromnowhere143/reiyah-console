@@ -12,7 +12,7 @@ await page.setViewport({ width: 1440, height: 900 });
 
 /* pass 1: online, warm the caches */
 await page.goto("http://localhost:4600/", { waitUntil: "networkidle2" });
-await page.waitForSelector(".world", { timeout: 20000 });
+await page.waitForSelector(".stage", { timeout: 20000 });
 await new Promise((r) => setTimeout(r, 1500));
 const swState = await page.evaluate(async () => {
   const reg = await navigator.serviceWorker.getRegistration();
@@ -26,11 +26,11 @@ await page.setOfflineMode(true);
 await page.reload({ waitUntil: "domcontentloaded" }).catch(() => {});
 let offlineOk = false;
 try {
-  await page.waitForSelector(".world, .blocked", { timeout: 20000 });
+  await page.waitForSelector(".stage, .blocked", { timeout: 20000 });
   offlineOk = true;
 } catch { /* neither appeared */ }
 const outcome = await page.evaluate(() => ({
-  world: !!document.querySelector(".world"),
+  world: !!document.querySelector(".stage"),
   blocked: !!document.querySelector(".blocked"),
   pill: document.querySelector(".pill")?.textContent ?? null,
   artifacts: document.querySelector(".harbortitle")?.textContent ?? null,

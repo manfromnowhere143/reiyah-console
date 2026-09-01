@@ -53,6 +53,39 @@ function safeList(rel) {
   }
 }
 
+/* ---- dynamic surface discovery: the UI can never go stale ---------------
+   Walks the evidence trees and serves every committed .json as a
+   path-addressed surface. New artifact families appear automatically. */
+const CATALOG_ROOTS = ["gate", "validation", "manifests", "evidence"];
+function walkCatalog() {
+  const rows = [];
+  const walk = (rel) => {
+    const abs = path.join(REPO, rel);
+    let entries;
+    try { entries = fs.readdirSync(abs, { withFileTypes: true }); } catch { return; }
+    for (const e of entries) {
+      const r = path.posix.join(rel, e.name);
+      if (e.isSymbolicLink()) continue;
+      if (e.isDirectory()) { walk(r); continue; }
+      if (!e.name.endsWith(".json") && !e.name.endsWith(".sha256")) continue;
+      try {
+        const st = fs.statSync(path.join(REPO, r));
+        rows.push({ path: r, bytes: st.size, mtimeMs: st.mtimeMs });
+      } catch { /* transient */ }
+    }
+  };
+  for (const root of CATALOG_ROOTS) walk(root);
+  rows.sort((a, b) => a.path.localeCompare(b.path));
+  return rows;
+}
+function pathSurfaceAllowed(rel) {
+  if (rel.includes("..") || rel.startsWith("/")) return false;
+  if (!CATALOG_ROOTS.some((r) => rel.startsWith(r + "/"))) return false;
+  if (!rel.endsWith(".json") && !rel.endsWith(".sha256")) return false;
+  const abs = path.join(REPO, rel);
+  try { return fs.lstatSync(abs).isFile(); } catch { return false; }
+}
+
 /* ---- read + digest with mtime cache ------------------------------------ */
 const cache = new Map(); // path -> { mtimeMs, size, sha256, bytes }
 function readSurface(rel) {
@@ -167,9 +200,22 @@ const server = http.createServer((req, res) => {
         surfaces,
       });
     }
+    if (p === "/api/catalog") {
+      return json(res, 200, {
+        state: "observed",
+        generatedAt: new Date().toISOString(),
+        identity: gitIdentity(),
+        roots: CATALOG_ROOTS,
+        entries: walkCatalog(),
+      });
+    }
     if (p.startsWith("/api/raw/")) {
-      const id = p.slice("/api/raw/".length);
-      const rel = SURFACES.get(id);
+      const id = decodeURIComponent(p.slice("/api/raw/".length));
+      let rel = SURFACES.get(id);
+      if (!rel && id.startsWith("p/")) {
+        const cand = id.slice(2);
+        if (pathSurfaceAllowed(cand)) rel = cand;
+      }
       if (!rel) return json(res, 404, { state: "blocked", reason: "unknown_surface" });
       const e = readSurface(rel);
       res.writeHead(200, {
@@ -182,8 +228,12 @@ const server = http.createServer((req, res) => {
       return res.end(e.bytes);
     }
     if (p.startsWith("/api/surface/")) {
-      const id = p.slice("/api/surface/".length);
-      const rel = SURFACES.get(id);
+      const id = decodeURIComponent(p.slice("/api/surface/".length));
+      let rel = SURFACES.get(id);
+      if (!rel && id.startsWith("p/")) {
+        const cand = id.slice(2);
+        if (pathSurfaceAllowed(cand)) rel = cand;
+      }
       if (!rel) return json(res, 404, { state: "blocked", reason: "unknown_surface" });
       const e = readSurface(rel);
       let data;

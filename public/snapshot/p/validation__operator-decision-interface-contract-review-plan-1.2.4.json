@@ -1,0 +1,164 @@
+{
+  "schema_id": "https://schemas.reiyah.invalid/gate-a/1.2.4/operator-decision-interface-contract-review-plan.schema.json",
+  "artifact_id": "reiyah.artifact.operator-decision-interface-contract-review-plan-1.2.4",
+  "plan_id": "reiyah.validation-plan.operator-decision-interface-contract-review@1.2.4",
+  "record_kind": "operator_decision_interface_contract_review_validation_plan",
+  "version": "1.2.4",
+  "lifecycle_status": "proposed",
+  "as_of_date": "2026-08-29",
+  "stage_id": "DI124-contract-review",
+  "activation_state": "review_recording_only_no_implementation_authority",
+  "repository_identity": {
+    "project": "Reiyah",
+    "canonical_root": "/Users/danielwahnich/workspace/reiyah",
+    "git_root": "/Users/danielwahnich/workspace/reiyah",
+    "configured_remote": "https://github.com/manfromnowhere143/reiyah.git",
+    "branch": "gate-a-1.2.4-operator-decision-interface"
+  },
+  "predecessor": {
+    "stage_id": "DI124-contract",
+    "commit": "b0786c8f1383df1dac997c161943a89d0f32e5be",
+    "tree": "1a70f3644ea7b1ea89cab382b8d3fae8b857441a",
+    "sole_parent": "e9643e850107333878d9b1bd3a84de3a45c1f04b",
+    "parent_tree": "2e54c3e6c74880d23063c6cda7532dca1cd6aa6d"
+  },
+  "incoming_transition_contract": {
+    "transition_id": "reiyah.transition.operator-decision-interface-1.2.4-contract-to-contract-review",
+    "from_stage": "DI124-contract",
+    "to_stage": "DI124-contract-review",
+    "baseline_commit": "b0786c8f1383df1dac997c161943a89d0f32e5be",
+    "baseline_tree": "1a70f3644ea7b1ea89cab382b8d3fae8b857441a",
+    "direct_single_parent_required": true,
+    "changed_existing_paths": [
+      "docs/SESSION_HANDOFF.md"
+    ],
+    "added_paths": [
+      "gate/operator-decision-interface-reviews/reiyah.operator-decision-interface-contract-review-1.2.4.json",
+      "schemas/operator-decision-interface-contract-review-1.2.4.schema.json",
+      "schemas/operator-decision-interface-contract-review-plan-1.2.4.schema.json",
+      "validation/operator-decision-interface-contract-review-plan-1.2.4.json"
+    ],
+    "removed_paths": [],
+    "executable_paths": [],
+    "unknown_delta_policy": "reject",
+    "raw_git_index_must_equal_head_before_staging": true,
+    "contract_subject_paths_must_match_predecessor_blobs": true,
+    "result_commit_binding_state": "not_self_bound_resolve_from_raw_git_after_commit"
+  },
+  "immutable_contract_subject": {
+    "interface_release_id": "reiyah.operator-decision-interface@1.2.4",
+    "contract_commit": "b0786c8f1383df1dac997c161943a89d0f32e5be",
+    "contract_tree": "1a70f3644ea7b1ea89cab382b8d3fae8b857441a",
+    "contract_artifact_count": 5,
+    "contract_bundle_serialization_sha256": "sha256:8b4595619bafe184e5ab2302a4f0fe1a25b92269edf86df3a053872981f89890",
+    "contract_paths": [
+      "docs/OPERATOR_DECISION_INTERFACE_1_2_4.md",
+      "gate/operator-decision-interfaces/reiyah.operator-decision-interface-1.2.4.json",
+      "schemas/operator-decision-interface-1.2.4.schema.json",
+      "schemas/operator-decision-interface-plan-1.2.4.schema.json",
+      "validation/operator-decision-interface-plan-1.2.4.json"
+    ],
+    "contract_bytes_may_change_in_review_transition": false
+  },
+  "review_record_binding": {
+    "path": "gate/operator-decision-interface-reviews/reiyah.operator-decision-interface-contract-review-1.2.4.json",
+    "artifact_id": "reiyah.artifact.operator-decision-interface-contract-review-1.2.4",
+    "review_id": "reiyah.review.operator-decision-interface-contract@1.2.4",
+    "schema_id": "https://schemas.reiyah.invalid/gate-a/1.2.4/operator-decision-interface-contract-review.schema.json",
+    "byte_size": 20854,
+    "sha256": "sha256:cc0a72b8db43034e52aa3c97c355c107c3f8df0385cdd361601750cd0628528a",
+    "git_mode": "100644"
+  },
+  "review_schema_binding": {
+    "path": "schemas/operator-decision-interface-contract-review-1.2.4.schema.json",
+    "schema_id": "https://schemas.reiyah.invalid/gate-a/1.2.4/operator-decision-interface-contract-review.schema.json",
+    "byte_size": 30262,
+    "sha256": "sha256:7b633235135cb4494f5930c1bd160e47da22c199aad91de8df6dd6c14e690514",
+    "git_mode": "100644"
+  },
+  "review_completion_contract": {
+    "review_kind": "role_separated_read_only_advisory_review",
+    "required_review_count": 3,
+    "required_distinct_role_count": 3,
+    "required_verdict": "pass_no_blocker",
+    "required_total_blocker_count": 0,
+    "required_subject_bytes_source": "rehash_verified_git_objects",
+    "reviewer_identity_state": "self_asserted_not_externally_verified",
+    "independent_external_review_completed": false,
+    "review_establishes_independence": false,
+    "review_confers_operator_acceptance": false,
+    "review_authorizes_implementation": false,
+    "review_creates_scientific_evidence": false
+  },
+  "static_validation_contract": {
+    "validator_path": null,
+    "launcher_path": null,
+    "toolchain_lock_path": null,
+    "fixture_catalog_path": null,
+    "readiness_report_path": null,
+    "implementation_present": false,
+    "release_validation_available": false,
+    "canonical_output_emission_authorized": false,
+    "repository_write_authorized_by_validator": false,
+    "network_authorized": false,
+    "required_checks": [
+      "review_schema_draft_2020_12_metaschema_valid",
+      "review_record_valid_against_exact_schema",
+      "review_plan_schema_draft_2020_12_metaschema_valid",
+      "review_plan_valid_against_exact_schema",
+      "contract_commit_tree_parent_and_five_blobs_rehash_exact",
+      "three_review_roles_times_subject_bindings_verdicts_and_limitations_reconcile",
+      "legacy_launcher_observation_outputs_source_bindings_and_root_cause_reconcile",
+      "external_advisory_measurements_remain_unadmitted_and_directions_unauthorized",
+      "all_authority_nonclaims_remain_exact",
+      "handoff_records_stage_evidence_risks_and_next_blocked_action",
+      "incoming_delta_matches_exact_one_changed_plus_four_added_regular_100644_paths",
+      "post_commit_raw_git_parent_tree_blob_and_unchanged_contract_readback"
+    ],
+    "legacy_1_2_3_launcher_is_current_DI124_validator": false,
+    "legacy_1_2_3_successor_branch_observation": "fail_closed_exit_2_but_opaque_diagnostic_recorded_as_advisory_defect",
+    "passing_static_schema_or_review_checks_create_acceptance": false
+  },
+  "advisory_finding_contract": {
+    "observation_id": "reiyah.advisory.di124.legacy-launcher-branch-error-translation",
+    "state": "locally_reproduced_and_source_traced",
+    "mapped_finding_ids": [
+      "DI124-001",
+      "DI124-009"
+    ],
+    "contract_review_blocker": false,
+    "implementation_readiness_blocker": true,
+    "frozen_1_2_3_in_place_edit_allowed": false,
+    "additive_reason_specific_closure_required": true
+  },
+  "external_advisory_boundary": {
+    "operator_supplied_model_advisory_received": true,
+    "exact_external_payload_retained_as_source_evidence": false,
+    "gate_b_or_external_measurement_bytes_admitted": false,
+    "claimed_measurements_or_novelty_admitted": false,
+    "directional_hypotheses_retained_as_proposals": true,
+    "directions_authorized_for_execution": false
+  },
+  "authority": {
+    "subject_architecture_status": "architecture_complete",
+    "interface_contract_review_state": "completed_internal_advisory_no_blocker",
+    "operator_acceptance_state": "unaccepted",
+    "ga_17_state": "not_evaluated",
+    "scientific_evidence_created": false,
+    "scientific_claim_authority": false,
+    "public_distribution_eligible": false,
+    "public_distribution_authorized": false,
+    "publication_acceptance_authorized": false,
+    "runtime_authorized": false,
+    "cloud_execution_authorized": false,
+    "private_data_ingestion_authorized": false,
+    "gate_b_authorized": false,
+    "physical_control_authorized": false,
+    "transport_verification_state": "not_evaluated",
+    "decision_record_creation_authorized": false,
+    "human_decision_process_authorized": false,
+    "implementation_authorized": false
+  },
+  "only_next_bounded_action": "await_new_separate_explicit_operator_instruction_for_DI124_implementation",
+  "next_transition_authorized": false
+}

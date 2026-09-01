@@ -1,0 +1,149 @@
+{
+  "schema_id": "https://schemas.reiyah.invalid/gate-a/1.2.4/operator-decision-inventory-extraction-rules.schema.json",
+  "artifact_id": "reiyah.artifact.operator-decision-inventory-extraction-rules-1.2.4",
+  "ruleset_id": "reiyah.ruleset.operator-decision-risk-locators@1.2.4",
+  "record_kind": "operator_decision_inventory_extraction_rules",
+  "version": "1.2.4",
+  "lifecycle_status": "proposed",
+  "as_of_date": "2026-08-29",
+  "subject": {
+    "c_packet_commit": "801eacf1620fe5850647b4d25941ea04798c2210",
+    "c_packet_tree": "5e63078bcab6272a34f45646c63c0690ed454c12",
+    "source_bindings": [
+      {
+        "source_kind": "threat_model",
+        "artifact_id": "reiyah.artifact.indexed-docs-threat-model-md",
+        "path": "docs/THREAT_MODEL.md",
+        "version": "1.2.3",
+        "git_mode": "100644",
+        "byte_size": 47942,
+        "sha256": "sha256:240218201333d50d3b5ed14653a52228e8b3000dbfc32c7ee30c56419bbf3a71"
+      },
+      {
+        "source_kind": "research_gap_register",
+        "artifact_id": "reiyah.artifact.indexed-docs-research-gap-register-md",
+        "path": "docs/RESEARCH_GAP_REGISTER.md",
+        "version": "1.2.3",
+        "git_mode": "100644",
+        "byte_size": 48092,
+        "sha256": "sha256:6fab2c66e2c14e8936cc374007bb1d764da3e24cb2ff139525d9b2b3c84a9d3c"
+      }
+    ]
+  },
+  "source_byte_profile": {
+    "encoding": "UTF-8",
+    "bom_allowed": false,
+    "nul_allowed": false,
+    "carriage_return_allowed": false,
+    "line_ending": "LF",
+    "surrogate_scalar_allowed": false,
+    "byte_offsets": "zero_based_end_exclusive",
+    "line_numbers": "one_based_inclusive"
+  },
+  "threat_row_rule": {
+    "required_id_pattern": "^TM-[0-9]{3}$",
+    "line_prefix_template": "| `TM-nnn` |",
+    "selection_cardinality_per_id": 1,
+    "source_text_selection": "complete_matching_markdown_table_row_including_one_terminal_LF",
+    "semantic_cell_count": 5,
+    "unescaped_inner_pipe_allowed": false,
+    "state_kind": "residual_statement_without_status_field",
+    "status_or_residual_selection": "fifth_semantic_cell_remove_only_one_delimiter_adjacent_ASCII_space"
+  },
+  "research_gap_section_rule": {
+    "required_id_pattern": "^RGA-[0-9]{3}$",
+    "heading_pattern": "^### RGA-[0-9]{3}: [^\\n]+$",
+    "selection_cardinality_per_id": 1,
+    "source_text_start": "first_byte_of_matching_level_three_heading",
+    "source_text_end": "first_byte_of_next_level_two_heading_or_level_three_RGA_heading_or_EOF",
+    "table_variant": {
+      "item_ids": [
+        "RGA-006", "RGA-007", "RGA-008", "RGA-009", "RGA-010", "RGA-011", "RGA-012",
+        "RGA-013", "RGA-014", "RGA-015", "RGA-016", "RGA-017", "RGA-018", "RGA-020",
+        "RGA-024", "RGA-025", "RGA-026", "RGA-027"
+      ],
+      "required_status_row_count": 1,
+      "required_classification_row_count": 1,
+      "state_kind": "explicit_status_field",
+      "status_selection": "Status_cell_remove_only_delimiter_adjacent_ASCII_spaces",
+      "classification_selection": "Classification_cell_remove_delimiter_spaces_then_extract_exact_leading_balanced_double_asterisk_token_suffix_retained_only_in_source_text",
+      "allowed_classifications": [
+        "GATE_A_SEMANTIC_BLOCKER",
+        "GATE_A_RELEASE_BLOCKER",
+        "GATE_B_RESEARCH_PREREQUISITE",
+        "PUBLIC_RELEASE_PREREQUISITE",
+        "NON_BLOCKER"
+      ]
+    },
+    "residual_unknown_variant": {
+      "item_ids": ["RGA-021", "RGA-022", "RGA-023"],
+      "required_enclosing_level_two_heading": "## Residual unknowns",
+      "required_status_row_count": 0,
+      "required_classification_row_count": 0,
+      "state_kind": "residual_statement_without_status_field",
+      "status_or_residual_selection": "exact_section_body_between_heading_terminal_LF_LF_and_section_terminal_LF_LF",
+      "classification_value": "RESIDUAL_UNKNOWN",
+      "classification_basis": "exact_enclosing_level_two_heading_plus_closed_item_id_membership"
+    }
+  },
+  "selection": {
+    "membership_policy": "TM_001_through_TM_056_plus_RGA_006_through_RGA_018_plus_RGA_020_through_RGA_027",
+    "membership_before_order": true,
+    "physical_markdown_order_is_normative": false,
+    "canonical_rank": "TM_before_RGA_then_three_digit_suffix_numeric_ascending",
+    "ordered_item_count": 77,
+    "canonical_id_serialization": {
+      "encoding": "ASCII_subset_of_UTF-8",
+      "record_format": "one_ID_plus_LF",
+      "terminal_lf_count": 1,
+      "byte_size": 560,
+      "sha256": "sha256:0157a181d666ff34b01399747cfa6f596865b5fc879e358d39754f7637ceb777"
+    }
+  },
+  "mapping_row_contract": {
+    "required_fields": [
+      "canonical_rank",
+      "item_id",
+      "source_kind",
+      "source_artifact_id",
+      "source_path",
+      "source_version",
+      "source_git_mode",
+      "source_byte_size",
+      "source_sha256",
+      "source_locator",
+      "source_text",
+      "source_text_encoding",
+      "source_text_byte_size",
+      "source_text_sha256",
+      "source_state_kind",
+      "source_status_or_residual_statement",
+      "source_status_or_residual_statement_encoding",
+      "source_status_or_residual_statement_byte_size",
+      "source_status_or_residual_statement_sha256",
+      "kind",
+      "scope_effects"
+    ],
+    "source_text_encoding": "UTF-8",
+    "canonical_mapping_serialization": "sorted_keys_compact_ASCII_JSON_plus_one_LF",
+    "operator_mutation_allowed": false
+  },
+  "scope_effects": [
+    "requires_decision_specific_disposition_for_exact_static_architecture_review",
+    "acknowledgement_does_not_close_resolve_or_generally_waive_source_item",
+    "global_threat_completeness_remains_false",
+    "creates_no_scientific_safety_publication_distribution_transport_runtime_or_gate_b_authority"
+  ],
+  "review_state": "implemented_pending_exact_byte_review",
+  "authority": {
+    "operator_acceptance_state": "unaccepted",
+    "ga_17_state": "not_evaluated",
+    "scientific_evidence_created": false,
+    "scientific_claim_authority": false,
+    "public_distribution_authorized": false,
+    "publication_acceptance_authorized": false,
+    "transport_verification_state": "not_evaluated",
+    "runtime_authorized": false,
+    "gate_b_authorized": false
+  }
+}

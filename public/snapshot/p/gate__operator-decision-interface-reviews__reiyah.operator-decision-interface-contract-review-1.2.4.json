@@ -1,0 +1,401 @@
+{
+  "schema_id": "https://schemas.reiyah.invalid/gate-a/1.2.4/operator-decision-interface-contract-review.schema.json",
+  "artifact_id": "reiyah.artifact.operator-decision-interface-contract-review-1.2.4",
+  "review_id": "reiyah.review.operator-decision-interface-contract@1.2.4",
+  "record_kind": "operator_decision_interface_contract_review",
+  "version": "1.2.4",
+  "lifecycle_status": "proposed",
+  "recorded_at": "2026-08-29T17:43:21Z",
+  "relation": {
+    "type": "reviews",
+    "subject_interface_release_id": "reiyah.operator-decision-interface@1.2.4",
+    "subject_stage_id": "DI124-contract",
+    "result_stage_id": "DI124-contract-review"
+  },
+  "repository_identity": {
+    "project": "Reiyah",
+    "canonical_root": "/Users/danielwahnich/workspace/reiyah",
+    "configured_remote": "https://github.com/manfromnowhere143/reiyah.git",
+    "remote_authority": "distribution_channel_only",
+    "branch": "gate-a-1.2.4-operator-decision-interface"
+  },
+  "subject_contract": {
+    "commit": "b0786c8f1383df1dac997c161943a89d0f32e5be",
+    "tree": "1a70f3644ea7b1ea89cab382b8d3fae8b857441a",
+    "sole_parent": "e9643e850107333878d9b1bd3a84de3a45c1f04b",
+    "parent_tree": "2e54c3e6c74880d23063c6cda7532dca1cd6aa6d",
+    "delta_policy": "exact_five_path_add_only_regular_100644",
+    "raw_commit_tree_and_blob_rehash_passed": true,
+    "subject_bytes_source": "rehash_verified_git_objects"
+  },
+  "subject_contract_bundle": {
+    "serialization_rule": "canonical_JSON_sorted_keys_compact_ASCII_plus_one_terminal_LF",
+    "serialization_byte_size": 1222,
+    "serialization_sha256": "sha256:8b4595619bafe184e5ab2302a4f0fe1a25b92269edf86df3a053872981f89890",
+    "path_count": 5,
+    "artifacts": [
+      {
+        "path": "docs/OPERATOR_DECISION_INTERFACE_1_2_4.md",
+        "git_mode": "100644",
+        "blob_oid": "55cf19a82b557740faa7cf6f8629682d84abfd21",
+        "byte_size": 61109,
+        "sha256": "sha256:74821b9f8c1d4f458ffda89dd623a307d4dca818911bc7b590f4d9592c4cc439"
+      },
+      {
+        "path": "gate/operator-decision-interfaces/reiyah.operator-decision-interface-1.2.4.json",
+        "git_mode": "100644",
+        "blob_oid": "4d8a6298d16d994da2a2dd3347fa1926b3730685",
+        "byte_size": 47157,
+        "sha256": "sha256:c719fbc041eb9e9e480e973ac576595114f6f1df6d018910fa820556fc87dfc1"
+      },
+      {
+        "path": "schemas/operator-decision-interface-1.2.4.schema.json",
+        "git_mode": "100644",
+        "blob_oid": "0167a2df6d78542b96b66e1485a463d7c4553341",
+        "byte_size": 46293,
+        "sha256": "sha256:f37643a58c1133f47dbd5b28b99393e52ebd9d7b15c6ab4a0f811868fa8e1e34"
+      },
+      {
+        "path": "schemas/operator-decision-interface-plan-1.2.4.schema.json",
+        "git_mode": "100644",
+        "blob_oid": "f657e40185545109d03a69f763e50d9dc648bd42",
+        "byte_size": 10744,
+        "sha256": "sha256:426c9d17043413d2907cf0a0fa113a8a2a786e43f853e3b9b71873975c58c9f7"
+      },
+      {
+        "path": "validation/operator-decision-interface-plan-1.2.4.json",
+        "git_mode": "100644",
+        "blob_oid": "a80c89f977001b03c4dc86b5fee93938d38e4f29",
+        "byte_size": 10522,
+        "sha256": "sha256:496493eeef5ca0b4d74ae46e064e074cc1528edc3be495569e8c8fe58e7238fb"
+      }
+    ]
+  },
+  "review_requirements": {
+    "review_kind": "role_separated_read_only_advisory_review",
+    "required_roles": [
+      "scientific_integrity_stage_grammar_and_authority_boundary",
+      "schema_consumer_raw_git_lineage_and_integrated_machine_audit",
+      "adversarial_recovery_authority_and_fail_closed_red_team"
+    ],
+    "required_review_count": 3,
+    "all_reviews_must_bind_exact_subject_commit_tree_parent_and_bundle": true,
+    "all_reviews_must_read_rehash_verified_git_object_bytes": true,
+    "all_reviews_must_name_self_asserted_reviewer_identity_role_start_completion_verdict_rationale_and_limitations": true,
+    "worktree_edit_during_subject_review_allowed": false,
+    "network_use_during_subject_review_allowed": false,
+    "independent_external_review_required_to_claim_independence": true,
+    "review_can_create_operator_acceptance": false,
+    "review_can_authorize_implementation": false
+  },
+  "reviews": [
+    {
+      "review_id": "reiyah.review-observation.di124-contract.corrected-doc-review.1",
+      "reviewer_self_identifier": "codex-agent.corrected_doc_review",
+      "task_path": "/root/corrected_doc_review",
+      "reviewer_kind": "model_assisted_internal_advisory",
+      "role": "scientific_integrity_stage_grammar_and_authority_boundary",
+      "started_at": "2026-08-29T17:38:27Z",
+      "completed_at": "2026-08-29T17:42:17Z",
+      "timestamp_basis": "self_reported_host_UTC_clock_not_externally_verified",
+      "subject_commit": "b0786c8f1383df1dac997c161943a89d0f32e5be",
+      "subject_tree": "1a70f3644ea7b1ea89cab382b8d3fae8b857441a",
+      "subject_sole_parent": "e9643e850107333878d9b1bd3a84de3a45c1f04b",
+      "subject_contract_bundle_sha256": "sha256:8b4595619bafe184e5ab2302a4f0fe1a25b92269edf86df3a053872981f89890",
+      "subject_artifact_count": 5,
+      "read_basis": "exact_retained_git_object_bytes_only",
+      "verdict": "pass_no_blocker",
+      "blocker_count": 0,
+      "check_count": null,
+      "challenge_coverage": [
+        "stage_and_repeatable_event_grammar",
+        "decision_verification_and_resolution_chronology",
+        "append_only_unique_head_topology",
+        "composite_resolution_precedence",
+        "unknown_and_lifecycle_state_preservation",
+        "scientific_integrity_and_authority_nonclaims",
+        "prose_machine_schema_and_plan_parity"
+      ],
+      "rationale": "Exact Git-object review found no blocking contradiction. The five-path single-parent add-only topology and retained historical byte identities verify. Prose, manifest, schemas, and plan agree on repeatable decision and verification events, read-only resolution evaluation with separately authorized optional recording, append-only unique-head series, chronology, composite precedence, unknown preservation, and fail-closed scientific and authority boundaries. Both JSON instances validate against their exact Draft 2020-12 schemas.",
+      "limitations": [
+        "not_independent_external_review",
+        "shared_model_and_system_context",
+        "shared_repository_context",
+        "advisory_integrity_signal_only",
+        "confers_no_acceptance_scientific_truth_implementation_publication_runtime_or_gate_b_authority"
+      ],
+      "repository_mutation_performed": false,
+      "network_used": false
+    },
+    {
+      "review_id": "reiyah.review-observation.di124-contract.final-integrated-audit.1",
+      "reviewer_self_identifier": "codex-agent.final_integrated_audit",
+      "task_path": "/root/final_integrated_audit",
+      "reviewer_kind": "model_assisted_internal_advisory",
+      "role": "schema_consumer_raw_git_lineage_and_integrated_machine_audit",
+      "started_at": "2026-08-29T17:38:36Z",
+      "completed_at": "2026-08-29T17:41:33Z",
+      "timestamp_basis": "self_reported_host_UTC_clock_not_externally_verified",
+      "subject_commit": "b0786c8f1383df1dac997c161943a89d0f32e5be",
+      "subject_tree": "1a70f3644ea7b1ea89cab382b8d3fae8b857441a",
+      "subject_sole_parent": "e9643e850107333878d9b1bd3a84de3a45c1f04b",
+      "subject_contract_bundle_sha256": "sha256:8b4595619bafe184e5ab2302a4f0fe1a25b92269edf86df3a053872981f89890",
+      "subject_artifact_count": 5,
+      "read_basis": "exact_retained_git_object_bytes_only",
+      "verdict": "pass_no_blocker",
+      "blocker_count": 0,
+      "check_count": 606,
+      "challenge_coverage": [
+        "draft_2020_12_metaschema_and_instance_validation",
+        "required_remove_one_and_unknown_property_mutations",
+        "raw_commit_tree_blob_rehash_and_delta_topology",
+        "canonical_output_report_marker_release_and_source_joins",
+        "ordered_77_item_universe_and_serialization",
+        "prose_machine_stage_chronology_and_composite_parity",
+        "capability_finding_and_authority_nonclaims"
+      ],
+      "rationale": "All five files were read from rehash-verified Git object bytes. The retained commit, tree, sole parent, and exact five-path add-only regular-100644 delta reconcile. Both Draft 2020-12 schemas are metaschema-valid and accept their exact retained instances; required remove-one, unknown-property, authority, lineage, stage, capability, mapping, universe, and delta mutations reject. Raw historical topology, canonical outputs, report semantics, completed marker, release and source joins, the conservative 77-item universe, prose-machine contracts, findings, capabilities, and authority nonclaims reconcile.",
+      "limitations": [
+        "not_independent_external_review",
+        "shared_model_and_system_context",
+        "shared_repository_context",
+        "advisory_integrity_signal_only",
+        "confers_no_acceptance_scientific_safety_publication_runtime_gate_b_or_transport_authority"
+      ],
+      "repository_mutation_performed": false,
+      "network_used": false
+    },
+    {
+      "review_id": "reiyah.review-observation.di124-contract.recovery-redteam.1",
+      "reviewer_self_identifier": "codex-agent.recovery_code_redteam",
+      "task_path": "/root/recovery_code_redteam",
+      "reviewer_kind": "model_assisted_internal_advisory",
+      "role": "adversarial_recovery_authority_and_fail_closed_red_team",
+      "started_at": "2026-08-29T17:38:53Z",
+      "completed_at": "2026-08-29T17:41:52Z",
+      "timestamp_basis": "self_reported_host_UTC_clock_not_externally_verified",
+      "subject_commit": "b0786c8f1383df1dac997c161943a89d0f32e5be",
+      "subject_tree": "1a70f3644ea7b1ea89cab382b8d3fae8b857441a",
+      "subject_sole_parent": "e9643e850107333878d9b1bd3a84de3a45c1f04b",
+      "subject_contract_bundle_sha256": "sha256:8b4595619bafe184e5ab2302a4f0fe1a25b92269edf86df3a053872981f89890",
+      "subject_artifact_count": 5,
+      "read_basis": "exact_retained_git_object_bytes_only",
+      "verdict": "pass_no_blocker",
+      "blocker_count": 0,
+      "check_count": 186,
+      "challenge_coverage": [
+        "self_reference_and_frozen_history",
+        "decision_verification_and_resolution_series_graphs",
+        "identity_authority_separation_and_forged_governance_outcomes",
+        "chronology_and_resolution_as_of_rollback",
+        "all_77_remove_one_mutations_including_RGA_020",
+        "placeholder_reuse_and_coordinated_risk_shrink",
+        "false_capability_and_scope_authority_promotion"
+      ],
+      "rationale": "Raw topology and the exact five-path regular-100644 add-only delta passed. Both schemas and instances passed. All 186 targeted mutations rejected, including every one of the 77 risk remove-one attacks and RGA-020. Frozen history, placeholder canaries, series graphs, chronology, risk inventory, false capabilities, synthetic fixture boundaries, and authority nonclaims reconcile. All ten DI124 findings remain open and implementation-blocked.",
+      "limitations": [
+        "not_independent_external_review",
+        "shared_model_and_system_context",
+        "shared_repository_context",
+        "cannot_establish_real_world_identity_authority_or_independence_truth",
+        "future_implementation_and_external_trust_policy_do_not_exist"
+      ],
+      "repository_mutation_performed": false,
+      "network_used": false
+    }
+  ],
+  "aggregate_review_result": {
+    "state": "completed_role_separated_internal_advisory_no_blocker",
+    "review_count": 3,
+    "distinct_role_count": 3,
+    "all_required_roles_present_exactly_once": true,
+    "all_reviews_bind_same_exact_subject_and_bundle": true,
+    "all_verdicts": "pass_no_blocker",
+    "total_blocker_count": 0,
+    "review_restart_required_on_any_subject_byte_or_identity_change": true,
+    "independent_external_review_completed": false,
+    "review_establishes_independence": false,
+    "review_confers_operator_acceptance": false,
+    "review_authorizes_implementation": false,
+    "review_creates_scientific_evidence": false
+  },
+  "advisory_observations": [
+    {
+      "observation_id": "reiyah.advisory.di124.legacy-launcher-branch-error-translation",
+      "state": "locally_reproduced_and_source_traced",
+      "title": "Frozen 1.2.3 launcher degrades a successor-branch identity mismatch to an opaque internal failure",
+      "contract_review_effect": "no_contract_blocker_existing_DI124_001_and_DI124_009_require_additive_closure",
+      "implementation_gate_effect": "must_be_reason_specifically_closed_before_DI124_ready",
+      "mapped_finding_ids": [
+        "DI124-001",
+        "DI124-009"
+      ],
+      "reproduction": {
+        "subject_head": "b0786c8f1383df1dac997c161943a89d0f32e5be",
+        "subject_branch": "gate-a-1.2.4-operator-decision-interface",
+        "gate_a_1_2_3": {
+          "argv": [
+            "tools/gate_a_1_2_3.sh",
+            "--snapshot-mode",
+            "release",
+            "--render",
+            "report",
+            "--output",
+            "raw"
+          ],
+          "exit_code": 2,
+          "stdout_byte_size": 0,
+          "stdout_sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "stderr_byte_size": 75,
+          "stderr_sha256": "sha256:ca06413815c14823e877419df27a179042c352f75fc04637edda7a3edaa78048",
+          "stderr_line": "GA123I-INTERNAL-FAILURE: deterministic exception boundary caught GateError"
+        },
+        "gate_a_1_2_2": {
+          "argv": [
+            "tools/gate_a_1_2_2.sh",
+            "--snapshot-mode",
+            "development",
+            "--output",
+            "json"
+          ],
+          "exit_code": 2,
+          "stdout_byte_size": 111,
+          "stdout_sha256": "sha256:be2999a36315f3e54da70fbf077b63dc61c09a87175418e9dea17ee3361e9db5",
+          "stderr_byte_size": 0,
+          "stderr_sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "diagnostic_code": "GA122-IDENTITY",
+          "diagnostic_message": "branch differs"
+        },
+        "exact_execution_times_retained": false,
+        "outside_repository_capture_bytes_retained": false,
+        "recorded_result_is_digest_and_semantic_observation_only": true
+      },
+      "source_bindings": [
+        {
+          "path": "tools/gate_a_1_2_3_release.py",
+          "git_mode": "100755",
+          "blob_oid": "ff0fe93f3c158558d8f98892e768d49c451de2be",
+          "byte_size": 671224,
+          "sha256": "sha256:f07d3b25c41753ead4bf736c7a4fb247c63a74530358c77b3c42b71a165dcca0"
+        },
+        {
+          "path": "tools/gate_a_1_2_3.py",
+          "git_mode": "100755",
+          "blob_oid": "ead4f2fc92e44731d012ea972a3f95c282dd4212",
+          "byte_size": 182864,
+          "sha256": "sha256:d014e841f4084fe2af6a53fe0c7435da1ee081c91cada8a866224248ee0b3e1b"
+        },
+        {
+          "path": "tools/gate_a_1_2_2.py",
+          "git_mode": "100755",
+          "blob_oid": "b82f322f43164d6367f4a45a7007e814e65a5518",
+          "byte_size": 204039,
+          "sha256": "sha256:e74cc1799e595a33aad16c165a6e5ac7ce0d44a90b2b66db7a1c0e51928fa8e3"
+        },
+        {
+          "path": "tools/gate_a_1_2_3.sh",
+          "git_mode": "100755",
+          "blob_oid": "ec39d8bb77d66b21a0e0e513e506aabfbfc292fb",
+          "byte_size": 5464,
+          "sha256": "sha256:5aad74b604b6baed819320edd1285a0d7d5132358be0da06b2ac76aaf3e57b2a"
+        },
+        {
+          "path": "tools/gate_a_1_2_2.sh",
+          "git_mode": "100755",
+          "blob_oid": "4acf35fd10ffd2879bcfeb9aa707cdbe79755bbe",
+          "byte_size": 938,
+          "sha256": "sha256:1f531103779e90c8b93da34664bf8c9f82abac3652d170f25bb5204a13b27759"
+        }
+      ],
+      "source_trace": {
+        "release_branch_literal_line": 269,
+        "contract_tool_path_line": 273,
+        "contract_module_loader_line": 2001,
+        "contract_module_branch_literal_line": 116,
+        "contract_module_gate_error_class_line": 373,
+        "contract_module_verify_identity_definition_line": 1268,
+        "contract_module_branch_check_line": 1291,
+        "contract_module_branch_diagnostic_line": 1293,
+        "translated_error_definition_line": 2728,
+        "untranslated_parent_contract_verify_identity_call_line": 17613,
+        "untranslated_toolchain_contract_verify_identity_call_line": 18478,
+        "generic_exception_boundary_line": 18525,
+        "corroborating_1_2_2_branch_literal_line": 113,
+        "corroborating_1_2_2_branch_identity_check_line": 958,
+        "root_cause": "The release evaluator loads exact tools/gate_a_1_2_3.py bytes in a separate module namespace. That loaded contract owns its own branch literal and GateError class, and its verify_identity rejects the successor branch. The release evaluator calls that function outside translated_error, so its outer GateError handler does not recognize the module-local exception and the generic boundary emits GA123I-INTERNAL-FAILURE. The separate 1.2.2 result corroborates the branch mismatch but is not the causal loaded module for the 1.2.3 launcher failure."
+      },
+      "correction_boundary": {
+        "frozen_1_2_3_bytes_may_be_edited": false,
+        "frozen_1_2_3_report_invalidated": false,
+        "branch_name_is_scientific_or_acceptance_identity": false,
+        "future_additive_implementation_must_bind_commit_tree_parent_and_declared_context": true,
+        "future_additive_implementation_must_translate_every_loaded_module_exception_to_a_typed_reason_specific_diagnostic": true,
+        "future_additive_implementation_must_test_successor_branch_and_foreign_branch_contexts": true,
+        "future_additive_implementation_must_not_claim_legacy_launcher_validation_for_DI124": true
+      }
+    }
+  ],
+  "external_advisory_intake": {
+    "input_kind": "operator_supplied_model_advisory",
+    "retention_extent": "paraphrased_directional_hypotheses_only",
+    "exact_external_payload_retained_as_source_evidence": false,
+    "external_repository_or_measurement_bytes_admitted": false,
+    "claimed_measurements_admitted_as_reiyah_scientific_evidence": false,
+    "novelty_or_comparative_claim_admitted": false,
+    "proposed_future_directions": [
+      {
+        "direction_id": "reiyah.proposal.future.executable-joint-silent-miss-contract",
+        "proposal": "Evaluate a later separately authorized executable scientific-contract release without weakening substitution guards.",
+        "current_state": "external_unretained_proposal",
+        "authorized_in_DI124_contract_review": false
+      },
+      {
+        "direction_id": "reiyah.proposal.future.human-automation-dependence",
+        "proposal": "Study an object-level human-automation dependence estimand on explicitly eligible retained data under a future accepted protocol.",
+        "current_state": "external_unretained_proposal",
+        "authorized_in_DI124_contract_review": false
+      },
+      {
+        "direction_id": "reiyah.proposal.future.annotation-error-partial-identification",
+        "proposal": "Develop sensitivity or partial-identification bounds for dependence under bounded reference-label error.",
+        "current_state": "external_unretained_proposal",
+        "authorized_in_DI124_contract_review": false
+      },
+      {
+        "direction_id": "reiyah.proposal.future.warning-fallback-silent-semantics",
+        "proposal": "Close the semantic gap between joint miss and silent miss by requiring declared warning and fallback observability.",
+        "current_state": "external_unretained_proposal",
+        "authorized_in_DI124_contract_review": false
+      }
+    ],
+    "requires_later_identity_rights_provenance_protocol_and_evidence_admission": true,
+    "creates_gate_b_authority": false
+  },
+  "authority": {
+    "subject_architecture_status": "architecture_complete",
+    "interface_contract_review_state": "completed_internal_advisory_no_blocker",
+    "operator_acceptance_state": "unaccepted",
+    "ga_17_state": "not_evaluated",
+    "independent_external_review_completed": false,
+    "scientific_evidence_created": false,
+    "scientific_claim_authority": false,
+    "public_distribution_eligible": false,
+    "public_distribution_authorized": false,
+    "publication_acceptance_authorized": false,
+    "runtime_authorized": false,
+    "cloud_execution_authorized": false,
+    "private_data_ingestion_authorized": false,
+    "gate_b_authorized": false,
+    "physical_control_authorized": false,
+    "transport_verification_state": "not_evaluated",
+    "decision_record_creation_authorized": false,
+    "human_decision_process_authorized": false,
+    "implementation_authorized": false
+  },
+  "next_transition": {
+    "stage": "DI124-implementation",
+    "authorized": false,
+    "blocked_reason": "requires_a_new_separate_explicit_operator_instruction_after_this_exact_review_record_is_retained",
+    "no_implicit_authority_from_prior_broad_mission_instruction": true
+  }
+}

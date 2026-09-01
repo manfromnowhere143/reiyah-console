@@ -71,6 +71,43 @@ async function loadSealed(): Promise<boolean> {
   }
 }
 
+/* ---- dynamic catalog: every committed evidence file, path-addressed ---- */
+export interface CatalogEntry { path: string; bytes: number }
+let catalogCache: CatalogEntry[] | null = null;
+
+export async function fetchCatalog(): Promise<CatalogEntry[]> {
+  if (catalogCache) return catalogCache;
+  try {
+    if (mode === "sealed") {
+      const r = await fetch("/snapshot/catalog.json");
+      if (r.ok) { catalogCache = (await r.json()).entries ?? []; return catalogCache!; }
+      return [];
+    }
+    const r = await fetch("/api/catalog");
+    if (!r.ok) return [];
+    catalogCache = (await r.json()).entries ?? [];
+    return catalogCache!;
+  } catch { return []; }
+}
+
+/** Fetch any cataloged evidence file by repo-relative path. */
+export async function fetchSurfaceByPath<T = unknown>(rel: string): Promise<SurfaceState<T>> {
+  if (mode === "sealed") {
+    try {
+      const r = await fetch(`/snapshot/p/${rel.replaceAll("/", "__")}`);
+      if (!r.ok) return { state: "blocked", reason: `sealed_missing_${r.status}` };
+      const bytes = await r.arrayBuffer();
+      const text = new TextDecoder().decode(bytes);
+      const data = (rel.endsWith(".json") ? JSON.parse(text) : text) as T;
+      const sha256 = await sha256Hex(bytes);
+      return { state: "observed", meta: { id: `p/${rel}`, path: rel, sha256, bytes: bytes.byteLength, readAt: sealedManifest?.sealedAt ?? "" }, data };
+    } catch (e) {
+      return { state: "blocked", reason: String((e as Error)?.message ?? e) };
+    }
+  }
+  return fetchSurface<T>(`p/${encodeURIComponent(rel)}` as string);
+}
+
 export async function fetchSummary(): Promise<Summary> {
   try {
     const r = await fetch("/api/summary");

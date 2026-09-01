@@ -1,9 +1,12 @@
-/* HARBOR INSTRUMENT — one scene, one camera.
-   The world is a 3×3 grid of stations; the camera forges to whichever the
-   operator presses. The URL is the camera position. Escape returns home. */
+/* HARBOR INSTRUMENT — one permanent stage.
+   Harbor's Living Engine is the home of the panel; pressing a dock card
+   morphs the panel's content in place through the View Transitions API
+   (compositor-speed cross-morph; jump cut under reduced motion). The dock
+   and HUD never move. The URL is the panel state. Escape returns home. */
 import { useEffect, useRef, useState } from "react";
+import { flushSync } from "react-dom";
 import { ProofBoot, verifyEvidenceOnce, type VerifiedEvidence } from "./boot/ProofBoot";
-import { STATIONS, useCamera } from "./lib/camera";
+import { STATIONS } from "./lib/camera";
 import { getSealedInfo, subscribeEvents } from "./lib/evidence";
 import { Mark, TruthPill } from "./components/primitives";
 import { GroundToggle } from "./components/GroundToggle";
@@ -29,15 +32,52 @@ export default function App() {
   );
 }
 
+const urlStation = () => new URLSearchParams(location.search).get("st") ?? "harbor";
+
 function Stage({ ev, onEvidence }: { ev: VerifiedEvidence; onEvidence: (e: VerifiedEvidence) => void }) {
-  const worldRef = useRef<HTMLDivElement>(null);
-  const { active, go } = useCamera(worldRef);
+  const [active, setActive] = useState<string>(urlStation());
   const [lastEventAt, setLastEventAt] = useState<number | null>(Date.now());
   const [connected, setConnected] = useState(true);
   const [gen, setGen] = useState(0);
   const [violated, setViolated] = useState(false);
   const sealed = getSealedInfo();
   const reverifying = useRef(false);
+
+  /* the morph: View Transition on panel-content swap */
+  const go = (id: string, push = true) => {
+    if (id === active) return;
+    const commit = () => {
+      flushSync(() => setActive(id));
+      if (push) history.pushState({ st: id }, "", id === "harbor" ? location.pathname : `?st=${id}`);
+    };
+    const reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const svt = (document as any).startViewTransition?.bind(document);
+    if (!reduced && svt) svt(commit);
+    else commit();
+  };
+
+  useEffect(() => {
+    const onPop = () => {
+      const id = urlStation();
+      const reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
+      const svt = (document as any).startViewTransition?.bind(document);
+      const commit = () => flushSync(() => setActive(id));
+      if (!reduced && svt) svt(commit); else commit();
+    };
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") go("harbor");
+      const idx = STATIONS.findIndex((s) => s.id === active);
+      if (e.key === "ArrowRight") go(STATIONS[(idx + 1) % STATIONS.length].id);
+      if (e.key === "ArrowLeft") go(STATIONS[(idx - 1 + STATIONS.length) % STATIONS.length].id);
+    };
+    window.addEventListener("popstate", onPop);
+    window.addEventListener("keydown", onKey);
+    return () => {
+      window.removeEventListener("popstate", onPop);
+      window.removeEventListener("keydown", onKey);
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [active]);
 
   useEffect(() => {
     const off = subscribeEvents((kind, at) => {
@@ -46,8 +86,6 @@ function Stage({ ev, onEvidence }: { ev: VerifiedEvidence; onEvidence: (e: Verif
       setConnected(true);
       setLastEventAt(at);
       if (kind === "evidence" && !reverifying.current) {
-        /* the repository changed: re-run the full digest gate, then let
-           every station re-read. No pixel survives on stale evidence. */
         reverifying.current = true;
         verifyEvidenceOnce()
           .then((next) => { onEvidence(next); setGen((g) => g + 1); setViolated(false); })
@@ -76,14 +114,7 @@ function Stage({ ev, onEvidence }: { ev: VerifiedEvidence; onEvidence: (e: Verif
   };
 
   return (
-    <div className="viewport">
-      {/* rung-1 liquid glass: static displacement lens, defined once */}
-      <svg width="0" height="0" style={{ position: "absolute" }} aria-hidden="true">
-        <filter id="harborLens" colorInterpolationFilters="sRGB">
-          <feTurbulence type="fractalNoise" baseFrequency="0.011 0.013" numOctaves="2" seed="7" result="noise" />
-          <feDisplacementMap in="SourceGraphic" in2="noise" scale="12" xChannelSelector="R" yChannelSelector="G" />
-        </filter>
-      </svg>
+    <div className="viewport stage">
       <div className="hud">
         <div style={{ display: "flex", alignItems: "center", gap: "0.55rem" }}>
           <span style={{ color: "var(--ink)" }}><Mark /></span>
@@ -99,22 +130,36 @@ function Stage({ ev, onEvidence }: { ev: VerifiedEvidence; onEvidence: (e: Verif
           {active !== "harbor" ? (
             <button className="hudbtn" onClick={() => go("harbor")}>⌂ HARBOR · ESC</button>
           ) : (
-            <span className="hudid" style={{ color: "var(--ink-ghost)" }}>ARROWS FLY · ESC HOME</span>
+            <span className="hudid" style={{ color: "var(--ink-ghost)" }}>⇄ ARROWS · ESC HOME</span>
           )}
         </div>
       </div>
-      <div className="world" ref={worldRef}>
+
+      <main className="stagepanel" aria-live="polite">
+        <div key={`${active}:${gen}`} className="panelcontent">
+          {render(active)}
+        </div>
+      </main>
+
+      <nav className="dock" aria-label="Stations">
         {STATIONS.map((s) => (
-          <div
+          <button
             key={s.id}
-            className="cell"
+            className="navcard glass"
+            data-red={String(!!s.red)}
             data-active={String(s.id === active)}
-            style={{ gridRow: s.row + 1, gridColumn: s.col + 1 }}
-            aria-hidden={s.id !== active}
+            aria-current={s.id === active ? "page" : undefined}
+            onClick={() => go(s.id)}
           >
-            <div key={gen} style={{ display: "contents" }}>{render(s.id)}</div>
-          </div>
+            <span className="nid">{s.num}</span>
+            <span className="nnm">{s.name}</span>
+            <span className="nds">{s.desc}</span>
+          </button>
         ))}
+      </nav>
+
+      <div className="nonclaim shell">
+        renders committed machine records only · not a driver-monitoring system · creates no acceptance, evidence, or authority
       </div>
     </div>
   );

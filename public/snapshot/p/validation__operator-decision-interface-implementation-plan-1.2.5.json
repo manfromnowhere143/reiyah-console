@@ -1,0 +1,744 @@
+{
+  "schema_id": "https://schemas.reiyah.invalid/gate-a/1.2.5/operator-decision-interface-implementation-plan.schema.json",
+  "artifact_id": "reiyah.artifact.operator-decision-interface-implementation-plan-1.2.5",
+  "plan_id": "reiyah.validation-plan.operator-decision-interface-correction-implementation@1.2.5",
+  "record_kind": "operator_decision_interface_implementation_plan",
+  "version": "1.2.5",
+  "lifecycle_status": "proposed",
+  "as_of_date": "2026-08-30",
+  "stage_id": "DI125-correction-implementation",
+  "repository_identity": {
+    "project": "Reiyah",
+    "canonical_root": "/Users/danielwahnich/workspace/reiyah",
+    "git_root": "/Users/danielwahnich/workspace/reiyah",
+    "configured_remote": "https://github.com/manfromnowhere143/reiyah.git",
+    "authoring_branch_context": "gate-a-1.2.5-readiness-correction-implementation",
+    "branch_name_is_scientific_or_acceptance_identity": false
+  },
+  "predecessor_review_checkpoint": {
+    "stage_id": "DI125-correction-review",
+    "commit": "c821a99f31a1d90f41cb398ebb6f91df38b4dce9",
+    "tree": "6a412631eb15e65e754b837a8d316ee41b367992",
+    "sole_parent": "ad6bd65fa23faebb002715c4a2ab2ec96f9a5429",
+    "parent_tree": "edf45850905e29ca8b55053896ffaf802d44ae77",
+    "delta": {
+      "changed_existing_paths": [
+        "docs/SESSION_HANDOFF.md"
+      ],
+      "added_paths": [
+        "gate/operator-decision-interface-reviews/reiyah.operator-decision-interface-readiness-correction-contract-review-1.2.5.json",
+        "schemas/operator-decision-interface-readiness-correction-contract-review-1.2.5.schema.json",
+        "schemas/operator-decision-interface-readiness-correction-contract-review-plan-1.2.5.schema.json",
+        "validation/operator-decision-interface-readiness-correction-contract-review-plan-1.2.5.json"
+      ],
+      "removed_paths": [],
+      "executable_paths": [],
+      "total_path_count": 5
+    },
+    "path_bindings": [
+      {
+        "path": "docs/SESSION_HANDOFF.md",
+        "git_mode": "100644",
+        "blob_oid": "93bbc2c9c754190c36465cd1b2c7698efc411941",
+        "byte_size": 145697,
+        "sha256": "sha256:86f1a2965e5cfa3e0e757626a01be436463abf6a38fbd5b3da873f25f3850e33"
+      },
+      {
+        "path": "gate/operator-decision-interface-reviews/reiyah.operator-decision-interface-readiness-correction-contract-review-1.2.5.json",
+        "git_mode": "100644",
+        "blob_oid": "b3c35c4bc296bea932910578a269fdf95b545c6d",
+        "byte_size": 32295,
+        "sha256": "sha256:278362ef15ac5b497f2dcc3744b624526328814fe48e5926592c132068885cef"
+      },
+      {
+        "path": "schemas/operator-decision-interface-readiness-correction-contract-review-1.2.5.schema.json",
+        "git_mode": "100644",
+        "blob_oid": "44c681675c705756947549ad464cab28b1f4ebb7",
+        "byte_size": 36936,
+        "sha256": "sha256:d1eb79b1a6da638585d29564518180e3f2e29e79fdfff6d6ca4cdaf42352c663"
+      },
+      {
+        "path": "schemas/operator-decision-interface-readiness-correction-contract-review-plan-1.2.5.schema.json",
+        "git_mode": "100644",
+        "blob_oid": "b18131a360f2b92c5e6ea70514b8325edfdec2df",
+        "byte_size": 16594,
+        "sha256": "sha256:3d1eaca880f3744ec6c2e44d1c2cdeb3588e44fd137599eb2eca854c9e1c546e"
+      },
+      {
+        "path": "validation/operator-decision-interface-readiness-correction-contract-review-plan-1.2.5.json",
+        "git_mode": "100644",
+        "blob_oid": "3a1d21c0a29eeb85c7dcd2b721fae7366e5a8154",
+        "byte_size": 8440,
+        "sha256": "sha256:f3027e858fe1fa95528e9b420662be9d602beaff309bcb053d05d699feaa2875"
+      }
+    ],
+    "revalidation_contract": {
+      "raw_git_bytes_only": true,
+      "strict_duplicate_key_json": true,
+      "closed_schema_registry": true,
+      "schemas_must_pass_draft_2020_12_metaschema": true,
+      "review_record_and_plan_must_validate": true,
+      "required_capability_count": 17,
+      "required_finding_count": 7,
+      "implementation_obligation_count": 13,
+      "review_role_count": 3,
+      "review_known_bad_count": 10,
+      "authority_and_next_transition_mirrors_exact": true
+    }
+  },
+  "incoming_transition_contract": {
+    "transition_id": "reiyah.transition.DI125-correction-review-to-DI125-correction-implementation",
+    "from_stage": "DI125-correction-review",
+    "to_stage": "DI125-correction-implementation",
+    "baseline_commit": "c821a99f31a1d90f41cb398ebb6f91df38b4dce9",
+    "baseline_tree": "6a412631eb15e65e754b837a8d316ee41b367992",
+    "direct_single_parent_required": true,
+    "changed_existing_paths": [
+      "docs/SESSION_HANDOFF.md"
+    ],
+    "added_paths": [
+      "docs/OPERATOR_DECISION_INTERFACE_READINESS_CORRECTION_1_2_5_IMPLEMENTATION.md",
+      "fixtures/v1.2.5/operator-decision-interface-fixture-catalog.json",
+      "gate/decisions/OPERATOR_DECISION-1.2.5.template.json",
+      "schemas/composite-evaluation-1.2.5.schema.json",
+      "schemas/composite-resolution-record-1.2.5.schema.json",
+      "schemas/human-authority-verification-record-1.2.5.schema.json",
+      "schemas/human-identity-verification-record-1.2.5.schema.json",
+      "schemas/operator-decision-interface-boundary-failure-1.2.5.schema.json",
+      "schemas/operator-decision-interface-clean-closeout-replay-observation-1.2.5.schema.json",
+      "schemas/operator-decision-interface-fixture-catalog-1.2.5.schema.json",
+      "schemas/operator-decision-interface-implementation-plan-1.2.5.schema.json",
+      "schemas/operator-decision-interface-implementation-review-1.2.5.schema.json",
+      "schemas/operator-decision-interface-mapping-review-1.2.5.schema.json",
+      "schemas/operator-decision-interface-readiness-closeout-1.2.5.schema.json",
+      "schemas/operator-decision-interface-readiness-report-1.2.5.schema.json",
+      "schemas/operator-decision-interface-ready-plan-1.2.5.schema.json",
+      "schemas/operator-decision-interface-toolchain-lock-1.2.5.schema.json",
+      "schemas/operator-decision-interface-validation-report-1.2.5.schema.json",
+      "schemas/operator-decision-record-1.2.5.schema.json",
+      "tools/gate_a_1_2_5_decision_interface.py",
+      "tools/gate_a_1_2_5_decision_interface.sh",
+      "tools/reiyah_gate_core_1_0_0.py",
+      "validation/operator-decision-interface-implementation-plan-1.2.5.json",
+      "validation/operator-decision-interface-toolchain-lock-1.2.5.json"
+    ],
+    "removed_paths": [],
+    "executable_paths": [
+      "tools/gate_a_1_2_5_decision_interface.py",
+      "tools/gate_a_1_2_5_decision_interface.sh"
+    ],
+    "changed_path_count": 1,
+    "added_path_count": 24,
+    "removed_path_count": 0,
+    "total_delta_path_count": 25,
+    "unknown_delta_policy": "reject",
+    "raw_git_index_must_equal_head_during_authoring": true,
+    "result_commit_binding_state": "deferred_to_post_commit_raw_git_observation"
+  },
+  "core_support": {
+    "core_id": "reiyah.core.gate-a@1.0.0",
+    "abi": 1,
+    "path": "tools/reiyah_gate_core_1_0_0.py",
+    "git_mode": "100644",
+    "load_policy": "captured_exact_bytes_and_digest_no_import_path_search",
+    "responsibilities": [
+      "canonical_json",
+      "strict_duplicate_key_json",
+      "bounded_raw_git",
+      "raw_git_object_type_before_payload",
+      "bounded_subprocess_capture",
+      "git_process_group_cleanup",
+      "module_origin_capture",
+      "four_role_capture_quorum",
+      "typed_exception_translation"
+    ]
+  },
+  "successor_role_bindings": [
+    {
+      "role_id": "decision_record_schema_and_consumer",
+      "identifiers": [
+        "https://schemas.reiyah.invalid/gate-a/1.2.5/operator-decision-record.schema.json"
+      ],
+      "artifact_paths": [
+        "schemas/operator-decision-record-1.2.5.schema.json"
+      ],
+      "consumer_path": "tools/gate_a_1_2_5_decision_interface.py",
+      "binding_source": "finalized_toolchain_lock_exact_path_mode_size_git_blob_and_sha256"
+    },
+    {
+      "role_id": "human_identity_verification_schema_and_consumer",
+      "identifiers": [
+        "https://schemas.reiyah.invalid/gate-a/1.2.5/human-identity-verification-record.schema.json"
+      ],
+      "artifact_paths": [
+        "schemas/human-identity-verification-record-1.2.5.schema.json"
+      ],
+      "consumer_path": "tools/gate_a_1_2_5_decision_interface.py",
+      "binding_source": "finalized_toolchain_lock_exact_path_mode_size_git_blob_and_sha256"
+    },
+    {
+      "role_id": "human_authority_verification_schema_and_consumer",
+      "identifiers": [
+        "https://schemas.reiyah.invalid/gate-a/1.2.5/human-authority-verification-record.schema.json"
+      ],
+      "artifact_paths": [
+        "schemas/human-authority-verification-record-1.2.5.schema.json"
+      ],
+      "consumer_path": "tools/gate_a_1_2_5_decision_interface.py",
+      "binding_source": "finalized_toolchain_lock_exact_path_mode_size_git_blob_and_sha256"
+    },
+    {
+      "role_id": "composite_evaluation_schema_and_consumer",
+      "identifiers": [
+        "https://schemas.reiyah.invalid/gate-a/1.2.5/composite-evaluation.schema.json"
+      ],
+      "artifact_paths": [
+        "schemas/composite-evaluation-1.2.5.schema.json"
+      ],
+      "consumer_path": "tools/gate_a_1_2_5_decision_interface.py",
+      "binding_source": "finalized_toolchain_lock_exact_path_mode_size_git_blob_and_sha256"
+    },
+    {
+      "role_id": "composite_resolution_schema_and_consumer",
+      "identifiers": [
+        "https://schemas.reiyah.invalid/gate-a/1.2.5/composite-resolution-record.schema.json"
+      ],
+      "artifact_paths": [
+        "schemas/composite-resolution-record-1.2.5.schema.json"
+      ],
+      "consumer_path": "tools/gate_a_1_2_5_decision_interface.py",
+      "binding_source": "finalized_toolchain_lock_exact_path_mode_size_git_blob_and_sha256"
+    },
+    {
+      "role_id": "fixture_catalog_schema",
+      "identifiers": [
+        "https://schemas.reiyah.invalid/gate-a/1.2.5/operator-decision-interface-fixture-catalog.schema.json"
+      ],
+      "artifact_paths": [
+        "schemas/operator-decision-interface-fixture-catalog-1.2.5.schema.json"
+      ],
+      "consumer_path": "tools/gate_a_1_2_5_decision_interface.py",
+      "binding_source": "finalized_toolchain_lock_exact_path_mode_size_git_blob_and_sha256"
+    },
+    {
+      "role_id": "fixture_catalog_instance",
+      "identifiers": [
+        "reiyah.artifact.operator-decision-interface-fixture-catalog-1.2.5",
+        "reiyah.fixture-catalog.operator-decision-interface@1.2.5"
+      ],
+      "artifact_paths": [
+        "fixtures/v1.2.5/operator-decision-interface-fixture-catalog.json"
+      ],
+      "consumer_path": "tools/gate_a_1_2_5_decision_interface.py",
+      "binding_source": "finalized_toolchain_lock_exact_path_mode_size_git_blob_and_sha256"
+    },
+    {
+      "role_id": "invalid_decision_template",
+      "identifiers": [
+        "reiyah.artifact.operator-decision-template-1.2.5",
+        "https://schemas.reiyah.invalid/gate-a/1.2.5/operator-decision-record.schema.json"
+      ],
+      "artifact_paths": [
+        "gate/decisions/OPERATOR_DECISION-1.2.5.template.json"
+      ],
+      "consumer_path": "tools/gate_a_1_2_5_decision_interface.py",
+      "binding_source": "finalized_toolchain_lock_exact_path_mode_size_git_blob_and_sha256"
+    },
+    {
+      "role_id": "decision_interface_evaluator",
+      "identifiers": [
+        "reiyah.tool.gate-a-1.2.5-decision-interface-evaluator"
+      ],
+      "artifact_paths": [
+        "tools/gate_a_1_2_5_decision_interface.py"
+      ],
+      "consumer_path": "tools/gate_a_1_2_5_decision_interface.py",
+      "binding_source": "finalized_toolchain_lock_exact_path_mode_size_git_blob_and_sha256"
+    },
+    {
+      "role_id": "implementation_plan_schema_and_instance",
+      "identifiers": [
+        "https://schemas.reiyah.invalid/gate-a/1.2.5/operator-decision-interface-implementation-plan.schema.json",
+        "reiyah.artifact.operator-decision-interface-implementation-plan-1.2.5",
+        "reiyah.validation-plan.operator-decision-interface-correction-implementation@1.2.5"
+      ],
+      "artifact_paths": [
+        "schemas/operator-decision-interface-implementation-plan-1.2.5.schema.json",
+        "validation/operator-decision-interface-implementation-plan-1.2.5.json"
+      ],
+      "consumer_path": "tools/gate_a_1_2_5_decision_interface.py",
+      "binding_source": "finalized_toolchain_lock_exact_path_mode_size_git_blob_and_sha256"
+    },
+    {
+      "role_id": "toolchain_lock_schema_and_instance",
+      "identifiers": [
+        "https://schemas.reiyah.invalid/gate-a/1.2.5/operator-decision-interface-toolchain-lock.schema.json",
+        "reiyah.artifact.operator-decision-interface-toolchain-lock-1.2.5",
+        "reiyah.toolchain-lock.operator-decision-interface@1.2.5"
+      ],
+      "artifact_paths": [
+        "schemas/operator-decision-interface-toolchain-lock-1.2.5.schema.json",
+        "validation/operator-decision-interface-toolchain-lock-1.2.5.json"
+      ],
+      "consumer_path": "tools/gate_a_1_2_5_decision_interface.py",
+      "binding_source": "schema_via_finalized_lock_instance_via_absent_install_reproduction_then_report_exact_path_mode_size_git_blob_and_sha256"
+    },
+    {
+      "role_id": "validation_report_schema",
+      "identifiers": [
+        "https://schemas.reiyah.invalid/gate-a/1.2.5/operator-decision-interface-validation-report.schema.json",
+        "reiyah.artifact.operator-decision-interface-validation-report-1.2.5",
+        "reiyah.validation.operator-decision-interface-implementation@1.2.5"
+      ],
+      "artifact_paths": [
+        "schemas/operator-decision-interface-validation-report-1.2.5.schema.json"
+      ],
+      "consumer_path": "tools/gate_a_1_2_5_decision_interface.py",
+      "binding_source": "finalized_toolchain_lock_exact_path_mode_size_git_blob_and_sha256"
+    },
+    {
+      "role_id": "decision_interface_launcher",
+      "identifiers": [
+        "reiyah.tool.gate-a-1.2.5-decision-interface-launcher"
+      ],
+      "artifact_paths": [
+        "tools/gate_a_1_2_5_decision_interface.sh"
+      ],
+      "consumer_path": "tools/gate_a_1_2_5_decision_interface.sh",
+      "binding_source": "finalized_toolchain_lock_exact_path_mode_size_git_blob_and_sha256"
+    }
+  ],
+  "support_artifact_paths": [
+    "docs/OPERATOR_DECISION_INTERFACE_READINESS_CORRECTION_1_2_5_IMPLEMENTATION.md",
+    "schemas/operator-decision-interface-boundary-failure-1.2.5.schema.json",
+    "schemas/operator-decision-interface-clean-closeout-replay-observation-1.2.5.schema.json",
+    "schemas/operator-decision-interface-implementation-review-1.2.5.schema.json",
+    "schemas/operator-decision-interface-mapping-review-1.2.5.schema.json",
+    "schemas/operator-decision-interface-readiness-closeout-1.2.5.schema.json",
+    "schemas/operator-decision-interface-readiness-report-1.2.5.schema.json",
+    "schemas/operator-decision-interface-ready-plan-1.2.5.schema.json",
+    "tools/reiyah_gate_core_1_0_0.py"
+  ],
+  "frozen_DI124_subject": {
+    "stage_id": "DI124-implementation",
+    "commit": "858f394893055288db8772f758414c5c2653b1d7",
+    "tree": "98012d9a66ed32b4e19d1eacfab62135ee26a83c",
+    "sole_parent": "148ed1a329bd14681bb35b0e7142c4772783df6d",
+    "parent_tree": "5e2755c965289331b16e845d077ca7fbd1b538e1",
+    "delta_paths": [
+      "docs/SESSION_HANDOFF.md",
+      "docs/OPERATOR_DECISION_INTERFACE_1_2_4_IMPLEMENTATION.md",
+      "docs/OPERATOR_DECISION_RISK_MAPPING_RULES_1_2_4.md",
+      "fixtures/v1.2.4/operator-decision-interface-fixture-catalog.json",
+      "gate/decisions/OPERATOR_DECISION-1.2.4.template.json",
+      "gate/operator-decision-inventories/reiyah.operator-decision-inventory-extraction-rules-1.2.4.json",
+      "gate/operator-decision-inventories/reiyah.operator-decision-inventory-mapping-1.2.4.json",
+      "schemas/composite-evaluation-1.2.4.schema.json",
+      "schemas/composite-resolution-record-1.2.4.schema.json",
+      "schemas/human-authority-verification-record-1.2.4.schema.json",
+      "schemas/human-identity-verification-record-1.2.4.schema.json",
+      "schemas/operator-decision-interface-boundary-failure-1.2.4.schema.json",
+      "schemas/operator-decision-interface-finding-map-1.2.4.schema.json",
+      "schemas/operator-decision-interface-fixture-catalog-1.2.4.schema.json",
+      "schemas/operator-decision-interface-implementation-plan-1.2.4.schema.json",
+      "schemas/operator-decision-interface-implementation-review-1.2.4.schema.json",
+      "schemas/operator-decision-interface-readiness-report-1.2.4.schema.json",
+      "schemas/operator-decision-interface-ready-plan-1.2.4.schema.json",
+      "schemas/operator-decision-interface-toolchain-lock-1.2.4.schema.json",
+      "schemas/operator-decision-interface-validation-report-1.2.4.schema.json",
+      "schemas/operator-decision-inventory-extraction-rules-1.2.4.schema.json",
+      "schemas/operator-decision-inventory-mapping-1.2.4.schema.json",
+      "schemas/operator-decision-record-1.2.4.schema.json",
+      "tools/gate_a_1_2_4_decision_interface.py",
+      "tools/gate_a_1_2_4_decision_interface.sh",
+      "validation/operator-decision-interface-finding-map-1.2.4.json",
+      "validation/operator-decision-interface-implementation-plan-1.2.4.json",
+      "validation/operator-decision-interface-toolchain-lock-1.2.4.json"
+    ],
+    "changed_path_count": 1,
+    "added_path_count": 27,
+    "removed_path_count": 0,
+    "total_delta_path_count": 28,
+    "raw_git_diff_reconstruction_required": true,
+    "plan_supplied_counts_are_evidence": false,
+    "key_blob_bindings": {
+      "fixture_catalog": {
+        "path": "fixtures/v1.2.4/operator-decision-interface-fixture-catalog.json",
+        "git_mode": "100644",
+        "blob_oid": "f6197718768d66e1139983bdf1dde4f3082ae58d"
+      },
+      "inventory_mapping": {
+        "path": "gate/operator-decision-inventories/reiyah.operator-decision-inventory-mapping-1.2.4.json",
+        "git_mode": "100644",
+        "blob_oid": "894b7e11afe423bef174fa9e28851f5c75eca652"
+      },
+      "evaluator": {
+        "path": "tools/gate_a_1_2_4_decision_interface.py",
+        "git_mode": "100755",
+        "blob_oid": "49da73810c32880fa1c1bcd36543ffb7bc4f763d"
+      },
+      "finding_map": {
+        "path": "validation/operator-decision-interface-finding-map-1.2.4.json",
+        "git_mode": "100644",
+        "blob_oid": "d1fcca3fd80b92ae85924824b6d2fe7aebac1a8b"
+      },
+      "implementation_plan": {
+        "path": "validation/operator-decision-interface-implementation-plan-1.2.4.json",
+        "git_mode": "100644",
+        "blob_oid": "ee674dfe89a0bc8ff9e379395ff2b3fc824fece4"
+      }
+    }
+  },
+  "population_contract": {
+    "known_good_witness_count": 6,
+    "risk_remove_one_adversary_count": 77,
+    "named_adversary_count": 124,
+    "inherited_catalog_adversary_count": 201,
+    "inherited_decomposition": "77_plus_124_equals_201",
+    "required_mapping_member": "RGA-020",
+    "mapping_ordered_row_count": 77,
+    "positive_production_check_count": 10,
+    "finding_negative_requirement_count": 31,
+    "required_finding_count": 10,
+    "finding_ids": [
+      "DI124-001",
+      "DI124-002",
+      "DI124-003",
+      "DI124-004",
+      "DI124-005",
+      "DI124-006",
+      "DI124-007",
+      "DI124-008",
+      "DI124-009",
+      "DI124-010"
+    ],
+    "positive_production_check_ids": [
+      "DI124I-SUBJECT-RESOLUTION",
+      "DI124I-DECISION-SCHEMA",
+      "DI124I-CANONICAL-OUTPUT-JOIN",
+      "DI124I-MANIFEST-SOURCE-RESOLUTION",
+      "DI124I-INVENTORY-RECONCILIATION",
+      "DI124I-DECISION-PARITY",
+      "DI124I-DECISION-SERIES",
+      "DI124I-TYPED-VERIFICATION-SEPARATION",
+      "DI124I-LOCKED-EVALUATOR",
+      "DI124I-ACYCLIC-READINESS"
+    ],
+    "finding_negative_adversary_ids": [
+      "reiyah.adversary.di124.stage-role-substitution",
+      "reiyah.adversary.di124.frozen-history-edit",
+      "reiyah.adversary.di124.decision-schema-substitution",
+      "reiyah.adversary.di124.template-activation",
+      "reiyah.adversary.di124.output-index-substitution",
+      "reiyah.adversary.di124.report-implication-forgery",
+      "reiyah.adversary.di124.source-mapping-digest-substitution",
+      "reiyah.adversary.di124.manifest-release-substitution",
+      "reiyah.adversary.di124.risk-remove-one.TM-001",
+      "reiyah.adversary.di124.rga-020-omission-explicit",
+      "reiyah.adversary.di124.accepted-parity-failure",
+      "reiyah.adversary.di124.acknowledgement-laundering",
+      "reiyah.adversary.di124.decision-series-fork",
+      "reiyah.adversary.di124.predecessor-byte-mismatch",
+      "reiyah.adversary.di124.identity-authority-verification-alias",
+      "reiyah.adversary.di124.operator-verifier-collapse",
+      "reiyah.adversary.di124.direct-python-execution",
+      "reiyah.adversary.di124.foreign-exception-translation",
+      "reiyah.adversary.di124.import-stdlib-origin-substitution",
+      "reiyah.adversary.di124.import-third-party-origin-substitution",
+      "reiyah.adversary.di124.import-bytecode-origin",
+      "reiyah.adversary.di124.capture-quorum-worker-substitution",
+      "reiyah.adversary.di124.production-check-consumer-substitution",
+      "reiyah.adversary.di124.production-check-operand-substitution",
+      "reiyah.adversary.di124.production-check-result-substitution",
+      "reiyah.adversary.di124.catalog-target-fixture-substitution",
+      "reiyah.adversary.di124.catalog-target-consumer-substitution",
+      "reiyah.adversary.di124.catalog-mutation-substitution",
+      "reiyah.adversary.di124.executed-source-substitution",
+      "reiyah.adversary.di124.future-edge-injection",
+      "reiyah.adversary.di124.post-packet-index-cycle"
+    ],
+    "finding_join_policy": {
+      "actual_outcomes_derived_before_expected_results_loaded": true,
+      "positive_ids_join_exactly_once": true,
+      "negative_ids_are_subset_of_201_not_additive": true,
+      "negative_ids_join_exactly_once": true,
+      "orphan_or_duplicate_join_allowed": false,
+      "finding_closed_count_at_implementation": 0,
+      "finding_status": "implemented_pending_DI124_ready"
+    }
+  },
+  "readiness_fixture_contract": {
+    "catalog_path": "fixtures/v1.2.5/operator-decision-interface-fixture-catalog.json",
+    "positive_route_spec_count": 1,
+    "positive_route_spec_ids": [
+      "reiyah.fixture.di125.readiness.full-route.v1-2-5"
+    ],
+    "readiness_adversary_count": 20,
+    "readiness_adversary_ids": [
+      "reiyah.adversary.di125.readiness-route-absent",
+      "reiyah.adversary.di125.development-report-relabel",
+      "reiyah.adversary.di125.implementation-subject-commit-substitution",
+      "reiyah.adversary.di125.implementation-bundle-coordinated-substitution",
+      "reiyah.adversary.di125.independence-promotion",
+      "reiyah.adversary.di125.mapping-rga020-removal",
+      "reiyah.adversary.di125.finding-evidence-omission",
+      "reiyah.adversary.di125.future-commit-binding",
+      "reiyah.adversary.di125.readiness-authority-promotion",
+      "reiyah.adversary.di125.report-self-digest",
+      "reiyah.adversary.di125.closeout-self-replay-assertion",
+      "reiyah.adversary.di125.frozen-family-relabel",
+      "reiyah.adversary.di125.inherited-count-lower-bound",
+      "reiyah.adversary.di125.readiness-report-operand-omission",
+      "reiyah.adversary.di125.closeout-operand-omission",
+      "reiyah.adversary.di125.clean-replay-operand-omission",
+      "reiyah.adversary.di125.report-closeout-alias",
+      "reiyah.adversary.di125.report-clean-replay-alias",
+      "reiyah.adversary.di125.closeout-clean-replay-alias",
+      "reiyah.adversary.di125.readiness-revision-substitution"
+    ],
+    "combined_rejection_count": 221,
+    "successor_consumer_canary_count": 5,
+    "successor_consumer_canary_ids": [
+      "DI125SC-001-decision-Q-digest",
+      "DI125SC-002-identity-decision-digest",
+      "DI125SC-003-authority-scope",
+      "DI125SC-004-composite-decision-head",
+      "DI125SC-005-resolution-evaluation-digest"
+    ],
+    "total_negative_probe_count": 226,
+    "populations_remain_separate": true,
+    "fixture_payload_can_select_synthetic_scope": false,
+    "production_or_history_admission_allowed": false,
+    "production_consumer_dispatch_required": true,
+    "shadow_model_allowed": false,
+    "mutation_targets_actual_bytes_or_topology": true
+  },
+  "synthetic_route_contract": {
+    "required": true,
+    "resolver": "sealed_in_memory_content_addressed_git_object_store",
+    "canonical_git_object_serialization_required": true,
+    "same_production_consumers_as_future_raw_git_route": true,
+    "mock_or_permissive_consumer_allowed": false,
+    "record_scope": "synthetic_capability_fixture_non_evidentiary",
+    "mandatory_route_variant": "documentation_envelope_absent",
+    "secondary_route_variant": "documentation_envelope_present_exact_allowlist",
+    "documentation_envelope_variant_count": 2,
+    "documentation_envelope_adversary_count": 5,
+    "ordered_stages": [
+      "synthetic_correction_implementation",
+      "synthetic_readiness_inputs",
+      "report_absent_render_R0",
+      "post_install_reproduction_R1",
+      "synthetic_readiness_report_commit",
+      "clean_report_commit_reproduction_R2",
+      "synthetic_readiness_closeout_commit",
+      "clean_closeout_replay_Q",
+      "synthetic_successor_decision_D",
+      "synthetic_identity_verification_I",
+      "synthetic_authority_verification_A",
+      "synthetic_composite_evaluation_E",
+      "synthetic_composite_resolution_R"
+    ],
+    "report_stream_equality": "R0_equals_R1_equals_R2",
+    "report_result": "readiness_evaluation_pass_pending_closeout",
+    "report_interface_readiness_state": "not_ready",
+    "report_forbidden_fields": [
+      "live_head",
+      "live_tree",
+      "branch_name",
+      "process_id",
+      "wall_clock",
+      "validation_observations",
+      "run_observations",
+      "report_byte_size",
+      "report_sha256"
+    ],
+    "closeout_binds_report_observations": [
+      "R0",
+      "R1",
+      "R2"
+    ],
+    "closeout_embeds_own_commit_tree_digest_or_replay_outcome": false,
+    "Q_is_outside_closeout_bytes_and_commit": true,
+    "Q_creates_additional_commit": false,
+    "Q_antecedent_payload_render": "clean-closeout-replay-evidence-payload",
+    "Q_antecedent_payload_excludes_Q": true,
+    "synthetic_stage_id": "DI125-synthetic-route-complete",
+    "synthetic_clean_replay_result": "synthetic_route_reaches_ready_transition_semantics_only",
+    "real_interface_readiness_promoted": false,
+    "synthetic_result_can_promote_outer_authority": false,
+    "outer_result": "corrected_implementation_not_ready"
+  },
+  "validation_contract": {
+    "launcher_path": "tools/gate_a_1_2_5_decision_interface.sh",
+    "evaluator_path": "tools/gate_a_1_2_5_decision_interface.py",
+    "core_path": "tools/reiyah_gate_core_1_0_0.py",
+    "toolchain_lock_path": "validation/operator-decision-interface-toolchain-lock-1.2.5.json",
+    "report_schema_path": "schemas/operator-decision-interface-validation-report-1.2.5.schema.json",
+    "schema_semantics_obligation_id": "DI125-IMP-007-closed-schema-and-json-semantics",
+    "schema_semantics_owner_tool_id": "reiyah.tool.gate-a-1.2.5-decision-interface-evaluator",
+    "schema_semantics_responsibilities": [
+      "closed_local_draft_2020_12_registry_resolution",
+      "exact_dynamic_reference_rejection",
+      "order_independent_json_object_semantics"
+    ],
+    "closed_ordered_routes": [
+      [
+        "tools/gate_a_1_2_5_decision_interface.sh",
+        "--snapshot-mode",
+        "development",
+        "--render",
+        "toolchain-lock",
+        "--output",
+        "raw"
+      ],
+      [
+        "tools/gate_a_1_2_5_decision_interface.sh",
+        "--snapshot-mode",
+        "development",
+        "--render",
+        "implementation-report",
+        "--output",
+        "raw"
+      ],
+      [
+        "tools/gate_a_1_2_5_decision_interface.sh",
+        "--snapshot-mode",
+        "implementation",
+        "--render",
+        "implementation-report",
+        "--output",
+        "raw"
+      ]
+    ],
+    "toolchain_lock_self_excluding": true,
+    "toolchain_lock_absent_render_then_installed_reproduction": true,
+    "toolchain_lock_pending_state_valid_for_report": false,
+    "toolchain_binding_serialization_rule": "sorted_path_NUL_mode_NUL_blob_oid_NUL_byte_size_NUL_sha256_LF",
+    "toolchain_binding_rows_equal_exact_ordered_projection_paths": true,
+    "toolchain_binding_modes_equal_incoming_transition_contract": true,
+    "toolchain_binding_blob_oids_recomputed_from_bytes": true,
+    "two_fresh_development_reports_byte_identical": true,
+    "two_fresh_clean_implementation_reports_byte_identical": true,
+    "launcher_enters_isolation_before_python": true,
+    "git_subprocesses_have_dedicated_process_groups": true,
+    "bounded_stdout_stderr_timeout_and_cleanup": true,
+    "successful_git_stderr_empty_or_digest_observed": true,
+    "raw_git_object_type_checked_before_payload": true,
+    "typed_reason_specific_diagnostics_with_nonempty_paths": true,
+    "module_origin_row_order": "origin_kind_then_module_then_origin",
+    "module_origin_serialization_rule": "origin_kind_NUL_module_NUL_origin_NUL_byte_size_NUL_sha256_LF",
+    "module_origin_scope": "injected_evaluator_and_core_plus_all_observed_file_backed_stdlib_and_third_party_modules",
+    "expected_catalog_results_loaded_after_actual_outcomes": true,
+    "report_self_digest_allowed": false,
+    "future_commit_or_tree_self_assertion_allowed": false
+  },
+  "future_transition_topology": {
+    "ordered_commit_stages": [
+      "DI125-correction-implementation",
+      "DI125-documentation-update",
+      "DI125-readiness-inputs",
+      "DI125-readiness-report",
+      "DI125-readiness-closeout"
+    ],
+    "documentation_update_optional": true,
+    "readiness_inputs_paths": [
+      "gate/operator-decision-interface-reviews/reiyah.operator-decision-interface-implementation-review-1.2.5.json",
+      "gate/operator-decision-interface-reviews/reiyah.operator-decision-interface-mapping-review-1.2.5.json",
+      "validation/operator-decision-interface-ready-plan-1.2.5.json"
+    ],
+    "separate_explicit_static_seal_instruction_required": true,
+    "readiness_report_path": "gate/validation-reports/operator-decision-interface-readiness-1.2.5.json",
+    "readiness_report_delta": {
+      "changed_existing_paths": [],
+      "added_paths": [
+        "gate/validation-reports/operator-decision-interface-readiness-1.2.5.json"
+      ],
+      "removed_paths": [],
+      "executable_paths": []
+    },
+    "readiness_closeout_path": "gate/operator-decision-interface-closeouts/reiyah.operator-decision-interface-readiness-closeout-1.2.5.json",
+    "readiness_closeout_delta": {
+      "changed_existing_paths": [
+        "docs/SESSION_HANDOFF.md"
+      ],
+      "added_paths": [
+        "gate/operator-decision-interface-closeouts/reiyah.operator-decision-interface-readiness-closeout-1.2.5.json"
+      ],
+      "removed_paths": [],
+      "executable_paths": []
+    },
+    "clean_closeout_replay_observation_path": "gate/operator-decision-interface-observations/reiyah.operator-decision-interface-clean-closeout-replay-observation-1.2.5.json",
+    "clean_closeout_replay_creates_commit": false,
+    "semantic_result_after_clean_replay": {
+      "stage_id": "DI124-ready",
+      "readiness_revision": "1.2.5",
+      "result": "interface_ready_for_separate_human_process"
+    },
+    "separate_human_process_authority_required": true
+  },
+  "documentation_envelope": {
+    "allowed_count": "zero_or_one",
+    "position": "after_implementation_before_readiness_inputs",
+    "exact_path_allowlist": [
+      "README.md",
+      "docs/ARCHITECTURE.md",
+      "docs/SESSION_HANDOFF.md"
+    ],
+    "single_parent_required": true,
+    "implementation_bound_paths_must_be_unchanged": true,
+    "executable_path_changes_allowed": false,
+    "authority_promotion_allowed": false,
+    "separate_validation_contract_required": true
+  },
+  "process_containment_nonclaims": {
+    "core_git_cleanup_required_scope": "dedicated_git_session_and_pgid_cleanup_on_all_caught_production_paths",
+    "os_level_process_tree_containment_under_external_evaluator_sigkill_claimed": false,
+    "outer_launcher_can_reach_dedicated_git_pgid": false,
+    "every_possible_child_escape_detected_claimed": false,
+    "darwin_eperm_interpretation": "only_after_waitid_WNOWAIT_pins_exited_evaluator_leader_not_descendant_enumeration"
+  },
+  "result_contract": {
+    "successful_result": "corrected_implementation_not_ready",
+    "readiness_route_implemented": true,
+    "synthetic_full_route_required": true,
+    "real_readiness_evaluated": false,
+    "finding_closed_count": 0,
+    "interface_readiness_state": "not_ready",
+    "operator_acceptance_state": "unaccepted",
+    "ga_17_state": "not_evaluated",
+    "implementation_report_is_internal_integrity_signal_only": true
+  },
+  "authority": {
+    "subject_architecture_status": "architecture_complete",
+    "correction_implementation_state": "candidate_under_locked_validation",
+    "interface_readiness_state": "not_ready",
+    "operator_acceptance_state": "unaccepted",
+    "ga_17_state": "not_evaluated",
+    "independent_external_review_completed": false,
+    "human_decision_process_authorized": false,
+    "scientific_evidence_created": false,
+    "scientific_claim_authority": false,
+    "public_distribution_eligible": false,
+    "public_distribution_authorized": false,
+    "publication_acceptance_authorized": false,
+    "transport_verification_state": "not_evaluated",
+    "runtime_authorized": false,
+    "cloud_execution_authorized": false,
+    "private_data_ingestion_authorized": false,
+    "physical_control_authorized": false,
+    "gate_b_authorized": false,
+    "readiness_inputs_authorized": false,
+    "main_ref_change_authorized": false,
+    "merge_commit_authorized": false,
+    "public_push_authorized": false
+  },
+  "next_transition": {
+    "stage_id": "DI125-readiness-inputs",
+    "authorized": false,
+    "optional_predecessor_stage": "DI125-documentation-update",
+    "requires_separate_explicit_static_seal_instruction": true,
+    "required_readiness_revision": "1.2.5",
+    "maximum_current_result": "corrected_implementation_not_ready"
+  }
+}
