@@ -1,0 +1,251 @@
+{
+  "schema_id": "https://schemas.reiyah.invalid/gate-a/1.2.4/operator-decision-interface-plan.schema.json",
+  "artifact_id": "reiyah.artifact.operator-decision-interface-plan-1.2.4",
+  "plan_id": "reiyah.validation-plan.operator-decision-interface@1.2.4",
+  "interface_release_id": "reiyah.operator-decision-interface@1.2.4",
+  "version": "1.2.4",
+  "record_kind": "operator_decision_interface_validation_plan",
+  "lifecycle_status": "proposed",
+  "activation_state": "disabled_contract_only",
+  "as_of_date": "2026-08-29",
+  "stage_id": "DI124-contract",
+  "repository_identity": {
+    "project": "Reiyah",
+    "canonical_root": "/Users/danielwahnich/workspace/reiyah",
+    "git_root": "/Users/danielwahnich/workspace/reiyah",
+    "configured_remote": "https://github.com/manfromnowhere143/reiyah.git",
+    "branch": "gate-a-1.2.4-operator-decision-interface"
+  },
+  "predecessor": {
+    "stage_id": "C_closeout",
+    "commit": "e9643e850107333878d9b1bd3a84de3a45c1f04b",
+    "tree": "2e54c3e6c74880d23063c6cda7532dca1cd6aa6d",
+    "first_parent": "801eacf1620fe5850647b4d25941ea04798c2210",
+    "subject_cpacket_commit": "801eacf1620fe5850647b4d25941ea04798c2210",
+    "subject_cpacket_tree": "5e63078bcab6272a34f45646c63c0690ed454c12"
+  },
+  "incoming_transition_contract": {
+    "transition_id": "reiyah.transition.operator-decision-interface-1.2.4-closeout-to-contract",
+    "from_stage": "C_closeout",
+    "to_stage": "DI124-contract",
+    "baseline_commit": "e9643e850107333878d9b1bd3a84de3a45c1f04b",
+    "baseline_tree": "2e54c3e6c74880d23063c6cda7532dca1cd6aa6d",
+    "direct_single_parent_required": true,
+    "changed_existing_paths": [],
+    "added_paths": [
+      "docs/OPERATOR_DECISION_INTERFACE_1_2_4.md",
+      "gate/operator-decision-interfaces/reiyah.operator-decision-interface-1.2.4.json",
+      "schemas/operator-decision-interface-1.2.4.schema.json",
+      "schemas/operator-decision-interface-plan-1.2.4.schema.json",
+      "validation/operator-decision-interface-plan-1.2.4.json"
+    ],
+    "removed_paths": [],
+    "executable_paths": [],
+    "unknown_delta_policy": "reject",
+    "raw_git_index_must_equal_head_before_staging": true,
+    "result_commit_binding_state": "not_self_bound_resolve_from_raw_git_after_commit"
+  },
+  "current_stage_contract": {
+    "ordered_stage_ids": [
+      "C_closeout",
+      "DI124-contract",
+      "DI124-contract-review",
+      "DI124-implementation",
+      "DI124-ready",
+      "D-recorded-unverified",
+      "V-recorded",
+      "R-composite-resolved"
+    ],
+    "one_time_lifecycle_prefix": [
+      "C_closeout",
+      "DI124-contract",
+      "DI124-contract-review",
+      "DI124-implementation",
+      "DI124-ready"
+    ],
+    "later_repeatable_event_state_classes": {
+      "D-recorded-unverified": {
+        "class_kind": "repeatable_append_only_decision_record_event",
+        "one_new_record_per_separately_authorized_transition": true,
+        "later_successor_transitions_are_one_at_a_time": true,
+        "history_overwrite_allowed": false
+      },
+      "V-recorded": {
+        "class_kind": "repeatable_append_only_typed_verification_record_event",
+        "one_new_typed_record_per_separately_authorized_transition": true,
+        "later_successor_transitions_are_one_at_a_time": true,
+        "history_overwrite_allowed": false
+      },
+      "R-composite-resolved": {
+        "class_kind": "repeatable_derived_composite_resolution_state",
+        "recomputed_from_unique_current_decision_identity_verification_and_authority_verification_heads": true,
+        "if_recorded_one_new_record_per_separately_authorized_transition": true,
+        "history_overwrite_allowed": false
+      }
+    },
+    "post_ready_event_grammar": {
+      "every_event_requires_separate_explicit_authority": true,
+      "decision_append": {
+        "allowed_predecessor_state_classes": [
+          "DI124-ready",
+          "D-recorded-unverified",
+          "V-recorded",
+          "R-composite-resolved"
+        ],
+        "exactly_one_new_decision_record_per_transition": true,
+        "later_decision_must_immediately_succeed_current_decision_head": true,
+        "prior_verification_and_resolution_heads_become_stale_for_current_resolution": true,
+        "fresh_decision_bound_identity_and_authority_verification_heads_required_before_resolved_decision_value": true
+      },
+      "typed_verification_append": {
+        "allowed_predecessor_state_classes": [
+          "D-recorded-unverified",
+          "V-recorded",
+          "R-composite-resolved"
+        ],
+        "typed_record_kinds": [
+          "human_identity_verification",
+          "human_authority_verification"
+        ],
+        "typed_record_order": "either_order",
+        "exactly_one_new_typed_record_per_transition": true,
+        "must_bind_current_decision_head": true,
+        "same_decision_typed_series_successors_allowed_one_at_a_time": true,
+        "changed_typed_verification_head_makes_prior_resolution_stale": true,
+        "changed_typed_verification_head_requires_recomputed_or_new_resolution": true
+      },
+      "resolution_evaluation": {
+        "callable_from_state_classes": [
+          "DI124-ready",
+          "D-recorded-unverified",
+          "V-recorded",
+          "R-composite-resolved"
+        ],
+        "favorable_or_eligible_head_precondition_required_to_evaluate": false,
+        "classification_precedence": [
+          "invalid",
+          "stale",
+          "unaccepted",
+          "decision_value"
+        ],
+        "closed_result_states": [
+          "unaccepted",
+          "accepted",
+          "rejected",
+          "deferred",
+          "stale",
+          "invalid"
+        ],
+        "resolved_decision_value_states": [
+          "accepted",
+          "rejected",
+          "deferred"
+        ],
+        "resolved_decision_value_requires_current_structurally_valid_decision_and_both_unique_current_eligible_verified_typed_heads": true,
+        "must_bind_typed_resolution_as_of_observation_or_basis": true,
+        "only_operands_existing_by_resolution_as_of_may_be_considered": true,
+        "historical_query_may_not_become_current_composite": true,
+        "derived_read_only_evaluation": true
+      },
+      "recorded_resolution_append": {
+        "allowed_predecessor_state_classes": [
+          "DI124-ready",
+          "D-recorded-unverified",
+          "V-recorded",
+          "R-composite-resolved"
+        ],
+        "may_retain_result_states": [
+          "unaccepted",
+          "accepted",
+          "rejected",
+          "deferred",
+          "stale",
+          "invalid"
+        ],
+        "requires_separate_explicit_authority": true,
+        "series_topology": "one_root_linear_unique_current_head",
+        "contiguous_positive_sequence_required": true,
+        "exact_predecessor_identity_and_bytes_required": true,
+        "exactly_one_new_resolution_record_per_transition": true,
+        "later_resolution_must_immediately_succeed_current_resolution_head": true,
+        "must_bind_evaluated_operand_heads_and_result": true,
+        "must_bind_typed_resolution_as_of_observation_or_basis": true,
+        "current_series_successor_resolution_as_of_must_be_nondecreasing": true,
+        "historical_replay_may_not_be_current_head_or_supersede_current_resolution": true,
+        "can_change_decision_or_verification_operands": false
+      },
+      "history_overwrite_allowed": false
+    },
+    "current_stage": "DI124-contract",
+    "expected_authoring_delta_state": "exact_five_path_add_only_unstaged_candidate",
+    "immutable_subject_paths_must_remain_unchanged": [
+      "gate/GATE_A_EVIDENCE_INDEX.json",
+      "gate/GATE_A_EVIDENCE_INDEX.sha256",
+      "gate/validation-reports/gate-a-validation-1.2.3.json",
+      "schemas/operator-decision-record-1.2.3.schema.json",
+      "gate/decisions/OPERATOR_DECISION-1.2.3.template.json"
+    ],
+    "decision_record_paths_allowed": false,
+    "implementation_paths_allowed": false,
+    "readiness_report_path_allowed": false,
+    "next_transition_authorized": false
+  },
+  "finding_contract": {
+    "interface_path": "gate/operator-decision-interfaces/reiyah.operator-decision-interface-1.2.4.json",
+    "interface_schema_path": "schemas/operator-decision-interface-1.2.4.schema.json",
+    "required_finding_ids": [
+      "DI124-001", "DI124-002", "DI124-003", "DI124-004", "DI124-005",
+      "DI124-006", "DI124-007", "DI124-008", "DI124-009", "DI124-010"
+    ],
+    "required_count": 10,
+    "baseline_open_count": 10,
+    "implementation_blocked_count": 10,
+    "closed_count": 0,
+    "implementation_status": "blocked_pending_separate_review_and_explicit_operator_instruction"
+  },
+  "validation_boundary": {
+    "validator_path": null,
+    "launcher_path": null,
+    "toolchain_lock_path": null,
+    "fixture_catalog_path": null,
+    "readiness_report_path": null,
+    "implementation_present": false,
+    "release_validation_available": false,
+    "canonical_output_emission_authorized": false,
+    "repository_write_authorized": false,
+    "network_authorized": false
+  },
+  "review_gate": {
+    "state": "blocked_pending_separate_exact_byte_review",
+    "review_must_bind_all_five_contract_paths": true,
+    "review_must_bind_content_digests_and_byte_sizes": true,
+    "review_must_name_reviewer_identity_time_and_rationale": true,
+    "review_schema_or_record_exists": false,
+    "review_kind": "role_separated_read_only_advisory_review",
+    "shared_model_or_system_failure_modes_remain": true,
+    "shared_repository_context_failure_modes_remain": true,
+    "review_establishes_independence": false,
+    "independent_external_review_completed": false,
+    "review_confers_gate_a_acceptance": false,
+    "review_authorizes_implementation": false
+  },
+  "authority": {
+    "operator_acceptance_state": "unaccepted",
+    "ga_17_state": "not_evaluated",
+    "scientific_evidence_created": false,
+    "scientific_claim_authority": false,
+    "public_distribution_eligible": false,
+    "public_distribution_authorized": false,
+    "publication_acceptance_authorized": false,
+    "runtime_authorized": false,
+    "cloud_execution_authorized": false,
+    "private_data_ingestion_authorized": false,
+    "gate_b_authorized": false,
+    "physical_control_authorized": false,
+    "transport_verification_state": "not_evaluated",
+    "decision_record_creation_authorized": false,
+    "human_decision_process_authorized": false,
+    "implementation_authorized": false
+  },
+  "only_next_bounded_action": "role_separated_read_only_advisory_review_of_exact_five_path_contract_candidate"
+}

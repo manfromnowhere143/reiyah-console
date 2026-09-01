@@ -153,9 +153,6 @@ export function Station({
         {sub && <span className="stsub">{sub}</span>}
       </div>
       <div className="stbody">{children}</div>
-      <div className="nonclaim">
-        renders committed machine records only · not a driver-monitoring system · creates no acceptance, evidence, or authority
-      </div>
     </>
   );
 }

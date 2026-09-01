@@ -1,0 +1,171 @@
+{
+  "schema_id": "https://schemas.reiyah.invalid/gate-a/1.2.3/toolchain-lock.schema.json",
+  "artifact_id": "reiyah.artifact.toolchain-lock-1.2.3",
+  "version": "1.2.3",
+  "runtime": {
+    "implementation": "cpython",
+    "version": "3.14.2",
+    "executable": "/opt/homebrew/bin/python3.14"
+  },
+  "platform": {
+    "system": "Darwin",
+    "machine": "arm64",
+    "kernel_release": "23.4.0",
+    "kernel_version": "Darwin Kernel Version 23.4.0: Wed Feb 21 21:44:43 PST 2024; root:xnu-10063.101.15~2/RELEASE_ARM64_T6000",
+    "product_version": "14.4",
+    "product_build_version": "23E214"
+  },
+  "isolation": {
+    "python_flags": [
+      "-I",
+      "-S",
+      "-B"
+    ],
+    "network_policy": "denied_before_python_start",
+    "filesystem_write_policy": "denied_before_python_start_except_dev_null_data",
+    "seatbelt_profile_sha256": "38b55e492f288ac0c410d68a4420f0242d21020c45be6addb13ac068e9ba3313",
+    "denied_operations": [
+      "network-bind",
+      "network-outbound",
+      "file-write-create",
+      "file-write-data",
+      "file-write-mode",
+      "file-write-unlink",
+      "file-write-xattr"
+    ]
+  },
+  "stdlib": {
+    "root": "/opt/homebrew/Cellar/python@3.14/3.14.2_1/Frameworks/Python.framework/Versions/3.14/lib/python3.14",
+    "excluded_subtrees": [
+      "config-3.14-darwin",
+      "site-packages"
+    ],
+    "file_count": 2889,
+    "tree_sha256": "6c16d67e7b053e4a26cf18c518b5d726ac7031bc4688208320daf57c41c2f491",
+    "framework": {
+      "path": "/opt/homebrew/Cellar/python@3.14/3.14.2_1/Frameworks/Python.framework/Versions/3.14/Python",
+      "resolved_path": "/opt/homebrew/Cellar/python@3.14/3.14.2_1/Frameworks/Python.framework/Versions/3.14/Python",
+      "sha256": "19e926471e468a71c8d0c165af01b53dd08dcc590bcae7eff666ba200dc6a48f",
+      "byte_size": 5454960
+    }
+  },
+  "executables": [
+    {
+      "name": "env",
+      "path": "/usr/bin/env",
+      "resolved_path": "/usr/bin/env",
+      "sha256": "fe531da7d583d35e73ecf2a17aedf8ae4b2ff883de91b20fff5ad79dd7e1c723",
+      "byte_size": 102336
+    },
+    {
+      "name": "git",
+      "path": "/usr/bin/git",
+      "resolved_path": "/usr/bin/git",
+      "sha256": "878004e85c866251cb3941ad57c0e21e4e361b026e139c24eb9a170c46ec8e81",
+      "byte_size": 119008
+    },
+    {
+      "name": "python",
+      "path": "/opt/homebrew/bin/python3.14",
+      "resolved_path": "/opt/homebrew/Cellar/python@3.14/3.14.2_1/Frameworks/Python.framework/Versions/3.14/bin/python3.14",
+      "sha256": "3b6b69c61fd3765ab911d701cd17293b4a9154a0cb4973b546f05847f9a164c6",
+      "byte_size": 52640
+    },
+    {
+      "name": "sandbox_exec",
+      "path": "/usr/bin/sandbox-exec",
+      "resolved_path": "/usr/bin/sandbox-exec",
+      "sha256": "569aa2e95952f1a355c46f3de02574bc4a90b9d21ec4c3944001f611935ee5ad",
+      "byte_size": 118944
+    },
+    {
+      "name": "shell",
+      "path": "/bin/sh",
+      "resolved_path": "/bin/sh",
+      "sha256": "75fab21b84ad712398981e76b53721a6db46eb3cc39e85e0abac1bff01b30d3b",
+      "byte_size": 101232
+    }
+  ],
+  "inherited_lock": {
+    "path": "validation/toolchain-lock-1.2.2.json",
+    "sha256": "sha256:5840dc54346511263dffcdf19c616688794ed23c2116c6e2baa092953301a76a",
+    "byte_size": 6166
+  },
+  "repository_bindings": [
+  {
+    "path": "tools/gate_a_1_2_3.sh",
+    "sha256": "sha256:241576fd9b52ab0742e476e02d58c6b80deadbf90e71f43fe0ed90a94afdf8ce",
+    "byte_size": 997
+  },
+  {
+    "path": "tools/gate_a_1_2_3.py",
+    "sha256": "sha256:d014e841f4084fe2af6a53fe0c7435da1ee081c91cada8a866224248ee0b3e1b",
+    "byte_size": 182864
+  },
+  {
+    "path": "validation/validation-plan.json",
+    "sha256": "sha256:c109bf5c20ff5bfd65196ee44ecabf17f2f2adb11f4108aa878f63234a673d96",
+    "byte_size": 6656
+  },
+  {
+    "path": "schemas/validation-plan-1.2.3.schema.json",
+    "sha256": "sha256:5d0ec80e0d402646263f08ef67d9bbcd5b4b8a2819fe463308b2acd696c06a7b",
+    "byte_size": 11388
+  },
+  {
+    "path": "schemas/validation-report-1.2.3.schema.json",
+    "sha256": "sha256:e6406e6f5d1ee1ecf931c076bc4512c3ea55193c0501e4a2a3367c6a9712229d",
+    "byte_size": 36859
+  },
+  {
+    "path": "schemas/gate-a-index-1.2.3.schema.json",
+    "sha256": "sha256:5027de7ada40ba675fb06faeb1ab9240bb9647179d93a087ad023dfd43210ade",
+    "byte_size": 17764
+  },
+  {
+    "path": "schemas/historical-development-checkpoint-recovery-1.2.3.schema.json",
+    "sha256": "sha256:910d7a90b81edb549b9db1393292b26c166bf32bde99eb2fdf421bc9fbf6c430",
+    "byte_size": 11051
+  },
+  {
+    "path": "schemas/operator-decision-record-1.2.3.schema.json",
+    "sha256": "sha256:eaf5819ee888dd9bf57c99e3883603131aa88032abd7d159747df7f19c8d994e",
+    "byte_size": 25535
+    },
+    {
+      "path": "gate/decisions/OPERATOR_DECISION-1.2.3.template.json",
+      "sha256": "sha256:5eacd95f6f44f487648da67b9650fc29e5d925395dff3e2d5d186a0bb7fb0f2b",
+      "byte_size": 6241
+    },
+  {
+    "path": "schemas/release-readiness-contract-1.2.3.schema.json",
+    "sha256": "sha256:c4fb92c7699b912e39075ca1f569cd9a52e8a26c32aae991f599a8a94b1971df",
+    "byte_size": 24627
+    },
+    {
+      "path": "fixtures/v1.2.3/release-readiness-fixture-catalog.json",
+      "sha256": "sha256:c5ff6bb0eb809148f6969ed7dcaf8416a1faeefb8be1c08fcf45d20c100ce973",
+      "byte_size": 8502
+    },
+  {
+    "path": "schemas/toolchain-lock-1.2.3.schema.json",
+    "sha256": "sha256:e58633764b1fe49b332ee13b4d0a623dee41c62480f8994570366228d5291872",
+    "byte_size": 12808
+    },
+    {
+      "path": "tools/gate_a_1_2_2.py",
+      "sha256": "sha256:e74cc1799e595a33aad16c165a6e5ac7ce0d44a90b2b66db7a1c0e51928fa8e3",
+      "byte_size": 204039
+    },
+    {
+      "path": "validation/toolchain-lock-1.2.2.json",
+      "sha256": "sha256:5840dc54346511263dffcdf19c616688794ed23c2116c6e2baa092953301a76a",
+      "byte_size": 6166
+    }
+  ],
+  "guarantee_boundaries": {
+    "covered": "Exact declared launcher, validator, plan, schema, fixture-catalog, inherited validator and lock, executable, Python framework, and standard-library bytes on the named host; the launcher enters Seatbelt before CPython starts; Git subprocess configuration is closed and raw commit, tree, and blob bytes are rehashed; concrete write, bind, and outbound probes must be denied.",
+    "conditional": "Isolation remains conditional on the exact macOS build, kernel, sandbox-exec and dyld-shared-cache Seatbelt implementation, shell, env, Git, Python, filesystem, concurrent external writers, and uncompromised operating system; dynamic libraries in the shared cache are outside individual file-digest closure.",
+    "externally_verified": "Nothing in this offline development replay independently proves GitHub transport, publisher assertions, operator acceptance, scientific validity, safety, runtime readiness, publication eligibility, release eligibility, architecture completion, or its own executable identity before first instruction."
+  }
+}

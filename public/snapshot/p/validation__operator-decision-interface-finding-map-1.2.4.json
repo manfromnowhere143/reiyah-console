@@ -1,0 +1,545 @@
+{
+  "schema_id": "https://schemas.reiyah.invalid/gate-a/1.2.4/operator-decision-interface-finding-map.schema.json",
+  "artifact_id": "reiyah.artifact.operator-decision-interface-finding-map-1.2.4",
+  "map_id": "reiyah.finding-map.operator-decision-interface-implementation@1.2.4",
+  "record_kind": "operator_decision_interface_finding_map",
+  "version": "1.2.4",
+  "lifecycle_status": "proposed",
+  "stage_id": "DI124-implementation",
+  "status_basis": {
+    "subject_stage_id": "DI124-contract-review",
+    "subject_commit": "148ed1a329bd14681bb35b0e7142c4772783df6d",
+    "subject_tree": "5e2755c965289331b16e845d077ca7fbd1b538e1",
+    "observation_kind": "implementation_evidence_requirements_not_observed_results",
+    "current_candidate_result_claimed": false,
+    "development_evidence_is_readiness_evidence": false
+  },
+  "required_finding_ids": [
+    "DI124-001",
+    "DI124-002",
+    "DI124-003",
+    "DI124-004",
+    "DI124-005",
+    "DI124-006",
+    "DI124-007",
+    "DI124-008",
+    "DI124-009",
+    "DI124-010"
+  ],
+  "findings": [
+    {
+      "finding_id": "DI124-001",
+      "title": "Immutable target and chronology resolution",
+      "requirement": "Rehash and exact-bind raw C_packet and C_closeout objects while preserving their distinct roles and every canonical output blob.",
+      "contract_baseline_status": "open",
+      "contract_baseline_blocked_reason": "disabled_contract_only_no_implementation_authorized",
+      "implementation_status": "implemented_pending_DI124_ready",
+      "closed": false,
+      "development_evidence_can_close_finding": false,
+      "positive_evidence_requirements": [
+        {
+          "evidence_id": "reiyah.evidence-requirement.di124-001.positive",
+          "production_check_id": "DI124I-SUBJECT-RESOLUTION",
+          "consumer_result_required": "pass",
+          "evidence_state": "required_not_yet_observed",
+          "evidence_role": "production_consumer_development_integrity_signal_only"
+        }
+      ],
+      "negative_evidence_requirements": [
+        {
+          "evidence_id": "reiyah.evidence-requirement.stage-role-substitution.negative",
+          "adversary_id": "reiyah.adversary.di124.stage-role-substitution",
+          "expected_primary_diagnostic": "DI124I-SUBJECT-STAGE-ROLE",
+          "expected_path": "/subject/c_packet",
+          "rejection_required": true,
+          "evidence_state": "required_not_yet_observed",
+          "evidence_role": "synthetic_adversary_rejection_development_integrity_signal_only"
+        },
+        {
+          "evidence_id": "reiyah.evidence-requirement.frozen-history-edit.negative",
+          "adversary_id": "reiyah.adversary.di124.frozen-history-edit",
+          "expected_primary_diagnostic": "DI124I-FROZEN-HISTORY",
+          "expected_path": "/repository/frozen_paths",
+          "rejection_required": true,
+          "evidence_state": "required_not_yet_observed",
+          "evidence_role": "synthetic_adversary_rejection_development_integrity_signal_only"
+        }
+      ]
+    },
+    {
+      "finding_id": "DI124-002",
+      "title": "Decision schema identity correction",
+      "requirement": "Define an additive decision-record schema that binds the actual revision-1 index without altering or relabeling the frozen 1.2.3 schema or template.",
+      "contract_baseline_status": "open",
+      "contract_baseline_blocked_reason": "disabled_contract_only_no_implementation_authorized",
+      "implementation_status": "implemented_pending_DI124_ready",
+      "closed": false,
+      "development_evidence_can_close_finding": false,
+      "positive_evidence_requirements": [
+        {
+          "evidence_id": "reiyah.evidence-requirement.di124-002.positive",
+          "production_check_id": "DI124I-DECISION-SCHEMA",
+          "consumer_result_required": "pass",
+          "evidence_state": "required_not_yet_observed",
+          "evidence_role": "production_consumer_development_integrity_signal_only"
+        }
+      ],
+      "negative_evidence_requirements": [
+        {
+          "evidence_id": "reiyah.evidence-requirement.decision-schema-substitution.negative",
+          "adversary_id": "reiyah.adversary.di124.decision-schema-substitution",
+          "expected_primary_diagnostic": "DI124D-SCHEMA-BINDING",
+          "expected_path": "/decision/schema_id",
+          "rejection_required": true,
+          "evidence_state": "required_not_yet_observed",
+          "evidence_role": "synthetic_adversary_rejection_development_integrity_signal_only"
+        },
+        {
+          "evidence_id": "reiyah.evidence-requirement.template-activation.negative",
+          "adversary_id": "reiyah.adversary.di124.template-activation",
+          "expected_primary_diagnostic": "DI124D-TEMPLATE-ACTIVATION",
+          "expected_path": "/decision/record_kind",
+          "rejection_required": true,
+          "evidence_state": "required_not_yet_observed",
+          "evidence_role": "synthetic_adversary_rejection_development_integrity_signal_only"
+        }
+      ]
+    },
+    {
+      "finding_id": "DI124-003",
+      "title": "Canonical output semantic join",
+      "requirement": "Resolve the exact index, sidecar, report, report semantics, and revision-1 index binding through one fail-closed production consumer.",
+      "contract_baseline_status": "open",
+      "contract_baseline_blocked_reason": "disabled_contract_only_no_implementation_authorized",
+      "implementation_status": "implemented_pending_DI124_ready",
+      "closed": false,
+      "development_evidence_can_close_finding": false,
+      "positive_evidence_requirements": [
+        {
+          "evidence_id": "reiyah.evidence-requirement.di124-003.positive",
+          "production_check_id": "DI124I-CANONICAL-OUTPUT-JOIN",
+          "consumer_result_required": "pass",
+          "evidence_state": "required_not_yet_observed",
+          "evidence_role": "production_consumer_development_integrity_signal_only"
+        }
+      ],
+      "negative_evidence_requirements": [
+        {
+          "evidence_id": "reiyah.evidence-requirement.output-index-substitution.negative",
+          "adversary_id": "reiyah.adversary.di124.output-index-substitution",
+          "expected_primary_diagnostic": "DI124I-OUTPUT-BINDING",
+          "expected_path": "/subject/canonical_outputs/0",
+          "rejection_required": true,
+          "evidence_state": "required_not_yet_observed",
+          "evidence_role": "synthetic_adversary_rejection_development_integrity_signal_only"
+        },
+        {
+          "evidence_id": "reiyah.evidence-requirement.report-implication-forgery.negative",
+          "adversary_id": "reiyah.adversary.di124.report-implication-forgery",
+          "expected_primary_diagnostic": "DI124I-REPORT-SEMANTICS",
+          "expected_path": "/subject/report",
+          "rejection_required": true,
+          "evidence_state": "required_not_yet_observed",
+          "evidence_role": "synthetic_adversary_rejection_development_integrity_signal_only"
+        }
+      ]
+    },
+    {
+      "finding_id": "DI124-004",
+      "title": "Manifest and source resolution",
+      "requirement": "Resolve exact mission, protocol, release-ledger, threat-model, and research-gap artifacts from the immutable index rather than trusting record assertions.",
+      "contract_baseline_status": "open",
+      "contract_baseline_blocked_reason": "disabled_contract_only_no_implementation_authorized",
+      "implementation_status": "implemented_pending_DI124_ready",
+      "closed": false,
+      "development_evidence_can_close_finding": false,
+      "positive_evidence_requirements": [
+        {
+          "evidence_id": "reiyah.evidence-requirement.di124-004.positive",
+          "production_check_id": "DI124I-MANIFEST-SOURCE-RESOLUTION",
+          "consumer_result_required": "pass",
+          "evidence_state": "required_not_yet_observed",
+          "evidence_role": "production_consumer_development_integrity_signal_only"
+        }
+      ],
+      "negative_evidence_requirements": [
+        {
+          "evidence_id": "reiyah.evidence-requirement.source-mapping-digest-substitution.negative",
+          "adversary_id": "reiyah.adversary.di124.source-mapping-digest-substitution",
+          "expected_primary_diagnostic": "DI124I-SOURCE-BINDING",
+          "expected_path": "/mapping/rows/0/source_sha256",
+          "rejection_required": true,
+          "evidence_state": "required_not_yet_observed",
+          "evidence_role": "synthetic_adversary_rejection_development_integrity_signal_only"
+        },
+        {
+          "evidence_id": "reiyah.evidence-requirement.manifest-release-substitution.negative",
+          "adversary_id": "reiyah.adversary.di124.manifest-release-substitution",
+          "expected_primary_diagnostic": "DI124I-MANIFEST-BINDING",
+          "expected_path": "/subject/manifest_release_ledger",
+          "rejection_required": true,
+          "evidence_state": "required_not_yet_observed",
+          "evidence_role": "synthetic_adversary_rejection_development_integrity_signal_only"
+        }
+      ]
+    },
+    {
+      "finding_id": "DI124-005",
+      "title": "Unresolved inventory derivation",
+      "requirement": "Derive and exact-reconcile the ordered 77-item inventory, including fail-closed RGA-020 and rejecting explicit-empty or operator-asserted substitution.",
+      "contract_baseline_status": "open",
+      "contract_baseline_blocked_reason": "disabled_contract_only_no_implementation_authorized",
+      "implementation_status": "implemented_pending_DI124_ready",
+      "closed": false,
+      "development_evidence_can_close_finding": false,
+      "positive_evidence_requirements": [
+        {
+          "evidence_id": "reiyah.evidence-requirement.di124-005.positive",
+          "production_check_id": "DI124I-INVENTORY-RECONCILIATION",
+          "consumer_result_required": "pass",
+          "evidence_state": "required_not_yet_observed",
+          "evidence_role": "production_consumer_development_integrity_signal_only"
+        }
+      ],
+      "negative_evidence_requirements": [
+        {
+          "evidence_id": "reiyah.evidence-requirement.tm-001.negative",
+          "adversary_id": "reiyah.adversary.di124.risk-remove-one.TM-001",
+          "expected_primary_diagnostic": "DI124D-RISK-UNIVERSE-MISSING",
+          "expected_path": "/decision/risk_inventory/items/0",
+          "rejection_required": true,
+          "evidence_state": "required_not_yet_observed",
+          "evidence_role": "synthetic_adversary_rejection_development_integrity_signal_only"
+        },
+        {
+          "evidence_id": "reiyah.evidence-requirement.rga-020-omission-explicit.negative",
+          "adversary_id": "reiyah.adversary.di124.rga-020-omission-explicit",
+          "expected_primary_diagnostic": "DI124D-RGA-020-REQUIRED",
+          "expected_path": "/decision/risk_inventory/items/69",
+          "rejection_required": true,
+          "evidence_state": "required_not_yet_observed",
+          "evidence_role": "synthetic_adversary_rejection_development_integrity_signal_only"
+        }
+      ]
+    },
+    {
+      "finding_id": "DI124-006",
+      "title": "Decision and disposition compatibility",
+      "requirement": "Exact-close accepted, rejected, and deferred decisions against complete item dispositions without treating acknowledgement as risk closure.",
+      "contract_baseline_status": "open",
+      "contract_baseline_blocked_reason": "disabled_contract_only_no_implementation_authorized",
+      "implementation_status": "implemented_pending_DI124_ready",
+      "closed": false,
+      "development_evidence_can_close_finding": false,
+      "positive_evidence_requirements": [
+        {
+          "evidence_id": "reiyah.evidence-requirement.di124-006.positive",
+          "production_check_id": "DI124I-DECISION-PARITY",
+          "consumer_result_required": "pass",
+          "evidence_state": "required_not_yet_observed",
+          "evidence_role": "production_consumer_development_integrity_signal_only"
+        }
+      ],
+      "negative_evidence_requirements": [
+        {
+          "evidence_id": "reiyah.evidence-requirement.accepted-parity-failure.negative",
+          "adversary_id": "reiyah.adversary.di124.accepted-parity-failure",
+          "expected_primary_diagnostic": "DI124D-DISPOSITION-PARITY",
+          "expected_path": "/decision/risk_inventory/items/0/operator_disposition",
+          "rejection_required": true,
+          "evidence_state": "required_not_yet_observed",
+          "evidence_role": "synthetic_adversary_rejection_development_integrity_signal_only"
+        },
+        {
+          "evidence_id": "reiyah.evidence-requirement.acknowledgement-laundering.negative",
+          "adversary_id": "reiyah.adversary.di124.acknowledgement-laundering",
+          "expected_primary_diagnostic": "DI124D-ACKNOWLEDGEMENT-SCOPE",
+          "expected_path": "/decision/risk_inventory/items/0",
+          "rejection_required": true,
+          "evidence_state": "required_not_yet_observed",
+          "evidence_role": "synthetic_adversary_rejection_development_integrity_signal_only"
+        }
+      ]
+    },
+    {
+      "finding_id": "DI124-007",
+      "title": "Append-only decision history",
+      "requirement": "Reject duplicate roots, forks, cycles, gaps, stale-head selection, predecessor mismatch, and non-increasing decision chronology.",
+      "contract_baseline_status": "open",
+      "contract_baseline_blocked_reason": "disabled_contract_only_no_implementation_authorized",
+      "implementation_status": "implemented_pending_DI124_ready",
+      "closed": false,
+      "development_evidence_can_close_finding": false,
+      "positive_evidence_requirements": [
+        {
+          "evidence_id": "reiyah.evidence-requirement.di124-007.positive",
+          "production_check_id": "DI124I-DECISION-SERIES",
+          "consumer_result_required": "pass",
+          "evidence_state": "required_not_yet_observed",
+          "evidence_role": "production_consumer_development_integrity_signal_only"
+        }
+      ],
+      "negative_evidence_requirements": [
+        {
+          "evidence_id": "reiyah.evidence-requirement.decision-series-fork.negative",
+          "adversary_id": "reiyah.adversary.di124.decision-series-fork",
+          "expected_primary_diagnostic": "DI124D-SERIES-FORK",
+          "expected_path": "/decision_series",
+          "rejection_required": true,
+          "evidence_state": "required_not_yet_observed",
+          "evidence_role": "synthetic_adversary_rejection_development_integrity_signal_only"
+        },
+        {
+          "evidence_id": "reiyah.evidence-requirement.predecessor-byte-mismatch.negative",
+          "adversary_id": "reiyah.adversary.di124.predecessor-byte-mismatch",
+          "expected_primary_diagnostic": "DI124D-PREDECESSOR-BINDING",
+          "expected_path": "/decision_series/records/1/predecessor/sha256",
+          "rejection_required": true,
+          "evidence_state": "required_not_yet_observed",
+          "evidence_role": "synthetic_adversary_rejection_development_integrity_signal_only"
+        }
+      ]
+    },
+    {
+      "finding_id": "DI124-008",
+      "title": "Human identity and authority separation",
+      "requirement": "Keep the human identity claim, decision, independent identity verification, independent authority verification, and composite acceptance as distinct records and states.",
+      "contract_baseline_status": "open",
+      "contract_baseline_blocked_reason": "disabled_contract_only_no_implementation_authorized",
+      "implementation_status": "implemented_pending_DI124_ready",
+      "closed": false,
+      "development_evidence_can_close_finding": false,
+      "positive_evidence_requirements": [
+        {
+          "evidence_id": "reiyah.evidence-requirement.di124-008.positive",
+          "production_check_id": "DI124I-TYPED-VERIFICATION-SEPARATION",
+          "consumer_result_required": "pass",
+          "evidence_state": "required_not_yet_observed",
+          "evidence_role": "production_consumer_development_integrity_signal_only"
+        }
+      ],
+      "negative_evidence_requirements": [
+        {
+          "evidence_id": "reiyah.evidence-requirement.identity-authority-verification-alias.negative",
+          "adversary_id": "reiyah.adversary.di124.identity-authority-verification-alias",
+          "expected_primary_diagnostic": "DI124V-TYPED-RECORD-ALIAS",
+          "expected_path": "/verification_series",
+          "rejection_required": true,
+          "evidence_state": "required_not_yet_observed",
+          "evidence_role": "synthetic_adversary_rejection_development_integrity_signal_only"
+        },
+        {
+          "evidence_id": "reiyah.evidence-requirement.operator-verifier-collapse.negative",
+          "adversary_id": "reiyah.adversary.di124.operator-verifier-collapse",
+          "expected_primary_diagnostic": "DI124V-VERIFIER-SEPARATION",
+          "expected_path": "/verification_series",
+          "rejection_required": true,
+          "evidence_state": "required_not_yet_observed",
+          "evidence_role": "synthetic_adversary_rejection_development_integrity_signal_only"
+        }
+      ]
+    },
+    {
+      "finding_id": "DI124-009",
+      "title": "Locked offline validation and adversaries",
+      "requirement": "Implement a byte-bound offline read-only launcher, deterministic validator, known-good witnesses, and reason-specific known-bad production-path adversaries.",
+      "contract_baseline_status": "open",
+      "contract_baseline_blocked_reason": "disabled_contract_only_no_implementation_authorized",
+      "implementation_status": "implemented_pending_DI124_ready",
+      "closed": false,
+      "development_evidence_can_close_finding": false,
+      "positive_evidence_requirements": [
+        {
+          "evidence_id": "reiyah.evidence-requirement.di124-009.positive",
+          "production_check_id": "DI124I-LOCKED-EVALUATOR",
+          "consumer_result_required": "pass",
+          "evidence_state": "required_not_yet_observed",
+          "evidence_role": "production_consumer_development_integrity_signal_only"
+        }
+      ],
+      "negative_evidence_requirements": [
+        {
+          "evidence_id": "reiyah.evidence-requirement.direct-python-execution.negative",
+          "adversary_id": "reiyah.adversary.di124.direct-python-execution",
+          "expected_primary_diagnostic": "DI124I-DIRECT-EXECUTION",
+          "expected_path": "/execution_boundary",
+          "rejection_required": true,
+          "evidence_state": "required_not_yet_observed",
+          "evidence_role": "synthetic_adversary_rejection_development_integrity_signal_only"
+        },
+        {
+          "evidence_id": "reiyah.evidence-requirement.foreign-exception-translation.negative",
+          "adversary_id": "reiyah.adversary.di124.foreign-exception-translation",
+          "expected_primary_diagnostic": "DI124I-FOREIGN-EXCEPTION",
+          "expected_path": "/dynamic_consumer",
+          "rejection_required": true,
+          "evidence_state": "required_not_yet_observed",
+          "evidence_role": "synthetic_adversary_rejection_development_integrity_signal_only"
+        },
+        {
+          "evidence_id": "reiyah.evidence-requirement.import-stdlib-origin-substitution.negative",
+          "adversary_id": "reiyah.adversary.di124.import-stdlib-origin-substitution",
+          "expected_primary_diagnostic": "DI124I-IMPORT-ORIGIN",
+          "expected_path": "/runtime/import_boundary/stdlib_origin",
+          "rejection_required": true,
+          "evidence_state": "required_not_yet_observed",
+          "evidence_role": "synthetic_adversary_rejection_development_integrity_signal_only"
+        },
+        {
+          "evidence_id": "reiyah.evidence-requirement.import-third-party-origin-substitution.negative",
+          "adversary_id": "reiyah.adversary.di124.import-third-party-origin-substitution",
+          "expected_primary_diagnostic": "DI124I-SCHEMA-RUNTIME",
+          "expected_path": "/runtime/import_boundary/third_party_origin",
+          "rejection_required": true,
+          "evidence_state": "required_not_yet_observed",
+          "evidence_role": "synthetic_adversary_rejection_development_integrity_signal_only"
+        },
+        {
+          "evidence_id": "reiyah.evidence-requirement.import-bytecode-origin.negative",
+          "adversary_id": "reiyah.adversary.di124.import-bytecode-origin",
+          "expected_primary_diagnostic": "DI124I-IMPORT-BYTECODE",
+          "expected_path": "/runtime/import_boundary/origin",
+          "rejection_required": true,
+          "evidence_state": "required_not_yet_observed",
+          "evidence_role": "synthetic_adversary_rejection_development_integrity_signal_only"
+        },
+        {
+          "evidence_id": "reiyah.evidence-requirement.capture-quorum-worker-substitution.negative",
+          "adversary_id": "reiyah.adversary.di124.capture-quorum-worker-substitution",
+          "expected_primary_diagnostic": "DI124I-WORKER-SNAPSHOT-MISMATCH",
+          "expected_path": "/worker/payload/snapshot",
+          "rejection_required": true,
+          "evidence_state": "required_not_yet_observed",
+          "evidence_role": "synthetic_adversary_rejection_development_integrity_signal_only"
+        },
+        {
+          "evidence_id": "reiyah.evidence-requirement.production-check-consumer-substitution.negative",
+          "adversary_id": "reiyah.adversary.di124.production-check-consumer-substitution",
+          "expected_primary_diagnostic": "DI124I-PRODUCTION-CHECK-CONSUMER",
+          "expected_path": "/production_check_results/0/consumer_id",
+          "rejection_required": true,
+          "evidence_state": "required_not_yet_observed",
+          "evidence_role": "synthetic_adversary_rejection_development_integrity_signal_only"
+        },
+        {
+          "evidence_id": "reiyah.evidence-requirement.production-check-operand-substitution.negative",
+          "adversary_id": "reiyah.adversary.di124.production-check-operand-substitution",
+          "expected_primary_diagnostic": "DI124I-PRODUCTION-CHECK-OPERAND",
+          "expected_path": "/production_check_results/0/operand_bindings/0/sha256",
+          "rejection_required": true,
+          "evidence_state": "required_not_yet_observed",
+          "evidence_role": "synthetic_adversary_rejection_development_integrity_signal_only"
+        },
+        {
+          "evidence_id": "reiyah.evidence-requirement.production-check-result-substitution.negative",
+          "adversary_id": "reiyah.adversary.di124.production-check-result-substitution",
+          "expected_primary_diagnostic": "DI124I-PRODUCTION-CHECK-RESULT",
+          "expected_path": "/production_check_results/0/result",
+          "rejection_required": true,
+          "evidence_state": "required_not_yet_observed",
+          "evidence_role": "synthetic_adversary_rejection_development_integrity_signal_only"
+        },
+        {
+          "evidence_id": "reiyah.evidence-requirement.catalog-target-fixture-substitution.negative",
+          "adversary_id": "reiyah.adversary.di124.catalog-target-fixture-substitution",
+          "expected_primary_diagnostic": "DI124F-ADVERSARY-TARGET",
+          "expected_path": "/named_adversaries/0/target_fixture_id",
+          "rejection_required": true,
+          "evidence_state": "required_not_yet_observed",
+          "evidence_role": "synthetic_adversary_rejection_development_integrity_signal_only"
+        },
+        {
+          "evidence_id": "reiyah.evidence-requirement.catalog-target-consumer-substitution.negative",
+          "adversary_id": "reiyah.adversary.di124.catalog-target-consumer-substitution",
+          "expected_primary_diagnostic": "DI124F-ADVERSARY-DISPATCH",
+          "expected_path": "/named_adversaries/0/target_consumer",
+          "rejection_required": true,
+          "evidence_state": "required_not_yet_observed",
+          "evidence_role": "synthetic_adversary_rejection_development_integrity_signal_only"
+        },
+        {
+          "evidence_id": "reiyah.evidence-requirement.catalog-mutation-substitution.negative",
+          "adversary_id": "reiyah.adversary.di124.catalog-mutation-substitution",
+          "expected_primary_diagnostic": "DI124F-ADVERSARY-DISPATCH",
+          "expected_path": "/named_adversaries/0/mutation",
+          "rejection_required": true,
+          "evidence_state": "required_not_yet_observed",
+          "evidence_role": "synthetic_adversary_rejection_development_integrity_signal_only"
+        },
+        {
+          "evidence_id": "reiyah.evidence-requirement.executed-source-substitution.negative",
+          "adversary_id": "reiyah.adversary.di124.executed-source-substitution",
+          "expected_primary_diagnostic": "DI124I-EXECUTED-SOURCE-BINDING",
+          "expected_path": "/toolchain/executables/evaluator",
+          "rejection_required": true,
+          "evidence_state": "required_not_yet_observed",
+          "evidence_role": "synthetic_adversary_rejection_development_integrity_signal_only"
+        }
+      ]
+    },
+    {
+      "finding_id": "DI124-010",
+      "title": "Acyclic readiness and verification topology",
+      "requirement": "Keep interface readiness, later human decision, later independent verification, and composite resolution acyclic and prevent any earlier record from self-binding a future event.",
+      "contract_baseline_status": "open",
+      "contract_baseline_blocked_reason": "disabled_contract_only_no_implementation_authorized",
+      "implementation_status": "implemented_pending_DI124_ready",
+      "closed": false,
+      "development_evidence_can_close_finding": false,
+      "positive_evidence_requirements": [
+        {
+          "evidence_id": "reiyah.evidence-requirement.di124-010.positive",
+          "production_check_id": "DI124I-ACYCLIC-READINESS",
+          "consumer_result_required": "pass",
+          "evidence_state": "required_not_yet_observed",
+          "evidence_role": "production_consumer_development_integrity_signal_only"
+        }
+      ],
+      "negative_evidence_requirements": [
+        {
+          "evidence_id": "reiyah.evidence-requirement.future-edge-injection.negative",
+          "adversary_id": "reiyah.adversary.di124.future-edge-injection",
+          "expected_primary_diagnostic": "DI124R-FUTURE-EDGE",
+          "expected_path": "/decision/ready_interface_binding/future_verification",
+          "rejection_required": true,
+          "evidence_state": "required_not_yet_observed",
+          "evidence_role": "synthetic_adversary_rejection_development_integrity_signal_only"
+        },
+        {
+          "evidence_id": "reiyah.evidence-requirement.post-packet-index-cycle.negative",
+          "adversary_id": "reiyah.adversary.di124.post-packet-index-cycle",
+          "expected_primary_diagnostic": "DI124R-POST-PACKET-CYCLE",
+          "expected_path": "/subject/canonical_index",
+          "rejection_required": true,
+          "evidence_state": "required_not_yet_observed",
+          "evidence_role": "synthetic_adversary_rejection_development_integrity_signal_only"
+        }
+      ]
+    }
+  ],
+  "implementation_gap_summary": {
+    "required_count": 10,
+    "implemented_pending_DI124_ready_count": 10,
+    "closed_count": 0,
+    "required_positive_evidence_count": 10,
+    "required_negative_evidence_count": 31,
+    "all_findings_closed": false,
+    "DI124_ready_established": false
+  },
+  "authority": {
+    "operator_acceptance_state": "unaccepted",
+    "ga_17_state": "not_evaluated",
+    "interface_readiness_state": "not_ready",
+    "independent_external_review_completed": false,
+    "scientific_evidence_created": false,
+    "scientific_claim_authority": false,
+    "public_distribution_authorized": false,
+    "publication_acceptance_authorized": false,
+    "transport_verification_state": "not_evaluated",
+    "runtime_authorized": false,
+    "cloud_execution_authorized": false,
+    "private_data_ingestion_authorized": false,
+    "physical_control_authorized": false,
+    "gate_b_authorized": false
+  }
+}

@@ -1,0 +1,123 @@
+{
+  "schema_id": "https://schemas.reiyah.invalid/gate-a/1.2.5/operator-decision-interface-readiness-correction-plan.schema.json",
+  "artifact_id": "reiyah.artifact.operator-decision-interface-readiness-correction-plan-1.2.5",
+  "plan_id": "reiyah.validation-plan.operator-decision-interface-readiness-correction-contract@1.2.5",
+  "record_kind": "operator_decision_interface_readiness_correction_plan",
+  "version": "1.2.5",
+  "lifecycle_status": "proposed",
+  "as_of_date": "2026-08-30",
+  "stage_id": "DI125-correction-contract",
+  "repository_identity": {
+    "project": "Reiyah",
+    "canonical_root": "/Users/danielwahnich/workspace/reiyah",
+    "git_root": "/Users/danielwahnich/workspace/reiyah",
+    "configured_remote": "https://github.com/manfromnowhere143/reiyah.git",
+    "authoring_branch": "gate-a-1.2.5-readiness-correction",
+    "branch_is_scientific_or_acceptance_identity": false
+  },
+  "predecessor": {
+    "stage_id": "DI124-implementation",
+    "commit": "858f394893055288db8772f758414c5c2653b1d7",
+    "tree": "98012d9a66ed32b4e19d1eacfab62135ee26a83c",
+    "sole_parent": "148ed1a329bd14681bb35b0e7142c4772783df6d",
+    "parent_tree": "5e2755c965289331b16e845d077ca7fbd1b538e1"
+  },
+  "incoming_transition_contract": {
+    "transition_id": "reiyah.transition.DI124-implementation-to-DI125-correction-contract",
+    "from_stage": "DI124-implementation",
+    "to_stage": "DI125-correction-contract",
+    "baseline_commit": "858f394893055288db8772f758414c5c2653b1d7",
+    "baseline_tree": "98012d9a66ed32b4e19d1eacfab62135ee26a83c",
+    "direct_single_parent_required": true,
+    "changed_existing_paths": [
+      "docs/SESSION_HANDOFF.md"
+    ],
+    "added_paths": [
+      "docs/OPERATOR_DECISION_INTERFACE_READINESS_CORRECTION_1_2_5.md",
+      "gate/operator-decision-interface-corrections/reiyah.operator-decision-interface-readiness-correction-1.2.5.json",
+      "schemas/operator-decision-interface-readiness-correction-1.2.5.schema.json",
+      "schemas/operator-decision-interface-readiness-correction-plan-1.2.5.schema.json",
+      "schemas/operator-decision-interface-readiness-correction-validation-report-1.2.5.schema.json",
+      "tools/gate_a_1_2_5_readiness_correction_contract.py",
+      "tools/gate_a_1_2_5_readiness_correction_contract.sh",
+      "validation/operator-decision-interface-readiness-correction-plan-1.2.5.json"
+    ],
+    "removed_paths": [],
+    "executable_paths": [
+      "tools/gate_a_1_2_5_readiness_correction_contract.py",
+      "tools/gate_a_1_2_5_readiness_correction_contract.sh"
+    ],
+    "changed_path_count": 1,
+    "added_path_count": 8,
+    "removed_path_count": 0,
+    "total_delta_path_count": 9,
+    "unknown_delta_policy": "reject",
+    "result_commit_binding_state": "deferred_to_post_commit_raw_git_observation"
+  },
+  "contract_binding": {
+    "contract_path": "gate/operator-decision-interface-corrections/reiyah.operator-decision-interface-readiness-correction-1.2.5.json",
+    "contract_schema_path": "schemas/operator-decision-interface-readiness-correction-1.2.5.schema.json",
+    "normative_prose_path": "docs/OPERATOR_DECISION_INTERFACE_READINESS_CORRECTION_1_2_5.md",
+    "plan_schema_path": "schemas/operator-decision-interface-readiness-correction-plan-1.2.5.schema.json",
+    "validation_report_schema_path": "schemas/operator-decision-interface-readiness-correction-validation-report-1.2.5.schema.json"
+  },
+  "validation_contract": {
+    "launcher_path": "tools/gate_a_1_2_5_readiness_correction_contract.sh",
+    "evaluator_path": "tools/gate_a_1_2_5_readiness_correction_contract.py",
+    "launcher_enters_no_network_read_only_policy_before_python": true,
+    "strict_duplicate_key_json": true,
+    "raw_git_commit_tree_blob_rehash": true,
+    "schemas_must_pass_draft_2020_12_metaschema": true,
+    "schema_ids_exactly_bound": true,
+    "contract_and_plan_must_validate": true,
+    "narrative_machine_stage_names_must_agree": true,
+    "normative_prose_exact_byte_binding": true,
+    "all_three_defects_must_be_reproduced_from_frozen_bytes": true,
+    "all_required_adversaries_must_be_rejected": true,
+    "candidate_and_delta_projection_bound_in_report": true,
+    "handoff_must_equal_exact_predecessor_prefix_plus_exact_suffix": true,
+    "inherited_schema_toolchain_description_reproduced_under_disclosed_compatibility_shim": true,
+    "di125_runtime_isolation_verified_separately": true,
+    "full_DI124_runtime_boundary_replayed": false,
+    "candidate_launcher_bytes_captured": true,
+    "candidate_launcher_empty_environment_shebang_required": true,
+    "executed_launcher_bytes_and_process_supervision_independently_attested": false,
+    "external_launcher_observation_required_for_independent_attestation": true,
+    "schema_known_bad_required_count": 14,
+    "development_route": [
+      "tools/gate_a_1_2_5_readiness_correction_contract.sh",
+      "--snapshot-mode",
+      "development",
+      "--output",
+      "raw"
+    ],
+    "clean_contract_route": [
+      "tools/gate_a_1_2_5_readiness_correction_contract.sh",
+      "--snapshot-mode",
+      "contract",
+      "--output",
+      "raw"
+    ],
+    "two_unchanged_runs_must_be_byte_identical": true,
+    "report_self_digest_allowed": false,
+    "future_commit_or_tree_self_assertion_allowed": false
+  },
+  "expected_result": {
+    "state": "correction_contract_validated_not_implemented",
+    "readiness_mode_implemented": false,
+    "interface_readiness_state": "not_ready",
+    "operator_acceptance_state": "unaccepted",
+    "ga_17_state": "not_evaluated",
+    "scientific_evidence_created": false,
+    "public_distribution_authorized": false,
+    "runtime_authorized": false,
+    "gate_b_authorized": false
+  },
+  "next_transition": {
+    "stage_id": "DI125-correction-review",
+    "authorized": false,
+    "requires_new_separate_explicit_operator_instruction": false,
+    "requires_exact_contract_commit_tree_and_delta": true,
+    "maximum_result": "internal_advisory_review_complete_correction_not_implemented"
+  }
+}

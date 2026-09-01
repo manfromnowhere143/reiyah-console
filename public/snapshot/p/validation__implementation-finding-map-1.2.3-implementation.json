@@ -1,0 +1,380 @@
+{
+  "schema_id": "https://schemas.reiyah.invalid/gate-a/1.2.3/implementation/finding-map.schema.json",
+  "artifact_id": "reiyah.artifact.implementation-finding-map-1.2.3",
+  "map_id": "reiyah.finding-map.gate-a-1.2.3-implementation",
+  "version": "1.2.3",
+  "lifecycle_status": "proposed",
+  "stage_id": "C123-implementation",
+  "status_basis": {
+    "subject_stage_id": "C123-contract",
+    "subject_commit": "8b2d1be3e0ba7b27610742a4b4ca1655ba184c24",
+    "observation_kind": "contract_baseline_gap_declaration",
+    "current_candidate_result_claimed": false
+  },
+  "required_finding_ids": [
+    "F123-001",
+    "F123-002",
+    "F123-003",
+    "F123-004",
+    "F123-005",
+    "F123-006",
+    "F123-007",
+    "F123-008",
+    "F123-009",
+    "F123-010"
+  ],
+  "findings": [
+    {
+      "finding_id": "F123-001",
+      "title": "Exact implementation lineage and delta",
+      "requirement": "The implementation projection is one immediate first-parent child of the exact C123-contract commit and its complete path and mode delta is independently anchored.",
+      "contract_baseline_status": "blocked_by_chronology",
+      "contract_baseline_blocked_reason": "At C123-contract the implementation commit, final tree, and final closed delta did not exist.",
+      "production_check_ids": ["GA123-IMPLEMENTATION-IDENTITY-LINEAGE"],
+      "production_adversary_ids": [
+        "reiyah.adversary.git-transition.substituted-parent",
+        "reiyah.adversary.finding-map.coordinated-fixture-substitution"
+      ],
+      "fixture_evidence": [
+        {
+          "fixture_id": "reiyah.fixture.release-readiness.coordinated-predecessor-substitution@1.2.3",
+          "path": "fixtures/v1.2.3/release-readiness-known-bad/coordinated-predecessor-substitution.json",
+          "sha256": "sha256:8b7e2534a48a45cb4e4919cf2ce17b5e549fd126ea7f35bc49e4562c231ebc1c",
+          "byte_size": 1967,
+          "expected_primary_diagnostic": "GA123-RELEASE-PREDECESSOR-SUBSTITUTION",
+          "evidence_role": "retained_release_contract_descriptor_not_production_builder_input"
+        }
+      ]
+    },
+    {
+      "finding_id": "F123-002",
+      "title": "Complete current-byte replay universe",
+      "requirement": "The evaluator replays GA-01 through GA-16 and the exact eight GA122 successor controls over current bytes rather than accepting historical report claims.",
+      "contract_baseline_status": "blocked_by_chronology",
+      "contract_baseline_blocked_reason": "At C123-contract the full current-projection evaluator had not been implemented or executed.",
+      "production_check_ids": ["GA123-IMPLEMENTATION-CURRENT-REPLAY"],
+      "production_adversary_ids": [
+        "reiyah.adversary.current-replay.missing-control",
+        "reiyah.adversary.current-replay.substituted-control"
+      ],
+      "fixture_evidence": [
+        {
+          "fixture_id": "reiyah.fixture.release-readiness.coordinated-ga-replay-truncation@1.2.3",
+          "path": "fixtures/v1.2.3/release-readiness-known-bad/coordinated-ga-replay-truncation.json",
+          "sha256": "sha256:6dd06fa8110a6ff1fab419f005a82f003254ff4d4718cad5f83f37f834609f24",
+          "byte_size": 1403,
+          "expected_primary_diagnostic": "GA123-RELEASE-GA-REPLAY-INCOMPLETE",
+          "evidence_role": "retained_release_contract_descriptor_not_production_builder_input"
+        }
+      ]
+    },
+    {
+      "finding_id": "F123-003",
+      "title": "Two fresh and distinct evaluators",
+      "requirement": "Exactly two separately loaded and state-reset worker processes independently recapture and evaluate the same candidate projection, whose dirty or clean snapshot basis is determined by its exact uncommitted path count, with distinct logical worker and operating-system process identities.",
+      "contract_baseline_status": "blocked_by_chronology",
+      "contract_baseline_blocked_reason": "At C123-contract no production dual-worker execution existed.",
+      "production_check_ids": ["GA123-IMPLEMENTATION-DUAL-EVALUATION"],
+      "production_adversary_ids": [
+        "reiyah.adversary.dual-evaluation.single-worker",
+        "reiyah.adversary.dual-evaluation.same-process",
+        "reiyah.adversary.finding-map.snapshot-requirement-promotion"
+      ],
+      "fixture_evidence": [
+        {
+          "fixture_id": "reiyah.fixture.release-readiness.single-worker-evaluation@1.2.3",
+          "path": "fixtures/v1.2.3/release-readiness-known-bad/single-worker-evaluation.json",
+          "sha256": "sha256:57379e37fcba2e3ce69d0af0935a668a9400f473f8dabb20e84a8a3f43b259c1",
+          "byte_size": 1986,
+          "expected_primary_diagnostic": "GA123-RELEASE-EVALUATION-COUNT",
+          "evidence_role": "retained_release_contract_descriptor_not_production_builder_input"
+        },
+        {
+          "fixture_id": "reiyah.fixture.release-readiness.same-worker-evaluation@1.2.3",
+          "path": "fixtures/v1.2.3/release-readiness-known-bad/same-worker-evaluation.json",
+          "sha256": "sha256:4fb226aa32ea3d91b05292110660d649819aff69b2be766ec9506a67e9631cec",
+          "byte_size": 1464,
+          "expected_primary_diagnostic": "GA123-RELEASE-WORKER-NOT-DISTINCT",
+          "evidence_role": "retained_release_contract_descriptor_not_production_builder_input"
+        }
+      ]
+    },
+    {
+      "finding_id": "F123-004",
+      "title": "Complete evaluation-payload equality",
+      "requirement": "The parent compares complete deterministic stage, selector, inventory, control, diagnostic, index, and pre-report payload bytes before rendering.",
+      "contract_baseline_status": "blocked_by_chronology",
+      "contract_baseline_blocked_reason": "At C123-contract the production worker envelope and parent comparator had not been implemented.",
+      "production_check_ids": ["GA123-IMPLEMENTATION-DUAL-EVALUATION"],
+      "production_adversary_ids": [
+        "reiyah.adversary.dual-evaluation.payload-mismatch",
+        "reiyah.adversary.dual-evaluation.subject-gate-mismatch"
+      ],
+      "fixture_evidence": [
+        {
+          "fixture_id": "reiyah.fixture.release-readiness.unequal-evaluations@1.2.3",
+          "path": "fixtures/v1.2.3/release-readiness-known-bad/unequal-evaluations.json",
+          "sha256": "sha256:3fc7b581e0ddb4717d56ddcd81337c66e84b61c9dcb86123b7772062cf77b8fd",
+          "byte_size": 1579,
+          "expected_primary_diagnostic": "GA123-RELEASE-EVALUATION-MISMATCH",
+          "evidence_role": "retained_release_contract_descriptor_not_production_builder_input"
+        }
+      ]
+    },
+    {
+      "finding_id": "F123-005",
+      "title": "Acyclic canonical index builder",
+      "requirement": "The index builder binds one immutable C0 projection, enforces the exact three output exclusions, derives inventory values from bytes, and rejects self-membership, staleness, and substitution.",
+      "contract_baseline_status": "blocked_by_chronology",
+      "contract_baseline_blocked_reason": "At C123-contract the production canonical index builder did not exist.",
+      "production_check_ids": ["GA123-IMPLEMENTATION-INDEX-BUILDER"],
+      "production_adversary_ids": [
+        "reiyah.adversary.index-builder.output-self-membership",
+        "reiyah.adversary.index-builder.stale-artifact-digest",
+        "reiyah.adversary.index-builder.candidate-projection-substitution",
+        "reiyah.adversary.index-builder.canonical-schema-substitution",
+        "reiyah.adversary.index-builder.sidecar-drift"
+      ],
+      "fixture_evidence": [
+        {
+          "fixture_id": "reiyah.fixture.release-readiness.output-self-membership@1.2.3",
+          "path": "fixtures/v1.2.3/release-readiness-known-bad/output-self-membership.json",
+          "sha256": "sha256:ee2628795d1592237958ce39372e0ce395ef9b415e3e56b37210b92278235fe8",
+          "byte_size": 1455,
+          "expected_primary_diagnostic": "GA123-RELEASE-OUTPUT-SELF-MEMBERSHIP",
+          "evidence_role": "retained_release_contract_descriptor_not_production_builder_input"
+        },
+        {
+          "fixture_id": "reiyah.fixture.release-readiness.stale-index@1.2.3",
+          "path": "fixtures/v1.2.3/release-readiness-known-bad/stale-index.json",
+          "sha256": "sha256:9e0d2f4fa7a5e2f8bad72bd6a5b04a7775cf74d3032df10cfb73b39ce863cc4e",
+          "byte_size": 1262,
+          "expected_primary_diagnostic": "GA123-RELEASE-INDEX-STALE",
+          "evidence_role": "retained_release_contract_descriptor_not_production_builder_input"
+        },
+        {
+          "fixture_id": "reiyah.fixture.release-readiness.substituted-index@1.2.3",
+          "path": "fixtures/v1.2.3/release-readiness-known-bad/substituted-index.json",
+          "sha256": "sha256:3ccad99fa06c39f7c9de84485f180f1925a664ed4e15928846561268a784b353",
+          "byte_size": 1307,
+          "expected_primary_diagnostic": "GA123-RELEASE-INDEX-SUBSTITUTED",
+          "evidence_role": "retained_release_contract_descriptor_not_production_builder_input"
+        }
+      ]
+    },
+    {
+      "finding_id": "F123-006",
+      "title": "Acyclic canonical report builder",
+      "requirement": "The report builder binds the exact C_index index and unchanged C0 projection, rejects stale or substituted inputs, and records no self digest or future event.",
+      "contract_baseline_status": "blocked_by_chronology",
+      "contract_baseline_blocked_reason": "At C123-contract the production canonical report builder did not exist.",
+      "production_check_ids": ["GA123-IMPLEMENTATION-REPORT-BUILDER"],
+      "production_adversary_ids": [
+        "reiyah.adversary.report-builder.stale-candidate",
+        "reiyah.adversary.report-builder.substituted-index",
+        "reiyah.adversary.report-builder.report-self-digest",
+        "reiyah.adversary.report-builder.wrong-first-parent",
+        "reiyah.adversary.report-builder.truncated-sidecar",
+        "reiyah.adversary.report-builder.double-lf-sidecar",
+        "reiyah.adversary.report-builder.trailing-byte-sidecar"
+      ],
+      "fixture_evidence": [
+        {
+          "fixture_id": "reiyah.fixture.release-readiness.stale-report@1.2.3",
+          "path": "fixtures/v1.2.3/release-readiness-known-bad/stale-report.json",
+          "sha256": "sha256:7d36a71cffaa31a149acf043c2f4260071fdb0fde85f60d8385a38cb7d51ade4",
+          "byte_size": 1286,
+          "expected_primary_diagnostic": "GA123-RELEASE-REPORT-STALE",
+          "evidence_role": "retained_release_contract_descriptor_not_production_builder_input"
+        },
+        {
+          "fixture_id": "reiyah.fixture.release-readiness.substituted-report@1.2.3",
+          "path": "fixtures/v1.2.3/release-readiness-known-bad/substituted-report.json",
+          "sha256": "sha256:4a5cdbd8ebcdb83438540e6bb4723ff2cde974ae4c5a96c9c38d2635ecb9754a",
+          "byte_size": 1300,
+          "expected_primary_diagnostic": "GA123-RELEASE-REPORT-SUBSTITUTED",
+          "evidence_role": "retained_release_contract_descriptor_not_production_builder_input"
+        }
+      ]
+    },
+    {
+      "finding_id": "F123-007",
+      "title": "Canonical report schema and implication parity",
+      "requirement": "The canonical report has a distinct identity and forbids pass, architecture completion, or release eligibility when controls or findings do not close.",
+      "contract_baseline_status": "blocked_by_chronology",
+      "contract_baseline_blocked_reason": "At C123-contract the canonical schema did not exist and had not been exercised through the production report validator.",
+      "production_check_ids": [
+        "GA123-IMPLEMENTATION-CANONICAL-SCHEMA",
+        "GA123-IMPLEMENTATION-FINDING-CLOSURE"
+      ],
+      "production_adversary_ids": [
+        "reiyah.adversary.canonical-schema.development-schema-substitution",
+        "reiyah.adversary.canonical-schema.open-required-finding",
+        "reiyah.adversary.finding-map.title-substitution",
+        "reiyah.adversary.finding-map.gap-summary-closure-promotion"
+      ],
+      "fixture_evidence": [
+        {
+          "fixture_id": "reiyah.fixture.release-readiness.false-architecture-completion@1.2.3",
+          "path": "fixtures/v1.2.3/release-readiness-known-bad/false-architecture-completion.json",
+          "sha256": "sha256:cb14be6d4415d9c5be2a3d48c333958fe58fb3137363e40a244eeba6bc70d260",
+          "byte_size": 1303,
+          "expected_primary_diagnostic": "GA123-RELEASE-FALSE-ARCHITECTURE-COMPLETION",
+          "evidence_role": "retained_release_contract_descriptor_not_production_builder_input"
+        }
+      ]
+    },
+    {
+      "finding_id": "F123-008",
+      "title": "Locked toolchain and stage-conditioned snapshot integrity",
+      "requirement": "The launcher and both workers remain offline and read-only, exact-bind runtime and repository bytes, require the parent pre-capture, both worker recaptures, and parent post-capture to exact-match one candidate projection, label a dirty candidate by its nonzero uncommitted_path_count as a bounded live non-immutable capture that is release-ineligible, require a clean candidate with zero uncommitted paths to use a verified immutable Git-object snapshot, and reject drifting or unsupported execution boundaries; lock authoring additionally exact-binds the dirty filesystem delta, an index equal to HEAD, and absent, parent, or rendered-self lock custody.",
+      "contract_baseline_status": "blocked_by_chronology",
+      "contract_baseline_blocked_reason": "At C123-contract the implementation evaluator and its toolchain lock had not been created or sealed.",
+      "production_check_ids": [
+        "GA123-IMPLEMENTATION-IDENTITY-LINEAGE",
+        "GA123-IMPLEMENTATION-TOOLCHAIN"
+      ],
+      "production_adversary_ids": [
+        "reiyah.adversary.release-boundary.dirty-candidate",
+        "reiyah.adversary.capture-boundary.state-drift",
+        "reiyah.adversary.capture-boundary.intermediate-directory-substitution",
+        "reiyah.adversary.toolchain.stdlib-substitution",
+        "reiyah.adversary.toolchain.repository-binding-substitution",
+        "reiyah.adversary.toolchain.candidate-projection-equality-removal",
+        "reiyah.adversary.toolchain.dirty-candidate-snapshot-promotion",
+        "reiyah.adversary.toolchain.clean-candidate-snapshot-demotion",
+        "reiyah.adversary.toolchain-lock-construction.implementation-initial-widened-delta",
+        "reiyah.adversary.toolchain-lock-construction.implementation-reproduction-stale-lock",
+        "reiyah.adversary.toolchain-lock-construction.c0-initial-parent-lock-drift",
+        "reiyah.adversary.toolchain-lock-construction.c0-reproduction-stale-lock",
+        "reiyah.adversary.toolchain-lock-construction.c0-plan-substitution",
+        "reiyah.adversary.toolchain-lock-construction.c0-widened-delta",
+        "reiyah.adversary.toolchain-lock-construction.staged-authoring-index-delta"
+      ],
+      "fixture_evidence": [
+        {
+          "fixture_id": "reiyah.fixture.release-readiness.dirty-release@1.2.3",
+          "path": "fixtures/v1.2.3/release-readiness-known-bad/dirty-release.json",
+          "sha256": "sha256:3d79c2c3e9f4d443ea0a179df79601da81a6bbb76301f375cdabb5bb99425fef",
+          "byte_size": 1305,
+          "expected_primary_diagnostic": "GA123-RELEASE-DIRTY-CANDIDATE",
+          "evidence_role": "retained_release_contract_descriptor_not_production_builder_input"
+        }
+      ]
+    },
+    {
+      "finding_id": "F123-009",
+      "title": "Authority and capability nonclaims",
+      "requirement": "Implementation evidence cannot create operator acceptance, public distribution, science, runtime, Gate B, or transport authority, and no capability becomes true without complete production-path evidence.",
+      "contract_baseline_status": "blocked_by_chronology",
+      "contract_baseline_blocked_reason": "At C123-contract the implementation report and capability evidence resolver had not been executed.",
+      "production_check_ids": ["GA123-IMPLEMENTATION-AUTHORITY-NONCLAIMS"],
+      "production_adversary_ids": [
+        "reiyah.adversary.authority.operator-acceptance-promotion",
+        "reiyah.adversary.authority.public-distribution-promotion",
+        "reiyah.adversary.authority.runtime-promotion",
+        "reiyah.adversary.finding-map.requirement-authority-promotion",
+        "reiyah.adversary.finding-map.baseline-reason-authority-promotion",
+        "reiyah.adversary.finding-map.status-basis-current-result-promotion",
+        "reiyah.adversary.finding-map.authority-boundary-promotion",
+        "reiyah.adversary.finding-map.fixture-evidence-role-promotion",
+        "reiyah.adversary.capability-evidence.missing-true-capability",
+        "reiyah.adversary.capability-evidence.substituted-positive-evidence",
+        "reiyah.adversary.capability-evidence.collapsed-positive-negative-evidence",
+        "reiyah.adversary.capability-evidence.underlying-evidence-deletion",
+        "reiyah.adversary.capability-evidence.underlying-evidence-substitution"
+      ],
+      "fixture_evidence": [
+        {
+          "fixture_id": "reiyah.fixture.release-readiness.operator-acceptance-promotion@1.2.3",
+          "path": "fixtures/v1.2.3/release-readiness-known-bad/operator-acceptance-promotion.json",
+          "sha256": "sha256:3b3c90d6bba91e025a02eace3d76fdae4623b1f44fd75c3b24d3c03230ecd6d0",
+          "byte_size": 1679,
+          "expected_primary_diagnostic": "GA123-RELEASE-OPERATOR-ACCEPTANCE-PROMOTION",
+          "evidence_role": "retained_release_contract_descriptor_not_production_builder_input"
+        },
+        {
+          "fixture_id": "reiyah.fixture.release-readiness.gate-b-promotion@1.2.3",
+          "path": "fixtures/v1.2.3/release-readiness-known-bad/gate-b-promotion.json",
+          "sha256": "sha256:e2abc7c37b59ee786abd236d2090772785450ac930b3b3cc8a984935f26e7bfe",
+          "byte_size": 1198,
+          "expected_primary_diagnostic": "GA123-RELEASE-GATE-B-PROMOTION",
+          "evidence_role": "retained_release_contract_descriptor_not_production_builder_input"
+        },
+        {
+          "fixture_id": "reiyah.fixture.release-readiness.public-distribution-promotion@1.2.3",
+          "path": "fixtures/v1.2.3/release-readiness-known-bad/public-distribution-promotion.json",
+          "sha256": "sha256:faac890d8afe425faca43f1d4380f64c5de4786126be1e9d93c113a278a55d4e",
+          "byte_size": 1379,
+          "expected_primary_diagnostic": "GA123-RELEASE-PUBLIC-DISTRIBUTION-PROMOTION",
+          "evidence_role": "retained_release_contract_descriptor_not_production_builder_input"
+        }
+      ]
+    },
+    {
+      "finding_id": "F123-010",
+      "title": "Implementation output boundary and chronology",
+      "requirement": "The clean implementation state performs no canonical output emission, preserves the inherited root index and sidecar, and records collision removal, output creation, and post-packet readback as unperformed later transitions rather than current facts; toolchain-lock rendering is confined to exact dirty authoring routes and rejects clean or later output stages.",
+      "contract_baseline_status": "blocked_by_chronology",
+      "contract_baseline_blocked_reason": "At C123-contract the implementation closeout evidence did not exist; later C0, C_index, and C_packet events were and remain outside this finding's closure claim.",
+      "production_check_ids": ["GA123-IMPLEMENTATION-OUTPUT-BOUNDARY"],
+      "production_adversary_ids": [
+        "reiyah.adversary.output-boundary.premature-output",
+        "reiyah.adversary.output-boundary.stage-presence-substitution",
+        "reiyah.adversary.toolchain-lock-construction.clean-implementation",
+        "reiyah.adversary.toolchain-lock-construction.clean-c0",
+        "reiyah.adversary.toolchain-lock-construction.c-index",
+        "reiyah.adversary.toolchain-lock-construction.c-packet",
+        "reiyah.adversary.toolchain-lock-construction.c-closeout"
+      ],
+      "fixture_evidence": [
+        {
+          "fixture_id": "reiyah.fixture.release-readiness.output-self-membership@1.2.3",
+          "path": "fixtures/v1.2.3/release-readiness-known-bad/output-self-membership.json",
+          "sha256": "sha256:ee2628795d1592237958ce39372e0ce395ef9b415e3e56b37210b92278235fe8",
+          "byte_size": 1455,
+          "expected_primary_diagnostic": "GA123-RELEASE-OUTPUT-SELF-MEMBERSHIP",
+          "evidence_role": "retained_release_contract_descriptor_not_production_builder_input"
+        }
+      ]
+    }
+  ],
+  "contract_baseline_gap_summary": {
+    "required_count": 10,
+    "closed_count": 0,
+    "blocked_by_chronology_count": 10,
+    "required_finding_ids": [
+      "F123-001",
+      "F123-002",
+      "F123-003",
+      "F123-004",
+      "F123-005",
+      "F123-006",
+      "F123-007",
+      "F123-008",
+      "F123-009",
+      "F123-010"
+    ],
+    "closed_finding_ids": [],
+    "blocked_by_chronology_finding_ids": [
+      "F123-001",
+      "F123-002",
+      "F123-003",
+      "F123-004",
+      "F123-005",
+      "F123-006",
+      "F123-007",
+      "F123-008",
+      "F123-009",
+      "F123-010"
+    ],
+    "all_findings_closed": false
+  },
+  "authority_boundary": {
+    "scientific_evidence_created": false,
+    "operator_acceptance_created": false,
+    "release_evidence_created": false,
+    "canonical_output_created": false,
+    "finding_status_is_operator_acceptance": false
+  }
+}

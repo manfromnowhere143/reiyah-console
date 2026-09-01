@@ -24,10 +24,10 @@ if (DARK) await page.evaluateOnNewDocument(() => { try { localStorage.setItem("h
 
 /* boot once */
 await page.goto(`${BASE}/`, { waitUntil: "networkidle2" });
-await page.waitForFunction(() => document.querySelector(".bootrow, .world") !== null, { timeout: 15000 });
+await page.waitForFunction(() => document.querySelector(".bootrow, .stage") !== null, { timeout: 15000 });
 await new Promise((r) => setTimeout(r, 600));
 await page.screenshot({ path: `${OUT}/boot${MOBILE ? "-m" : ""}.png` });
-await page.waitForSelector(".world", { timeout: 15000 });
+await page.waitForSelector(".stage", { timeout: 15000 });
 await new Promise((r) => setTimeout(r, 1200));
 
 for (const st of STATIONS) {

@@ -7,8 +7,8 @@
    Every moving thing is a committed byte. No mock data exists. */
 import { useEffect, useRef } from "react";
 import type { VerifiedEvidence } from "../boot/ProofBoot";
-import { Digest, Station } from "../components/primitives";
-import { STATIONS, type StationDef } from "../lib/camera";
+import { Digest } from "../components/primitives";
+import { fetchSurface } from "../lib/evidence";
 
 interface ArtifactRow {
   artifact: { path: string; sha256: string };
@@ -36,6 +36,18 @@ export function Harbor({ ev, go, pulse }: { ev: VerifiedEvidence; go: (id: strin
   const mainRef = useRef<HTMLCanvasElement>(null);
   const pulseRef = useRef(0);
   useEffect(() => { if (pulse) pulseRef.current = performance.now(); }, [pulse]);
+  /* the law behind each rejection: fixture path -> expected primary rule */
+  const ruleRef = useRef<Map<string, string>>(new Map());
+  const lastRejectRef = useRef<{ rule: string; at: number } | null>(null);
+  useEffect(() => {
+    fetchSurface<any>("fixtures").then((s) => {
+      if (s.state === "observed") {
+        const m = new Map<string, string>();
+        for (const f of s.data.fixtures ?? []) if (f.expected_primary_rule_id) m.set(f.path, f.expected_primary_rule_id);
+        ruleRef.current = m;
+      }
+    });
+  }, []);
 
   const artifacts: ArtifactRow[] = ev.index?.artifacts ?? [];
   const auth = ev.index?.authority ?? {};
@@ -154,6 +166,8 @@ export function Harbor({ ev, go, pulse }: { ev: VerifiedEvidence; go: (id: strin
           if (p.fall === 0) {
             /* the gate strikes: spark + eject with real physics */
             sparks.push({ x: gateP.x, y: gateP.y, life: 1 });
+            const rule = ruleRef.current.get(p.a.artifact.path);
+            if (rule) lastRejectRef.current = { rule, at: now };
             p.fx = gateP.x; p.fy = gateP.y;
             p.vx = 30 + Math.random() * 30; p.vy = 40;
           }
@@ -288,6 +302,11 @@ export function Harbor({ ev, go, pulse }: { ev: VerifiedEvidence; go: (id: strin
       mctx.fillText("FAILS CLOSED", gateP.x, gateP.y + 82);
       mctx.fillStyle = `rgba(${RED},0.8)`;
       mctx.fillText(`↓ REJECTED BY DESIGN · ${badTotal}`, gateP.x, gateP.y + 100);
+      const lr = lastRejectRef.current;
+      if (lr && now - lr.at < 2800) {
+        mctx.fillStyle = `rgba(${RED},${(0.85 * (1 - (now - lr.at) / 2800)).toFixed(2)})`;
+        mctx.fillText(lr.rule, gateP.x, gateP.y + 114);
+      }
 
       /* sealed ledger */
       const lP = railPt(1);
@@ -349,7 +368,6 @@ export function Harbor({ ev, go, pulse }: { ev: VerifiedEvidence; go: (id: strin
   ];
 
   return (
-    <Station id="ST–00" name="Harbor" sub="the living engine · hover the rail to slow time and read any packet">
       <div className="harbor">
         <div className="fieldwrap">
           <canvas ref={trailRef} aria-hidden="true" />
@@ -368,16 +386,6 @@ export function Harbor({ ev, go, pulse }: { ev: VerifiedEvidence; go: (id: strin
             </div>
           </div>
         </div>
-        <nav className="navmap" aria-label="Stations">
-          {STATIONS.filter((s: StationDef) => s.id !== "harbor").map((s) => (
-            <button key={s.id} className="navcard glass" data-red={String(!!s.red)} onClick={() => go(s.id)}>
-              <span className="nid">{s.num}</span>
-              <span className="nnm">{s.name}</span>
-              <span className="nds">{s.desc}</span>
-            </button>
-          ))}
-        </nav>
       </div>
-    </Station>
   );
 }

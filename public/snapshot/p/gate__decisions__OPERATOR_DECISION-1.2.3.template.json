@@ -1,0 +1,138 @@
+{
+  "template_notice": "DELIBERATELY INVALID AND NON-ACCEPTING TEMPLATE. No tool may replace the decision, operator identity, authority basis, time, rationale, packet identity, artifact digests, byte sizes, sequence, or predecessor. A human operator must create a new append-only record, and schema validity still cannot authenticate identity or authority or confer acceptance.",
+  "target_schema_id": "https://schemas.reiyah.invalid/gate-a/1.2.3/operator-decision-record.schema.json",
+  "schema_version": "1.2.3",
+  "artifact_id": "REPLACE_WITH_NEW_STABLE_ARTIFACT_ID",
+  "record_id": "REPLACE_WITH_NEW_STABLE_RECORD_ID",
+  "version": "1.2.3",
+  "record_kind": "operator_gate_decision",
+  "is_template": true,
+  "gate_id": "reiyah.gate-a",
+  "decision_scope": "exact_gate_a_1_2_3_static_architecture_packet_only",
+  "mission_release_id": "reiyah.mission@1.1.0",
+  "protocol_release_id": "reiyah.protocol.harbor-gate-a@1.2.0",
+  "candidate_packet_binding": {
+    "project": "Reiyah",
+    "canonical_root": "/Users/danielwahnich/workspace/reiyah",
+    "configured_remote": "https://github.com/manfromnowhere143/reiyah.git",
+    "remote_authority": "distribution_channel_only",
+    "git_object_format": "sha1",
+    "packet_role": "C_packet",
+    "packet_commit": null,
+    "packet_tree": null
+  },
+  "release_ledger_binding": {
+    "artifact_id": "reiyah.artifact.manifest-release-ledger-1.2.0",
+    "path": "manifests/manifest-release-ledger.json",
+    "sha256": null,
+    "byte_size": null,
+    "schema_id": "https://schemas.reiyah.invalid/gate-a/1.2.0/manifest-release-ledger.schema.json",
+    "version": "1.2.0"
+  },
+  "manifest_release_bindings": [
+    {
+      "release_id": "reiyah.mission@1.1.0",
+      "artifact": {
+        "artifact_id": "reiyah.artifact.mission-1.1.0",
+        "path": "manifests/mission/reiyah-mission-1.1.0.json",
+        "sha256": null,
+        "byte_size": null,
+        "schema_id": "https://schemas.reiyah.invalid/gate-a/1.1.0/mission-manifest.schema.json",
+        "version": "1.1.0"
+      }
+    },
+    {
+      "release_id": "reiyah.protocol.harbor-gate-a@1.2.0",
+      "artifact": {
+        "artifact_id": "reiyah.artifact.protocol-1.2.0",
+        "path": "manifests/protocol/harbor-gate-a-protocol-1.2.0.json",
+        "sha256": null,
+        "byte_size": null,
+        "schema_id": "https://schemas.reiyah.invalid/gate-a/1.2.0/protocol-manifest.schema.json",
+        "version": "1.2.0"
+      }
+    }
+  ],
+  "architecture_completeness_binding": {
+    "artifact_id": "reiyah.artifact.gate-a-index-1.2.3",
+    "path": "gate/GATE_A_EVIDENCE_INDEX.json",
+    "sha256": null,
+    "byte_size": null,
+    "schema_id": "https://schemas.reiyah.invalid/gate-a/1.2.3/gate-a-index.schema.json",
+    "version": "1.2.3"
+  },
+  "validation_report_binding": {
+    "artifact_id": "reiyah.artifact.validation-report-1.2.3",
+    "path": "gate/validation-reports/gate-a-validation-1.2.3.json",
+    "sha256": null,
+    "byte_size": null,
+    "schema_id": "https://schemas.reiyah.invalid/gate-a/1.2.3/canonical-validation-report.schema.json",
+    "version": "1.2.3"
+  },
+  "unresolved_risk_gap_inventory": {
+    "scope": "declared_unresolved_risks_and_evidence_gaps_of_exact_bound_c_packet",
+    "selection_rule": "all_tm_residual_risk_rows_and_all_rga_entries_open_or_residual_unknown_in_exact_bound_sources",
+    "completeness_assertion": null,
+    "source_register_bindings": [
+      {
+        "source_kind": "threat_model",
+        "artifact_id": null,
+        "path": "docs/THREAT_MODEL.md",
+        "sha256": null,
+        "byte_size": null
+      },
+      {
+        "source_kind": "research_gap_register",
+        "artifact_id": null,
+        "path": "docs/RESEARCH_GAP_REGISTER.md",
+        "sha256": null,
+        "byte_size": null
+      }
+    ],
+    "inventory_state": "not_recorded",
+    "item_count": null,
+    "items": null,
+    "empty_set_rationale": null
+  },
+  "decision": null,
+  "operator_kind": "human",
+  "operator_identity": null,
+  "authority_basis": "REPLACE_BY_THE_HUMAN_OPERATOR_WITH_AN_EXTERNALLY_CHECKABLE_AUTHORITY_BASIS_FOR_THIS_EXACT_PACKET",
+  "decided_at": null,
+  "rationale": "REPLACE_BY_THE_HUMAN_OPERATOR_WITH_SUBSTANTIVE_DECISION_SPECIFIC_REASONING_THAT_ADDRESSES_THE_EXACT_PACKET_UNRESOLVED_RISKS_AND_UNKNOWNS",
+  "risk_acknowledgements": [
+    "Schema validity cannot authenticate the operator's identity or authority and cannot confer operator acceptance.",
+    "The recorded decision is limited to the exact Gate A 1.2.3 static architecture packet and its bound bytes.",
+    "Architecture acceptance does not accept a scientific, safety, compliance, causal, readiness, performance, benchmark, or superiority claim.",
+    "The decision does not authorize publication or public distribution.",
+    "The decision does not authorize runtime, deployment, private-data ingestion, model execution, cloud execution, Gate B, or physical control.",
+    "Publisher reachability or readback is not independent transport verification; transport remains not evaluated.",
+    "Any change to the bound packet, index, report, mission, protocol, or release ledger makes this decision stale and requires an append-only successor."
+  ],
+  "schema_authority_boundary": {
+    "schema_validity_authenticates_operator_identity": false,
+    "schema_validity_authenticates_operator_authority": false,
+    "schema_validity_confers_operator_acceptance": false,
+    "schema_validity_proves_inventory_completeness": false,
+    "ga17_evaluated_by_schema": false,
+    "exact_inventory_reconciliation_required": true,
+    "external_identity_and_authority_verification_required": true
+  },
+  "authority_nonclaims": {
+    "scientific_evidence_created": false,
+    "scientific_claims_accepted": false,
+    "scientific_claim_authority": false,
+    "safety_case_claimed": false,
+    "standards_compliance_claimed": false,
+    "publication_acceptance_authorized": false,
+    "runtime_execution_authorized": false,
+    "gate_b_authorized": false,
+    "public_distribution_authorized": false,
+    "public_distribution_eligible": false,
+    "transport_verification_state": "not_evaluated"
+  },
+  "decision_sequence": 0,
+  "history_policy": "append_only_linear",
+  "supersedes_record_id": null,
+  "supersedes_record_sha256": null
+}

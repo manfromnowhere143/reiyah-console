@@ -1,0 +1,1090 @@
+{
+  "schema_id": "https://schemas.reiyah.invalid/gate-a/1.2.4/operator-decision-interface.schema.json",
+  "artifact_id": "reiyah.artifact.operator-decision-interface-1.2.4",
+  "interface_release_id": "reiyah.operator-decision-interface@1.2.4",
+  "version": "1.2.4",
+  "record_kind": "operator_decision_interface_contract",
+  "lifecycle_status": "proposed",
+  "activation_state": "disabled_contract_only",
+  "as_of_date": "2026-08-29",
+  "subject_packet_version": "1.2.3",
+  "relation": "corrects",
+  "repository_identity": {
+    "project": "Reiyah",
+    "repository_id": "reiyah",
+    "canonical_root": "/Users/danielwahnich/workspace/reiyah",
+    "configured_remote": "https://github.com/manfromnowhere143/reiyah.git",
+    "remote_authority": "distribution_channel_only",
+    "contract_branch": "gate-a-1.2.4-operator-decision-interface"
+  },
+  "stage_contract": {
+    "stage_id": "DI124-contract",
+    "ordered_stage_ids": [
+      "C_closeout",
+      "DI124-contract",
+      "DI124-contract-review",
+      "DI124-implementation",
+      "DI124-ready",
+      "D-recorded-unverified",
+      "V-recorded",
+      "R-composite-resolved"
+    ],
+    "one_time_lifecycle_prefix": [
+      "C_closeout",
+      "DI124-contract",
+      "DI124-contract-review",
+      "DI124-implementation",
+      "DI124-ready"
+    ],
+    "later_repeatable_event_state_classes": {
+      "D-recorded-unverified": {
+        "class_kind": "repeatable_append_only_decision_record_event",
+        "one_new_record_per_separately_authorized_transition": true,
+        "later_successor_transitions_are_one_at_a_time": true,
+        "history_overwrite_allowed": false
+      },
+      "V-recorded": {
+        "class_kind": "repeatable_append_only_typed_verification_record_event",
+        "one_new_typed_record_per_separately_authorized_transition": true,
+        "later_successor_transitions_are_one_at_a_time": true,
+        "history_overwrite_allowed": false
+      },
+      "R-composite-resolved": {
+        "class_kind": "repeatable_derived_composite_resolution_state",
+        "recomputed_from_unique_current_decision_identity_verification_and_authority_verification_heads": true,
+        "if_recorded_one_new_record_per_separately_authorized_transition": true,
+        "history_overwrite_allowed": false
+      }
+    },
+    "post_ready_event_grammar": {
+      "every_event_requires_separate_explicit_authority": true,
+      "decision_append": {
+        "allowed_predecessor_state_classes": [
+          "DI124-ready",
+          "D-recorded-unverified",
+          "V-recorded",
+          "R-composite-resolved"
+        ],
+        "exactly_one_new_decision_record_per_transition": true,
+        "later_decision_must_immediately_succeed_current_decision_head": true,
+        "prior_verification_and_resolution_heads_become_stale_for_current_resolution": true,
+        "fresh_decision_bound_identity_and_authority_verification_heads_required_before_resolved_decision_value": true
+      },
+      "typed_verification_append": {
+        "allowed_predecessor_state_classes": [
+          "D-recorded-unverified",
+          "V-recorded",
+          "R-composite-resolved"
+        ],
+        "typed_record_kinds": [
+          "human_identity_verification",
+          "human_authority_verification"
+        ],
+        "typed_record_order": "either_order",
+        "exactly_one_new_typed_record_per_transition": true,
+        "must_bind_current_decision_head": true,
+        "same_decision_typed_series_successors_allowed_one_at_a_time": true,
+        "changed_typed_verification_head_makes_prior_resolution_stale": true,
+        "changed_typed_verification_head_requires_recomputed_or_new_resolution": true
+      },
+      "resolution_evaluation": {
+        "callable_from_state_classes": [
+          "DI124-ready",
+          "D-recorded-unverified",
+          "V-recorded",
+          "R-composite-resolved"
+        ],
+        "favorable_or_eligible_head_precondition_required_to_evaluate": false,
+        "classification_precedence": [
+          "invalid",
+          "stale",
+          "unaccepted",
+          "decision_value"
+        ],
+        "closed_result_states": [
+          "unaccepted",
+          "accepted",
+          "rejected",
+          "deferred",
+          "stale",
+          "invalid"
+        ],
+        "resolved_decision_value_states": [
+          "accepted",
+          "rejected",
+          "deferred"
+        ],
+        "resolved_decision_value_requires_current_structurally_valid_decision_and_both_unique_current_eligible_verified_typed_heads": true,
+        "must_bind_typed_resolution_as_of_observation_or_basis": true,
+        "only_operands_existing_by_resolution_as_of_may_be_considered": true,
+        "historical_query_may_not_become_current_composite": true,
+        "derived_read_only_evaluation": true
+      },
+      "recorded_resolution_append": {
+        "allowed_predecessor_state_classes": [
+          "DI124-ready",
+          "D-recorded-unverified",
+          "V-recorded",
+          "R-composite-resolved"
+        ],
+        "may_retain_result_states": [
+          "unaccepted",
+          "accepted",
+          "rejected",
+          "deferred",
+          "stale",
+          "invalid"
+        ],
+        "requires_separate_explicit_authority": true,
+        "series_topology": "one_root_linear_unique_current_head",
+        "contiguous_positive_sequence_required": true,
+        "exact_predecessor_identity_and_bytes_required": true,
+        "exactly_one_new_resolution_record_per_transition": true,
+        "later_resolution_must_immediately_succeed_current_resolution_head": true,
+        "must_bind_evaluated_operand_heads_and_result": true,
+        "must_bind_typed_resolution_as_of_observation_or_basis": true,
+        "current_series_successor_resolution_as_of_must_be_nondecreasing": true,
+        "historical_replay_may_not_be_current_head_or_supersede_current_resolution": true,
+        "can_change_decision_or_verification_operands": false
+      },
+      "history_overwrite_allowed": false
+    },
+    "contract_candidate_paths": [
+      "docs/OPERATOR_DECISION_INTERFACE_1_2_4.md",
+      "gate/operator-decision-interfaces/reiyah.operator-decision-interface-1.2.4.json",
+      "schemas/operator-decision-interface-1.2.4.schema.json",
+      "schemas/operator-decision-interface-plan-1.2.4.schema.json",
+      "validation/operator-decision-interface-plan-1.2.4.json"
+    ],
+    "contract_candidate_path_count": 5,
+    "contract_candidate_delta_policy": "exact_add_only_non_executable",
+    "result_commit_binding_state": "deferred_to_post_commit_raw_git_observation",
+    "next_transition_authorized": false,
+    "implementation_authorized": false,
+    "decision_record_creation_authorized": false,
+    "human_decision_process_authorized": false,
+    "external_identity_or_authority_verification_implemented": false
+  },
+  "interface_binding_targets": [
+    {
+      "binding_role": "frozen_incompatible_decision_schema",
+      "relation": "corrects_frozen_defect",
+      "path": "schemas/operator-decision-record-1.2.3.schema.json",
+      "schema_id": "https://schemas.reiyah.invalid/gate-a/1.2.3/operator-decision-record.schema.json",
+      "sha256": "sha256:eaf5819ee888dd9bf57c99e3883603131aa88032abd7d159747df7f19c8d994e",
+      "byte_size": 25535,
+      "git_mode": "100644",
+      "binding_rationale": "frozen_index_binding_requires_non_revision_schema_identity"
+    },
+    {
+      "binding_role": "frozen_invalid_nonaccepting_template",
+      "relation": "corrects_frozen_defect",
+      "path": "gate/decisions/OPERATOR_DECISION-1.2.3.template.json",
+      "target_schema_id": "https://schemas.reiyah.invalid/gate-a/1.2.3/operator-decision-record.schema.json",
+      "frozen_observed_template_artifact_id_literal": "REPLACE_WITH_NEW_STABLE_ARTIFACT_ID",
+      "literal_is_also_retained_in_canonical_template_index_row": true,
+      "frozen_literal_classification": "retained_historical_placeholder_defect",
+      "placeholder_identifier_is_valid_for_successor": false,
+      "placeholder_identifier_reuse_prohibited": true,
+      "frozen_observed_record_id_literal": "REPLACE_WITH_NEW_STABLE_RECORD_ID",
+      "record_placeholder_identifier_is_valid_for_successor": false,
+      "record_placeholder_identifier_reuse_prohibited": true,
+      "sha256": "sha256:5eacd95f6f44f487648da67b9650fc29e5d925395dff3e2d5d186a0bb7fb0f2b",
+      "byte_size": 6241,
+      "git_mode": "100644",
+      "binding_rationale": "template_is_intentionally_invalid_and_cannot_bind_revision_1_packet"
+    },
+    {
+      "binding_role": "actual_revision_1_index_schema",
+      "relation": "binds_unchanged_subject",
+      "path": "schemas/gate-a-index-1.2.3-revision-1.schema.json",
+      "schema_id": "https://schemas.reiyah.invalid/gate-a/1.2.3/revision-1/gate-a-index.schema.json",
+      "sha256": "sha256:d356d3918ac53bf046fa37e94753545d0a5b34bff73c7bc2844ea537d4215592",
+      "byte_size": 16856,
+      "git_mode": "100644",
+      "binding_rationale": "future_decision_binding_must_name_actual_index_schema_identity"
+    },
+    {
+      "binding_role": "actual_canonical_report_schema",
+      "relation": "binds_unchanged_subject",
+      "path": "schemas/canonical-validation-report-1.2.3.schema.json",
+      "schema_id": "https://schemas.reiyah.invalid/gate-a/1.2.3/canonical-validation-report.schema.json",
+      "sha256": "sha256:40e5b0ec2a10d35ac1dd12722c200aa9208af218ab031fe7669ddeeeec95f4ab",
+      "byte_size": 30144,
+      "git_mode": "100644",
+      "binding_rationale": "future_decision_binding_must_join_report_to_revision_1_index"
+    }
+  ],
+  "immutable_subject": {
+    "packet": {
+      "role": "C_packet",
+      "commit": "801eacf1620fe5850647b4d25941ea04798c2210",
+      "tree": "5e63078bcab6272a34f45646c63c0690ed454c12",
+      "first_parent": "cad149e296e8a35959c0ca1ee2d9525af50b0bf6"
+    },
+    "closeout": {
+      "role": "C_closeout",
+      "commit": "e9643e850107333878d9b1bd3a84de3a45c1f04b",
+      "tree": "2e54c3e6c74880d23063c6cda7532dca1cd6aa6d",
+      "first_parent": "801eacf1620fe5850647b4d25941ea04798c2210",
+      "handoff": {
+        "path": "docs/SESSION_HANDOFF.md",
+        "sha256": "sha256:40353d7442cb4637578a7c8434b32518a462a7a2c2eb85fe660eb594fce469ed",
+        "byte_size": 103349,
+        "git_mode": "100644"
+      },
+      "completed_marker_projection": {
+        "state": "completed",
+        "ordered_external_replay_assertions": [
+          {
+            "assertion_id": "reiyah.assertion.gate-a-1.2.3-post-cpacket-report-replay-1",
+            "argv": [
+              "tools/gate_a_1_2_3.sh",
+              "--snapshot-mode",
+              "release",
+              "--render",
+              "report",
+              "--output",
+              "raw"
+            ],
+            "exit_code": 0,
+            "stderr_byte_size": 0,
+            "stderr_sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "canonical_report_byte_size": 17292,
+            "canonical_report_sha256": "sha256:24357b380dc1dd9d551cbbd06f421c44806a15845f4c27adb8fd731d65843333",
+            "equals_canonical_report": true,
+            "subject_cpacket_commit": "801eacf1620fe5850647b4d25941ea04798c2210",
+            "subject_cpacket_tree": "5e63078bcab6272a34f45646c63c0690ed454c12"
+          },
+          {
+            "assertion_id": "reiyah.assertion.gate-a-1.2.3-post-cpacket-report-replay-2",
+            "argv": [
+              "tools/gate_a_1_2_3.sh",
+              "--snapshot-mode",
+              "release",
+              "--render",
+              "report",
+              "--output",
+              "raw"
+            ],
+            "exit_code": 0,
+            "stderr_byte_size": 0,
+            "stderr_sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "canonical_report_byte_size": 17292,
+            "canonical_report_sha256": "sha256:24357b380dc1dd9d551cbbd06f421c44806a15845f4c27adb8fd731d65843333",
+            "equals_canonical_report": true,
+            "subject_cpacket_commit": "801eacf1620fe5850647b4d25941ea04798c2210",
+            "subject_cpacket_tree": "5e63078bcab6272a34f45646c63c0690ed454c12"
+          }
+        ],
+        "custody_classification": "administrative_external_report_readback_assertions_only",
+        "publication_or_publisher_provenance_established": false,
+        "independence_established": false,
+        "transport_verification_established": false,
+        "operator_acceptance_created": false,
+        "scientific_evidence_created": false
+      }
+    },
+    "canonical_outputs": [
+      {
+        "artifact_id": "reiyah.artifact.gate-a-index-1.2.3",
+        "path": "gate/GATE_A_EVIDENCE_INDEX.json",
+        "schema_id": "https://schemas.reiyah.invalid/gate-a/1.2.3/revision-1/gate-a-index.schema.json",
+        "sha256": "sha256:998f953fa35c908206cf93bd21d3000f96caf6ae044b7424d8dccf4826223af8",
+        "byte_size": 505497,
+        "git_mode": "100644"
+      },
+      {
+        "artifact_id": "reiyah.artifact.gate-a-index-sidecar-1.2.3",
+        "path": "gate/GATE_A_EVIDENCE_INDEX.sha256",
+        "schema_id": null,
+        "sha256": "sha256:5b72c1933a178e0481f258b9aef1f3e176b440e409066e113cb8dd10f27617c0",
+        "byte_size": 105,
+        "git_mode": "100644"
+      },
+      {
+        "artifact_id": "reiyah.artifact.validation-report-1.2.3",
+        "path": "gate/validation-reports/gate-a-validation-1.2.3.json",
+        "schema_id": "https://schemas.reiyah.invalid/gate-a/1.2.3/canonical-validation-report.schema.json",
+        "sha256": "sha256:24357b380dc1dd9d551cbbd06f421c44806a15845f4c27adb8fd731d65843333",
+        "byte_size": 17292,
+        "git_mode": "100644"
+      }
+    ],
+    "canonical_report_semantics": {
+      "projection_kind": "exact_selected_fields_and_derived_counts_from_frozen_report",
+      "stage_id": "C_packet",
+      "mode": "release",
+      "status": "pass",
+      "exit_code": 0,
+      "architecture_status": "architecture_complete",
+      "release_eligible": true,
+      "diagnostics": [],
+      "index_binding": {
+        "artifact_id": "reiyah.artifact.gate-a-index-1.2.3",
+        "path": "gate/GATE_A_EVIDENCE_INDEX.json",
+        "byte_size": 505497,
+        "stage_id": "C_index",
+        "git_commit": "cad149e296e8a35959c0ca1ee2d9525af50b0bf6",
+        "git_tree": "8833836fdd151b39db5d2727f94c3869eb315d15",
+        "first_parent": "bd8449e90f7ce70fe27fad2506b1d4fed6e6035f",
+        "schema_id": "https://schemas.reiyah.invalid/gate-a/1.2.3/revision-1/gate-a-index.schema.json",
+        "sha256": "sha256:998f953fa35c908206cf93bd21d3000f96caf6ae044b7424d8dccf4826223af8",
+        "candidate_projection_sha256": "sha256:56f05cf60f8c18da53a4a44c4837a18455692063a6bec6d830a0d5cb22a08025",
+        "sidecar_path": "gate/GATE_A_EVIDENCE_INDEX.sha256",
+        "sidecar_byte_size": 105,
+        "sidecar_sha256": "sha256:5b72c1933a178e0481f258b9aef1f3e176b440e409066e113cb8dd10f27617c0",
+        "sidecar_sha256_line": "sha256:998f953fa35c908206cf93bd21d3000f96caf6ae044b7424d8dccf4826223af8  gate/GATE_A_EVIDENCE_INDEX.json",
+        "sidecar_exactly_one_terminal_lf": true,
+        "post_packet_readback_state": "not_observable_inside_self_bound_packet",
+        "report_self_digest_present": false
+      },
+      "authority": {
+        "ga_17_state": "not_evaluated",
+        "gate_b_authorized": false,
+        "operator_acceptance_state": "unaccepted",
+        "public_distribution_authorized": false,
+        "public_distribution_eligible": false,
+        "publication_acceptance_authorized": false,
+        "runtime_authorized": false,
+        "scientific_claim_authority": false,
+        "scientific_evidence_created": false,
+        "transport_verification_state": "not_evaluated"
+      },
+      "finding_closure": {
+        "required_count": 10,
+        "closed_count": 10,
+        "all_findings_closed": true,
+        "blocked_by_chronology_count": 0
+      },
+      "implementation_control_summary": {
+        "row_count": 10,
+        "pass_count": 10,
+        "nonpass_count": 0,
+        "all_pass": true
+      },
+      "required_replay_control_summary": {
+        "row_count": 24,
+        "pass_count": 24,
+        "nonpass_count": 0,
+        "all_pass": true
+      }
+    },
+    "release_bindings": [
+      {
+        "binding_role": "release_ledger",
+        "ledger_id": "reiyah.manifest-release-ledger",
+        "artifact_id": "reiyah.artifact.manifest-release-ledger-1.2.0",
+        "path": "manifests/manifest-release-ledger.json",
+        "schema_id": "https://schemas.reiyah.invalid/gate-a/1.2.0/manifest-release-ledger.schema.json",
+        "version": "1.2.0",
+        "sha256": "sha256:ca59e874873603935f56a9abab5d7e834a8896be40ddbbaebc80d234aa0f26ad",
+        "byte_size": 5267,
+        "git_mode": "100644"
+      },
+      {
+        "binding_role": "mission_release",
+        "release_id": "reiyah.mission@1.1.0",
+        "ledger_entry_must_resolve_exactly_once": true,
+        "artifact_id": "reiyah.artifact.mission-1.1.0",
+        "path": "manifests/mission/reiyah-mission-1.1.0.json",
+        "schema_id": "https://schemas.reiyah.invalid/gate-a/1.1.0/mission-manifest.schema.json",
+        "version": "1.1.0",
+        "sha256": "sha256:1d49a990391c8629c4dd919e73786f12de6c63092e43608d53d41dee4f52d4ed",
+        "byte_size": 5597,
+        "git_mode": "100644"
+      },
+      {
+        "binding_role": "protocol_release",
+        "release_id": "reiyah.protocol.harbor-gate-a@1.2.0",
+        "ledger_entry_must_resolve_exactly_once": true,
+        "artifact_id": "reiyah.artifact.protocol-1.2.0",
+        "path": "manifests/protocol/harbor-gate-a-protocol-1.2.0.json",
+        "schema_id": "https://schemas.reiyah.invalid/gate-a/1.2.0/protocol-manifest.schema.json",
+        "version": "1.2.0",
+        "sha256": "sha256:d282e8a58de6a207129079498343b23bb634b45eaa38697794b77b9dadbad7ad",
+        "byte_size": 63718,
+        "git_mode": "100644"
+      }
+    ]
+  },
+  "unresolved_inventory_contract": {
+    "selection_rule_id": "reiyah.selection.operator-decision-unresolved-inventory@1.2.4",
+    "selection_policy": "all_TM_001_through_TM_056_residual_risk_rows_plus_RGA_006_through_RGA_018_and_RGA_020_through_RGA_027",
+    "rga_020_inclusion_policy": "fail_closed_include_because_independent_transport_verification_is_not_evaluated",
+    "source_membership_extraction_policy": "set_membership_by_exact_unique_id_independent_of_markdown_heading_order",
+    "source_document_order_is_normative": false,
+    "canonical_order_source": "ordered_item_ids",
+    "canonical_rank_policy": "TM_prefix_before_RGA_then_three_digit_numeric_ascending",
+    "canonical_serialization": {
+      "encoding": "ASCII_subset_of_UTF-8",
+      "record_format": "one_ID_per_line",
+      "line_ending": "LF",
+      "terminal_lf_count": 1,
+      "byte_size": 560,
+      "sha256": "sha256:0157a181d666ff34b01399747cfa6f596865b5fc879e358d39754f7637ceb777"
+    },
+    "decision_items_must_exact_match_canonical_order": true,
+    "source_bindings": [
+      {
+        "source_kind": "threat_model",
+        "artifact_id": "reiyah.artifact.indexed-docs-threat-model-md",
+        "path": "docs/THREAT_MODEL.md",
+        "version": "1.2.3",
+        "sha256": "sha256:240218201333d50d3b5ed14653a52228e8b3000dbfc32c7ee30c56419bbf3a71",
+        "byte_size": 47942,
+        "git_mode": "100644",
+        "media_type": "text/markdown",
+        "role": "threat_model",
+        "version_basis": "intrinsic_version"
+      },
+      {
+        "source_kind": "research_gap_register",
+        "artifact_id": "reiyah.artifact.indexed-docs-research-gap-register-md",
+        "path": "docs/RESEARCH_GAP_REGISTER.md",
+        "version": "1.2.3",
+        "sha256": "sha256:6fab2c66e2c14e8936cc374007bb1d764da3e24cb2ff139525d9b2b3c84a9d3c",
+        "byte_size": 48092,
+        "git_mode": "100644",
+        "media_type": "text/markdown",
+        "role": "research_gap_register",
+        "version_basis": "exact_path_version_binding"
+      }
+    ],
+    "ordered_item_ids": [
+      "TM-001", "TM-002", "TM-003", "TM-004", "TM-005", "TM-006", "TM-007", "TM-008",
+      "TM-009", "TM-010", "TM-011", "TM-012", "TM-013", "TM-014", "TM-015", "TM-016",
+      "TM-017", "TM-018", "TM-019", "TM-020", "TM-021", "TM-022", "TM-023", "TM-024",
+      "TM-025", "TM-026", "TM-027", "TM-028", "TM-029", "TM-030", "TM-031", "TM-032",
+      "TM-033", "TM-034", "TM-035", "TM-036", "TM-037", "TM-038", "TM-039", "TM-040",
+      "TM-041", "TM-042", "TM-043", "TM-044", "TM-045", "TM-046", "TM-047", "TM-048",
+      "TM-049", "TM-050", "TM-051", "TM-052", "TM-053", "TM-054", "TM-055", "TM-056",
+      "RGA-006", "RGA-007", "RGA-008", "RGA-009", "RGA-010", "RGA-011", "RGA-012",
+      "RGA-013", "RGA-014", "RGA-015", "RGA-016", "RGA-017", "RGA-018", "RGA-020",
+      "RGA-021", "RGA-022", "RGA-023", "RGA-024", "RGA-025", "RGA-026", "RGA-027"
+    ],
+    "item_count": 77,
+    "future_reviewed_item_mapping": {
+      "mapping_id": "reiyah.mapping.operator-decision-unresolved-inventory@1.2.4",
+      "required_row_count": 77,
+      "required_row_order_source": "ordered_item_ids",
+      "immutable_per_item_fields": [
+        "item_id",
+        "source_artifact_id",
+        "source_locator",
+        "source_text",
+        "source_text_encoding",
+        "source_text_byte_size",
+        "source_text_sha256",
+        "source_state_kind",
+        "source_status_or_residual_statement",
+        "source_status_or_residual_statement_encoding",
+        "source_status_or_residual_statement_byte_size",
+        "source_status_or_residual_statement_sha256",
+        "kind",
+        "scope_effects"
+      ],
+      "source_state_kind_closed_values": [
+        "explicit_status_field",
+        "residual_statement_without_status_field"
+      ],
+      "must_exact_bind_source_bindings": true,
+      "operator_mutation_allowed": false,
+      "separate_exact_byte_review_required": true,
+      "future_locator_text_ruleset_binding": {
+        "binding_state": "deferred_not_yet_authored_or_reviewed",
+        "required_identity_fields": [
+          "ruleset_id",
+          "sha256",
+          "byte_size"
+        ],
+        "ruleset_id": null,
+        "sha256": null,
+        "byte_size": null,
+        "exact_source_locator_grammar_required": true,
+        "exact_source_text_byte_selection_required": true,
+        "normalization_policy_must_be_explicit": true,
+        "canonical_row_serialization_rule_required": true,
+        "raw_source_bytes_must_remain_recoverable": true,
+        "separate_exact_byte_review_required": true,
+        "required_and_separately_reviewed_before_inventory_reconciliation_implementation_is_claimed_or_DI124_ready": true,
+        "implemented": false
+      },
+      "implemented": false,
+      "automated_prose_extraction_claimed": false
+    },
+    "explicit_empty_allowed": false,
+    "operator_assertion_can_substitute_for_derivation": false,
+    "global_threat_completeness_claimed": false
+  },
+  "future_decision_series_contract": {
+    "contract_state": "declarative_future_unimplemented",
+    "series_topology": "one_root_linear_unique_current_head",
+    "one_new_record_per_separately_authorized_transition": true,
+    "fixed_series_scope": {
+      "subject_packet_commit": "801eacf1620fe5850647b4d25941ea04798c2210",
+      "subject_packet_tree": "5e63078bcab6272a34f45646c63c0690ed454c12",
+      "administrative_closeout_commit": "e9643e850107333878d9b1bd3a84de3a45c1f04b",
+      "administrative_closeout_tree": "2e54c3e6c74880d23063c6cda7532dca1cd6aa6d",
+      "interface_release_id": "reiyah.operator-decision-interface@1.2.4",
+      "inventory_selection_rule_id": "reiyah.selection.operator-decision-unresolved-inventory@1.2.4",
+      "ordered_inventory_item_count": 77,
+      "ordered_inventory_serialization_sha256": "sha256:0157a181d666ff34b01399747cfa6f596865b5fc879e358d39754f7637ceb777"
+    },
+    "fixed_scope_change_within_series_allowed": false,
+    "subject_interface_or_source_universe_change_requires_new_reviewed_interface_and_distinct_series": true,
+    "newly_discovered_risk_may_be_inserted_into_fixed_77_item_series": false,
+    "newly_discovered_risk_requires_new_reviewed_interface_and_distinct_series": true,
+    "historical_series_discoverability_must_be_preserved": true,
+    "exact_ready_projection_binding": {
+      "binding_state": "deferred_until_DI124_ready_projection_exists",
+      "git_commit": null,
+      "git_tree": null,
+      "contract_bundle": {
+        "paths": [
+          "docs/OPERATOR_DECISION_INTERFACE_1_2_4.md",
+          "gate/operator-decision-interfaces/reiyah.operator-decision-interface-1.2.4.json",
+          "schemas/operator-decision-interface-1.2.4.schema.json",
+          "schemas/operator-decision-interface-plan-1.2.4.schema.json",
+          "validation/operator-decision-interface-plan-1.2.4.json"
+        ],
+        "required_per_path_identity_fields": [
+          "sha256",
+          "byte_size",
+          "git_mode"
+        ],
+        "per_path_identities": null,
+        "identity_state": "deferred_until_exact_DI124_contract_commit_exists"
+      },
+      "later_implementation_operands": [
+        {
+          "binding_role": "decision_record_schema",
+          "path": null,
+          "artifact_id": null,
+          "schema_id": null,
+          "sha256": null,
+          "byte_size": null,
+          "git_mode": null,
+          "identity_state": "deferred_not_implemented"
+        },
+        {
+          "binding_role": "deliberately_invalid_decision_template",
+          "path": null,
+          "artifact_id": null,
+          "schema_id": null,
+          "sha256": null,
+          "byte_size": null,
+          "git_mode": null,
+          "identity_state": "deferred_not_implemented"
+        },
+        {
+          "binding_role": "implementation_validation_plan",
+          "path": null,
+          "artifact_id": null,
+          "schema_id": null,
+          "sha256": null,
+          "byte_size": null,
+          "git_mode": null,
+          "identity_state": "deferred_not_implemented"
+        },
+        {
+          "binding_role": "interface_readiness_report",
+          "path": null,
+          "artifact_id": null,
+          "schema_id": null,
+          "sha256": null,
+          "byte_size": null,
+          "git_mode": null,
+          "identity_state": "deferred_not_implemented"
+        },
+        {
+          "binding_role": "locked_launcher",
+          "path": null,
+          "artifact_id": null,
+          "schema_id": null,
+          "sha256": null,
+          "byte_size": null,
+          "git_mode": null,
+          "identity_state": "deferred_not_implemented"
+        },
+        {
+          "binding_role": "production_evaluator",
+          "path": null,
+          "artifact_id": null,
+          "schema_id": null,
+          "sha256": null,
+          "byte_size": null,
+          "git_mode": null,
+          "identity_state": "deferred_not_implemented"
+        },
+        {
+          "binding_role": "toolchain_lock",
+          "path": null,
+          "artifact_id": null,
+          "schema_id": null,
+          "sha256": null,
+          "byte_size": null,
+          "git_mode": null,
+          "identity_state": "deferred_not_implemented"
+        },
+        {
+          "binding_role": "fixture_catalog",
+          "path": null,
+          "artifact_id": null,
+          "schema_id": null,
+          "sha256": null,
+          "byte_size": null,
+          "git_mode": null,
+          "identity_state": "deferred_not_implemented"
+        }
+      ]
+    },
+    "future_decision_must_bind_nonnull_exact_ready_commit_tree_contract_bundle_and_all_implementation_operands": true,
+    "implementation_present": false
+  },
+  "future_decision_parity_contract": {
+    "contract_state": "declarative_future_unimplemented",
+    "full_inventory_required_for_every_decision": true,
+    "required_item_count": 77,
+    "required_item_order_source": "unresolved_inventory_contract.ordered_item_ids",
+    "missing_or_omitted_items_allowed": false,
+    "decision_specific_human_note_required_for_every_item": true,
+    "allowed_disposition_values": [
+      "acknowledged_nonblocking_for_exact_static_architecture_only",
+      "rejection_basis",
+      "deferral_basis",
+      "not_evaluated_after_terminal_rejection",
+      "not_evaluated_after_terminal_deferral"
+    ],
+    "decision_rules": {
+      "accepted": {
+        "allowed_item_dispositions": [
+          "acknowledged_nonblocking_for_exact_static_architecture_only"
+        ],
+        "required_acknowledged_item_count": 77,
+        "prohibited_item_dispositions": [
+          "rejection_basis",
+          "deferral_basis",
+          "not_evaluated_after_terminal_rejection",
+          "not_evaluated_after_terminal_deferral"
+        ]
+      },
+      "rejected": {
+        "allowed_item_dispositions": [
+          "acknowledged_nonblocking_for_exact_static_architecture_only",
+          "rejection_basis",
+          "not_evaluated_after_terminal_rejection"
+        ],
+        "minimum_rejection_basis_count": 1,
+        "prohibited_item_dispositions": [
+          "deferral_basis",
+          "not_evaluated_after_terminal_deferral"
+        ]
+      },
+      "deferred": {
+        "allowed_item_dispositions": [
+          "acknowledged_nonblocking_for_exact_static_architecture_only",
+          "deferral_basis",
+          "not_evaluated_after_terminal_deferral"
+        ],
+        "minimum_deferral_basis_count": 1,
+        "prohibited_item_dispositions": [
+          "rejection_basis",
+          "not_evaluated_after_terminal_rejection"
+        ]
+      }
+    },
+    "cross_outcome_basis_dispositions_prohibited": true,
+    "noncoercive_residual_semantics": {
+      "not_evaluated_after_terminal_rejection_meaning": "item_retained_but_not_evaluated_after_the_human_already_selected_a_terminal_rejection_basis",
+      "not_evaluated_after_terminal_deferral_meaning": "item_retained_but_not_evaluated_after_the_human_already_selected_a_terminal_deferral_basis",
+      "not_evaluated_counts_as_acknowledgement": false,
+      "not_evaluated_counts_as_decision_basis": false,
+      "not_evaluated_closes_resolves_or_waives_item": false
+    },
+    "acknowledgement_closes_resolves_or_waives_item": false,
+    "implemented": false
+  },
+  "future_chronology_contract": {
+    "contract_state": "declarative_future_unimplemented",
+    "required_partial_order": [
+      "exact_DI124_ready_observation_binding_at <= decided_at",
+      "decided_at <= decision_recorded_at",
+      "exact_decision_bytes_exist_at <= identity_verification_act_started_at",
+      "identity_verification_act_started_at <= identity_verified_at",
+      "decision_recorded_at <= identity_verified_at",
+      "identity_verified_at <= identity_verification_recorded_at",
+      "exact_decision_bytes_exist_at <= authority_verification_act_started_at",
+      "authority_verification_act_started_at <= authority_verified_at",
+      "decision_recorded_at <= authority_verified_at",
+      "authority_verified_at <= authority_verification_recorded_at",
+      "decision_recorded_at <= resolution_as_of",
+      "identity_verification_recorded_at <= resolution_as_of",
+      "authority_verification_recorded_at <= resolution_as_of"
+    ],
+    "resolution_as_of_contract": {
+      "value_kind": "canonical_UTC_instant",
+      "typed_observation_or_basis_required": true,
+      "required_basis_fields": [
+        "basis_kind",
+        "observation_time",
+        "evidence_references",
+        "scope",
+        "limitations"
+      ],
+      "only_operands_existing_by_resolution_as_of_may_be_considered": true,
+      "current_resolution_series_successors_require_nondecreasing_resolution_as_of": true,
+      "backdating_or_rollback_can_bypass_later_expiry_or_revocation": false,
+      "historical_replay_classification": "historical_replay_not_current_composite",
+      "historical_replay_can_become_current_resolution_head": false,
+      "unbound_wall_clock_allowed": false
+    },
+    "preexisting_grant_or_evidence_issuance": {
+      "may_predate_decision": true,
+      "must_be_retained_as_a_distinct_field_from_post_decision_verification_act": true,
+      "can_substitute_for_post_decision_verification_act": false
+    },
+    "authority_interval": {
+      "valid_from_relation": "valid_from <= decided_at",
+      "nonnull_valid_until_relation": "decided_at < valid_until"
+    },
+    "revocation_mapping": {
+      "effective_at <= decided_at": "invalid",
+      "decided_at < effective_at <= resolution_as_of": "stale"
+    },
+    "git_author_commit_or_tag_times_can_prove_chronology": false,
+    "self_asserted_times_can_prove_chronology": false,
+    "implemented": false
+  },
+  "future_external_verifier_eligibility_contract": {
+    "contract_state": "declarative_future_unimplemented",
+    "applies_separately_to_record_kinds": [
+      "human_identity_verification",
+      "human_authority_verification"
+    ],
+    "current_binding_state": "deferred_no_reviewed_external_trust_policy_or_grant_evidence_basis_exists",
+    "reviewed_external_trust_policy_identity": {
+      "path": null,
+      "artifact_id": null,
+      "schema_id": null,
+      "sha256": null,
+      "byte_size": null,
+      "binding_state": "deferred_not_retained_or_reviewed"
+    },
+    "separately_reviewed_external_trust_policy_required": true,
+    "separately_retained_grant_or_evidence_basis_required": true,
+    "post_decision_verification_act_must_be_external_to_decision_creation_act": true,
+    "eligibility_must_be_evaluated_separately_for_each_typed_series": true,
+    "ineligible_as_sole_basis": [
+      "decision_author_or_operator_self_assertion",
+      "git_author_or_repository_ownership_or_commit_rights",
+      "account_ownership",
+      "key_or_credential_possession",
+      "cryptographic_signature",
+      "checksum_or_digest",
+      "model_output_or_model_consensus",
+      "same_process_or_same_assertion_repetition"
+    ],
+    "one_record_assertion_or_evidence_basis_can_collapse_identity_into_authority": false,
+    "repository_validation_can_establish_external_identity_authority_or_independence_truth": false,
+    "secrets_credentials_private_keys_or_sensitive_identity_payloads_allowed_in_repository": false,
+    "implementation_present": false
+  },
+  "future_composite_resolution_contract": {
+    "contract_state": "declarative_future_unimplemented",
+    "allowed_composite_states": [
+      "unaccepted",
+      "accepted",
+      "rejected",
+      "deferred",
+      "stale",
+      "invalid"
+    ],
+    "verification_required_for_decision_values": [
+      "accepted",
+      "rejected",
+      "deferred"
+    ],
+    "required_typed_verification_series": [
+      {
+        "record_kind": "human_identity_verification",
+        "series_kind": "append_only_identity_verification_series",
+        "series_topology": "one_root_linear_unique_current_eligible_head",
+        "must_bind": [
+          "exact_decision_identity_and_bytes",
+          "claimed_human_identity"
+        ],
+        "must_retain_separately": [
+          "verifier_identity",
+          "evidence_references",
+          "verification_method",
+          "verified_at",
+          "recorded_at",
+          "validity_interval",
+          "verification_scope"
+        ],
+        "may_assert_or_substitute_for_authority_verification": false
+      },
+      {
+        "record_kind": "human_authority_verification",
+        "series_kind": "append_only_authority_verification_series",
+        "series_topology": "one_root_linear_unique_current_eligible_head",
+        "must_bind": [
+          "exact_decision_identity_and_bytes",
+          "claimed_human_identity",
+          "exact_static_architecture_authority_scope"
+        ],
+        "must_retain_separately": [
+          "verifier_identity",
+          "evidence_references",
+          "verification_method",
+          "verified_at",
+          "recorded_at",
+          "authority_basis",
+          "authority_scope",
+          "validity_interval",
+          "revocation_state"
+        ],
+        "may_assert_or_substitute_for_identity_verification": false
+      }
+    ],
+    "typed_verification_state_axes": {
+      "applies_separately_to_record_kinds": [
+        "human_identity_verification",
+        "human_authority_verification"
+      ],
+      "artifact_structure_values": [
+        "absent",
+        "structurally_invalid",
+        "structurally_valid"
+      ],
+      "external_outcome_values": [
+        "not_evaluated",
+        "verified",
+        "failed",
+        "contradicted"
+      ],
+      "lineage_values": [
+        "current",
+        "superseded"
+      ],
+      "temporal_eligibility_values": [
+        "eligible",
+        "expired",
+        "revoked"
+      ],
+      "series_graph_validity_values": [
+        "valid",
+        "invalid"
+      ],
+      "invalid_series_graph_reasons": [
+        "multiple_roots",
+        "fork",
+        "multiple_heads",
+        "cycle",
+        "orphan",
+        "sequence_failure",
+        "predecessor_byte_mismatch"
+      ],
+      "composite_stale_is_derived_not_a_verification_outcome": true,
+      "axes_may_be_collapsed": false
+    },
+    "one_record_or_assertion_can_satisfy_both_verification_series": false,
+    "each_verification_series_requires_distinct_record_identity_and_bytes": true,
+    "each_verification_series_requires_separate_verifier_evidence_method_time_and_scope": true,
+    "resolution_precedence": [
+      "invalid",
+      "stale",
+      "unaccepted",
+      "decision_value"
+    ],
+    "invalid_if_any": [
+      "decision_structural_or_semantic_failure",
+      "decision_series_multiple_roots_fork_multiple_heads_cycle_or_orphan",
+      "decision_series_sequence_or_predecessor_byte_mismatch",
+      "resolution_as_of_missing_unbound_or_precedes_any_consumed_operand_recorded_at",
+      "current_resolution_series_resolution_as_of_decreases_or_rolls_back",
+      "historical_replay_selected_as_current_resolution_head",
+      "recorded_resolution_series_multiple_roots_fork_multiple_heads_cycle_or_orphan_sequence_or_predecessor_byte_mismatch",
+      "identity_verification_failed_or_claimed_human_mismatch",
+      "authority_verification_failed_or_exact_scope_mismatch",
+      "authority_not_valid_at_decided_at",
+      "verification_binding_failure",
+      "verification_chronology_failure",
+      "verification_contradicted",
+      "identity_or_authority_verification_series_multiple_roots_fork_multiple_heads_cycle_or_orphan",
+      "identity_or_authority_verification_sequence_or_predecessor_byte_mismatch"
+    ],
+    "stale_if_any_after_invalid": [
+      "any_bound_subject_operand_changed",
+      "interface_or_ordered_risk_universe_changed",
+      "selected_decision_superseded_or_not_current_head",
+      "selected_identity_or_authority_verification_superseded_or_not_current_head",
+      "identity_or_authority_verification_currently_expired_or_revoked"
+    ],
+    "unaccepted_if_any_after_invalid_or_stale": [
+      "decision_absent",
+      "identity_verification_absent_or_not_evaluated",
+      "authority_verification_absent_or_not_evaluated"
+    ],
+    "resolved_outcome_requires_all": [
+      "current_unique_head_decision",
+      "decision_structurally_and_semantically_valid",
+      "all_bound_subject_operands_current",
+      "claimed_human_identity_verification_verified",
+      "exact_static_architecture_scope_authority_verification_verified",
+      "authority_valid_at_decided_at",
+      "verification_binding_scope_and_chronology_valid",
+      "separate_identity_and_authority_verification_series_each_have_unique_current_head"
+    ],
+    "decision_to_composite_state": {
+      "accepted": "accepted",
+      "rejected": "rejected",
+      "deferred": "deferred"
+    },
+    "identity_and_authority_verification_series_are_separate": true,
+    "older_favorable_verification_can_override_later_failed_revoked_or_corrective_head": false,
+    "verification_can_change_decision_value": false,
+    "repository_validation_can_establish_real_world_identity_or_authority_truth": false
+  },
+  "findings": {
+    "required_finding_ids": [
+      "DI124-001", "DI124-002", "DI124-003", "DI124-004", "DI124-005",
+      "DI124-006", "DI124-007", "DI124-008", "DI124-009", "DI124-010"
+    ],
+    "baseline_open_finding_ids": [
+      "DI124-001", "DI124-002", "DI124-003", "DI124-004", "DI124-005",
+      "DI124-006", "DI124-007", "DI124-008", "DI124-009", "DI124-010"
+    ],
+    "implementation_blocked_finding_ids": [
+      "DI124-001", "DI124-002", "DI124-003", "DI124-004", "DI124-005",
+      "DI124-006", "DI124-007", "DI124-008", "DI124-009", "DI124-010"
+    ],
+    "closed_finding_ids": [],
+    "finding_rows": [
+      {
+        "finding_id": "DI124-001",
+        "title": "Immutable target and chronology resolution",
+        "requirement": "Rehash and exact-bind raw C_packet and C_closeout objects while preserving their distinct roles and every canonical output blob.",
+        "baseline_status": "open",
+        "implementation_status": "blocked",
+        "blocked_reason": "disabled_contract_only_no_implementation_authorized"
+      },
+      {
+        "finding_id": "DI124-002",
+        "title": "Decision schema identity correction",
+        "requirement": "Define an additive decision-record schema that binds the actual revision-1 index without altering or relabeling the frozen 1.2.3 schema or template.",
+        "baseline_status": "open",
+        "implementation_status": "blocked",
+        "blocked_reason": "disabled_contract_only_no_implementation_authorized"
+      },
+      {
+        "finding_id": "DI124-003",
+        "title": "Canonical output semantic join",
+        "requirement": "Resolve the exact index, sidecar, report, report semantics, and revision-1 index binding through one fail-closed production consumer.",
+        "baseline_status": "open",
+        "implementation_status": "blocked",
+        "blocked_reason": "disabled_contract_only_no_implementation_authorized"
+      },
+      {
+        "finding_id": "DI124-004",
+        "title": "Manifest and source resolution",
+        "requirement": "Resolve exact mission, protocol, release-ledger, threat-model, and research-gap artifacts from the immutable index rather than trusting record assertions.",
+        "baseline_status": "open",
+        "implementation_status": "blocked",
+        "blocked_reason": "disabled_contract_only_no_implementation_authorized"
+      },
+      {
+        "finding_id": "DI124-005",
+        "title": "Unresolved inventory derivation",
+        "requirement": "Derive and exact-reconcile the ordered 77-item inventory, including fail-closed RGA-020 and rejecting explicit-empty or operator-asserted substitution.",
+        "baseline_status": "open",
+        "implementation_status": "blocked",
+        "blocked_reason": "disabled_contract_only_no_implementation_authorized"
+      },
+      {
+        "finding_id": "DI124-006",
+        "title": "Decision and disposition compatibility",
+        "requirement": "Exact-close accepted, rejected, and deferred decisions against complete item dispositions without treating acknowledgement as risk closure.",
+        "baseline_status": "open",
+        "implementation_status": "blocked",
+        "blocked_reason": "disabled_contract_only_no_implementation_authorized"
+      },
+      {
+        "finding_id": "DI124-007",
+        "title": "Append-only decision history",
+        "requirement": "Reject duplicate roots, forks, cycles, gaps, stale-head selection, predecessor mismatch, and non-increasing decision chronology.",
+        "baseline_status": "open",
+        "implementation_status": "blocked",
+        "blocked_reason": "disabled_contract_only_no_implementation_authorized"
+      },
+      {
+        "finding_id": "DI124-008",
+        "title": "Human identity and authority separation",
+        "requirement": "Keep the human identity claim, decision, independent identity verification, independent authority verification, and composite acceptance as distinct records and states.",
+        "baseline_status": "open",
+        "implementation_status": "blocked",
+        "blocked_reason": "disabled_contract_only_no_implementation_authorized"
+      },
+      {
+        "finding_id": "DI124-009",
+        "title": "Locked offline validation and adversaries",
+        "requirement": "Implement a byte-bound offline read-only launcher, deterministic validator, known-good witnesses, and reason-specific known-bad production-path adversaries.",
+        "baseline_status": "open",
+        "implementation_status": "blocked",
+        "blocked_reason": "disabled_contract_only_no_implementation_authorized"
+      },
+      {
+        "finding_id": "DI124-010",
+        "title": "Acyclic readiness and verification topology",
+        "requirement": "Keep interface readiness, later human decision, later independent verification, and composite resolution acyclic and prevent any earlier record from self-binding a future event.",
+        "baseline_status": "open",
+        "implementation_status": "blocked",
+        "blocked_reason": "disabled_contract_only_no_implementation_authorized"
+      }
+    ]
+  },
+  "capabilities": {
+    "contract_definition_present": true,
+    "decision_record_schema_implemented": false,
+    "production_binding_resolver_implemented": false,
+    "inventory_reconciliation_implemented": false,
+    "reviewed_77_row_item_mapping_implemented": false,
+    "decision_disposition_parity_implemented": false,
+    "decision_series_scope_and_ready_binding_implemented": false,
+    "decision_history_resolver_implemented": false,
+    "decision_and_verification_chronology_implemented": false,
+    "locked_offline_validator_implemented": false,
+    "known_bad_fixture_catalog_implemented": false,
+    "interface_readiness_report_implemented": false,
+    "human_identity_verification_implemented": false,
+    "human_authority_verification_implemented": false,
+    "external_verifier_eligibility_policy_implemented": false,
+    "composite_acceptance_resolution_implemented": false
+  },
+  "authority": {
+    "architecture_status_of_subject_packet": "architecture_complete",
+    "operator_acceptance_state": "unaccepted",
+    "ga_17_state": "not_evaluated",
+    "scientific_evidence_created": false,
+    "scientific_claim_authority": false,
+    "public_distribution_eligible": false,
+    "public_distribution_authorized": false,
+    "publication_acceptance_authorized": false,
+    "runtime_authorized": false,
+    "cloud_execution_authorized": false,
+    "private_data_ingestion_authorized": false,
+    "gate_b_authorized": false,
+    "physical_control_authorized": false,
+    "transport_verification_state": "not_evaluated",
+    "schema_validity_confers_acceptance": false,
+    "contract_review_confers_acceptance": false
+  },
+  "limitations": [
+    "This proposed interface contract is not a Gate A 1.2.4 architecture packet or scientific release.",
+    "No decision record, human identity, human authority, GA-17 result, or operator acceptance is created.",
+    "The exact Gate A 1.2.3 index, sidecar, report, C_packet, and C_closeout remain immutable historical subjects.",
+    "Risk acknowledgement for static architecture cannot close a scientific, safety, distribution, runtime, or Gate B risk.",
+    "A later implementation, human decision, independent verification, publication event, runtime, or Gate B action requires separate explicit authority."
+  ]
+}
