@@ -102,10 +102,10 @@ button:focus-visible, a:focus-visible { outline: 2px solid var(--ink-soft); outl
 }
 /* Rung 1: true refraction where SVG backdrop filters are supported (Chromium).
    The displacement map is static — animated turbulence stutters compositing. */
-@supports (backdrop-filter: url(#harborLens)) {
+@supports (backdrop-filter: url(#harborGlass)) {
   .glass {
-    backdrop-filter: url(#harborLens) blur(14px) saturate(1.2) brightness(1.05);
-    -webkit-backdrop-filter: url(#harborLens) blur(14px) saturate(1.2) brightness(1.05);
+    backdrop-filter: url(#harborGlass) blur(11px) saturate(1.25) brightness(1.04);
+    -webkit-backdrop-filter: url(#harborGlass) blur(11px) saturate(1.25) brightness(1.04);
   }
 }
 @media (prefers-reduced-transparency: reduce) {

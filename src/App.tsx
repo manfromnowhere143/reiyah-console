@@ -117,6 +117,25 @@ function Stage({ ev, onEvidence }: { ev: VerifiedEvidence; onEvidence: (e: Verif
 
   return (
     <div className="viewport stage">
+      {/* liquid-glass refraction filters — real, defined once, Chromium-only
+          (graceful blur fallback elsewhere). harborGlass splits light per
+          channel at the edge: true chromatic dispersion, Apple's technique. */}
+      <svg aria-hidden="true" width="0" height="0" style={{ position: "absolute" }}>
+        <defs>
+          <filter id="harborLens" x="-20%" y="-20%" width="140%" height="140%" colorInterpolationFilters="sRGB">
+            <feTurbulence type="fractalNoise" baseFrequency="0.012 0.014" numOctaves="2" seed="7" result="n" />
+            <feDisplacementMap in="SourceGraphic" in2="n" scale="9" xChannelSelector="R" yChannelSelector="G" />
+          </filter>
+          <filter id="harborGlass" x="-25%" y="-25%" width="150%" height="150%" colorInterpolationFilters="sRGB">
+            <feTurbulence type="fractalNoise" baseFrequency="0.009 0.011" numOctaves="2" seed="11" result="n" />
+            <feDisplacementMap in="SourceGraphic" in2="n" scale="17" xChannelSelector="R" yChannelSelector="G" result="dr" />
+            <feColorMatrix in="dr" type="matrix" values="1 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 1 0" result="r" />
+            <feDisplacementMap in="SourceGraphic" in2="n" scale="8" xChannelSelector="R" yChannelSelector="G" result="db" />
+            <feColorMatrix in="db" type="matrix" values="0 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 1 0" result="gb" />
+            <feBlend in="r" in2="gb" mode="screen" />
+          </filter>
+        </defs>
+      </svg>
       <div className="hud">
         <div style={{ display: "flex", alignItems: "center", gap: "0.55rem" }}>
           <span style={{ color: "var(--ink)" }}><Mark /></span>
