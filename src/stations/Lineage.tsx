@@ -18,8 +18,53 @@ export function Lineage({ summary }: { summary: Summary }) {
 
   const { reports, recoveries } = state.data;
 
+  /* live reasoning over the committed reports — every value derived here,
+     recomputed on each re-verify, never asserted */
+  const series = reports
+    .filter((r: any) => r.state === "observed")
+    .map((r: any) => {
+      const ctrls = [...(r.data?.required_replay_controls ?? []), ...(r.data?.implementation_controls ?? [])];
+      const total = ctrls.length;
+      const pass = ctrls.filter((c: any) => c.state === "pass").length;
+      const diag = (r.data?.diagnostics ?? []).length;
+      const version = r.meta.path.split("/").pop()?.replace("gate-a-validation-", "").replace(".json", "") ?? "?";
+      const ok = (r.data?.status ?? r.data?.result) === "pass" && diag === 0 && (total === 0 || pass === total);
+      return { version, total, pass, diag, ok };
+    });
+  const headCtrls = series.filter((s) => s.total > 0).at(-1)?.total ?? 0;
+  const allPass = series.length > 0 && series.every((s) => s.ok);
+  const totalDiag = series.reduce((a, s) => a + s.diag, 0);
+
   return (
     <Station id="ST–02" name="Lineage" sub="append-only history · nothing regenerated, nothing relabeled">
+      <div className="ipanel" style={{ marginBottom: "0.8rem" }}>
+        <div className="ilabel" style={{ display: "flex", justifyContent: "space-between", gap: "1rem" }}>
+          <span>rigor across the chain · derived live from each report</span>
+          <span style={{ color: allPass && totalDiag === 0 ? "var(--ok)" : "var(--accent)" }}>
+            {allPass && totalDiag === 0 ? "unbroken" : "attention"}
+          </span>
+        </div>
+        <div style={{ display: "grid", gridTemplateColumns: "1fr auto", gap: "1.4rem", alignItems: "center" }}>
+          <div style={{ display: "flex", gap: "0.5rem", flexWrap: "wrap", alignItems: "center" }}>
+            {series.map((s, i) => (
+              <div key={i} title={`${s.version}: ${s.ok ? "pass" : "check"} · ${s.diag} diagnostics`}
+                style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: "0.3rem" }}>
+                <span style={{
+                  width: "0.7rem", height: "0.7rem", borderRadius: "50%",
+                  background: s.ok ? "var(--ok)" : "transparent",
+                  border: s.ok ? "none" : "1px solid var(--accent)",
+                }} />
+                <span style={{ fontFamily: "var(--mono)", fontSize: "0.5rem", color: "var(--ink-faint)" }}>{s.version.replace(/^operator-decision.*/, "DI")}</span>
+              </div>
+            ))}
+          </div>
+          <div style={{ textAlign: "right" }}>
+            <div className="big">{series.length}<em>/{series.length}</em></div>
+            <div className="sub">passing releases · {totalDiag} diagnostics across the entire chain · {headCtrls} controls at the head</div>
+          </div>
+        </div>
+      </div>
+
       <div className="ipanel" style={{ marginBottom: "0.8rem" }}>
         <div className="ilabel">canonical validation reports · {reports.length}</div>
         {reports.map((r, i) =>
