@@ -43,114 +43,133 @@ export function Harbor({ ev, pulse }: { ev: VerifiedEvidence; go: (id: string) =
   useEffect(() => {
     const wrap = wrapRef.current;
     if (!wrap || artifacts.length === 0) return;
-
-    /* fresh, transferable canvases for this mount */
-    const trailCv = document.createElement("canvas");
-    trailCv.setAttribute("aria-hidden", "true");
-    const mainCv = document.createElement("canvas");
-    mainCv.setAttribute("aria-label", `Living diagram of the Reiyah engine processing ${artifacts.length} digest-verified artifacts`);
-    wrap.insertBefore(mainCv, wrap.firstChild);   // main above trail
-    wrap.insertBefore(trailCv, wrap.firstChild);  // trail behind
+    let disposed = false;
 
     const reducedMq = matchMedia("(prefers-reduced-motion: reduce)");
-    const readEnv = (): HarborEnv => ({
-      w: mainCv.clientWidth, h: mainCv.clientHeight,
+    const domMakeCanvas = (w: number, h: number) => { const c = document.createElement("canvas"); c.width = w; c.height = h; return c; };
+
+    /* every canvas this mount creates (worker path may discard one and make a
+       fresh one for the fallback) so cleanup removes them all */
+    const canvases: HTMLCanvasElement[] = [];
+    const makeVisibleCanvas = () => {
+      const c = document.createElement("canvas");
+      c.setAttribute("aria-label", `Living diagram of the Reiyah engine processing ${artifacts.length} digest-verified artifacts`);
+      wrap.insertBefore(c, wrap.firstChild);
+      canvases.push(c);
+      return c;
+    };
+    const readEnv = (cv: HTMLCanvasElement): HarborEnv => ({
+      w: cv.clientWidth, h: cv.clientHeight,
       dpr: Math.min(2, window.devicePixelRatio || 1),
       dark: document.documentElement.dataset.ground === "dark",
       reduced: reducedMq.matches,
     });
-    const rectMouse = (e: PointerEvent) => {
-      const r = mainCv.getBoundingClientRect();
+    const rectMouse = (cv: HTMLCanvasElement, e: PointerEvent) => {
+      const r = cv.getBoundingClientRect();
       return { x: e.clientX - r.left, y: e.clientY - r.top };
+    };
+
+    /* the current host owns a list of teardown callbacks; switching hosts (a GL
+       failover) tears the old one down before starting the new */
+    let teardown: Array<() => void> = [];
+    const runTeardown = () => { for (const t of teardown.splice(0)) { try { t(); } catch { /* noop */ } } };
+
+    /* ---------- main-thread 2D fallback (also the no-worker path) ---------- */
+    const startFallback = () => {
+      if (disposed) return;
+      wrap.removeAttribute("data-live"); // visible immediately: the synchronous first frame lands in the view-transition snapshot
+      wrap.dataset.render = "2d";
+      const cv = makeVisibleCanvas();
+      const engine = createHarborEngine(cv, artifacts, badTotal, domMakeCanvas);
+      engineRef.current = engine;
+      ruleSink.current = (m) => engine.setRuleMap(m);
+      const onMove = (e: PointerEvent) => { const p = rectMouse(cv, e); engine.setMouse(p.x, p.y, true); };
+      const onLeave = () => engine.setMouse(-1, -1, false);
+      cv.addEventListener("pointermove", onMove);
+      cv.addEventListener("pointerleave", onLeave);
+      let raf = 0;
+      const tick = (now: number) => {
+        const env = readEnv(cv);
+        engine.frame(now, env);
+        if (!env.reduced) raf = requestAnimationFrame(tick);
+      };
+      engine.frame(performance.now(), readEnv(cv)); // synchronous first frame
+      if (!reducedMq.matches) raf = requestAnimationFrame(tick);
+      teardown.push(() => {
+        cancelAnimationFrame(raf);
+        engineRef.current = null;
+        cv.removeEventListener("pointermove", onMove);
+        cv.removeEventListener("pointerleave", onLeave);
+        ruleSink.current = () => {};
+      });
+    };
+
+    /* ---------- worker path (OffscreenCanvas; GL or 2D inside the worker) ---------- */
+    const startWorker = () => {
+      let worker: Worker | null = null;
+      try { worker = new Worker(new URL("./harbor.worker.ts", import.meta.url), { type: "module" }); } catch { worker = null; }
+      if (!worker) { startFallback(); return; }
+      const w = worker;
+      workerRef.current = w;
+      const cv = makeVisibleCanvas();
+      wrap.dataset.live = "false"; // fade in when the worker's first frame lands
+      const off = (cv as unknown as { transferControlToOffscreen(): OffscreenCanvas }).transferControlToOffscreen();
+      w.postMessage({ type: "init", canvas: off, artifacts, badTotal, env: readEnv(cv) }, [off]);
+      ruleSink.current = (m) => w.postMessage({ type: "ruleMap", map: m });
+
+      let ready = false;
+      const failover = () => {
+        if (ready || disposed) return;
+        ready = true; clearTimeout(wd);
+        runTeardown();       // tear the worker host down
+        cv.remove();         // drop the transferred (dead) canvas
+        startFallback();     // restart on a fresh main-thread canvas
+      };
+      const wd = window.setTimeout(failover, 4500); // software renderers can stall building shaders; then fall back
+
+      w.onmessage = (e: MessageEvent) => {
+        const d = e.data as { type?: string; mode?: string; where?: string; message?: string };
+        if (d?.type === "ready") { ready = true; clearTimeout(wd); wrap.dataset.live = "true"; if (d.mode) wrap.dataset.render = d.mode; }
+        else if (d?.type === "needfallback") { failover(); }
+        else if (d?.type === "error") { console.error(`[harbor.worker:${d.where}]`, d.message); wrap.dataset.live = "true"; }
+      };
+      w.onerror = () => { failover(); };
+
+      const pushEnv = () => w.postMessage({ type: "env", env: readEnv(cv) });
+      const ro = new ResizeObserver(pushEnv); ro.observe(cv);
+      const mo = new MutationObserver(pushEnv);
+      mo.observe(document.documentElement, { attributes: true, attributeFilter: ["data-ground"] });
+      reducedMq.addEventListener("change", pushEnv);
+      const onMove = (e: PointerEvent) => { const p = rectMouse(cv, e); w.postMessage({ type: "mouse", x: p.x, y: p.y, over: true }); };
+      const onLeave = () => w.postMessage({ type: "mouse", x: -1, y: -1, over: false });
+      cv.addEventListener("pointermove", onMove);
+      cv.addEventListener("pointerleave", onLeave);
+
+      teardown.push(() => {
+        clearTimeout(wd);
+        w.postMessage({ type: "stop" });
+        w.terminate();
+        workerRef.current = null;
+        ro.disconnect(); mo.disconnect();
+        reducedMq.removeEventListener("change", pushEnv);
+        cv.removeEventListener("pointermove", onMove);
+        cv.removeEventListener("pointerleave", onLeave);
+        ruleSink.current = () => {};
+      });
     };
 
     const canWorker =
       typeof OffscreenCanvas !== "undefined" &&
-      typeof (mainCv as unknown as { transferControlToOffscreen?: unknown }).transferControlToOffscreen === "function" &&
+      typeof (document.createElement("canvas") as unknown as { transferControlToOffscreen?: unknown }).transferControlToOffscreen === "function" &&
       typeof Worker !== "undefined";
 
-    /* ---------- main-thread fallback: the same engine, byte-identical ---------- */
-    const runMainThread = () => {
-      const engine = createHarborEngine(trailCv, mainCv, artifacts, badTotal, (w, h) => {
-        const c = document.createElement("canvas"); c.width = w; c.height = h; return c;
-      });
-      engineRef.current = engine;
-      ruleSink.current = (m) => engine.setRuleMap(m);
+    if (canWorker) startWorker(); else startFallback();
 
-      const onMove = (e: PointerEvent) => { const p = rectMouse(e); engine.setMouse(p.x, p.y, true); };
-      const onLeave = () => engine.setMouse(-1, -1, false);
-      mainCv.addEventListener("pointermove", onMove);
-      mainCv.addEventListener("pointerleave", onLeave);
-
-      let raf = 0;
-      const tick = (now: number) => {
-        const env = readEnv();
-        engine.frame(now, env);
-        if (!env.reduced) raf = requestAnimationFrame(tick);
-      };
-      engine.frame(performance.now(), readEnv()); // synchronous first frame -> no pop-in through the view transition
-      if (!reducedMq.matches) raf = requestAnimationFrame(tick);
-
-      return () => {
-        cancelAnimationFrame(raf);
-        engineRef.current = null;
-        mainCv.removeEventListener("pointermove", onMove);
-        mainCv.removeEventListener("pointerleave", onLeave);
-        ruleSink.current = () => {};
-        trailCv.remove(); mainCv.remove();
-      };
+    return () => {
+      disposed = true;
+      runTeardown();
+      for (const c of canvases) c.remove();
     };
-
-    let cleanup: () => void;
-    if (canWorker) {
-      let worker: Worker | null = null;
-      try {
-        worker = new Worker(new URL("./harbor.worker.ts", import.meta.url), { type: "module" });
-      } catch {
-        worker = null;
-      }
-      if (!worker) {
-        cleanup = runMainThread();
-      } else {
-        const w = worker;
-        workerRef.current = w;
-        wrap.dataset.live = "false"; // fade the engine in when the worker's first frame lands
-        const offTrail = (trailCv as unknown as { transferControlToOffscreen(): OffscreenCanvas }).transferControlToOffscreen();
-        const offMain = (mainCv as unknown as { transferControlToOffscreen(): OffscreenCanvas }).transferControlToOffscreen();
-        w.postMessage(
-          { type: "init", trail: offTrail, main: offMain, artifacts, badTotal, env: readEnv() },
-          [offTrail, offMain],
-        );
-        ruleSink.current = (m) => w.postMessage({ type: "ruleMap", map: m });
-        w.onmessage = (e: MessageEvent) => { if ((e.data as { type?: string })?.type === "ready") wrap.dataset.live = "true"; };
-
-        const pushEnv = () => w.postMessage({ type: "env", env: readEnv() });
-        const ro = new ResizeObserver(pushEnv); ro.observe(mainCv);
-        const mo = new MutationObserver(pushEnv);
-        mo.observe(document.documentElement, { attributes: true, attributeFilter: ["data-ground"] });
-        reducedMq.addEventListener("change", pushEnv);
-        const onMove = (e: PointerEvent) => { const p = rectMouse(e); w.postMessage({ type: "mouse", x: p.x, y: p.y, over: true }); };
-        const onLeave = () => w.postMessage({ type: "mouse", x: -1, y: -1, over: false });
-        mainCv.addEventListener("pointermove", onMove);
-        mainCv.addEventListener("pointerleave", onLeave);
-
-        cleanup = () => {
-          w.postMessage({ type: "stop" });
-          w.terminate();
-          workerRef.current = null;
-          ro.disconnect(); mo.disconnect();
-          reducedMq.removeEventListener("change", pushEnv);
-          mainCv.removeEventListener("pointermove", onMove);
-          mainCv.removeEventListener("pointerleave", onLeave);
-          ruleSink.current = () => {};
-          trailCv.remove(); mainCv.remove();
-        };
-      }
-    } else {
-      cleanup = runMainThread();
-    }
-
-    return cleanup;
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [artifacts]);
 
