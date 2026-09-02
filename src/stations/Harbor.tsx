@@ -197,8 +197,17 @@ export function Harbor({ ev, go, pulse }: { ev: VerifiedEvidence; go: (id: strin
         }
         if (Math.abs(p.t - tGate) < 0.012 && !p.bad) p.stamp = 1;
         p.stamp = Math.max(0, p.stamp - dt * 2.2);
-        tctx.fillStyle = p.stamp > 0 ? `rgba(${OK},0.95)` : `rgba(${INK},${p.bad ? 0.4 : 0.88})`;
-        tctx.beginPath(); tctx.arc(x, y, p.bad ? 2.3 : 3, 0, TAU); tctx.fill();
+        const rgb = p.stamp > 0 ? OK : p.bad ? INK : INK;
+        const coreR = p.bad ? 2.2 : 3;
+        /* comet: additive halo on obsidian, then the bright core */
+        if (dark) {
+          tctx.globalCompositeOperation = "lighter";
+          tctx.fillStyle = `rgba(${p.stamp > 0 ? OK : p.bad ? "120,120,124" : "200,205,212"},${p.bad ? 0.1 : 0.22})`;
+          tctx.beginPath(); tctx.arc(x, y, coreR * 3.2, 0, TAU); tctx.fill();
+          tctx.globalCompositeOperation = "source-over";
+        }
+        tctx.fillStyle = `rgba(${rgb},${p.stamp > 0 ? 0.98 : p.bad ? 0.42 : 0.9})`;
+        tctx.beginPath(); tctx.arc(x, y, coreR, 0, TAU); tctx.fill();
         if (!leading || p.t > leading.t) leading = p;
         if (mouse.over) {
           const d = Math.hypot(mouse.x - x, mouse.y - y);
@@ -219,9 +228,32 @@ export function Harbor({ ev, go, pulse }: { ev: VerifiedEvidence; go: (id: strin
 
       /* ============ CRISP LAYER ============ */
       mctx.clearRect(0, 0, w, h);
+
+      /* soft radial glow — cheap bloom, depth without spectacle */
+      const glow = (gx: number, gy: number, gr: number, rgb: string, a: number) => {
+        const g = mctx.createRadialGradient(gx, gy, 0, gx, gy, gr);
+        g.addColorStop(0, `rgba(${rgb},${a})`);
+        g.addColorStop(1, `rgba(${rgb},0)`);
+        mctx.fillStyle = g;
+        mctx.beginPath(); mctx.arc(gx, gy, gr, 0, TAU); mctx.fill();
+      };
+
+      /* ATMOSPHERE: ambient light pools behind the two bright nodes, so the
+         chamber has depth. On paper these become soft ink shadows. */
+      const breath = reduced ? 1 : 0.85 + 0.15 * Math.sin(now / 1400);
+      if (dark) {
+        glow(eyeP.x, eyeP.y, Math.min(w, h) * 0.32, INK, 0.05 * breath);
+        glow(eyeP.x, eyeP.y, Math.min(w, h) * 0.15, RED, 0.05 * breath);
+        glow(gateP.x, gateP.y, Math.min(w, h) * 0.26, INK, 0.045);
+      } else {
+        glow(eyeP.x, eyeP.y, Math.min(w, h) * 0.3, INK, 0.03 * breath);
+        glow(gateP.x, gateP.y, Math.min(w, h) * 0.24, INK, 0.028);
+      }
+
       if (ghost) mctx.drawImage(ghost, 0, 0, w, h);
 
-      mctx.strokeStyle = `rgba(${INK},0.16)`;
+      /* the rail: a luminous cable with a faint under-glow */
+      mctx.strokeStyle = `rgba(${INK},${dark ? 0.22 : 0.16})`;
       mctx.lineWidth = 1;
       const r0 = railPt(0), r1 = railPt(1);
       mctx.beginPath();
@@ -291,8 +323,11 @@ export function Harbor({ ev, go, pulse }: { ev: VerifiedEvidence; go: (id: strin
       mctx.beginPath();
       mctx.arc(0, 0, eyeR, -TAU / 8 + (25 * Math.PI) / 180, -TAU / 8 - (25 * Math.PI) / 180 + TAU);
       mctx.stroke();
-      mctx.fillStyle = `rgba(${RED},0.95)`;
-      mctx.beginPath(); mctx.arc(pupil.x, pupil.y, eyeR * 0.3 * (surge ? 1.25 : 1), 0, TAU); mctx.fill();
+      /* the pupil, with a living bloom */
+      const pr = eyeR * 0.3 * (surge ? 1.25 : 1);
+      glow(pupil.x, pupil.y, pr * (surge ? 5 : 3.4), RED, surge ? 0.5 : 0.34);
+      mctx.fillStyle = `rgba(${RED},0.97)`;
+      mctx.beginPath(); mctx.arc(pupil.x, pupil.y, pr, 0, TAU); mctx.fill();
       mctx.restore();
       mctx.fillStyle = `rgba(${INK},${TA})`;
       if (!portrait) {
@@ -329,11 +364,13 @@ export function Harbor({ ev, go, pulse }: { ev: VerifiedEvidence; go: (id: strin
         mctx.fillText("SIX KINDS, NEVER MERGED", midChain.x, midChain.y + 58);
       }
 
-      /* the gate */
+      /* the gate — luminous bars with a scanning beam that sweeps the aperture */
       const closing = sparks.length > 0 ? 6 : 0;
       const gh = portrait ? Math.min(44, w * 0.12) : 54;
+      const scan = reduced ? 0.5 : (Math.sin(now / 900) * 0.5 + 0.5);
+      mctx.save();
       mctx.strokeStyle = `rgba(${INK},0.9)`;
-      mctx.lineWidth = 2;
+      mctx.lineWidth = 2; mctx.lineCap = "round";
       mctx.beginPath();
       if (!portrait) {
         mctx.moveTo(gateP.x, gateP.y - gh); mctx.lineTo(gateP.x, gateP.y - 10 + closing);
@@ -343,6 +380,14 @@ export function Harbor({ ev, go, pulse }: { ev: VerifiedEvidence; go: (id: strin
         mctx.moveTo(gateP.x + 10 - closing, gateP.y); mctx.lineTo(gateP.x + gh, gateP.y);
       }
       mctx.stroke();
+      /* the beam: a bright mote sweeping the gap, checking each passer */
+      if (dark) mctx.globalCompositeOperation = "lighter";
+      const bx = portrait ? gateP.x - (gh - 12) + scan * (gh - 12) * 2 : gateP.x;
+      const by = portrait ? gateP.y : gateP.y - (gh - 12) + scan * (gh - 12) * 2;
+      glow(bx, by, 10, OK, dark ? 0.55 : 0.32);
+      mctx.fillStyle = `rgba(${OK},0.85)`;
+      mctx.beginPath(); mctx.arc(bx, by, 1.6, 0, TAU); mctx.fill();
+      mctx.restore();
       mctx.fillStyle = `rgba(${INK},${TA})`;
       if (!portrait) {
         mctx.textAlign = "center";
@@ -421,6 +466,13 @@ export function Harbor({ ev, go, pulse }: { ev: VerifiedEvidence; go: (id: strin
         mctx.fillText(tip, tx + 8, ty + 13);
         mctx.textAlign = "center";
       }
+
+      /* cinematic vignette — frames the chamber, darkens the edges last */
+      const vig = mctx.createRadialGradient(w / 2, h * 0.46, Math.min(w, h) * 0.28, w / 2, h * 0.5, Math.max(w, h) * 0.72);
+      vig.addColorStop(0, "rgba(0,0,0,0)");
+      vig.addColorStop(1, dark ? "rgba(3,3,5,0.55)" : "rgba(210,208,198,0.4)");
+      mctx.fillStyle = vig;
+      mctx.fillRect(0, 0, w, h);
 
       if (!reduced) raf = requestAnimationFrame(draw);
     };
