@@ -218,6 +218,47 @@
       </div>
     </div>
     <div id="root"></div>
+    <script>
+      /* Boot watchdog — the instrument must never freeze on its splash. The
+         module bundle can fail to execute when a stale service worker pairs a
+         cached page with asset hashes a later deploy has purged (the classic
+         installed-PWA staleness). This classic script runs even when the
+         module bundle does not. If React has not taken over the splash within
+         the budget, recover exactly once: drop every service worker and cache,
+         then reload clean from the network. A sessionStorage guard makes a
+         reload loop impossible; if recovery already ran and it is still stuck,
+         it shows an honest manual hint instead of looping. */
+      (function () {
+        setTimeout(function () {
+          if (!document.getElementById("boot")) return; /* React took over — healthy */
+          var s = document.querySelector("#boot .ap-status");
+          try {
+            if (sessionStorage.getItem("harbor-recovering")) {
+              if (s) s.textContent = "still loading — close and reopen the app";
+              return;
+            }
+            sessionStorage.setItem("harbor-recovering", "1");
+          } catch (e) {}
+          if (s) s.textContent = "refreshing instrument";
+          var jobs = [];
+          try {
+            if (navigator.serviceWorker && navigator.serviceWorker.getRegistrations)
+              jobs.push(navigator.serviceWorker.getRegistrations().then(function (rs) {
+                return Promise.all(rs.map(function (r) { return r.unregister(); }));
+              }));
+          } catch (e) {}
+          try {
+            if (window.caches && caches.keys)
+              jobs.push(caches.keys().then(function (ks) {
+                return Promise.all(ks.map(function (k) { return caches.delete(k); }));
+              }));
+          } catch (e) {}
+          Promise.all(jobs).catch(function () {}).then(function () {
+            location.reload();
+          });
+        }, 6500);
+      })();
+    </script>
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>
