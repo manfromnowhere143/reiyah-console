@@ -44,7 +44,11 @@ function Stage({ ev, onEvidence }: { ev: VerifiedEvidence; onEvidence: (e: Verif
   const sealed = getSealedInfo();
   const reverifying = useRef(false);
 
-  /* the morph: View Transition on panel-content swap */
+  /* the forge: the screen forms out of the tab you pressed. The destination's
+     dock button carries a shared view-transition-name into the old snapshot,
+     then the new panel content adopts it — so the button's geometry morphs
+     (expands) into the presented content. Falls back to a plain commit under
+     reduced motion or without the View Transitions API. */
   const go = (id: string, push = true) => {
     if (id === active) return;
     const commit = () => {
@@ -53,8 +57,20 @@ function Stage({ ev, onEvidence }: { ev: VerifiedEvidence; onEvidence: (e: Verif
     };
     const reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
     const svt = (document as any).startViewTransition?.bind(document);
-    if (!reduced && svt) svt(commit);
-    else commit();
+    if (reduced || !svt) { commit(); return; }
+    const card = document.querySelector<HTMLElement>(`.dock [data-station="${id}"]`);
+    if (!card) { svt(commit); return; }
+    card.style.viewTransitionName = "forge";
+    const vt = svt(() => {
+      card.style.viewTransitionName = "";
+      commit();
+      const content = document.querySelector<HTMLElement>(".panelcontent");
+      if (content) content.style.viewTransitionName = "forge";
+    });
+    vt.finished?.finally?.(() => {
+      const content = document.querySelector<HTMLElement>(".panelcontent");
+      if (content) content.style.viewTransitionName = "";
+    });
   };
 
   useEffect(() => {
@@ -168,6 +184,7 @@ function Stage({ ev, onEvidence }: { ev: VerifiedEvidence; onEvidence: (e: Verif
           <button
             key={s.id}
             className="navcard glass"
+            data-station={s.id}
             data-red={String(!!s.red)}
             data-active={String(s.id === active)}
             aria-current={s.id === active ? "page" : undefined}
