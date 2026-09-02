@@ -3,6 +3,11 @@ import { createRoot } from "react-dom/client";
 import App from "./App";
 import "./instrument.css";
 
+/* The module executed — the bundle is healthy, so the boot watchdog's
+   recovery guard is cleared. A later genuine failure can then self-heal
+   again rather than being locked out by a one-shot flag. */
+try { sessionStorage.removeItem("harbor-recovering"); } catch { /* private mode */ }
+
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
     <App />

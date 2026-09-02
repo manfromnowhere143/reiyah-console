@@ -50,13 +50,8 @@ export async function verifyEvidenceOnce(): Promise<VerifiedEvidence> {
    fabricated timer. Each phase names the true work underway. */
 const PHASES = ["establishing identity", "recomputing index digest", "confirming twin agreement", "descending into the field"] as const;
 
-interface Ident { branch: string; head: string; clean: boolean }
-
 export function ProofBoot({ onReady }: { onReady: (ev: VerifiedEvidence) => void }) {
   const [phase, setPhase] = useState(0);               // 0..4 checks passed
-  const [ident, setIdent] = useState<Ident | null>(null);
-  const [digest, setDigest] = useState<string | null>(null);
-  const [artifacts, setArtifacts] = useState<number | null>(null);
   const [blocked, setBlocked] = useState<string | null>(null);
   const [complete, setComplete] = useState(false);
   const [leaving, setLeaving] = useState(false);
@@ -90,8 +85,6 @@ export function ProofBoot({ onReady }: { onReady: (ev: VerifiedEvidence) => void
         const summary = await fetchSummary();
         if (!alive) return;
         if (summary.identity.state !== "observed") throw new Error(`identity_blocked: ${summary.identity.reason}`);
-        const idn = summary.identity;
-        setIdent({ branch: idn.branch || "detached", head: idn.head.slice(0, 8), clean: idn.worktree_clean });
         setPhase(1);
 
         /* 2 — index digest, recomputed here */
@@ -102,7 +95,6 @@ export function ProofBoot({ onReady }: { onReady: (ev: VerifiedEvidence) => void
         const indexOk = clientSha === sidecarSha && clientSha === rawIndex.serverSha256;
         if (!alive) return;
         if (!indexOk) throw new Error("index_digest_mismatch");
-        setDigest(clientSha.replace("sha256:", "").slice(0, 16));
         const index = JSON.parse(new TextDecoder().decode(rawIndex.bytes));
         setPhase(2);
 
@@ -120,7 +112,6 @@ export function ProofBoot({ onReady }: { onReady: (ev: VerifiedEvidence) => void
 
         /* 4 — descent */
         result.current = { summary, index, indexSha256: clientSha, sidecarLine, report, reportMeta };
-        setArtifacts(Number(index?.artifacts?.length ?? 0));
         setPhase(4);
         setComplete(true);
         setTimeout(() => { if (alive) depart(); }, 900);
@@ -185,24 +176,6 @@ export function ProofBoot({ onReady }: { onReady: (ev: VerifiedEvidence) => void
 
           <div className="apx-track"><span className="apx-fill" style={{ transform: `scaleX(${p})` }} /></div>
           <div className="apx-status" data-complete={String(complete)}>{status}</div>
-
-          <div className="apx-proof">
-            {ident
-              ? <>reiyah · {ident.branch} · <span className="hl">{ident.head}</span> · worktree {ident.clean ? "clean" : "dirty"}</>
-              : <span className="dim">reading identity…</span>}
-          </div>
-          <div className="apx-proof">
-            {digest
-              ? <><span className="ok">✓</span> sha256:<span className="hl">{digest}</span>… recomputed here · equals committed sidecar</>
-              : <span className="dim">recomputing index digest in this browser…</span>}
-          </div>
-          <div className="apx-proof">
-            {artifacts != null
-              ? <><span className="ok">●</span> {artifacts.toLocaleString()} artifacts verified into the field</>
-              : <span className="dim">&nbsp;</span>}
-          </div>
-
-          <div className="apx-motto">A blocked result is preferable to a plausible default.</div>
         </div>
       </div>
     </div>
