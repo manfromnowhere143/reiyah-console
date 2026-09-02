@@ -2,7 +2,7 @@
    The EpistemicValue is the atomic component of the whole instrument —
    six states, never merged, never coerced to zero or false. */
 import { useEffect, useState } from "react";
-import { prove, type Proof, type LiveState } from "../lib/evidence";
+import { prove, proveInclusion, type Proof, type LiveState, type InclusionProof } from "../lib/evidence";
 
 /* ---------- The mark: the aware iris ---------- */
 export function Mark({ size = 15 }: { size?: number }) {
@@ -49,13 +49,19 @@ export function Ev({ label, ev, unit }: { label: string; ev: EvLike | undefined;
 export function Digest({ id, sha, path }: { id: string; sha: string; path: string }) {
   const [open, setOpen] = useState(false);
   const [proof, setProof] = useState<Proof | { state: "blocked"; reason: string } | null>(null);
+  const [incl, setIncl] = useState<InclusionProof | null>(null);
   const short = sha.replace("sha256:", "").slice(0, 8);
 
   const run = async () => {
     setOpen(true);
     setProof(null);
+    setIncl(null);
     try {
-      setProof(await prove(id));
+      const pr = await prove(id);
+      setProof(pr);
+      if ("equal" in pr && pr.equal) {
+        proveInclusion(id, pr.clientSha256).then((i) => i && setIncl(i)).catch(() => {});
+      }
     } catch (e) {
       setProof({ state: "blocked", reason: String((e as Error)?.message ?? e) });
     }
@@ -84,6 +90,24 @@ export function Digest({ id, sha, path }: { id: string; sha: string; path: strin
                 <div className="proverow"><span className="k">server</span><span className="v">{p.serverSha256}</span></div>
                 <div className="proverow"><span className="k">this browser</span><span className={`v ${p.equal ? "eq" : "neq"}`}>{p.clientSha256}</span></div>
                 <div className="proverow"><span className="k">verdict</span><span className={`v ${p.equal ? "eq" : "neq"}`}>{p.equal ? "BYTE-IDENTICAL" : "MISMATCH — do not trust this surface"}</span></div>
+                {p.equal && (
+                  <>
+                    <div className="proverow" style={{ borderTop: "1px solid var(--line)", paddingTop: "0.7rem", marginTop: "0.3rem" }}>
+                      <span className="k">seal root</span>
+                      <span className="v">{incl ? `sha256:${incl.rootHex.slice(0, 40)}…` : "folding the sealed set…"}</span>
+                    </div>
+                    <div className="proverow">
+                      <span className="k">inclusion</span>
+                      <span className={`v ${incl ? (incl.verified ? "eq" : "neq") : "compute"}`}>
+                        {incl
+                          ? incl.verified
+                            ? `PROVEN · this record folds into the root over ${incl.leafCount} surfaces in ${incl.steps} hops`
+                            : "NOT INCLUDED — this record is not part of the sealed root"
+                          : "computing the audit path…"}
+                      </span>
+                    </div>
+                  </>
+                )}
               </>
             ) : blocked ? (
               <>

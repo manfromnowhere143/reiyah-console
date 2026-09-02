@@ -108,15 +108,21 @@ export async function fetchSurfaceByPath<T = unknown>(rel: string): Promise<Surf
   return fetchSurface<T>(`p/${encodeURIComponent(rel)}` as string);
 }
 
+let lastSurfaces: SurfaceRow[] = [];
+export function getSurfaces(): SurfaceRow[] { return lastSurfaces; }
+
 export async function fetchSummary(): Promise<Summary> {
   try {
     const r = await fetch("/api/summary");
     if (r.ok) {
       mode = "live";
-      return await r.json();
+      const s: Summary = await r.json();
+      lastSurfaces = s.surfaces ?? [];
+      return s;
     }
   } catch { /* fall through to sealed */ }
   if (await loadSealed()) {
+    lastSurfaces = sealedManifest!.surfaces;
     return {
       instrument: "reiyah-console (sealed snapshot)",
       generatedAt: sealedManifest!.sealedAt,
@@ -125,6 +131,39 @@ export async function fetchSummary(): Promise<Summary> {
     };
   }
   throw new Error("no_evidence_source: live api unreachable and no sealed snapshot present");
+}
+
+/* Merkle inclusion over the sealed surface set — built once, cached. */
+let merkleCache: { key: string; tree: import("./merkle").MerkleTree } | null = null;
+export async function getMerkle(): Promise<import("./merkle").MerkleTree | null> {
+  const leaves = lastSurfaces
+    .filter((s) => s.state === "observed" && s.sha256)
+    .map((s) => ({ id: s.id, sha256: s.sha256! }));
+  if (leaves.length === 0) return null;
+  const key = leaves.map((l) => l.id + l.sha256).join("|");
+  if (merkleCache && merkleCache.key === key) return merkleCache.tree;
+  const { buildMerkle } = await import("./merkle");
+  const tree = await buildMerkle(leaves);
+  merkleCache = { key, tree };
+  return tree;
+}
+
+export interface InclusionProof {
+  rootHex: string;
+  steps: number;
+  leafCount: number;
+  verified: boolean;
+}
+
+/** Prove a surface is included in the sealed whole — recomputed in-browser. */
+export async function proveInclusion(id: string, leafSha256: string): Promise<InclusionProof | null> {
+  const tree = await getMerkle();
+  if (!tree) return null;
+  const { inclusionPath, verifyInclusion } = await import("./merkle");
+  const path = inclusionPath(tree, id);
+  if (!path) return null;
+  const verified = await verifyInclusion(leafSha256, path, tree.rootHex);
+  return { rootHex: tree.rootHex, steps: path.length, leafCount: tree.leafCount, verified };
 }
 
 export interface RawResult {
