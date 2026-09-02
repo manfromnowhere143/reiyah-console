@@ -1,33 +1,48 @@
-/* Harbor Instrument service worker.
-   Shell: cache-first. Evidence (/api): network-first with honest fallback —
-   a cached surface is served only with its stored digest so the client can
-   still verify; when nothing is cached the client renders a blocked state.
-   The worker never fabricates a response body. */
-const SHELL = "harbor-shell-v2";
+/* Harbor Instrument service worker — v__BUILD__
+   Strategy (the honest PWA pattern):
+   - navigations: NETWORK-FIRST, cache fallback — a new deploy is visible on
+     the very next load; offline still boots the last verified shell.
+   - hashed /assets/: cache-first (immutable by name).
+   - /api: network-first with cached fallback carrying its stored digests;
+     nothing is ever fabricated (offline+uncached => explicit blocked body).
+   - activate: old caches purged; skipWaiting + clients.claim so the new
+     worker rules immediately. The __BUILD__ stamp changes every build. */
+const BUILD = "__BUILD__";
+const SHELL = `harbor-shell-${BUILD}`;
+const ASSETS = "harbor-assets-v1"; // hashed filenames: safe forever
 const EVIDENCE = "harbor-evidence-v1";
+const KEEP = new Set([SHELL, ASSETS, EVIDENCE]);
 
 self.addEventListener("install", (e) => {
   e.waitUntil(caches.open(SHELL).then((c) => c.addAll(["/"])).then(() => self.skipWaiting()));
 });
 
 self.addEventListener("activate", (e) => {
-  e.waitUntil(self.clients.claim());
+  e.waitUntil(
+    caches.keys()
+      .then((keys) => Promise.all(keys.filter((k) => !KEEP.has(k)).map((k) => caches.delete(k))))
+      .then(() => self.clients.claim())
+  );
 });
 
 self.addEventListener("fetch", (e) => {
-  const url = new URL(e.request.url);
-  if (e.request.method !== "GET") return;
-  if (url.pathname.startsWith("/api/events")) return; // SSE is never cached
+  const req = e.request;
+  if (req.method !== "GET") return;
+  const url = new URL(req.url);
+  if (url.origin !== location.origin) return;
+  if (url.pathname.startsWith("/api/events")) return; // SSE never cached
+
+  /* evidence: network-first, honest cached fallback */
   if (url.pathname.startsWith("/api/")) {
     e.respondWith(
-      fetch(e.request)
+      fetch(req)
         .then((res) => {
           const copy = res.clone();
-          caches.open(EVIDENCE).then((c) => c.put(e.request, copy));
+          caches.open(EVIDENCE).then((c) => c.put(req, copy));
           return res;
         })
         .catch(async () => {
-          const hit = await caches.match(e.request);
+          const hit = await caches.match(req);
           if (hit) return hit;
           return new Response(
             JSON.stringify({ state: "blocked", reason: "offline_and_uncached" }),
@@ -37,15 +52,39 @@ self.addEventListener("fetch", (e) => {
     );
     return;
   }
+
+  /* hashed assets: cache-first, immutable */
+  if (url.pathname.startsWith("/assets/")) {
+    e.respondWith(
+      caches.match(req).then(
+        (hit) =>
+          hit ||
+          fetch(req).then((res) => {
+            const copy = res.clone();
+            caches.open(ASSETS).then((c) => c.put(req, copy));
+            return res;
+          })
+      )
+    );
+    return;
+  }
+
+  /* navigations + everything else: network-first so deploys land instantly */
   e.respondWith(
-    caches.match(e.request).then(
-      (hit) =>
-        hit ||
-        fetch(e.request).then((res) => {
-          const copy = res.clone();
-          caches.open(SHELL).then((c) => c.put(e.request, copy));
-          return res;
-        })
-    )
+    fetch(req)
+      .then((res) => {
+        const copy = res.clone();
+        caches.open(SHELL).then((c) => c.put(req, copy));
+        return res;
+      })
+      .catch(async () => {
+        const hit = await caches.match(req);
+        if (hit) return hit;
+        if (req.mode === "navigate") {
+          const home = await caches.match("/");
+          if (home) return home;
+        }
+        return Response.error();
+      })
   );
 });
