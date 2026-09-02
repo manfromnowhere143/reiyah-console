@@ -202,7 +202,8 @@ export function createHarborGL(gl: GL): HarborGL | null {
       gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, true);
       gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, scene);
 
-      const ground: [number, number, number] = opts.dark ? [10 / 255, 11 / 255, 14 / 255] : [236 / 255, 234 / 255, 226 / 255];
+      // the page void, so Harbor's field blends seamlessly into the screen ground
+      const ground: [number, number, number] = opts.dark ? [5 / 255, 5 / 255, 7 / 255] : [244 / 255, 243 / 255, 238 / 255];
 
       // 1 — base: scene over ground -> base FBO (full res)
       gl.useProgram(progBase);

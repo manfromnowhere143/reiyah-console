@@ -180,18 +180,14 @@ export function TruthPill({ lastEventAt, connected, sealed, violated }: {
 }
 
 /* ---------- Station shell ---------- */
+/* No page title: the station's identity lives on the dock tab you pressed, so
+   the content floats on the screen without a redundant header. `id`/`name`/`sub`
+   are kept in the signature (callers still pass them) for accessibility. */
 export function Station({
-  id, name, sub, children,
+  id, name, children,
 }: { id: string; name: string; sub?: string; children: React.ReactNode }) {
   return (
-    <>
-      <div className="sthead">
-        <span className="stid">{id}</span>
-        <h2>{name}</h2>
-        {sub && <span className="stsub">{sub}</span>}
-      </div>
-      <div className="stbody">{children}</div>
-    </>
+    <section className="stbody" aria-label={`${id} ${name}`}>{children}</section>
   );
 }
 
