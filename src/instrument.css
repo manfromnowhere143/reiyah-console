@@ -744,6 +744,74 @@ button:focus-visible, a:focus-visible { outline: 2px solid var(--ink-soft); outl
 .blocked h2 { font-family: var(--display); text-transform: uppercase; letter-spacing: 0.03em; margin: 0 0 0.6rem; }
 .blocked p { color: var(--ink-soft); font-size: 0.88rem; max-width: 32rem; }
 
+/* ---- The Aperture: minimal verification boot (continues the inline splash) ----
+   Same geometry as the inline splash in index.html: the eye is pinned to the
+   viewport centre, all text sits a fixed 66px below it. The handoff is seamless
+   because nothing moves. */
+.apx { position: absolute; inset: 0; animation: apxIn 0.5s var(--ease) both; }
+@keyframes apxIn { from { opacity: 0; } to { opacity: 1; } }
+.apx-core { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); }
+.apx-lens {
+  position: absolute; top: 50%; left: 50%; width: 232px; height: 232px;
+  transform: translate(-50%, -50%); border-radius: 50%; pointer-events: none;
+  background:
+    radial-gradient(58% 58% at 50% 38%, var(--sheen), transparent 70%),
+    radial-gradient(closest-side, color-mix(in srgb, var(--accent) 5%, transparent), transparent 78%);
+  border: 1px solid var(--line);
+  box-shadow: inset 0 1px 0 var(--sheen), 0 30px 80px var(--shadow); opacity: 0.5;
+  transition: opacity 0.7s var(--ease);
+}
+.apx-iris { position: relative; width: 132px; height: 132px; display: grid; place-items: center; }
+.apx-arc { position: absolute; inset: 0; }
+.apx-eye { position: relative; color: var(--ink); overflow: visible; }
+.apx-ring { transform-box: fill-box; transform-origin: center; animation: apxSpin 16s linear infinite; }
+@keyframes apxSpin { to { transform: rotate(360deg); } }
+.apx-below {
+  position: absolute; top: 50%; left: 50%; transform: translateX(-50%);
+  margin-top: 66px; display: flex; flex-direction: column; align-items: center;
+  text-align: center; width: min(92vw, 680px);
+}
+.apx-word {
+  font-family: var(--display); font-weight: 700; font-size: 30px;
+  letter-spacing: 0.34em; text-indent: 0.34em; text-transform: uppercase; line-height: 1; color: var(--ink);
+  white-space: nowrap;
+}
+.apx-sub {
+  margin-top: 9px; font-family: var(--mono); font-size: 9.5px; letter-spacing: 0.32em;
+  text-indent: 0.32em; text-transform: uppercase; color: var(--ink-faint); white-space: nowrap;
+}
+.apx-track {
+  position: relative; width: 168px; height: 1px; margin-top: 26px; background: var(--line); overflow: hidden;
+}
+.apx-fill {
+  position: absolute; inset: 0; transform-origin: left center;
+  background: linear-gradient(90deg, color-mix(in srgb, var(--accent) 40%, transparent), var(--accent));
+  transition: transform 0.7s var(--ease);
+}
+.apx-status {
+  margin-top: 13px; font-family: var(--mono); font-size: 9.5px; letter-spacing: 0.2em;
+  text-transform: uppercase; color: var(--ink-ghost); transition: color 0.5s var(--ease); white-space: nowrap;
+}
+.apx-status[data-complete="true"] { color: var(--ok); }
+.apx-proof {
+  margin-top: 8px; font-family: var(--mono); font-size: 9.5px; letter-spacing: 0.06em;
+  color: var(--ink-faint); text-align: center; min-height: 1.1em; white-space: nowrap;
+}
+.apx-proof .hl { color: var(--ink); }
+.apx-proof .ok { color: var(--ok); margin-right: 0.35em; }
+.apx-proof .dim { color: var(--ink-ghost); opacity: 0.7; }
+.apx-motto {
+  margin-top: 30px; font-family: var(--mono); font-size: 9px; letter-spacing: 0.14em;
+  text-transform: uppercase; color: var(--ink-ghost); text-align: center; max-width: 26rem;
+}
+.apx[data-complete="true"] .apx-lens { opacity: 0.72; }
+@media (prefers-reduced-motion: reduce) { .apx-ring { animation: none; } }
+@media (max-width: 520px) {
+  .apx-word { font-size: 26px; }
+  .apx-status { white-space: normal; }
+  .apx-proof { font-size: 8.5px; letter-spacing: 0.02em; white-space: normal; word-break: break-word; line-height: 1.55; }
+}
+
 /* footer strip inside cells */
 .nonclaim {
   flex: none; margin-top: 0.8rem;
