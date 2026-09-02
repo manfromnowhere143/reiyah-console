@@ -6,7 +6,7 @@ import puppeteer from "puppeteer-core";
 const OUT = process.argv[2] ?? "shots";
 const MOBILE = process.argv.includes("--mobile");
 const DARK = process.argv.includes("--dark");
-const BASE = "http://localhost:4600";
+const BASE = process.env.SHOT_BASE ?? "http://localhost:4600";
 const CHROME = "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome";
 const STATIONS = ["harbor", "ledger", "lineage", "encounter", "controls", "estimands", "adversaries", "chair", "frontier", "system"];
 
@@ -19,7 +19,7 @@ const browser = await puppeteer.launch({
   args: ["--hide-scrollbars", "--force-device-scale-factor=1"],
 });
 const page = await browser.newPage();
-await page.setViewport(MOBILE ? { width: 390, height: 844, isMobile: true, hasTouch: true } : { width: 1440, height: 900 });
+await page.setViewport(MOBILE ? { width: 430, height: 932, isMobile: true, hasTouch: true } : { width: 1440, height: 900 });
 if (DARK) await page.evaluateOnNewDocument(() => { try { localStorage.setItem("harbor-ground", "dark"); } catch {} });
 
 /* boot once */

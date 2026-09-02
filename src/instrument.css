@@ -504,10 +504,27 @@ button:focus-visible, a:focus-visible { outline: 2px solid var(--ink-soft); outl
   .miris .mrays { animation: raysBreathe 7s ease-in-out infinite; }
   @keyframes raysBreathe { 0%, 100% { opacity: 0.16; } 50% { opacity: 0.3; } }
 }
-@media (max-width: 900px) {
-  .mandala { grid-template-columns: 1fr 1fr; grid-template-rows: none;
-    grid-template-areas: "n n" "c c" "nw ne" "w e" "sw se" "s s"; overflow-y: auto; }
-  .miris svg { max-height: 11rem; }
+@media (max-width: 760px) {
+  /* phone: one flowing column — the iris a hero band, cards full-width */
+  .mandala {
+    display: flex; flex-direction: column; gap: 0.7rem;
+    height: auto; min-height: 100%; overflow-y: auto; padding-bottom: 0.5rem;
+    grid-template: none;
+  }
+  .mcell { display: block; }
+  /* narrative order down the phone: law, eye, world, kinds, gate, sealed,
+     human, corrections, then the honest dark */
+  .m-n { order: 0; } .m-c { order: 1; } .m-w { order: 2; } .m-nw { order: 3; }
+  .m-sw { order: 4; } .m-e { order: 5; } .m-s { order: 6; } .m-se { order: 7; }
+  .m-ne { order: 8; }
+  .miris { min-height: 8.5rem; padding: 0.4rem 0; }
+  .miris svg { max-height: 9rem; }
+  .mmotto { max-width: 100%; padding: 0 0.5rem; }
+  .mcard { padding: 1rem 1.1rem; }
+  .mbig { font-size: 2rem; }
+  .mname { font-size: 0.66rem; }
+  .mline { font-size: 0.82rem; }
+  .mline.dim { font-size: 0.74rem; }
 }
 
 /* the correction saga */
