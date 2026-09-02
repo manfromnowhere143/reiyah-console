@@ -126,17 +126,17 @@ export function Encounter() {
       const objY = horizon + (h * 0.42) * smooth(0.06, 0.5, p);
       const objScale = 0.5 + smooth(0.06, 0.9, p) * 0.9;
 
-      ctx.strokeStyle = `rgba(${INK},0.12)`;
-      ctx.lineWidth = 1;
+      ctx.strokeStyle = `rgba(${INK},0.34)`;
+      ctx.lineWidth = 1.3;
       ctx.beginPath();
       ctx.moveTo(cx - 26, horizon); ctx.lineTo(cx - w * 0.42, h);
       ctx.moveTo(cx + 26, horizon); ctx.lineTo(cx + w * 0.42, h);
       ctx.moveTo(0, horizon); ctx.lineTo(w, horizon);
       ctx.stroke();
-      ctx.strokeStyle = `rgba(${INK},0.09)`;
       for (let i = 1; i <= 6; i++) {
         const f = i / 7, y = horizon + (h - horizon) * f * f;
-        ctx.lineWidth = 1 + f * 2.5;
+        ctx.strokeStyle = `rgba(${INK},${(0.2 + f * 0.35).toFixed(2)})`;
+        ctx.lineWidth = 1.2 + f * 2.5;
         ctx.beginPath(); ctx.moveTo(cx, y); ctx.lineTo(cx, y + (h - horizon) * 0.04 * (1 + f)); ctx.stroke();
       }
 
