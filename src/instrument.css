@@ -142,7 +142,7 @@ button:focus-visible, a:focus-visible { outline: 2px solid var(--ink-soft); outl
    toolbar animates; 100vh is the fallback for engines without dvh. */
 .viewport {
   position: fixed; top: 0; left: 0; width: 100%;
-  height: 100vh; height: 100dvh;
+  height: 100vh; height: var(--app-h, 100dvh);
   overflow: hidden; background: var(--void);
 }
 .viewport.stage {
@@ -371,7 +371,7 @@ button:focus-visible, a:focus-visible { outline: 2px solid var(--ink-soft); outl
 /* prove overlay */
 .overlay {
   position: fixed; top: 0; left: 0; width: 100%;
-  height: 100vh; height: 100dvh; z-index: 90;
+  height: 100vh; height: var(--app-h, 100dvh); z-index: 90;
   background: var(--scrim, rgba(12, 14, 18, 0.45));
   backdrop-filter: blur(2px); -webkit-backdrop-filter: blur(2px);
   display: flex; align-items: center; justify-content: center;
@@ -770,7 +770,7 @@ button:focus-visible, a:focus-visible { outline: 2px solid var(--ink-soft); outl
    ============================================================ */
 .boot {
   position: fixed; top: 0; left: 0; width: 100%;
-  height: 100vh; height: 100dvh; z-index: 100; background: var(--void);
+  height: 100vh; height: var(--app-h, 100dvh); z-index: 100; background: var(--void);
   display: flex; align-items: center; justify-content: center; padding: 1.5rem;
 }
 /* the descent: the gate lifts, the harbor rises beneath it */
