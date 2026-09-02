@@ -484,12 +484,35 @@ export function Harbor({ ev, go, pulse }: { ev: VerifiedEvidence; go: (id: strin
         mctx.textAlign = "center";
       }
 
-      /* cinematic vignette — frames the chamber, darkens the edges last */
-      const vig = mctx.createRadialGradient(w / 2, h * 0.46, Math.min(w, h) * 0.28, w / 2, h * 0.5, Math.max(w, h) * 0.72);
-      vig.addColorStop(0, "rgba(0,0,0,0)");
-      vig.addColorStop(1, dark ? "rgba(3,3,5,0.55)" : "rgba(210,208,198,0.4)");
-      mctx.fillStyle = vig;
-      mctx.fillRect(0, 0, w, h);
+      /* filmic bloom — the scene blooms into its own light (obsidian only).
+         A single self-composite: bright pixels bleed, dark stay dark. */
+      if (dark) {
+        mctx.save();
+        mctx.globalCompositeOperation = "lighter";
+        mctx.globalAlpha = 0.3;
+        mctx.filter = "blur(6px)";
+        mctx.drawImage(mainCv, 0, 0, w, h);
+        mctx.filter = "none";
+        mctx.restore();
+      }
+
+      /* chromatic-aberration vignette — a real lens fringe frames the edges */
+      const vg = (rgb: string, ox: number, a: number) => {
+        const g = mctx.createRadialGradient(w / 2 + ox, h * 0.46, Math.min(w, h) * 0.3, w / 2, h * 0.5, Math.max(w, h) * 0.72);
+        g.addColorStop(0, `rgba(${rgb},0)`);
+        g.addColorStop(1, `rgba(${rgb},${a})`);
+        mctx.fillStyle = g;
+        mctx.fillRect(0, 0, w, h);
+      };
+      if (dark) {
+        vg("150,70,95", -4, 0.09);   // warm fringe, one side
+        vg("70,95,140", 4, 0.09);    // cool fringe, the other
+        vg("3,3,5", 0, 0.52);        // the darkening, last
+      } else {
+        vg("196,120,120", -3, 0.05);
+        vg("120,140,180", 3, 0.05);
+        vg("210,208,198", 0, 0.42);
+      }
 
       if (!reduced) raf = requestAnimationFrame(draw);
     };
