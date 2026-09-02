@@ -171,6 +171,23 @@ button:focus-visible, a:focus-visible { outline: 2px solid var(--ink-soft); outl
   padding: 1.1rem 1.3rem 0.9rem;
   min-height: 0;
 }
+/* film grain — dissolves gradient banding in the blooms, adds cinema tooth */
+.grain {
+  position: absolute; inset: -8%; z-index: 3; pointer-events: none;
+  opacity: 0.05; mix-blend-mode: soft-light;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-size: 140px 140px;
+}
+:root[data-ground="dark"] .grain { opacity: 0.07; mix-blend-mode: overlay; }
+@media (prefers-reduced-motion: no-preference) {
+  .grain { animation: grainShift 0.5s steps(3) infinite; }
+  @keyframes grainShift {
+    0% { transform: translate(0, 0); }
+    33% { transform: translate(-3%, 2%); }
+    66% { transform: translate(2%, -3%); }
+    100% { transform: translate(0, 0); }
+  }
+}
 /* the morph: only the panel transitions; chrome stays welded */
 ::view-transition-old(root), ::view-transition-new(root) { animation: none; }
 ::view-transition-old(stage-panel) { animation: panelOut 0.26s var(--damped) both; }
@@ -311,9 +328,14 @@ button:focus-visible, a:focus-visible { outline: 2px solid var(--ink-soft); outl
 .digest {
   display: inline-flex; align-items: center; gap: 0.45rem;
   font-family: var(--mono); font-size: 0.6rem; letter-spacing: 0.03em;
-  color: var(--ink-faint); border: 1px solid var(--line-soft); border-radius: 6px;
-  padding: 0.25rem 0.55rem; background: var(--veil);
+  color: var(--ink-soft); border: 1px solid var(--glass-rim); border-radius: 8px;
+  padding: 0.3rem 0.6rem; background: var(--glass);
+  backdrop-filter: blur(14px) saturate(1.15); -webkit-backdrop-filter: blur(14px) saturate(1.15);
+  box-shadow: inset 0 1px 0 var(--sheen);
   transition: color 0.2s var(--ease), border-color 0.2s var(--ease);
+}
+@supports (backdrop-filter: url(#harborLens)) {
+  .digest { backdrop-filter: url(#harborLens) blur(10px) saturate(1.2); -webkit-backdrop-filter: url(#harborLens) blur(10px) saturate(1.2); }
 }
 .digest:hover { color: var(--ink-soft); border-color: var(--glass-rim); }
 .digest .mark { color: var(--ink-ghost); }
@@ -368,14 +390,28 @@ button:focus-visible, a:focus-visible { outline: 2px solid var(--ink-soft); outl
 .ctrl[data-state="fail"] .cst { color: var(--accent); }
 .ctrl .cobs { font-family: var(--mono); font-size: 0.56rem; color: var(--ink-ghost); }
 
-/* authority wall — calm refusals */
-.authwall { display: grid; grid-template-columns: repeat(auto-fit, minmax(12.5rem, 1fr)); gap: 0.45rem; }
-.authrow {
-  display: flex; justify-content: space-between; gap: 0.8rem; align-items: center;
-  border: 1px solid var(--line-soft); border-radius: 8px; padding: 0.5rem 0.75rem;
-  font-family: var(--mono); font-size: 0.6rem; letter-spacing: 0.04em; color: var(--ink-soft);
-  background: var(--field);
+/* authority wall — one refractive glass panel lensing the living engine */
+.authwall {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 0;
+  border-radius: 13px; padding: 0.15rem; overflow: hidden; position: relative;
 }
+/* perpetual specular sweep — the liquid in liquid glass */
+@media (prefers-reduced-motion: no-preference) {
+  .authwall::after {
+    content: ""; position: absolute; inset: 0; border-radius: inherit; pointer-events: none;
+    background: linear-gradient(100deg, transparent 38%, var(--cross) 50%, transparent 62%);
+    background-size: 260% 100%;
+    animation: crossLight 7s ease-in-out infinite;
+  }
+}
+.authrow {
+  display: flex; justify-content: space-between; gap: 0.7rem; align-items: center;
+  padding: 0.52rem 0.7rem; position: relative; z-index: 1;
+  font-family: var(--mono); font-size: 0.6rem; letter-spacing: 0.04em; color: var(--ink-soft);
+  border-bottom: 1px solid var(--line-soft);
+}
+.authrow:nth-child(odd) { border-right: 1px solid var(--line-soft); }
+.authrow:nth-last-child(-n+2) { border-bottom: none; }
 .authrow .st { color: var(--ink-ghost); letter-spacing: 0.12em; }
 
 /* estimand instruments */

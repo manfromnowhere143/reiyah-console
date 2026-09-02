@@ -506,7 +506,7 @@ export function Harbor({ ev, go, pulse }: { ev: VerifiedEvidence; go: (id: strin
           <div className="fh">
             <Digest id="index" sha={ev.indexSha256} path="gate/GATE_A_EVIDENCE_INDEX.json" />
           </div>
-          <div className="fh authwall" style={{ maxWidth: "34rem" }}>
+          <div className="fh authwall glass" style={{ maxWidth: "34rem" }}>
             {authRows.map(([k, v]) => (
               <div key={k} className="authrow"><span>{k}</span><span className="st">{v}</span></div>
             ))}

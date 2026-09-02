@@ -141,6 +141,7 @@ function Stage({ ev, onEvidence }: { ev: VerifiedEvidence; onEvidence: (e: Verif
         <div key={`${active}:${gen}`} className="panelcontent">
           {render(active)}
         </div>
+        <div className="grain" aria-hidden="true" />
       </main>
 
       <nav className="dock" aria-label="Stations">
