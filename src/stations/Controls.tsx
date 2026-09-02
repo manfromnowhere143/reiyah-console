@@ -13,6 +13,12 @@ export function Controls({ ev }: { ev: VerifiedEvidence }) {
   const caps: any[] = r.capability_evidence?.capability_rows ?? [];
   const dual = r.dual_evaluation ?? {};
 
+  /* reasoning derived live from the report bytes */
+  const allC = [...replay, ...impl];
+  const totalObs = allC.reduce((a, c) => a + (c.observation_count || 0), 0);
+  const deepest = allC.reduce((m: any, c) => ((c.observation_count || 0) > (m?.observation_count || 0) ? c : m), null);
+  const capTrue = caps.filter((c) => c.claimed_value).length;
+
   return (
     <Station id="ST–04" name="Controls" sub={`report ${r.version} · status ${String(r.status).toUpperCase()} · exit ${r.exit_code} · diagnostics ${r.diagnostics?.length ?? "?"}`}>
       <div className="grid3" style={{ marginBottom: "0.8rem" }}>
@@ -22,6 +28,17 @@ export function Controls({ ev }: { ev: VerifiedEvidence }) {
         {ev.reportMeta && (
           <div className="ipanel"><div className="ilabel">report digest</div><div style={{ marginTop: "0.2rem" }}><Digest id={`report-${r.version}`} sha={ev.reportMeta.sha256} path={ev.reportMeta.path} /></div><div className="sub">press to reprove</div></div>
         )}
+      </div>
+
+      <div className="ipanel" style={{ marginBottom: "0.8rem", display: "flex", justifyContent: "space-between", gap: "1.5rem", flexWrap: "wrap", alignItems: "flex-end" }}>
+        <div>
+          <div className="ilabel">total observations · every control replayed, counted live</div>
+          <div className="big">{totalObs.toLocaleString()}</div>
+        </div>
+        <div style={{ textAlign: "right", fontFamily: "var(--mono)", fontSize: "0.66rem", color: "var(--ink-faint)", lineHeight: 1.7 }}>
+          {deepest && <div>deepest check · <span style={{ color: "var(--ink)" }}>{deepest.control_id}</span> at {Number(deepest.observation_count).toLocaleString()} observations</div>}
+          <div>{capTrue}/{caps.length} capabilities implemented · <span style={{ color: "var(--ink)" }}>{caps.length - capTrue} honestly declared unimplemented</span></div>
+        </div>
       </div>
 
       <div className="ipanel" style={{ marginBottom: "0.8rem" }}>
