@@ -226,7 +226,9 @@ export function Encounter() {
 
       raf = requestAnimationFrame(draw);
     };
-    raf = requestAnimationFrame(draw);
+    /* One synchronous frame at mount so the film is already on the canvas
+       before the view-transition snapshot — no pop-in. draw() self-schedules. */
+    draw();
     return () => { cancelAnimationFrame(raf); el.removeEventListener("scroll", onScroll); };
   }, []);
 

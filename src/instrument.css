@@ -188,12 +188,17 @@ button:focus-visible, a:focus-visible { outline: 2px solid var(--ink-soft); outl
     100% { transform: translate(0, 0); }
   }
 }
-/* the morph: only the panel transitions; chrome stays welded */
+/* the morph: only the panel transitions; chrome stays welded.
+   Compositor-only — opacity and transform, never filter/blur. Animating
+   blur here forced a full re-raster of the panel (which already carries a
+   live backdrop blur) on every frame; the crossfade now runs entirely on
+   the GPU thread, so it stays smooth even entering the canvas stations. */
+::view-transition-group(stage-panel) { animation-timing-function: var(--ease); }
 ::view-transition-old(root), ::view-transition-new(root) { animation: none; }
-::view-transition-old(stage-panel) { animation: panelOut 0.26s var(--damped) both; }
-::view-transition-new(stage-panel) { animation: panelIn 0.42s var(--ease) both; }
-@keyframes panelOut { to { opacity: 0; transform: scale(0.986); filter: blur(7px); } }
-@keyframes panelIn { from { opacity: 0; transform: scale(1.012); filter: blur(9px); } }
+::view-transition-old(stage-panel) { animation: panelOut 0.22s var(--damped) both; will-change: opacity, transform; }
+::view-transition-new(stage-panel) { animation: panelIn 0.34s var(--ease) both; will-change: opacity, transform; }
+@keyframes panelOut { to { opacity: 0; transform: scale(0.992); } }
+@keyframes panelIn { from { opacity: 0; transform: scale(1.008); } }
 
 /* the dock: persistent station cards */
 .dock {
