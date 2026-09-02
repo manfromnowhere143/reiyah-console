@@ -18,6 +18,10 @@ export interface HarborEnv {
   dpr: number;
   dark: boolean;
   reduced: boolean;
+  /* "canvas": the engine applies its own 2D bloom + vignette (fallback path).
+     "none": a downstream GPU pass owns bloom/dispersion/vignette, so the engine
+     emits the raw scene. Defaults to "canvas". */
+  post?: "canvas" | "none";
 }
 
 /* Either a real canvas (main thread) or an OffscreenCanvas (worker). */
@@ -37,6 +41,7 @@ interface Packet {
   fx?: number; fy?: number; vx?: number; vy?: number;
   stamp: number;
   lane: number;
+  mass: number;   // 0..1, the artifact's real byte size, log-scaled
 }
 interface Spark { x: number; y: number; life: number }
 
@@ -48,14 +53,19 @@ export interface HarborEngine {
 }
 
 export function createHarborEngine(
-  trailCv: AnyCanvas,
-  mainCv: AnyCanvas,
+  output: AnyCanvas,
   artifacts: ArtifactRow[],
   badTotal: number,
   makeCanvas: MakeCanvas,
 ): HarborEngine {
+  /* Two internal layers — a persistent trail buffer and a per-frame crisp
+     layer — are composited onto `output` each frame. `output` is the visible
+     canvas (2D fallback) or an internal scene buffer the GPU pass reads. */
+  const trailCv = makeCanvas(2, 2);
+  const mainCv = makeCanvas(2, 2);
   const tctx = trailCv.getContext("2d") as Ctx;
   const mctx = mainCv.getContext("2d") as Ctx;
+  const octx = output.getContext("2d") as Ctx;
 
   const mono = '11px "B612 Mono","SF Mono",Menlo,monospace';
   const monoSmall = '9px "B612 Mono","SF Mono",Menlo,monospace';
@@ -73,6 +83,12 @@ export function createHarborEngine(
   let ruleMap: Record<string, string> = {};
   let lastReject: { rule: string; at: number } | null = null;
 
+  /* the real byte size of each artifact, log-scaled to 0..1 — drives packet
+     mass so a heavier record visibly carries more weight. Committed data. */
+  let lmin = Infinity, lmax = -Infinity;
+  for (const a of artifacts) { const l = Math.log(Math.max(1, a.byte_size || 1)); if (l < lmin) lmin = l; if (l > lmax) lmax = l; }
+  const massOf = (b: number) => (lmax > lmin ? (Math.log(Math.max(1, b || 1)) - lmin) / (lmax - lmin) : 0.5);
+
   const spawn = () => {
     const a = artifacts[spawnIdx % artifacts.length];
     spawnIdx++;
@@ -81,6 +97,7 @@ export function createHarborEngine(
       a, t: 0, speed: 0.085 + hh * 0.05,
       bad: a.role === "known_bad_fixture",
       fall: 0, stamp: 0, lane: (hh - 0.5) * 2,
+      mass: massOf(a.byte_size),
     });
   };
   for (let i = 0; i < 6; i++) { spawn(); packets[i].t = i * 0.15; }
@@ -108,8 +125,9 @@ export function createHarborEngine(
     const rdt = Math.min(0.05, (now - last) / 1000);
     last = now;
     const { dpr, dark, reduced } = env;
+    const post = env.post ?? "canvas";
     const w = env.w, h = env.h;
-    for (const cv of [trailCv, mainCv]) {
+    for (const cv of [trailCv, mainCv, output]) {
       if (cv.width !== w * dpr || cv.height !== h * dpr) { cv.width = w * dpr; cv.height = h * dpr; }
     }
     tctx.setTransform(dpr, 0, 0, dpr, 0, 0);
@@ -203,7 +221,8 @@ export function createHarborEngine(
       if (Math.abs(p.t - tGate) < 0.012 && !p.bad) p.stamp = 1;
       p.stamp = Math.max(0, p.stamp - dt * 2.2);
       const rgb = p.stamp > 0 ? OK : p.bad ? INK : INK;
-      const coreR = p.bad ? 2.2 : 3;
+      /* size carries the artifact's real byte mass */
+      const coreR = (p.bad ? 2.1 : 2.6) * (0.72 + p.mass * 0.9);
       /* comet: additive halo on obsidian, then the bright core */
       if (dark) {
         tctx.globalCompositeOperation = "lighter";
@@ -478,7 +497,8 @@ export function createHarborEngine(
       mctx.beginPath(); mctx.arc(hovered.x, hovered.y, 8, 0, TAU); mctx.stroke();
       const name = hovered.p.a.artifact.path.split("/").pop() ?? "";
       const sha = hovered.p.a.artifact.sha256.slice(7, 15);
-      const tip = `${name} · ${sha} · ${hovered.p.bad ? "WILL BE REJECTED" : "WILL SEAL"}`;
+      const bytes = (hovered.p.a.byte_size || 0).toLocaleString();
+      const tip = `${name} · ${sha} · ${bytes} B · ${hovered.p.bad ? "WILL BE REJECTED" : "WILL SEAL"}`;
       mctx.font = monoSmall; mctx.textAlign = "left";
       const tw = mctx.measureText(tip).width + 16;
       const tx = Math.min(w - tw - 8, Math.max(8, hovered.x + 14)), ty = Math.max(8, hovered.y - 26);
@@ -492,34 +512,44 @@ export function createHarborEngine(
 
     mctx.restore(); /* end the parallax layer — post & vignette are screen-fixed */
 
-    /* filmic bloom — the scene blooms into its own light (obsidian only). */
-    if (dark) {
-      mctx.save();
-      mctx.globalCompositeOperation = "lighter";
-      mctx.globalAlpha = 0.3;
-      mctx.filter = "blur(6px)";
-      mctx.drawImage(mainCv as CanvasImageSource, 0, 0, w, h);
-      mctx.filter = "none";
-      mctx.restore();
+    /* filmic bloom + vignette — applied here only on the 2D fallback path.
+       When a GPU pass owns them (post === "none") the engine emits the raw
+       scene so the shader pipeline can do real bright-pass bloom, radial
+       dispersion, tone-mapping and grain. */
+    if (post === "canvas") {
+      if (dark) {
+        mctx.save();
+        mctx.globalCompositeOperation = "lighter";
+        mctx.globalAlpha = 0.3;
+        mctx.filter = "blur(6px)";
+        mctx.drawImage(mainCv as CanvasImageSource, 0, 0, w, h);
+        mctx.filter = "none";
+        mctx.restore();
+      }
+      const vg = (rgb: string, ox: number, a: number) => {
+        const g = mctx.createRadialGradient(w / 2 + ox, h * 0.46, Math.min(w, h) * 0.3, w / 2, h * 0.5, Math.max(w, h) * 0.72);
+        g.addColorStop(0, `rgba(${rgb},0)`);
+        g.addColorStop(1, `rgba(${rgb},${a})`);
+        mctx.fillStyle = g;
+        mctx.fillRect(0, 0, w, h);
+      };
+      if (dark) {
+        vg("150,70,95", -4, 0.09);
+        vg("70,95,140", 4, 0.09);
+        vg("3,3,5", 0, 0.52);
+      } else {
+        vg("196,120,120", -3, 0.05);
+        vg("120,140,180", 3, 0.05);
+        vg("210,208,198", 0, 0.42);
+      }
     }
 
-    /* chromatic-aberration vignette — a real lens fringe frames the edges */
-    const vg = (rgb: string, ox: number, a: number) => {
-      const g = mctx.createRadialGradient(w / 2 + ox, h * 0.46, Math.min(w, h) * 0.3, w / 2, h * 0.5, Math.max(w, h) * 0.72);
-      g.addColorStop(0, `rgba(${rgb},0)`);
-      g.addColorStop(1, `rgba(${rgb},${a})`);
-      mctx.fillStyle = g;
-      mctx.fillRect(0, 0, w, h);
-    };
-    if (dark) {
-      vg("150,70,95", -4, 0.09);
-      vg("70,95,140", 4, 0.09);
-      vg("3,3,5", 0, 0.52);
-    } else {
-      vg("196,120,120", -3, 0.05);
-      vg("120,140,180", 3, 0.05);
-      vg("210,208,198", 0, 0.42);
-    }
+    /* composite the persistent trail and the crisp layer onto the output, in
+       device space (both buffers are already sized w*dpr). */
+    octx.setTransform(1, 0, 0, 1, 0, 0);
+    octx.clearRect(0, 0, output.width, output.height);
+    octx.drawImage(trailCv as CanvasImageSource, 0, 0);
+    octx.drawImage(mainCv as CanvasImageSource, 0, 0);
   };
 
   return {
