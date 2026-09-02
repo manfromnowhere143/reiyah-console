@@ -450,7 +450,11 @@ button:focus-visible, a:focus-visible { outline: 2px solid var(--ink-soft); outl
 /* harbor */
 .harbor { display: grid; grid-template-rows: 1fr; height: 100%; min-height: 0; }
 .fieldwrap { position: relative; overflow: hidden; background: transparent; min-height: 0; margin: -1.1rem -1.3rem -0.9rem; }
-.fieldwrap canvas { position: absolute; inset: 0; width: 100%; height: 100%; }
+.fieldwrap canvas { position: absolute; inset: 0; width: 100%; height: 100%; transition: opacity 0.5s var(--ease); }
+/* worker path: hidden until the worker's first frame lands, then fades in.
+   the main-thread fallback never sets data-live, so its synchronous first
+   frame is visible immediately (and lands in the view-transition snapshot). */
+.fieldwrap[data-live="false"] canvas { opacity: 0; }
 .fieldhud {
   position: absolute; left: 1.1rem; bottom: 1rem; right: 1.1rem;
   display: flex; justify-content: space-between; align-items: flex-end; gap: 1rem;

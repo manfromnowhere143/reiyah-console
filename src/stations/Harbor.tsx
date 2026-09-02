@@ -1,550 +1,157 @@
-/* HARBOR — THE LIVING ENGINE, orientation-aware.
-   Landscape: the rail sags left→right like a cable. Portrait: the rail
-   hangs top→bottom like a plumb line, labels alternating beside it —
-   a design for the hand, not a squeezed desktop. Same physics everywhere:
-   real artifacts in flight, trails, the saccading eye, gate sparks with
-   real rule IDs, hover slows time. No mock data exists. */
+/* HARBOR — THE LIVING ENGINE. The simulation and render live in a pure engine
+   (harborEngine.ts). It runs either inside a Web Worker over an OffscreenCanvas
+   — so the sustained animation never touches the main thread and the UI stays
+   responsive on any device — or, where that is unsupported, on the main thread
+   as a byte-identical fallback. The two canvases are created imperatively so
+   each mount owns fresh, transferable elements (transferControlToOffscreen may
+   run only once per element, and React StrictMode double-invokes effects). */
 import { useEffect, useRef } from "react";
 import type { VerifiedEvidence } from "../boot/ProofBoot";
 import { Digest } from "../components/primitives";
 import { fetchSurface } from "../lib/evidence";
+import { createHarborEngine, type ArtifactRow, type HarborEngine, type HarborEnv } from "./harborEngine";
 
-interface ArtifactRow {
-  artifact: { path: string; sha256: string };
-  byte_size: number;
-  role: string;
-}
-
-const TAU = Math.PI * 2;
-const KINDS = ["OBS", "BEL", "DEC", "INT", "OUT", "EVD"];
-
-interface Packet {
-  a: ArtifactRow;
-  t: number;
-  speed: number;
-  bad: boolean;
-  fall: number;
-  fx?: number; fy?: number; vx?: number; vy?: number;
-  stamp: number;
-  lane: number;
-}
-interface Spark { x: number; y: number; life: number }
-
-export function Harbor({ ev, go, pulse }: { ev: VerifiedEvidence; go: (id: string) => void; pulse?: number }) {
-  const trailRef = useRef<HTMLCanvasElement>(null);
-  const mainRef = useRef<HTMLCanvasElement>(null);
-  const pulseRef = useRef(0);
-  useEffect(() => { if (pulse) pulseRef.current = performance.now(); }, [pulse]);
-
-  const ruleRef = useRef<Map<string, string>>(new Map());
-  const lastRejectRef = useRef<{ rule: string; at: number } | null>(null);
-  useEffect(() => {
-    fetchSurface<any>("fixtures").then((s) => {
-      if (s.state === "observed") {
-        const m = new Map<string, string>();
-        for (const f of s.data.fixtures ?? []) if (f.expected_primary_rule_id) m.set(f.path, f.expected_primary_rule_id);
-        ruleRef.current = m;
-      }
-    });
-  }, []);
+export function Harbor({ ev, pulse }: { ev: VerifiedEvidence; go: (id: string) => void; pulse?: number }) {
+  const wrapRef = useRef<HTMLDivElement>(null);
+  const workerRef = useRef<Worker | null>(null);
+  const engineRef = useRef<HarborEngine | null>(null);
+  const ruleSink = useRef<(m: Record<string, string>) => void>(() => {});
 
   const artifacts: ArtifactRow[] = ev.index?.artifacts ?? [];
   const auth = ev.index?.authority ?? {};
   const proj = ev.index?.candidate_projection ?? {};
   const badTotal = artifacts.filter((a) => a.role === "known_bad_fixture").length;
 
+  /* rejection-rule map: loaded live, forwarded to whichever host is running */
   useEffect(() => {
-    const trailCv = trailRef.current, mainCv = mainRef.current;
-    if (!trailCv || !mainCv || artifacts.length === 0) return;
-    const tctx = trailCv.getContext("2d"), mctx = mainCv.getContext("2d");
-    if (!tctx || !mctx) return;
-    const reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
-    const mono = '11px "B612 Mono", monospace';
-    const monoSmall = '9px "B612 Mono", monospace';
+    fetchSurface<any>("fixtures").then((s) => {
+      if (s.state !== "observed") return;
+      const m: Record<string, string> = {};
+      for (const f of s.data.fixtures ?? []) if (f.expected_primary_rule_id) m[f.path] = f.expected_primary_rule_id;
+      ruleSink.current(m);
+    });
+  }, []);
 
-    let spawnIdx = 0, sealed = 0, spawnAcc = 0, blink = 0, raf = 0;
-    let timeScale = 1;
-    const packets: Packet[] = [];
-    const sparks: Spark[] = [];
-    const nodeGlow = [0, 0, 0, 0, 0, 0];
-    const pupil = { x: 0, y: 0 };
-    const mouse = { x: -1, y: -1, over: false };
-    const par = { x: 0, y: 0 };  // damped parallax offset — depth, with weight
+  /* re-verify pulse -> surge, forwarded to the running host */
+  useEffect(() => {
+    if (!pulse) return;
+    const at = performance.now();
+    if (workerRef.current) workerRef.current.postMessage({ type: "pulse", at });
+    else engineRef.current?.setPulse(at);
+  }, [pulse]);
 
-    const spawn = () => {
-      const a = artifacts[spawnIdx % artifacts.length];
-      spawnIdx++;
-      const hh = parseInt(a.artifact.sha256.slice(9, 13), 16) / 0xffff;
-      packets.push({
-        a, t: 0, speed: 0.085 + hh * 0.05,
-        bad: a.role === "known_bad_fixture",
-        fall: 0, stamp: 0, lane: (hh - 0.5) * 2,
-      });
-    };
-    for (let i = 0; i < 6; i++) { spawn(); packets[i].t = i * 0.15; }
+  useEffect(() => {
+    const wrap = wrapRef.current;
+    if (!wrap || artifacts.length === 0) return;
 
-    let ghost: HTMLCanvasElement | null = null;
-    let ghostKey = "";
-    const buildGhost = (w: number, h: number, dpr: number, ink: string) => {
-      ghost = document.createElement("canvas");
-      ghost.width = w * dpr; ghost.height = h * dpr;
-      const g = ghost.getContext("2d")!;
-      g.setTransform(dpr, 0, 0, dpr, 0, 0);
-      for (const a of artifacts) {
-        const hex = a.artifact.sha256.slice(9);
-        const x = (parseInt(hex.slice(0, 5), 16) / 0xfffff) * w;
-        const y = (parseInt(hex.slice(5, 10), 16) / 0xfffff) * h;
-        g.fillStyle = `rgba(${ink},${a.role === "known_bad_fixture" ? 0.028 : 0.055})`;
-        g.beginPath(); g.arc(x, y, 1, 0, TAU); g.fill();
-      }
-    };
+    /* fresh, transferable canvases for this mount */
+    const trailCv = document.createElement("canvas");
+    trailCv.setAttribute("aria-hidden", "true");
+    const mainCv = document.createElement("canvas");
+    mainCv.setAttribute("aria-label", `Living diagram of the Reiyah engine processing ${artifacts.length} digest-verified artifacts`);
+    wrap.insertBefore(mainCv, wrap.firstChild);   // main above trail
+    wrap.insertBefore(trailCv, wrap.firstChild);  // trail behind
 
-    const onMove = (e: PointerEvent) => {
+    const reducedMq = matchMedia("(prefers-reduced-motion: reduce)");
+    const readEnv = (): HarborEnv => ({
+      w: mainCv.clientWidth, h: mainCv.clientHeight,
+      dpr: Math.min(2, window.devicePixelRatio || 1),
+      dark: document.documentElement.dataset.ground === "dark",
+      reduced: reducedMq.matches,
+    });
+    const rectMouse = (e: PointerEvent) => {
       const r = mainCv.getBoundingClientRect();
-      mouse.x = e.clientX - r.left; mouse.y = e.clientY - r.top; mouse.over = true;
+      return { x: e.clientX - r.left, y: e.clientY - r.top };
     };
-    const onLeave = () => { mouse.over = false; };
-    mainCv.addEventListener("pointermove", onMove);
-    mainCv.addEventListener("pointerleave", onLeave);
 
-    let last = performance.now();
-    const draw = (now: number) => {
-      const rdt = Math.min(0.05, (now - last) / 1000);
-      last = now;
-      const dpr = Math.min(2, window.devicePixelRatio || 1);
-      const w = mainCv.clientWidth, h = mainCv.clientHeight;
-      for (const cv of [trailCv, mainCv]) {
-        if (cv.width !== w * dpr || cv.height !== h * dpr) { cv.width = w * dpr; cv.height = h * dpr; }
-      }
-      tctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-      mctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    const canWorker =
+      typeof OffscreenCanvas !== "undefined" &&
+      typeof (mainCv as unknown as { transferControlToOffscreen?: unknown }).transferControlToOffscreen === "function" &&
+      typeof Worker !== "undefined";
 
-      const dark = document.documentElement.dataset.ground === "dark";
-      const INK = dark ? "255,255,255" : "16,18,21";
-      const RED = dark ? "227,25,55" : "214,23,50";
-      const OK = dark ? "143,208,176" : "23,114,76";
-      const FADE = dark ? "rgba(10,11,14,0.22)" : "rgba(236,234,226,0.24)";
-      const TA = dark ? "0.96" : "0.8";
-      const surge = !!pulseRef.current && now - pulseRef.current < 2000;
-      const portrait = h > w * 1.05;
+    /* ---------- main-thread fallback: the same engine, byte-identical ---------- */
+    const runMainThread = () => {
+      const engine = createHarborEngine(trailCv, mainCv, artifacts, badTotal, (w, h) => {
+        const c = document.createElement("canvas"); c.width = w; c.height = h; return c;
+      });
+      engineRef.current = engine;
+      ruleSink.current = (m) => engine.setRuleMap(m);
 
-      timeScale += ((mouse.over ? 0.28 : 1) - timeScale) * Math.min(1, rdt * 6);
-      const dt = rdt * (reduced ? 0 : timeScale) * (surge ? 2 : 1);
+      const onMove = (e: PointerEvent) => { const p = rectMouse(e); engine.setMouse(p.x, p.y, true); };
+      const onLeave = () => engine.setMouse(-1, -1, false);
+      mainCv.addEventListener("pointermove", onMove);
+      mainCv.addEventListener("pointerleave", onLeave);
 
-      /* damped parallax — the scene has depth; motion has inertia, never 1:1 */
-      const MP = Math.min(w, h) * 0.018;
-      const ptx = mouse.over && !reduced ? -((mouse.x / w) - 0.5) * 2 * MP : 0;
-      const pty = mouse.over && !reduced ? -((mouse.y / h) - 0.5) * 2 * MP : 0;
-      par.x += (ptx - par.x) * Math.min(1, rdt * 3);
-      par.y += (pty - par.y) * Math.min(1, rdt * 3);
-
-      /* ---- orientation-aware rail ---- */
-      let railPt: (t: number) => { x: number; y: number };
-      let tEye: number, tChain0: number, tChain1: number, tGate: number;
-      if (!portrait) {
-        const midY = h * 0.46, dip = h * 0.075;
-        const x0 = w * 0.06, x2 = w * 0.9;
-        railPt = (t) => ({
-          x: x0 + (x2 - x0) * t,
-          y: (1 - t) * (1 - t) * midY + 2 * (1 - t) * t * (midY + dip) + t * t * midY,
-        });
-        tEye = 0.18; tChain0 = 0.30; tChain1 = 0.62; tGate = 0.74;
-      } else {
-        const cx = w * 0.42, dipX = w * 0.11;
-        const y0 = h * 0.06, y2 = h * 0.82;
-        railPt = (t) => ({
-          x: (1 - t) * (1 - t) * cx + 2 * (1 - t) * t * (cx + dipX) + t * t * cx,
-          y: y0 + (y2 - y0) * t,
-        });
-        tEye = 0.16; tChain0 = 0.30; tChain1 = 0.60; tGate = 0.74;
-      }
-      const eyeP = railPt(tEye), gateP = railPt(tGate);
-
-      const key = `${w}x${h}x${dpr}x${dark}`;
-      if (key !== ghostKey) { buildGhost(w, h, dpr, INK); ghostKey = key; }
-
-      /* ============ TRAIL LAYER ============ */
-      tctx.fillStyle = FADE;
-      tctx.fillRect(0, 0, w, h);
-      if (reduced) tctx.clearRect(0, 0, w, h);
-
-      spawnAcc += dt * 1.15;
-      if (!reduced && spawnAcc > 0.5 && packets.length < 30) { spawnAcc = 0; spawn(); }
-      let leading: Packet | null = null;
-      let hovered: { p: Packet; x: number; y: number } | null = null;
-
-      tctx.save();
-      tctx.translate(par.x, par.y);
-      for (let i = packets.length - 1; i >= 0; i--) {
-        const p = packets[i];
-        if (p.fall > 0 || (p.bad && p.t >= tGate)) {
-          if (p.fall === 0) {
-            sparks.push({ x: gateP.x, y: gateP.y, life: 1 });
-            const rule = ruleRef.current.get(p.a.artifact.path);
-            if (rule) lastRejectRef.current = { rule, at: now };
-            p.fx = gateP.x; p.fy = gateP.y;
-            if (portrait) { p.vx = 90 + Math.random() * 60; p.vy = 30; }
-            else { p.vx = 30 + Math.random() * 30; p.vy = 40; }
-          }
-          p.fall += dt * 1.4;
-          p.vy! += (portrait ? 420 : 640) * dt;
-          p.fx! += p.vx! * dt; p.fy! += p.vy! * dt;
-          const fa = Math.max(0, 1 - p.fall * 0.8);
-          tctx.fillStyle = `rgba(${RED},${(0.9 * fa).toFixed(2)})`;
-          tctx.beginPath(); tctx.arc(p.fx!, p.fy!, 2.8, 0, TAU); tctx.fill();
-          if (p.fy! > h + 10 || p.fx! > w + 10 || p.fall > 1.8) packets.splice(i, 1);
-          continue;
-        }
-        p.t += dt * p.speed;
-        if (p.t >= 1) { sealed++; packets.splice(i, 1); continue; }
-        const pt = railPt(p.t);
-        const jx = portrait ? Math.sin(p.t * 30) * 2 * p.lane : 0;
-        const jy = portrait ? 0 : Math.sin(p.t * 30) * 2 * p.lane;
-        const x = pt.x + jx, y = pt.y + jy;
-        for (let k = 0; k < 6; k++) {
-          const tN = tChain0 + (k / 5) * (tChain1 - tChain0);
-          if (Math.abs(p.t - tN) < 0.006) nodeGlow[k] = 1;
-        }
-        if (Math.abs(p.t - tGate) < 0.012 && !p.bad) p.stamp = 1;
-        p.stamp = Math.max(0, p.stamp - dt * 2.2);
-        const rgb = p.stamp > 0 ? OK : p.bad ? INK : INK;
-        const coreR = p.bad ? 2.2 : 3;
-        /* comet: additive halo on obsidian, then the bright core */
-        if (dark) {
-          tctx.globalCompositeOperation = "lighter";
-          tctx.fillStyle = `rgba(${p.stamp > 0 ? OK : p.bad ? "120,120,124" : "200,205,212"},${p.bad ? 0.1 : 0.22})`;
-          tctx.beginPath(); tctx.arc(x, y, coreR * 3.2, 0, TAU); tctx.fill();
-          tctx.globalCompositeOperation = "source-over";
-        }
-        tctx.fillStyle = `rgba(${rgb},${p.stamp > 0 ? 0.98 : p.bad ? 0.42 : 0.9})`;
-        tctx.beginPath(); tctx.arc(x, y, coreR, 0, TAU); tctx.fill();
-        if (!leading || p.t > leading.t) leading = p;
-        if (mouse.over) {
-          const d = Math.hypot(mouse.x - x, mouse.y - y);
-          if (d < 26 && (!hovered || d < Math.hypot(mouse.x - hovered.x, mouse.y - hovered.y))) {
-            hovered = { p, x, y };
-          }
-        }
-      }
-
-      for (let i = sparks.length - 1; i >= 0; i--) {
-        const s = sparks[i];
-        s.life -= dt * 2.4;
-        if (s.life <= 0) { sparks.splice(i, 1); continue; }
-        tctx.strokeStyle = `rgba(${RED},${(s.life * 0.8).toFixed(2)})`;
-        tctx.lineWidth = 1.5;
-        tctx.beginPath(); tctx.arc(s.x, s.y, (1 - s.life) * 22 + 4, 0, TAU); tctx.stroke();
-      }
-      tctx.restore();
-
-      /* ============ CRISP LAYER ============ */
-      mctx.clearRect(0, 0, w, h);
-
-      /* soft radial glow — cheap bloom, depth without spectacle */
-      const glow = (gx: number, gy: number, gr: number, rgb: string, a: number) => {
-        const g = mctx.createRadialGradient(gx, gy, 0, gx, gy, gr);
-        g.addColorStop(0, `rgba(${rgb},${a})`);
-        g.addColorStop(1, `rgba(${rgb},0)`);
-        mctx.fillStyle = g;
-        mctx.beginPath(); mctx.arc(gx, gy, gr, 0, TAU); mctx.fill();
+      let raf = 0;
+      const tick = (now: number) => {
+        const env = readEnv();
+        engine.frame(now, env);
+        if (!env.reduced) raf = requestAnimationFrame(tick);
       };
+      engine.frame(performance.now(), readEnv()); // synchronous first frame -> no pop-in through the view transition
+      if (!reducedMq.matches) raf = requestAnimationFrame(tick);
 
-      /* the far layer: the ghost population moves less — depth by parallax */
-      if (ghost) mctx.drawImage(ghost, par.x * 0.35, par.y * 0.35, w, h);
-
-      /* the scene rides the near parallax layer */
-      mctx.save();
-      mctx.translate(par.x, par.y);
-
-      /* ATMOSPHERE: ambient light pools behind the two bright nodes, so the
-         chamber has depth. On paper these become soft ink shadows. */
-      const breath = reduced ? 1 : 0.85 + 0.15 * Math.sin(now / 1400);
-      if (dark) {
-        glow(eyeP.x, eyeP.y, Math.min(w, h) * 0.32, INK, 0.05 * breath);
-        glow(eyeP.x, eyeP.y, Math.min(w, h) * 0.15, RED, 0.05 * breath);
-        glow(gateP.x, gateP.y, Math.min(w, h) * 0.26, INK, 0.045);
-      } else {
-        glow(eyeP.x, eyeP.y, Math.min(w, h) * 0.3, INK, 0.03 * breath);
-        glow(gateP.x, gateP.y, Math.min(w, h) * 0.24, INK, 0.028);
-      }
-
-      /* the rail: a luminous cable with a faint under-glow */
-      mctx.strokeStyle = `rgba(${INK},${dark ? 0.22 : 0.16})`;
-      mctx.lineWidth = 1;
-      const r0 = railPt(0), r1 = railPt(1);
-      mctx.beginPath();
-      if (!portrait) {
-        mctx.moveTo(r0.x, r0.y);
-        mctx.quadraticCurveTo((r0.x + r1.x) / 2, h * 0.46 + h * 0.15, r1.x, r1.y);
-      } else {
-        mctx.moveTo(r0.x, r0.y);
-        mctx.quadraticCurveTo(w * 0.42 + w * 0.22, (r0.y + r1.y) / 2, r1.x, r1.y);
-      }
-      mctx.stroke();
-
-      mctx.font = monoSmall;
-
-      /* encounter */
-      mctx.strokeStyle = `rgba(${INK},0.45)`; mctx.lineWidth = 1.2;
-      if (!portrait) {
-        mctx.textAlign = "center";
-        mctx.beginPath();
-        mctx.moveTo(r0.x - 22, r0.y + 38); mctx.lineTo(r0.x - 6, r0.y - 26);
-        mctx.moveTo(r0.x + 22, r0.y + 38); mctx.lineTo(r0.x + 6, r0.y - 26);
-        mctx.stroke();
-        mctx.beginPath();
-        mctx.moveTo(r0.x, r0.y - 45); mctx.lineTo(r0.x + 7, r0.y - 38);
-        mctx.lineTo(r0.x, r0.y - 31); mctx.lineTo(r0.x - 7, r0.y - 38);
-        mctx.closePath(); mctx.stroke();
-        mctx.fillStyle = `rgba(${INK},${TA})`;
-        mctx.fillText("ENCOUNTER", r0.x, r0.y + 58);
-      } else {
-        mctx.beginPath();
-        mctx.moveTo(r0.x - 26, r0.y - 7); mctx.lineTo(r0.x - 8, r0.y);
-        mctx.moveTo(r0.x - 26, r0.y + 7); mctx.lineTo(r0.x - 8, r0.y);
-        mctx.stroke();
-        mctx.beginPath();
-        mctx.moveTo(r0.x - 36, r0.y - 6); mctx.lineTo(r0.x - 30, r0.y);
-        mctx.lineTo(r0.x - 36, r0.y + 6); mctx.lineTo(r0.x - 42, r0.y);
-        mctx.closePath(); mctx.stroke();
-        mctx.textAlign = "left";
-        mctx.fillStyle = `rgba(${INK},${TA})`;
-        mctx.fillText("ENCOUNTER", r0.x + 14, r0.y + 3);
-      }
-
-      /* the eye */
-      blink = Math.max(0, blink - rdt);
-      if (!reduced && Math.random() < rdt / 7) blink = 0.16;
-      const eyeR = portrait ? Math.min(22, w * 0.055) : Math.min(30, w * 0.024);
-      let target = { x: Math.cos(-TAU / 8) * eyeR * 0.18, y: Math.sin(-TAU / 8) * eyeR * 0.18 };
-      let bestD = Infinity;
-      for (const p of packets) {
-        if (p.fall > 0 || p.t > tEye + 0.06) continue;
-        const pt = railPt(p.t);
-        const d = tEye - p.t;
-        if (d >= 0 && d < bestD) {
-          bestD = d;
-          const ang = Math.atan2(pt.y - eyeP.y, pt.x - eyeP.x);
-          target = { x: Math.cos(ang) * eyeR * 0.22, y: Math.sin(ang) * eyeR * 0.22 };
-        }
-      }
-      pupil.x += (target.x - pupil.x) * Math.min(1, rdt * 14);
-      pupil.y += (target.y - pupil.y) * Math.min(1, rdt * 14);
-      mctx.save();
-      mctx.translate(eyeP.x, eyeP.y);
-      mctx.scale(1, blink > 0 ? Math.max(0.1, 1 - blink * 6) : 1);
-      mctx.strokeStyle = `rgba(${INK},0.94)`;
-      mctx.lineWidth = Math.max(3, eyeR * 0.24);
-      mctx.lineCap = "round";
-      mctx.beginPath();
-      mctx.arc(0, 0, eyeR, -TAU / 8 + (25 * Math.PI) / 180, -TAU / 8 - (25 * Math.PI) / 180 + TAU);
-      mctx.stroke();
-      /* the pupil — filmic layered bloom + a motivated anamorphic streak.
-         The eye is the hero; light here is earned, never gaudy. */
-      const pr = eyeR * 0.3 * (surge ? 1.25 : 1);
-      const em = surge ? 1 : 0.62;
-      if (dark) {
-        mctx.globalCompositeOperation = "lighter";
-        glow(pupil.x, pupil.y, pr * 6.5, RED, 0.16 * em);   // wide soft halo
-        glow(pupil.x, pupil.y, pr * 2.7, RED, 0.4 * em);    // tight core glow
-        const sw = eyeR * (surge ? 7.5 : 4.4);              // anamorphic streak
-        const sg = mctx.createLinearGradient(pupil.x - sw, 0, pupil.x + sw, 0);
-        sg.addColorStop(0, `rgba(${RED},0)`);
-        sg.addColorStop(0.5, `rgba(${RED},${(0.5 * em).toFixed(3)})`);
-        sg.addColorStop(1, `rgba(${RED},0)`);
-        mctx.fillStyle = sg;
-        const sh = 0.8 + em * 0.9;
-        mctx.fillRect(pupil.x - sw, pupil.y - sh, sw * 2, sh * 2);
-        mctx.globalCompositeOperation = "source-over";
-      } else {
-        glow(pupil.x, pupil.y, pr * 3.6, RED, 0.28 * em);
-      }
-      mctx.fillStyle = `rgba(${RED},0.98)`;
-      mctx.beginPath(); mctx.arc(pupil.x, pupil.y, pr, 0, TAU); mctx.fill();
-      mctx.restore();
-      mctx.fillStyle = `rgba(${INK},${TA})`;
-      if (!portrait) {
-        mctx.textAlign = "center";
-        mctx.fillText("REIYAH SEES", eyeP.x, eyeP.y + eyeR + 26);
-      } else {
-        mctx.textAlign = "left";
-        mctx.fillText("REIYAH SEES", eyeP.x + eyeR + 12, eyeP.y + 3);
-      }
-
-      /* six kinds */
-      for (let k = 0; k < 6; k++) {
-        const tN = tChain0 + (k / 5) * (tChain1 - tChain0);
-        const pN = railPt(tN);
-        nodeGlow[k] = Math.max(0, nodeGlow[k] - rdt * 2.4);
-        const gGlow = nodeGlow[k];
-        mctx.strokeStyle = `rgba(${INK},${(0.45 + gGlow * 0.55).toFixed(2)})`;
-        mctx.lineWidth = 1.2 + gGlow;
-        mctx.beginPath(); mctx.arc(pN.x, pN.y, (portrait ? 4.5 : 5.5) + gGlow * 2.5, 0, TAU); mctx.stroke();
-        mctx.fillStyle = `rgba(${INK},${TA})`;
-        if (!portrait) {
-          mctx.textAlign = "center";
-          mctx.fillText(KINDS[k], pN.x, pN.y - 15 - gGlow * 2);
-        } else {
-          const leftSide = k % 2 === 0;
-          mctx.textAlign = leftSide ? "right" : "left";
-          mctx.fillText(KINDS[k], pN.x + (leftSide ? -18 : 18), pN.y + 3);
-        }
-      }
-      if (!portrait) {
-        const midChain = railPt((tChain0 + tChain1) / 2);
-        mctx.textAlign = "center";
-        mctx.fillStyle = `rgba(${INK},${TA})`;
-        mctx.fillText("SIX KINDS, NEVER MERGED", midChain.x, midChain.y + 58);
-      }
-
-      /* the gate — luminous bars with a scanning beam that sweeps the aperture */
-      const closing = sparks.length > 0 ? 6 : 0;
-      const gh = portrait ? Math.min(44, w * 0.12) : 54;
-      const scan = reduced ? 0.5 : (Math.sin(now / 900) * 0.5 + 0.5);
-      mctx.save();
-      mctx.strokeStyle = `rgba(${INK},0.9)`;
-      mctx.lineWidth = 2; mctx.lineCap = "round";
-      mctx.beginPath();
-      if (!portrait) {
-        mctx.moveTo(gateP.x, gateP.y - gh); mctx.lineTo(gateP.x, gateP.y - 10 + closing);
-        mctx.moveTo(gateP.x, gateP.y + 10 - closing); mctx.lineTo(gateP.x, gateP.y + gh);
-      } else {
-        mctx.moveTo(gateP.x - gh, gateP.y); mctx.lineTo(gateP.x - 10 + closing, gateP.y);
-        mctx.moveTo(gateP.x + 10 - closing, gateP.y); mctx.lineTo(gateP.x + gh, gateP.y);
-      }
-      mctx.stroke();
-      /* the beam: a bright mote sweeping the gap, checking each passer */
-      if (dark) mctx.globalCompositeOperation = "lighter";
-      const bx = portrait ? gateP.x - (gh - 12) + scan * (gh - 12) * 2 : gateP.x;
-      const by = portrait ? gateP.y : gateP.y - (gh - 12) + scan * (gh - 12) * 2;
-      glow(bx, by, 10, OK, dark ? 0.55 : 0.32);
-      mctx.fillStyle = `rgba(${OK},0.85)`;
-      mctx.beginPath(); mctx.arc(bx, by, 1.6, 0, TAU); mctx.fill();
-      mctx.restore();
-      mctx.fillStyle = `rgba(${INK},${TA})`;
-      if (!portrait) {
-        mctx.textAlign = "center";
-        mctx.fillText("THE GATE", gateP.x, gateP.y + 70);
-        mctx.fillText("FAILS CLOSED", gateP.x, gateP.y + 82);
-        mctx.fillStyle = `rgba(${RED},0.8)`;
-        mctx.fillText(`↓ REJECTED BY DESIGN · ${badTotal}`, gateP.x, gateP.y + 100);
-        const lr = lastRejectRef.current;
-        if (lr && now - lr.at < 2800) {
-          mctx.fillStyle = `rgba(${RED},${(0.85 * (1 - (now - lr.at) / 2800)).toFixed(2)})`;
-          mctx.fillText(lr.rule, gateP.x, gateP.y + 114);
-        }
-      } else {
-        mctx.textAlign = "left";
-        mctx.fillText("THE GATE", gateP.x + gh + 10, gateP.y - 4);
-        mctx.fillText("FAILS CLOSED", gateP.x + gh + 10, gateP.y + 8);
-        mctx.fillStyle = `rgba(${RED},0.8)`;
-        mctx.fillText(`→ REJECTED · ${badTotal}`, gateP.x + gh + 10, gateP.y + 22);
-      }
-
-      /* sealed ledger */
-      const lP = railPt(1);
-      if (!portrait) {
-        const stackW = 46;
-        const frac = Math.min(1, ((sealed % artifacts.length) / artifacts.length) + 0.15);
-        mctx.strokeStyle = `rgba(${INK},0.4)`; mctx.lineWidth = 1;
-        mctx.strokeRect(lP.x - stackW / 2 + 8, lP.y - 50, stackW, 100);
-        mctx.fillStyle = `rgba(${INK},0.85)`;
-        mctx.fillRect(lP.x - stackW / 2 + 8, lP.y + 50 - 100 * frac, stackW, 100 * frac);
-        mctx.fillStyle = `rgba(${INK},${TA})`;
-        mctx.textAlign = "center";
-        mctx.fillText(`SEALED · ${artifacts.length}`, lP.x + 8, lP.y + 66);
-      } else {
-        const stackW2 = Math.min(120, w * 0.34);
-        const frac = Math.min(1, ((sealed % artifacts.length) / artifacts.length) + 0.15);
-        mctx.strokeStyle = `rgba(${INK},0.4)`; mctx.lineWidth = 1;
-        mctx.strokeRect(lP.x - stackW2 / 2, lP.y + 12, stackW2, 20);
-        mctx.fillStyle = `rgba(${INK},0.85)`;
-        mctx.fillRect(lP.x - stackW2 / 2, lP.y + 12, stackW2 * frac, 20);
-        mctx.fillStyle = `rgba(${INK},${TA})`;
-        mctx.textAlign = "center";
-        mctx.fillText(`SEALED · ${artifacts.length}`, lP.x, lP.y + 48);
-      }
-
-      /* ticker */
-      if (leading) {
-        mctx.font = portrait ? monoSmall : mono;
-        mctx.fillStyle = `rgba(${INK},${TA})`;
-        if (!portrait) {
-          mctx.textAlign = "right";
-          const label = `IN FLIGHT · ${leading.a.artifact.path} · ${leading.a.artifact.sha256.slice(0, 20)}…`;
-          mctx.fillText(label.length > 96 ? "…" + label.slice(-94) : label, w - 16, 26);
-        } else {
-          mctx.textAlign = "left";
-          const name = leading.a.artifact.path.split("/").pop() ?? "";
-          mctx.fillText(`IN FLIGHT · ${name.length > 32 ? name.slice(0, 32) + "…" : name}`, 12, h - 10);
-        }
-        mctx.textAlign = "center";
-      }
-
-      /* hover tooltip */
-      if (hovered) {
-        mctx.strokeStyle = `rgba(${INK},0.9)`;
-        mctx.lineWidth = 1;
-        mctx.beginPath(); mctx.arc(hovered.x, hovered.y, 8, 0, TAU); mctx.stroke();
-        const name = hovered.p.a.artifact.path.split("/").pop() ?? "";
-        const sha = hovered.p.a.artifact.sha256.slice(7, 15);
-        const tip = `${name} · ${sha} · ${hovered.p.bad ? "WILL BE REJECTED" : "WILL SEAL"}`;
-        mctx.font = monoSmall; mctx.textAlign = "left";
-        const tw = mctx.measureText(tip).width + 16;
-        const tx = Math.min(w - tw - 8, Math.max(8, hovered.x + 14)), ty = Math.max(8, hovered.y - 26);
-        mctx.fillStyle = dark ? "rgba(5,5,7,0.85)" : "rgba(251,250,246,0.92)";
-        mctx.strokeStyle = `rgba(${INK},0.25)`;
-        mctx.beginPath(); mctx.roundRect(tx, ty, tw, 18, 5); mctx.fill(); mctx.stroke();
-        mctx.fillStyle = hovered.p.bad ? `rgba(${RED},0.9)` : `rgba(${INK},0.85)`;
-        mctx.fillText(tip, tx + 8, ty + 13);
-        mctx.textAlign = "center";
-      }
-
-      mctx.restore(); /* end the parallax layer — post & vignette are screen-fixed */
-
-      /* filmic bloom — the scene blooms into its own light (obsidian only).
-         A single self-composite: bright pixels bleed, dark stay dark. */
-      if (dark) {
-        mctx.save();
-        mctx.globalCompositeOperation = "lighter";
-        mctx.globalAlpha = 0.3;
-        mctx.filter = "blur(6px)";
-        mctx.drawImage(mainCv, 0, 0, w, h);
-        mctx.filter = "none";
-        mctx.restore();
-      }
-
-      /* chromatic-aberration vignette — a real lens fringe frames the edges */
-      const vg = (rgb: string, ox: number, a: number) => {
-        const g = mctx.createRadialGradient(w / 2 + ox, h * 0.46, Math.min(w, h) * 0.3, w / 2, h * 0.5, Math.max(w, h) * 0.72);
-        g.addColorStop(0, `rgba(${rgb},0)`);
-        g.addColorStop(1, `rgba(${rgb},${a})`);
-        mctx.fillStyle = g;
-        mctx.fillRect(0, 0, w, h);
+      return () => {
+        cancelAnimationFrame(raf);
+        engineRef.current = null;
+        mainCv.removeEventListener("pointermove", onMove);
+        mainCv.removeEventListener("pointerleave", onLeave);
+        ruleSink.current = () => {};
+        trailCv.remove(); mainCv.remove();
       };
-      if (dark) {
-        vg("150,70,95", -4, 0.09);   // warm fringe, one side
-        vg("70,95,140", 4, 0.09);    // cool fringe, the other
-        vg("3,3,5", 0, 0.52);        // the darkening, last
-      } else {
-        vg("196,120,120", -3, 0.05);
-        vg("120,140,180", 3, 0.05);
-        vg("210,208,198", 0, 0.42);
-      }
+    };
 
-      if (!reduced) raf = requestAnimationFrame(draw);
-    };
-    /* Paint one frame synchronously at mount. Stations mount via flushSync
-       inside startViewTransition, so this fills the canvas before the new
-       snapshot is captured — the engine is already alive in the crossfade,
-       never popping in a frame late. draw() self-schedules the loop. */
-    draw(performance.now());
-    if (reduced) requestAnimationFrame(draw);
-    return () => {
-      cancelAnimationFrame(raf);
-      mainCv.removeEventListener("pointermove", onMove);
-      mainCv.removeEventListener("pointerleave", onLeave);
-    };
+    let cleanup: () => void;
+    if (canWorker) {
+      let worker: Worker | null = null;
+      try {
+        worker = new Worker(new URL("./harbor.worker.ts", import.meta.url), { type: "module" });
+      } catch {
+        worker = null;
+      }
+      if (!worker) {
+        cleanup = runMainThread();
+      } else {
+        const w = worker;
+        workerRef.current = w;
+        wrap.dataset.live = "false"; // fade the engine in when the worker's first frame lands
+        const offTrail = (trailCv as unknown as { transferControlToOffscreen(): OffscreenCanvas }).transferControlToOffscreen();
+        const offMain = (mainCv as unknown as { transferControlToOffscreen(): OffscreenCanvas }).transferControlToOffscreen();
+        w.postMessage(
+          { type: "init", trail: offTrail, main: offMain, artifacts, badTotal, env: readEnv() },
+          [offTrail, offMain],
+        );
+        ruleSink.current = (m) => w.postMessage({ type: "ruleMap", map: m });
+        w.onmessage = (e: MessageEvent) => { if ((e.data as { type?: string })?.type === "ready") wrap.dataset.live = "true"; };
+
+        const pushEnv = () => w.postMessage({ type: "env", env: readEnv() });
+        const ro = new ResizeObserver(pushEnv); ro.observe(mainCv);
+        const mo = new MutationObserver(pushEnv);
+        mo.observe(document.documentElement, { attributes: true, attributeFilter: ["data-ground"] });
+        reducedMq.addEventListener("change", pushEnv);
+        const onMove = (e: PointerEvent) => { const p = rectMouse(e); w.postMessage({ type: "mouse", x: p.x, y: p.y, over: true }); };
+        const onLeave = () => w.postMessage({ type: "mouse", x: -1, y: -1, over: false });
+        mainCv.addEventListener("pointermove", onMove);
+        mainCv.addEventListener("pointerleave", onLeave);
+
+        cleanup = () => {
+          w.postMessage({ type: "stop" });
+          w.terminate();
+          workerRef.current = null;
+          ro.disconnect(); mo.disconnect();
+          reducedMq.removeEventListener("change", pushEnv);
+          mainCv.removeEventListener("pointermove", onMove);
+          mainCv.removeEventListener("pointerleave", onLeave);
+          ruleSink.current = () => {};
+          trailCv.remove(); mainCv.remove();
+        };
+      }
+    } else {
+      cleanup = runMainThread();
+    }
+
+    return cleanup;
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [artifacts]);
 
   const authRows: Array<[string, string]> = [
@@ -558,9 +165,8 @@ export function Harbor({ ev, go, pulse }: { ev: VerifiedEvidence; go: (id: strin
 
   return (
     <div className="harbor">
-      <div className="fieldwrap">
-        <canvas ref={trailRef} aria-hidden="true" />
-        <canvas ref={mainRef} aria-label={`Living diagram of the Reiyah engine processing ${artifacts.length} digest-verified artifacts`} />
+      <div className="fieldwrap" ref={wrapRef}>
+        {/* the two canvases are created imperatively by the effect above */}
         <div className="harbortitle">
           THE LIVING ENGINE · {artifacts.length.toLocaleString()} ARTIFACTS · {Number(proj.total_bytes ?? 0).toLocaleString()} BYTES · {badTotal} REJECTED BY DESIGN
         </div>
