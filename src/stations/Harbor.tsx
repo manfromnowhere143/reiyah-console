@@ -69,6 +69,7 @@ export function Harbor({ ev, go, pulse }: { ev: VerifiedEvidence; go: (id: strin
     const nodeGlow = [0, 0, 0, 0, 0, 0];
     const pupil = { x: 0, y: 0 };
     const mouse = { x: -1, y: -1, over: false };
+    const par = { x: 0, y: 0 };  // damped parallax offset — depth, with weight
 
     const spawn = () => {
       const a = artifacts[spawnIdx % artifacts.length];
@@ -130,6 +131,13 @@ export function Harbor({ ev, go, pulse }: { ev: VerifiedEvidence; go: (id: strin
       timeScale += ((mouse.over ? 0.28 : 1) - timeScale) * Math.min(1, rdt * 6);
       const dt = rdt * (reduced ? 0 : timeScale) * (surge ? 2 : 1);
 
+      /* damped parallax — the scene has depth; motion has inertia, never 1:1 */
+      const MP = Math.min(w, h) * 0.018;
+      const ptx = mouse.over && !reduced ? -((mouse.x / w) - 0.5) * 2 * MP : 0;
+      const pty = mouse.over && !reduced ? -((mouse.y / h) - 0.5) * 2 * MP : 0;
+      par.x += (ptx - par.x) * Math.min(1, rdt * 3);
+      par.y += (pty - par.y) * Math.min(1, rdt * 3);
+
       /* ---- orientation-aware rail ---- */
       let railPt: (t: number) => { x: number; y: number };
       let tEye: number, tChain0: number, tChain1: number, tGate: number;
@@ -165,6 +173,8 @@ export function Harbor({ ev, go, pulse }: { ev: VerifiedEvidence; go: (id: strin
       let leading: Packet | null = null;
       let hovered: { p: Packet; x: number; y: number } | null = null;
 
+      tctx.save();
+      tctx.translate(par.x, par.y);
       for (let i = packets.length - 1; i >= 0; i--) {
         const p = packets[i];
         if (p.fall > 0 || (p.bad && p.t >= tGate)) {
@@ -225,6 +235,7 @@ export function Harbor({ ev, go, pulse }: { ev: VerifiedEvidence; go: (id: strin
         tctx.lineWidth = 1.5;
         tctx.beginPath(); tctx.arc(s.x, s.y, (1 - s.life) * 22 + 4, 0, TAU); tctx.stroke();
       }
+      tctx.restore();
 
       /* ============ CRISP LAYER ============ */
       mctx.clearRect(0, 0, w, h);
@@ -238,6 +249,13 @@ export function Harbor({ ev, go, pulse }: { ev: VerifiedEvidence; go: (id: strin
         mctx.beginPath(); mctx.arc(gx, gy, gr, 0, TAU); mctx.fill();
       };
 
+      /* the far layer: the ghost population moves less — depth by parallax */
+      if (ghost) mctx.drawImage(ghost, par.x * 0.35, par.y * 0.35, w, h);
+
+      /* the scene rides the near parallax layer */
+      mctx.save();
+      mctx.translate(par.x, par.y);
+
       /* ATMOSPHERE: ambient light pools behind the two bright nodes, so the
          chamber has depth. On paper these become soft ink shadows. */
       const breath = reduced ? 1 : 0.85 + 0.15 * Math.sin(now / 1400);
@@ -249,8 +267,6 @@ export function Harbor({ ev, go, pulse }: { ev: VerifiedEvidence; go: (id: strin
         glow(eyeP.x, eyeP.y, Math.min(w, h) * 0.3, INK, 0.03 * breath);
         glow(gateP.x, gateP.y, Math.min(w, h) * 0.24, INK, 0.028);
       }
-
-      if (ghost) mctx.drawImage(ghost, 0, 0, w, h);
 
       /* the rail: a luminous cable with a faint under-glow */
       mctx.strokeStyle = `rgba(${INK},${dark ? 0.22 : 0.16})`;
@@ -483,6 +499,8 @@ export function Harbor({ ev, go, pulse }: { ev: VerifiedEvidence; go: (id: strin
         mctx.fillText(tip, tx + 8, ty + 13);
         mctx.textAlign = "center";
       }
+
+      mctx.restore(); /* end the parallax layer — post & vignette are screen-fixed */
 
       /* filmic bloom — the scene blooms into its own light (obsidian only).
          A single self-composite: bright pixels bleed, dark stay dark. */
