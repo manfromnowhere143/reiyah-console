@@ -16,6 +16,27 @@
           document.documentElement.dataset.ground = "light";
         }
       })();
+      /* Exact app height — the definitive iOS fix. A fixed root sized by 100vh
+         or even 100dvh can lock to the small viewport on first paint (toolbar
+         shown) and never grow when it retracts, leaving the app short with the
+         ground showing below until a reload. We measure the real visible height
+         and re-sample it at every moment it can change — resize, orientation,
+         bfcache restore, the visual viewport, and several timeouts after load
+         to catch the toolbar settle Safari does not always signal. */
+      (function () {
+        var d = document.documentElement;
+        function setH() {
+          var vv = window.visualViewport;
+          var h = (vv && vv.height) ? vv.height : window.innerHeight;
+          if (h) d.style.setProperty("--app-h", h + "px");
+        }
+        setH();
+        addEventListener("resize", setH, { passive: true });
+        addEventListener("orientationchange", function () { setH(); setTimeout(setH, 300); });
+        addEventListener("pageshow", setH);
+        if (window.visualViewport) window.visualViewport.addEventListener("resize", setH, { passive: true });
+        addEventListener("load", function () { setH(); setTimeout(setH, 60); setTimeout(setH, 250); setTimeout(setH, 600); });
+      })();
     </script>
     <link rel="manifest" href="/manifest.webmanifest" />
     <!-- icon set: exact house pattern (portfolio), plus 48px for Google search -->
@@ -113,7 +134,7 @@
          wordmark never shift — the splash simply dissolves into the boot. */
       #boot {
         position: fixed; top: 0; left: 0; width: 100%;
-        height: 100vh; height: 100dvh; z-index: 200;
+        height: 100vh; height: var(--app-h, 100dvh); z-index: 200;
         background: #f4f3ee; color: #101215;
         --ap-accent: #d61732; --ap-line: rgba(16,18,21,.16);
         --ap-faint: #686f78; --ap-ghost: #9aa0a7;
