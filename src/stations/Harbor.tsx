@@ -323,10 +323,27 @@ export function Harbor({ ev, go, pulse }: { ev: VerifiedEvidence; go: (id: strin
       mctx.beginPath();
       mctx.arc(0, 0, eyeR, -TAU / 8 + (25 * Math.PI) / 180, -TAU / 8 - (25 * Math.PI) / 180 + TAU);
       mctx.stroke();
-      /* the pupil, with a living bloom */
+      /* the pupil — filmic layered bloom + a motivated anamorphic streak.
+         The eye is the hero; light here is earned, never gaudy. */
       const pr = eyeR * 0.3 * (surge ? 1.25 : 1);
-      glow(pupil.x, pupil.y, pr * (surge ? 5 : 3.4), RED, surge ? 0.5 : 0.34);
-      mctx.fillStyle = `rgba(${RED},0.97)`;
+      const em = surge ? 1 : 0.62;
+      if (dark) {
+        mctx.globalCompositeOperation = "lighter";
+        glow(pupil.x, pupil.y, pr * 6.5, RED, 0.16 * em);   // wide soft halo
+        glow(pupil.x, pupil.y, pr * 2.7, RED, 0.4 * em);    // tight core glow
+        const sw = eyeR * (surge ? 7.5 : 4.4);              // anamorphic streak
+        const sg = mctx.createLinearGradient(pupil.x - sw, 0, pupil.x + sw, 0);
+        sg.addColorStop(0, `rgba(${RED},0)`);
+        sg.addColorStop(0.5, `rgba(${RED},${(0.5 * em).toFixed(3)})`);
+        sg.addColorStop(1, `rgba(${RED},0)`);
+        mctx.fillStyle = sg;
+        const sh = 0.8 + em * 0.9;
+        mctx.fillRect(pupil.x - sw, pupil.y - sh, sw * 2, sh * 2);
+        mctx.globalCompositeOperation = "source-over";
+      } else {
+        glow(pupil.x, pupil.y, pr * 3.6, RED, 0.28 * em);
+      }
+      mctx.fillStyle = `rgba(${RED},0.98)`;
       mctx.beginPath(); mctx.arc(pupil.x, pupil.y, pr, 0, TAU); mctx.fill();
       mctx.restore();
       mctx.fillStyle = `rgba(${INK},${TA})`;
