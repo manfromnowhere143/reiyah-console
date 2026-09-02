@@ -72,9 +72,9 @@ export function Lineage({ summary }: { summary: Summary }) {
       <div className="ipanel" style={{ marginBottom: "0.8rem" }}>
         <div className="ilabel">canonical validation reports · {canonical.length}</div>
         {canonical.map((r: any, i: number) => (
-          <div key={i} className="bar" style={{ gridTemplateColumns: "8rem 1fr auto" }}>
+          <div key={i} className="bar linerow">
             <span className="bk">{r.meta.path.split("/").pop()?.replace("gate-a-validation-", "").replace(".json", "")}</span>
-            <span style={{ fontFamily: "var(--mono)", fontSize: "0.6rem", color: "var(--ink-faint)" }}>
+            <span className="linemid">
               {String(r.data?.status ?? r.data?.result ?? "recorded").toUpperCase()}
               {" · "}{String(r.data?.architecture_status ?? "")}
               {" · exit "}{String(r.data?.exit_code ?? "?")}
@@ -95,11 +95,9 @@ export function Lineage({ summary }: { summary: Summary }) {
         <div className="ilabel">recovery chain · {recoveries.length} immutable predecessors</div>
         {recoveries.map((r, i) =>
           r.state === "observed" ? (
-            <div key={i} className="bar" style={{ gridTemplateColumns: "8rem 1fr auto" }}>
+            <div key={i} className="bar linerow">
               <span className="bk">{r.meta.path.split("/")[1]}</span>
-              <span style={{ fontFamily: "var(--mono)", fontSize: "0.6rem", color: "var(--ink-faint)", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
-                {String(r.data?.recovery_method ?? "recorded")}
-              </span>
+              <span className="linemid">{String(r.data?.recovery_method ?? "recorded")}</span>
               <Digest id={r.meta.id} sha={r.meta.sha256} path={r.meta.path} />
             </div>
           ) : (

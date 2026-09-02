@@ -405,6 +405,25 @@ button:focus-visible, a:focus-visible { outline: 2px solid var(--ink-soft); outl
 .bar .bt { height: 8px; border-radius: 4px; background: var(--panel-2); overflow: hidden; }
 .bar .bf { height: 100%; background: var(--ink-soft); border-radius: 4px; }
 .bar .bn { font-family: var(--mono); font-size: 0.66rem; color: var(--ink-faint); text-align: right; font-variant-numeric: tabular-nums; }
+/* grid items must be allowed to shrink below their content, or a long cell
+   pushes the row wider than the screen and the page scrolls sideways */
+.bar > * { min-width: 0; }
+
+/* Lineage record rows: name | status | digest on desktop; on mobile the row
+   restacks so the name and its digest sit together and the status wraps below —
+   stable, never sliding off-screen. */
+.linerow { grid-template-columns: 8rem 1fr auto; grid-template-areas: "name status digest"; row-gap: 0.1rem; }
+.linerow > .bk { grid-area: name; }
+.linerow > .linemid {
+  grid-area: status; min-width: 0;
+  font-family: var(--mono); font-size: 0.6rem; color: var(--ink-faint);
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+.linerow > .digest { grid-area: digest; }
+@media (max-width: 760px) {
+  .linerow { grid-template-columns: 1fr auto; grid-template-areas: "name digest" "status status"; align-items: center; }
+  .linerow > .linemid { white-space: normal; font-size: 0.56rem; line-height: 1.4; }
+}
 
 /* control grid */
 .ctrlgrid { display: grid; grid-template-columns: repeat(auto-fill, minmax(9.6rem, 1fr)); gap: 0.45rem; }

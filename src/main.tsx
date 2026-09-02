@@ -21,12 +21,9 @@ if ("serviceWorker" in navigator && import.meta.env.PROD) {
     .catch(() => {
       /* offline support is an enhancement; its absence is not a failure */
     });
-  /* when a new worker takes command, reload once so every deploy lands
-     immediately on every device — no user ritual, ever */
-  let refreshed = false;
-  navigator.serviceWorker.addEventListener("controllerchange", () => {
-    if (refreshed) return;
-    refreshed = true;
-    location.reload();
-  });
+  /* No forced reload on controllerchange. A fresh worker claiming the page
+     (first visit, or the first load after a deploy) would otherwise reload the
+     page and read as a double-load flash. Freshness does not need it: every
+     navigation is network-first, so the newest HTML and assets arrive on the
+     next load anyway, and the boot watchdog recovers any stale-cache case. */
 }
