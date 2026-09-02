@@ -38,6 +38,8 @@ export function Encounter() {
   const progRef = useRef(0);
   const easedRef = useRef(0);
   const [chain, setChain] = useState<Chain>(FALLBACK);
+  const chainRef = useRef<Chain>(FALLBACK);
+  useEffect(() => { chainRef.current = chain; }, [chain]);
 
   useEffect(() => {
     let alive = true;
@@ -163,6 +165,34 @@ export function Encounter() {
         ctx.moveTo(cx, objY - r); ctx.lineTo(cx + r, objY);
         ctx.lineTo(cx, objY + r); ctx.lineTo(cx - r, objY);
         ctx.closePath(); ctx.stroke();
+
+        /* the belief as a quantile dotplot — 20 dots, each 5% of probability;
+           the most legible honest uncertainty encoding (Kay/Hullman). */
+        const bShow = smooth(0.26, 0.42, p) * (1 - smooth(0.66, 0.74, p));
+        if (bShow > 0.02) {
+          const p1 = chainRef.current.p1 ?? 0.75;
+          const filled = Math.round(p1 * 20);
+          const dpr2 = 5.5, gap = 4.2, cols = 4;
+          const ox = cx + r + 26, oy = objY - (2 * (dpr2 + gap));
+          ctx.globalAlpha = bShow;
+          for (let d = 0; d < 20; d++) {
+            const col = d % cols, row = Math.floor(d / cols);
+            const dx = ox + col * (dpr2 + gap), dy = oy + row * (dpr2 + gap);
+            if (d < filled) {
+              ctx.fillStyle = `rgba(${INK},0.9)`;
+              ctx.beginPath(); ctx.arc(dx, dy, dpr2 / 2, 0, TAU); ctx.fill();
+            } else {
+              ctx.strokeStyle = `rgba(${INK},0.4)`;
+              ctx.lineWidth = 1;
+              ctx.beginPath(); ctx.arc(dx, dy, dpr2 / 2, 0, TAU); ctx.stroke();
+            }
+          }
+          ctx.fillStyle = `rgba(${INK},0.55)`;
+          ctx.font = '8px "B612 Mono", monospace';
+          ctx.textAlign = "left";
+          ctx.fillText(`RELEVANT ${p1.toFixed(2)}`, ox, oy + 5 * (dpr2 + gap) + 2);
+          ctx.globalAlpha = 1;
+        }
       }
 
       /* ---- the joint blind wedge: where neither channel reaches ---- */
