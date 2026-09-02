@@ -1,10 +1,12 @@
-/* The Harbor engine — the living-diagram simulation and render, extracted from
-   the component into a pure module with no DOM or window references. Every
-   per-frame input arrives through `env` (size, dpr, theme, reduced-motion) or
-   the input setters (pointer, pulse, rejection-rule map). The same engine runs
-   in a Web Worker over an OffscreenCanvas (main thread freed) and, where that
-   is unsupported, directly on the main thread as a byte-identical fallback.
-   The drawing logic below is a faithful copy of the original component loop. */
+/* The Harbor engine — THE SENSED WORLD. A first-person, in-cabin view of the
+   real domain Reiyah exists for: driving forward, the committed artifacts
+   stream toward you as sensed objects, each passing through the six kinds
+   (OBS -> BEL -> DEC -> INT -> OUT -> EVD); the gate rejects known-bad fixtures
+   in-world; a sensing reticle watches the road ahead. Every object is a real,
+   digest-verified record. No DOM or window references — every per-frame input
+   arrives through `env` or the input setters — so the same engine runs in a
+   Web Worker over an OffscreenCanvas (with the WebGL2 post feeding on its
+   scene) and, where that is unsupported, on the main thread as a fallback. */
 
 export interface ArtifactRow {
   artifact: { path: string; sha256: string };
@@ -19,31 +21,31 @@ export interface HarborEnv {
   dark: boolean;
   reduced: boolean;
   /* "canvas": the engine applies its own 2D bloom + vignette (fallback path).
-     "none": a downstream GPU pass owns bloom/dispersion/vignette, so the engine
-     emits the raw scene. Defaults to "canvas". */
+     "none": a downstream GPU pass owns bloom/dispersion/vignette. */
   post?: "canvas" | "none";
 }
 
-/* Either a real canvas (main thread) or an OffscreenCanvas (worker). */
 type AnyCanvas = HTMLCanvasElement | OffscreenCanvas;
 type Ctx = CanvasRenderingContext2D | OffscreenCanvasRenderingContext2D;
 type MakeCanvas = (w: number, h: number) => AnyCanvas;
 
 const TAU = Math.PI * 2;
 const KINDS = ["OBS", "BEL", "DEC", "INT", "OUT", "EVD"];
+const KIND_T = [0.10, 0.24, 0.38, 0.54, 0.70, 0.86]; // where each kind lives along the approach
+const GATE_T = 0.46;                                  // the gate: bad fixtures are rejected here
 
 interface Packet {
   a: ArtifactRow;
-  t: number;
+  t: number;        // 0 (far, at the horizon) -> 1 (near, passing the ego)
   speed: number;
   bad: boolean;
-  fall: number;
-  fx?: number; fy?: number; vx?: number; vy?: number;
-  stamp: number;
-  lane: number;
-  mass: number;   // 0..1, the artifact's real byte size, log-scaled
+  lane: number;     // -1..1 across the road
+  mass: number;     // 0..1, real byte size (log-scaled)
+  fall: number;     // > 0 once rejected
+  vx: number; vy: number;
+  px: number; py: number; // previous screen position, for the motion streak
+  seen: boolean;
 }
-interface Spark { x: number; y: number; life: number }
 
 export interface HarborEngine {
   frame(now: number, env: HarborEnv): void;
@@ -58,9 +60,6 @@ export function createHarborEngine(
   badTotal: number,
   makeCanvas: MakeCanvas,
 ): HarborEngine {
-  /* Two internal layers — a persistent trail buffer and a per-frame crisp
-     layer — are composited onto `output` each frame. `output` is the visible
-     canvas (2D fallback) or an internal scene buffer the GPU pass reads. */
   const trailCv = makeCanvas(2, 2);
   const mainCv = makeCanvas(2, 2);
   const tctx = trailCv.getContext("2d") as Ctx;
@@ -70,21 +69,16 @@ export function createHarborEngine(
   const mono = '11px "B612 Mono","SF Mono",Menlo,monospace';
   const monoSmall = '9px "B612 Mono","SF Mono",Menlo,monospace';
 
-  let spawnIdx = 0, sealed = 0, spawnAcc = 0, blink = 0;
+  let spawnIdx = 0, sealed = 0, spawnAcc = 0, raf0 = 0;
   let timeScale = 1;
   const packets: Packet[] = [];
-  const sparks: Spark[] = [];
-  const nodeGlow = [0, 0, 0, 0, 0, 0];
-  const pupil = { x: 0, y: 0 };
+  const kindGlow = [0, 0, 0, 0, 0, 0];
   const mouse = { x: -1, y: -1, over: false };
-  const par = { x: 0, y: 0 };
+  let lastRejectAt = 0, lastRejectRule = "";
 
   let pulseAt = 0;
   let ruleMap: Record<string, string> = {};
-  let lastReject: { rule: string; at: number } | null = null;
 
-  /* the real byte size of each artifact, log-scaled to 0..1 — drives packet
-     mass so a heavier record visibly carries more weight. Committed data. */
   let lmin = Infinity, lmax = -Infinity;
   for (const a of artifacts) { const l = Math.log(Math.max(1, a.byte_size || 1)); if (l < lmin) lmin = l; if (l > lmax) lmax = l; }
   const massOf = (b: number) => (lmax > lmin ? (Math.log(Math.max(1, b || 1)) - lmin) / (lmax - lmin) : 0.5);
@@ -93,32 +87,18 @@ export function createHarborEngine(
     const a = artifacts[spawnIdx % artifacts.length];
     spawnIdx++;
     const hh = parseInt(a.artifact.sha256.slice(9, 13), 16) / 0xffff;
+    const hh2 = parseInt(a.artifact.sha256.slice(13, 17), 16) / 0xffff;
     packets.push({
-      a, t: 0, speed: 0.085 + hh * 0.05,
+      a, t: 0, speed: 0.055 + hh * 0.05,
       bad: a.role === "known_bad_fixture",
-      fall: 0, stamp: 0, lane: (hh - 0.5) * 2,
+      lane: (hh2 - 0.5) * 1.7,
       mass: massOf(a.byte_size),
+      fall: 0, vx: 0, vy: 0, px: 0, py: 0, seen: false,
     });
   };
-  for (let i = 0; i < 6; i++) { spawn(); packets[i].t = i * 0.15; }
+  for (let i = 0; i < 7; i++) { spawn(); packets[i].t = i * 0.13; }
 
-  let ghost: AnyCanvas | null = null;
-  let ghostKey = "";
-  const buildGhost = (w: number, h: number, dpr: number, ink: string) => {
-    ghost = makeCanvas(w * dpr, h * dpr);
-    const g = ghost.getContext("2d") as Ctx;
-    g.setTransform(dpr, 0, 0, dpr, 0, 0);
-    for (const a of artifacts) {
-      const hex = a.artifact.sha256.slice(9);
-      const x = (parseInt(hex.slice(0, 5), 16) / 0xfffff) * w;
-      const y = (parseInt(hex.slice(5, 10), 16) / 0xfffff) * h;
-      g.fillStyle = `rgba(${ink},${a.role === "known_bad_fixture" ? 0.028 : 0.055})`;
-      g.beginPath(); g.arc(x, y, 1, 0, TAU); g.fill();
-    }
-  };
-
-  let last = 0;
-  let started = false;
+  let last = 0, started = false;
 
   const frame = (now: number, env: HarborEnv) => {
     if (!started) { last = now; started = true; }
@@ -136,125 +116,36 @@ export function createHarborEngine(
     const INK = dark ? "255,255,255" : "16,18,21";
     const RED = dark ? "227,25,55" : "214,23,50";
     const OK = dark ? "143,208,176" : "23,114,76";
-    const FADE = dark ? "rgba(10,11,14,0.22)" : "rgba(236,234,226,0.24)";
-    const TA = dark ? "0.96" : "0.8";
+    const DIM = dark ? "150,157,166" : "120,128,138";
+    const FADE = dark ? "rgba(5,5,7,0.30)" : "rgba(244,243,238,0.32)";
+    const TA = dark ? "0.94" : "0.82";
     const surge = !!pulseAt && now - pulseAt < 2000;
-    const portrait = h > w * 1.05;
+    const t = now / 1000;
 
-    timeScale += ((mouse.over ? 0.28 : 1) - timeScale) * Math.min(1, rdt * 6);
-    const dt = rdt * (reduced ? 0 : timeScale) * (surge ? 2 : 1);
+    timeScale += ((mouse.over ? 0.4 : 1) - timeScale) * Math.min(1, rdt * 6);
+    const dt = rdt * (reduced ? 0 : timeScale) * (surge ? 1.7 : 1);
+    const flow = reduced ? 0 : t * 0.28; // forward motion for the lane dashes
 
-    /* damped parallax — the scene has depth; motion has inertia, never 1:1 */
-    const MP = Math.min(w, h) * 0.018;
-    const ptx = mouse.over && !reduced ? -((mouse.x / w) - 0.5) * 2 * MP : 0;
-    const pty = mouse.over && !reduced ? -((mouse.y / h) - 0.5) * 2 * MP : 0;
-    par.x += (ptx - par.x) * Math.min(1, rdt * 3);
-    par.y += (pty - par.y) * Math.min(1, rdt * 3);
+    /* ---- perspective of the road ---- */
+    const horizon = Math.round(h * 0.40);
+    const cx = w / 2;
+    const groundH = h - horizon;
+    const yAt = (p: number) => horizon + groundH * (p * p);
+    const fAt = (y: number) => (y - horizon) / groundH;               // 0 at horizon, 1 at ego
+    const halfAt = (f: number) => 22 + (w * 0.52 - 22) * f;           // road half-width
+    const project = (p: number, lane: number) => {
+      const y = yAt(p); const f = fAt(y);
+      return { x: cx + lane * halfAt(f) * 0.82, y, f };
+    };
 
-    /* ---- orientation-aware rail ---- */
-    let railPt: (t: number) => { x: number; y: number };
-    let tEye: number, tChain0: number, tChain1: number, tGate: number;
-    if (!portrait) {
-      const midY = h * 0.46, dip = h * 0.075;
-      const x0 = w * 0.06, x2 = w * 0.9;
-      railPt = (t) => ({
-        x: x0 + (x2 - x0) * t,
-        y: (1 - t) * (1 - t) * midY + 2 * (1 - t) * t * (midY + dip) + t * t * midY,
-      });
-      tEye = 0.18; tChain0 = 0.30; tChain1 = 0.62; tGate = 0.74;
-    } else {
-      const cx = w * 0.42, dipX = w * 0.11;
-      const y0 = h * 0.06, y2 = h * 0.82;
-      railPt = (t) => ({
-        x: (1 - t) * (1 - t) * cx + 2 * (1 - t) * t * (cx + dipX) + t * t * cx,
-        y: y0 + (y2 - y0) * t,
-      });
-      tEye = 0.16; tChain0 = 0.30; tChain1 = 0.60; tGate = 0.74;
-    }
-    const eyeP = railPt(tEye), gateP = railPt(tGate);
-
-    const key = `${w}x${h}x${dpr}x${dark}`;
-    if (key !== ghostKey) { buildGhost(w, h, dpr, INK); ghostKey = key; }
-
-    /* ============ TRAIL LAYER ============ */
+    /* ============ TRAIL LAYER: motion, speed, the world in flight ============ */
     tctx.fillStyle = FADE;
     tctx.fillRect(0, 0, w, h);
     if (reduced) tctx.clearRect(0, 0, w, h);
 
-    spawnAcc += dt * 1.15;
-    if (!reduced && spawnAcc > 0.5 && packets.length < 30) { spawnAcc = 0; spawn(); }
-    let leading: Packet | null = null;
-    let hovered: { p: Packet; x: number; y: number } | null = null;
-
-    tctx.save();
-    tctx.translate(par.x, par.y);
-    for (let i = packets.length - 1; i >= 0; i--) {
-      const p = packets[i];
-      if (p.fall > 0 || (p.bad && p.t >= tGate)) {
-        if (p.fall === 0) {
-          sparks.push({ x: gateP.x, y: gateP.y, life: 1 });
-          const rule = ruleMap[p.a.artifact.path];
-          if (rule) lastReject = { rule, at: now };
-          p.fx = gateP.x; p.fy = gateP.y;
-          if (portrait) { p.vx = 90 + Math.random() * 60; p.vy = 30; }
-          else { p.vx = 30 + Math.random() * 30; p.vy = 40; }
-        }
-        p.fall += dt * 1.4;
-        p.vy! += (portrait ? 420 : 640) * dt;
-        p.fx! += p.vx! * dt; p.fy! += p.vy! * dt;
-        const fa = Math.max(0, 1 - p.fall * 0.8);
-        tctx.fillStyle = `rgba(${RED},${(0.9 * fa).toFixed(2)})`;
-        tctx.beginPath(); tctx.arc(p.fx!, p.fy!, 2.8, 0, TAU); tctx.fill();
-        if (p.fy! > h + 10 || p.fx! > w + 10 || p.fall > 1.8) packets.splice(i, 1);
-        continue;
-      }
-      p.t += dt * p.speed;
-      if (p.t >= 1) { sealed++; packets.splice(i, 1); continue; }
-      const pt = railPt(p.t);
-      const jx = portrait ? Math.sin(p.t * 30) * 2 * p.lane : 0;
-      const jy = portrait ? 0 : Math.sin(p.t * 30) * 2 * p.lane;
-      const x = pt.x + jx, y = pt.y + jy;
-      for (let k = 0; k < 6; k++) {
-        const tN = tChain0 + (k / 5) * (tChain1 - tChain0);
-        if (Math.abs(p.t - tN) < 0.006) nodeGlow[k] = 1;
-      }
-      if (Math.abs(p.t - tGate) < 0.012 && !p.bad) p.stamp = 1;
-      p.stamp = Math.max(0, p.stamp - dt * 2.2);
-      const rgb = p.stamp > 0 ? OK : p.bad ? INK : INK;
-      /* size carries the artifact's real byte mass */
-      const coreR = (p.bad ? 2.1 : 2.6) * (0.72 + p.mass * 0.9);
-      /* comet: additive halo on obsidian, then the bright core */
-      if (dark) {
-        tctx.globalCompositeOperation = "lighter";
-        tctx.fillStyle = `rgba(${p.stamp > 0 ? OK : p.bad ? "120,120,124" : "200,205,212"},${p.bad ? 0.1 : 0.22})`;
-        tctx.beginPath(); tctx.arc(x, y, coreR * 3.2, 0, TAU); tctx.fill();
-        tctx.globalCompositeOperation = "source-over";
-      }
-      tctx.fillStyle = `rgba(${rgb},${p.stamp > 0 ? 0.98 : p.bad ? 0.42 : 0.9})`;
-      tctx.beginPath(); tctx.arc(x, y, coreR, 0, TAU); tctx.fill();
-      if (!leading || p.t > leading.t) leading = p;
-      if (mouse.over) {
-        const d = Math.hypot(mouse.x - x, mouse.y - y);
-        if (d < 26 && (!hovered || d < Math.hypot(mouse.x - hovered.x, mouse.y - hovered.y))) {
-          hovered = { p, x, y };
-        }
-      }
-    }
-
-    for (let i = sparks.length - 1; i >= 0; i--) {
-      const s = sparks[i];
-      s.life -= dt * 2.4;
-      if (s.life <= 0) { sparks.splice(i, 1); continue; }
-      tctx.strokeStyle = `rgba(${RED},${(s.life * 0.8).toFixed(2)})`;
-      tctx.lineWidth = 1.5;
-      tctx.beginPath(); tctx.arc(s.x, s.y, (1 - s.life) * 22 + 4, 0, TAU); tctx.stroke();
-    }
-    tctx.restore();
-
     /* ============ CRISP LAYER ============ */
     mctx.clearRect(0, 0, w, h);
 
-    /* soft radial glow — cheap bloom, depth without spectacle */
     const glow = (gx: number, gy: number, gr: number, rgb: string, a: number) => {
       const g = mctx.createRadialGradient(gx, gy, 0, gx, gy, gr);
       g.addColorStop(0, `rgba(${rgb},${a})`);
@@ -263,238 +154,203 @@ export function createHarborEngine(
       mctx.beginPath(); mctx.arc(gx, gy, gr, 0, TAU); mctx.fill();
     };
 
-    /* the far layer: the ghost population moves less — depth by parallax */
-    if (ghost) mctx.drawImage(ghost as CanvasImageSource, par.x * 0.35, par.y * 0.35, w, h);
+    /* the sky/road ground: a faint depth wash toward the horizon */
+    if (dark) glow(cx, horizon, Math.max(w, h) * 0.5, INK, 0.05);
 
-    /* the scene rides the near parallax layer */
-    mctx.save();
-    mctx.translate(par.x, par.y);
-
-    const breath = reduced ? 1 : 0.85 + 0.15 * Math.sin(now / 1400);
-    if (dark) {
-      glow(eyeP.x, eyeP.y, Math.min(w, h) * 0.32, INK, 0.05 * breath);
-      glow(eyeP.x, eyeP.y, Math.min(w, h) * 0.15, RED, 0.05 * breath);
-      glow(gateP.x, gateP.y, Math.min(w, h) * 0.26, INK, 0.045);
-    } else {
-      glow(eyeP.x, eyeP.y, Math.min(w, h) * 0.3, INK, 0.03 * breath);
-      glow(gateP.x, gateP.y, Math.min(w, h) * 0.24, INK, 0.028);
-    }
-
-    /* the rail: a luminous cable with a faint under-glow */
-    mctx.strokeStyle = `rgba(${INK},${dark ? 0.22 : 0.16})`;
+    /* road edges converging to the vanishing point */
+    mctx.strokeStyle = `rgba(${INK},${dark ? 0.16 : 0.14})`;
+    mctx.lineWidth = 1.4; mctx.lineCap = "round";
+    mctx.beginPath();
+    mctx.moveTo(cx - 22, horizon); mctx.lineTo(cx - w * 0.54, h);
+    mctx.moveTo(cx + 22, horizon); mctx.lineTo(cx + w * 0.54, h);
+    mctx.stroke();
+    /* the horizon line */
+    mctx.strokeStyle = `rgba(${INK},${dark ? 0.14 : 0.12})`;
     mctx.lineWidth = 1;
-    const r0 = railPt(0), r1 = railPt(1);
-    mctx.beginPath();
-    if (!portrait) {
-      mctx.moveTo(r0.x, r0.y);
-      mctx.quadraticCurveTo((r0.x + r1.x) / 2, h * 0.46 + h * 0.15, r1.x, r1.y);
-    } else {
-      mctx.moveTo(r0.x, r0.y);
-      mctx.quadraticCurveTo(w * 0.42 + w * 0.22, (r0.y + r1.y) / 2, r1.x, r1.y);
-    }
-    mctx.stroke();
+    mctx.beginPath(); mctx.moveTo(0, horizon); mctx.lineTo(w, horizon); mctx.stroke();
 
-    mctx.font = monoSmall;
-
-    /* encounter */
-    mctx.strokeStyle = `rgba(${INK},0.45)`; mctx.lineWidth = 1.2;
-    if (!portrait) {
-      mctx.textAlign = "center";
-      mctx.beginPath();
-      mctx.moveTo(r0.x - 22, r0.y + 38); mctx.lineTo(r0.x - 6, r0.y - 26);
-      mctx.moveTo(r0.x + 22, r0.y + 38); mctx.lineTo(r0.x + 6, r0.y - 26);
-      mctx.stroke();
-      mctx.beginPath();
-      mctx.moveTo(r0.x, r0.y - 45); mctx.lineTo(r0.x + 7, r0.y - 38);
-      mctx.lineTo(r0.x, r0.y - 31); mctx.lineTo(r0.x - 7, r0.y - 38);
-      mctx.closePath(); mctx.stroke();
-      mctx.fillStyle = `rgba(${INK},${TA})`;
-      mctx.fillText("ENCOUNTER", r0.x, r0.y + 58);
-    } else {
-      mctx.beginPath();
-      mctx.moveTo(r0.x - 26, r0.y - 7); mctx.lineTo(r0.x - 8, r0.y);
-      mctx.moveTo(r0.x - 26, r0.y + 7); mctx.lineTo(r0.x - 8, r0.y);
-      mctx.stroke();
-      mctx.beginPath();
-      mctx.moveTo(r0.x - 36, r0.y - 6); mctx.lineTo(r0.x - 30, r0.y);
-      mctx.lineTo(r0.x - 36, r0.y + 6); mctx.lineTo(r0.x - 42, r0.y);
-      mctx.closePath(); mctx.stroke();
-      mctx.textAlign = "left";
-      mctx.fillStyle = `rgba(${INK},${TA})`;
-      mctx.fillText("ENCOUNTER", r0.x + 14, r0.y + 3);
+    /* centre lane dashes, scrolling toward the ego (forward motion) */
+    const N = 11;
+    for (let k = 0; k < N; k++) {
+      let p = ((k / N) + flow) % 1;
+      const y = yAt(p), f = fAt(y);
+      mctx.strokeStyle = `rgba(${INK},${(0.05 + 0.2 * f).toFixed(3)})`;
+      mctx.lineWidth = 1 + f * 4;
+      mctx.beginPath(); mctx.moveTo(cx, y); mctx.lineTo(cx, y - (6 + f * 34)); mctx.stroke();
     }
 
-    /* the eye */
-    blink = Math.max(0, blink - rdt);
-    if (!reduced && Math.random() < rdt / 7) blink = 0.16;
-    const eyeR = portrait ? Math.min(22, w * 0.055) : Math.min(30, w * 0.024);
-    let target = { x: Math.cos(-TAU / 8) * eyeR * 0.18, y: Math.sin(-TAU / 8) * eyeR * 0.18 };
-    let bestD = Infinity;
-    for (const p of packets) {
-      if (p.fall > 0 || p.t > tEye + 0.06) continue;
-      const pt = railPt(p.t);
-      const d = tEye - p.t;
-      if (d >= 0 && d < bestD) {
-        bestD = d;
-        const ang = Math.atan2(pt.y - eyeP.y, pt.x - eyeP.x);
-        target = { x: Math.cos(ang) * eyeR * 0.22, y: Math.sin(ang) * eyeR * 0.22 };
-      }
-    }
-    pupil.x += (target.x - pupil.x) * Math.min(1, rdt * 14);
-    pupil.y += (target.y - pupil.y) * Math.min(1, rdt * 14);
-    mctx.save();
-    mctx.translate(eyeP.x, eyeP.y);
-    mctx.scale(1, blink > 0 ? Math.max(0.1, 1 - blink * 6) : 1);
-    mctx.strokeStyle = `rgba(${INK},0.94)`;
-    mctx.lineWidth = Math.max(3, eyeR * 0.24);
-    mctx.lineCap = "round";
-    mctx.beginPath();
-    mctx.arc(0, 0, eyeR, -TAU / 8 + (25 * Math.PI) / 180, -TAU / 8 - (25 * Math.PI) / 180 + TAU);
-    mctx.stroke();
-    const pr = eyeR * 0.3 * (surge ? 1.25 : 1);
-    const em = surge ? 1 : 0.62;
-    if (dark) {
-      mctx.globalCompositeOperation = "lighter";
-      glow(pupil.x, pupil.y, pr * 6.5, RED, 0.16 * em);
-      glow(pupil.x, pupil.y, pr * 2.7, RED, 0.4 * em);
-      const sw = eyeR * (surge ? 7.5 : 4.4);
-      const sg = mctx.createLinearGradient(pupil.x - sw, 0, pupil.x + sw, 0);
-      sg.addColorStop(0, `rgba(${RED},0)`);
-      sg.addColorStop(0.5, `rgba(${RED},${(0.5 * em).toFixed(3)})`);
-      sg.addColorStop(1, `rgba(${RED},0)`);
-      mctx.fillStyle = sg;
-      const sh = 0.8 + em * 0.9;
-      mctx.fillRect(pupil.x - sw, pupil.y - sh, sw * 2, sh * 2);
-      mctx.globalCompositeOperation = "source-over";
-    } else {
-      glow(pupil.x, pupil.y, pr * 3.6, RED, 0.28 * em);
-    }
-    mctx.fillStyle = `rgba(${RED},0.98)`;
-    mctx.beginPath(); mctx.arc(pupil.x, pupil.y, pr, 0, TAU); mctx.fill();
-    mctx.restore();
-    mctx.fillStyle = `rgba(${INK},${TA})`;
-    if (!portrait) {
-      mctx.textAlign = "center";
-      mctx.fillText("REIYAH SEES", eyeP.x, eyeP.y + eyeR + 26);
-    } else {
-      mctx.textAlign = "left";
-      mctx.fillText("REIYAH SEES", eyeP.x + eyeR + 12, eyeP.y + 3);
-    }
-
-    /* six kinds */
-    for (let k = 0; k < 6; k++) {
-      const tN = tChain0 + (k / 5) * (tChain1 - tChain0);
-      const pN = railPt(tN);
-      nodeGlow[k] = Math.max(0, nodeGlow[k] - rdt * 2.4);
-      const gGlow = nodeGlow[k];
-      mctx.strokeStyle = `rgba(${INK},${(0.45 + gGlow * 0.55).toFixed(2)})`;
-      mctx.lineWidth = 1.2 + gGlow;
-      mctx.beginPath(); mctx.arc(pN.x, pN.y, (portrait ? 4.5 : 5.5) + gGlow * 2.5, 0, TAU); mctx.stroke();
-      mctx.fillStyle = `rgba(${INK},${TA})`;
-      if (!portrait) {
-        mctx.textAlign = "center";
-        mctx.fillText(KINDS[k], pN.x, pN.y - 15 - gGlow * 2);
-      } else {
-        const leftSide = k % 2 === 0;
-        mctx.textAlign = leftSide ? "right" : "left";
-        mctx.fillText(KINDS[k], pN.x + (leftSide ? -18 : 18), pN.y + 3);
-      }
-    }
-    if (!portrait) {
-      const midChain = railPt((tChain0 + tChain1) / 2);
-      mctx.textAlign = "center";
-      mctx.fillStyle = `rgba(${INK},${TA})`;
-      mctx.fillText("SIX KINDS, NEVER MERGED", midChain.x, midChain.y + 58);
-    }
-
-    /* the gate — luminous bars with a scanning beam that sweeps the aperture */
-    const closing = sparks.length > 0 ? 6 : 0;
-    const gh = portrait ? Math.min(44, w * 0.12) : 54;
-    const scan = reduced ? 0.5 : (Math.sin(now / 900) * 0.5 + 0.5);
-    mctx.save();
-    mctx.strokeStyle = `rgba(${INK},0.9)`;
-    mctx.lineWidth = 2; mctx.lineCap = "round";
-    mctx.beginPath();
-    if (!portrait) {
-      mctx.moveTo(gateP.x, gateP.y - gh); mctx.lineTo(gateP.x, gateP.y - 10 + closing);
-      mctx.moveTo(gateP.x, gateP.y + 10 - closing); mctx.lineTo(gateP.x, gateP.y + gh);
-    } else {
-      mctx.moveTo(gateP.x - gh, gateP.y); mctx.lineTo(gateP.x - 10 + closing, gateP.y);
-      mctx.moveTo(gateP.x + 10 - closing, gateP.y); mctx.lineTo(gateP.x + gh, gateP.y);
-    }
-    mctx.stroke();
+    /* ---- the sensing reticle: REIYAH watches the road ahead ---- */
+    const scan = reduced ? 0.5 : (Math.sin(t * 1.1) * 0.5 + 0.5);
+    const rr = 10 + scan * 6;
     if (dark) mctx.globalCompositeOperation = "lighter";
-    const bx = portrait ? gateP.x - (gh - 12) + scan * (gh - 12) * 2 : gateP.x;
-    const by = portrait ? gateP.y : gateP.y - (gh - 12) + scan * (gh - 12) * 2;
-    glow(bx, by, 10, OK, dark ? 0.55 : 0.32);
-    mctx.fillStyle = `rgba(${OK},0.85)`;
-    mctx.beginPath(); mctx.arc(bx, by, 1.6, 0, TAU); mctx.fill();
-    mctx.restore();
+    glow(cx, horizon, 26 * (surge ? 1.4 : 1), RED, 0.14 * (surge ? 1.4 : 1));
+    mctx.globalCompositeOperation = "source-over";
+    mctx.strokeStyle = `rgba(${RED},${0.7})`;
+    mctx.lineWidth = 1.2;
+    mctx.beginPath(); mctx.arc(cx, horizon, rr, 0, TAU); mctx.stroke();
+    mctx.strokeStyle = `rgba(${INK},0.5)`;
+    for (let a = 0; a < 4; a++) {
+      const ang = a * (TAU / 4) + t * 0.3;
+      mctx.beginPath();
+      mctx.moveTo(cx + Math.cos(ang) * (rr + 3), horizon + Math.sin(ang) * (rr + 3));
+      mctx.lineTo(cx + Math.cos(ang) * (rr + 8), horizon + Math.sin(ang) * (rr + 8));
+      mctx.stroke();
+    }
+    mctx.fillStyle = `rgba(${RED},0.95)`;
+    mctx.beginPath(); mctx.arc(cx, horizon, 2, 0, TAU); mctx.fill();
+    mctx.font = monoSmall; mctx.textAlign = "center"; mctx.fillStyle = `rgba(${INK},${TA})`;
+    mctx.fillText("REIYAH SEES", cx, horizon - rr - 8);
+
+    /* ---- objects (the real artifacts) approaching through the kinds ---- */
+    for (let i = 0; i < 6; i++) kindGlow[i] = Math.max(0, kindGlow[i] - rdt * 2.2);
+    spawnAcc += dt * 1.1;
+    if (!reduced && spawnAcc > 0.42 && packets.length < 34) { spawnAcc = 0; spawn(); }
+
+    let leading: Packet | null = null;
+    let hovered: { p: Packet; x: number; y: number; s: number } | null = null;
+
+    for (let i = packets.length - 1; i >= 0; i--) {
+      const pk = packets[i];
+
+      if (pk.fall > 0 || (pk.bad && pk.t >= GATE_T)) {
+        if (pk.fall === 0) {
+          const at = project(GATE_T, pk.lane);
+          pk.px = at.x; pk.py = at.y;
+          pk.vx = (pk.lane < 0 ? -1 : 1) * (60 + Math.random() * 60);
+          pk.vy = 26;
+          lastRejectAt = now; lastRejectRule = ruleMap[pk.a.artifact.path] || "known-bad fixture";
+        }
+        pk.fall += dt * 1.5;
+        pk.vy += 340 * dt;
+        pk.px += pk.vx * dt; pk.py += pk.vy * dt;
+        const fa = Math.max(0, 1 - pk.fall * 0.7);
+        if (dark) mctx.globalCompositeOperation = "lighter";
+        glow(pk.px, pk.py, 10 * fa, RED, 0.4 * fa);
+        mctx.globalCompositeOperation = "source-over";
+        mctx.fillStyle = `rgba(${RED},${(0.9 * fa).toFixed(2)})`;
+        mctx.beginPath(); mctx.arc(pk.px, pk.py, 3, 0, TAU); mctx.fill();
+        if (pk.fall > 1.6 || pk.py > h + 20) packets.splice(i, 1);
+        continue;
+      }
+
+      pk.t += dt * pk.speed;
+      if (pk.t >= 1) { sealed++; packets.splice(i, 1); continue; }
+
+      const pr = project(pk.t, pk.lane);
+      const s = (2.4 + pr.f * pr.f * 20) * (0.65 + pk.mass * 0.7);
+
+      /* light the kind zone this object is crossing */
+      for (let k = 0; k < 6; k++) if (Math.abs(pk.t - KIND_T[k]) < 0.03) kindGlow[k] = 1;
+
+      /* the motion streak (speed) on the trail layer */
+      if (pk.seen && pr.f > 0.04) {
+        tctx.strokeStyle = `rgba(${pk.bad ? RED : DIM},${(0.12 + pr.f * 0.3).toFixed(3)})`;
+        tctx.lineWidth = Math.max(0.6, s * 0.4);
+        tctx.beginPath(); tctx.moveTo(pk.px, pk.py); tctx.lineTo(pr.x, pr.y); tctx.stroke();
+      }
+
+      /* belief halo (doubt) around objects in the belief zone */
+      if (pk.t > KIND_T[1] - 0.08 && pk.t < KIND_T[2]) {
+        const doubt = 1 - smoothLocal(KIND_T[1], KIND_T[2], pk.t);
+        if (dark) mctx.globalCompositeOperation = "lighter";
+        glow(pr.x, pr.y, s + 10 + 10 * doubt, INK, 0.05 + 0.06 * doubt);
+        mctx.globalCompositeOperation = "source-over";
+      }
+
+      /* the object: a sensed diamond. Bright core, additive halo on obsidian. */
+      const rgb = pk.bad ? RED : (pk.t > KIND_T[4] ? OK : INK);
+      if (dark) {
+        mctx.globalCompositeOperation = "lighter";
+        glow(pr.x, pr.y, s * 2.6, rgb, 0.16 + pr.f * 0.14);
+        mctx.globalCompositeOperation = "source-over";
+      }
+      mctx.strokeStyle = `rgba(${rgb},${(0.5 + pr.f * 0.45).toFixed(2)})`;
+      mctx.lineWidth = Math.max(1, s * 0.16);
+      mctx.beginPath();
+      mctx.moveTo(pr.x, pr.y - s); mctx.lineTo(pr.x + s, pr.y);
+      mctx.lineTo(pr.x, pr.y + s); mctx.lineTo(pr.x - s, pr.y);
+      mctx.closePath(); mctx.stroke();
+      if (pr.f > 0.3) {
+        mctx.fillStyle = `rgba(${rgb},${(0.7 * pr.f).toFixed(2)})`;
+        mctx.beginPath(); mctx.arc(pr.x, pr.y, s * 0.28, 0, TAU); mctx.fill();
+      }
+
+      /* detection bracket + kind label on tracked objects (the sensing HUD) */
+      if (pr.f > 0.36) {
+        const bs = s + 7, cor = Math.min(7, bs * 0.55);
+        mctx.strokeStyle = `rgba(${pk.bad ? RED : INK},${(0.22 + pr.f * 0.4).toFixed(2)})`;
+        mctx.lineWidth = 1;
+        for (const [sx, sy] of [[-1, -1], [1, -1], [1, 1], [-1, 1]] as const) {
+          const bx = pr.x + sx * bs, by = pr.y + sy * bs;
+          mctx.beginPath();
+          mctx.moveTo(bx - sx * cor, by); mctx.lineTo(bx, by); mctx.lineTo(bx, by - sy * cor);
+          mctx.stroke();
+        }
+        let ki = 0; for (let k = 0; k < 6; k++) if (pk.t >= KIND_T[k]) ki = k;
+        mctx.fillStyle = `rgba(${pk.bad ? RED : INK},${(0.45 + pr.f * 0.4).toFixed(2)})`;
+        mctx.font = monoSmall; mctx.textAlign = "left";
+        mctx.fillText(pk.bad ? "REJECT" : KINDS[ki], pr.x - bs, pr.y - bs - 3);
+      }
+
+      pk.px = pr.x; pk.py = pr.y; pk.seen = true;
+      if (!leading || pk.t > leading.t) leading = pk;
+      if (mouse.over) {
+        const d = Math.hypot(mouse.x - pr.x, mouse.y - pr.y);
+        if (d < s + 14 && (!hovered || d < Math.hypot(mouse.x - hovered.x, mouse.y - hovered.y))) {
+          hovered = { p: pk, x: pr.x, y: pr.y, s };
+        }
+      }
+    }
+
+    /* ---- the gate across the road: fails closed ---- */
+    const gy = yAt(GATE_T), gf = fAt(gy), ghw = halfAt(gf) * 0.82;
+    mctx.strokeStyle = `rgba(${INK},${dark ? 0.5 : 0.4})`;
+    mctx.lineWidth = 1;
+    mctx.setLineDash([5, 5]);
+    mctx.beginPath(); mctx.moveTo(cx - ghw, gy); mctx.lineTo(cx + ghw, gy); mctx.stroke();
+    mctx.setLineDash([]);
+    mctx.fillStyle = `rgba(${INK},${TA})`; mctx.font = monoSmall; mctx.textAlign = "left";
+    mctx.fillText("GATE · FAILS CLOSED", cx + ghw + 8, gy - 4);
+    mctx.fillStyle = `rgba(${RED},0.85)`;
+    mctx.fillText(`REJECTED BY DESIGN · ${badTotal}`, cx + ghw + 8, gy + 8);
+    if (now - lastRejectAt < 2600) {
+      mctx.fillStyle = `rgba(${RED},${(0.85 * (1 - (now - lastRejectAt) / 2600)).toFixed(2)})`;
+      mctx.fillText(lastRejectRule, cx + ghw + 8, gy + 20);
+    }
+
+    /* ---- the six kinds as a sensing readout down the left edge ---- */
+    mctx.textAlign = "left"; mctx.font = monoSmall;
+    for (let k = 0; k < 6; k++) {
+      const ky = horizon + 16 + k * 15;
+      const gk = kindGlow[k];
+      mctx.fillStyle = `rgba(${gk > 0.2 ? RED : INK},${(0.4 + gk * 0.55).toFixed(2)})`;
+      mctx.beginPath(); mctx.arc(14, ky, 2 + gk * 1.6, 0, TAU); mctx.fill();
+      mctx.fillStyle = `rgba(${INK},${(0.5 + gk * 0.45).toFixed(2)})`;
+      mctx.fillText(KINDS[k], 22, ky + 3);
+    }
     mctx.fillStyle = `rgba(${INK},${TA})`;
-    if (!portrait) {
-      mctx.textAlign = "center";
-      mctx.fillText("THE GATE", gateP.x, gateP.y + 70);
-      mctx.fillText("FAILS CLOSED", gateP.x, gateP.y + 82);
-      mctx.fillStyle = `rgba(${RED},0.8)`;
-      mctx.fillText(`↓ REJECTED BY DESIGN · ${badTotal}`, gateP.x, gateP.y + 100);
-      const lr = lastReject;
-      if (lr && now - lr.at < 2800) {
-        mctx.fillStyle = `rgba(${RED},${(0.85 * (1 - (now - lr.at) / 2800)).toFixed(2)})`;
-        mctx.fillText(lr.rule, gateP.x, gateP.y + 114);
-      }
-    } else {
-      mctx.textAlign = "left";
-      mctx.fillText("THE GATE", gateP.x + gh + 10, gateP.y - 4);
-      mctx.fillText("FAILS CLOSED", gateP.x + gh + 10, gateP.y + 8);
-      mctx.fillStyle = `rgba(${RED},0.8)`;
-      mctx.fillText(`→ REJECTED · ${badTotal}`, gateP.x + gh + 10, gateP.y + 22);
-    }
+    mctx.fillText("SIX KINDS · NEVER MERGED", 14, horizon + 16 + 6 * 15 + 4);
 
-    /* sealed ledger */
-    const lP = railPt(1);
-    if (!portrait) {
-      const stackW = 46;
-      const frac = Math.min(1, ((sealed % artifacts.length) / artifacts.length) + 0.15);
-      mctx.strokeStyle = `rgba(${INK},0.4)`; mctx.lineWidth = 1;
-      mctx.strokeRect(lP.x - stackW / 2 + 8, lP.y - 50, stackW, 100);
-      mctx.fillStyle = `rgba(${INK},0.85)`;
-      mctx.fillRect(lP.x - stackW / 2 + 8, lP.y + 50 - 100 * frac, stackW, 100 * frac);
-      mctx.fillStyle = `rgba(${INK},${TA})`;
-      mctx.textAlign = "center";
-      mctx.fillText(`SEALED · ${artifacts.length}`, lP.x + 8, lP.y + 66);
-    } else {
-      const stackW2 = Math.min(120, w * 0.34);
-      const frac = Math.min(1, ((sealed % artifacts.length) / artifacts.length) + 0.15);
-      mctx.strokeStyle = `rgba(${INK},0.4)`; mctx.lineWidth = 1;
-      mctx.strokeRect(lP.x - stackW2 / 2, lP.y + 12, stackW2, 20);
-      mctx.fillStyle = `rgba(${INK},0.85)`;
-      mctx.fillRect(lP.x - stackW2 / 2, lP.y + 12, stackW2 * frac, 20);
-      mctx.fillStyle = `rgba(${INK},${TA})`;
-      mctx.textAlign = "center";
-      mctx.fillText(`SEALED · ${artifacts.length}`, lP.x, lP.y + 48);
-    }
+    /* ---- sealed ledger (objects that passed into evidence) ---- */
+    mctx.textAlign = "right";
+    mctx.fillStyle = `rgba(${OK},${TA})`;
+    mctx.fillText(`SEALED · ${artifacts.length}`, w - 14, horizon + 18);
+    mctx.fillStyle = `rgba(${INK},${TA})`;
+    mctx.fillText(`IN FLIGHT · ${packets.filter((p) => p.fall === 0).length}`, w - 14, horizon + 32);
 
-    /* ticker */
+    /* ---- ticker: the nearest object's identity ---- */
     if (leading) {
-      mctx.font = portrait ? monoSmall : mono;
+      mctx.font = mono; mctx.textAlign = "left";
       mctx.fillStyle = `rgba(${INK},${TA})`;
-      if (!portrait) {
-        mctx.textAlign = "right";
-        const label = `IN FLIGHT · ${leading.a.artifact.path} · ${leading.a.artifact.sha256.slice(0, 20)}…`;
-        mctx.fillText(label.length > 96 ? "…" + label.slice(-94) : label, w - 16, 26);
-      } else {
-        mctx.textAlign = "left";
-        const name = leading.a.artifact.path.split("/").pop() ?? "";
-        mctx.fillText(`IN FLIGHT · ${name.length > 32 ? name.slice(0, 32) + "…" : name}`, 12, h - 10);
-      }
-      mctx.textAlign = "center";
+      const name = leading.a.artifact.path.split("/").pop() ?? "";
+      const label = `SENSING · ${name} · ${leading.a.artifact.sha256.slice(0, 16)}…`;
+      mctx.fillText(label.length > 84 ? label.slice(0, 84) + "…" : label, 14, h - 14);
     }
 
-    /* hover tooltip */
+    /* ---- hover: identify the exact record ---- */
     if (hovered) {
-      mctx.strokeStyle = `rgba(${INK},0.9)`;
-      mctx.lineWidth = 1;
-      mctx.beginPath(); mctx.arc(hovered.x, hovered.y, 8, 0, TAU); mctx.stroke();
+      mctx.strokeStyle = `rgba(${INK},0.9)`; mctx.lineWidth = 1;
+      mctx.beginPath(); mctx.arc(hovered.x, hovered.y, hovered.s + 5, 0, TAU); mctx.stroke();
       const name = hovered.p.a.artifact.path.split("/").pop() ?? "";
       const sha = hovered.p.a.artifact.sha256.slice(7, 15);
       const bytes = (hovered.p.a.byte_size || 0).toLocaleString();
@@ -502,54 +358,61 @@ export function createHarborEngine(
       mctx.font = monoSmall; mctx.textAlign = "left";
       const tw = mctx.measureText(tip).width + 16;
       const tx = Math.min(w - tw - 8, Math.max(8, hovered.x + 14)), ty = Math.max(8, hovered.y - 26);
-      mctx.fillStyle = dark ? "rgba(5,5,7,0.85)" : "rgba(251,250,246,0.92)";
-      mctx.strokeStyle = `rgba(${INK},0.25)`;
-      mctx.beginPath(); mctx.roundRect(tx, ty, tw, 18, 5); mctx.fill(); mctx.stroke();
-      mctx.fillStyle = hovered.p.bad ? `rgba(${RED},0.9)` : `rgba(${INK},0.85)`;
+      mctx.fillStyle = dark ? "rgba(5,5,7,0.9)" : "rgba(251,250,246,0.94)";
+      mctx.beginPath(); mctx.roundRect(tx, ty, tw, 18, 5); mctx.fill();
+      mctx.fillStyle = hovered.p.bad ? `rgba(${RED},0.9)` : `rgba(${INK},0.9)`;
       mctx.fillText(tip, tx + 8, ty + 13);
-      mctx.textAlign = "center";
     }
 
-    mctx.restore(); /* end the parallax layer — post & vignette are screen-fixed */
+    /* ---- the cabin frame: this is a view from inside ---- */
+    mctx.textAlign = "center";
+    /* A-pillars: darken the top corners */
+    const pil = (side: number) => {
+      const g = mctx.createLinearGradient(side < 0 ? 0 : w, 0, side < 0 ? w * 0.22 : w * 0.78, h * 0.5);
+      g.addColorStop(0, dark ? "rgba(3,3,5,0.85)" : "rgba(210,208,200,0.5)");
+      g.addColorStop(1, "rgba(0,0,0,0)");
+      mctx.fillStyle = g;
+      mctx.beginPath();
+      if (side < 0) { mctx.moveTo(0, 0); mctx.lineTo(w * 0.2, 0); mctx.lineTo(0, h * 0.42); }
+      else { mctx.moveTo(w, 0); mctx.lineTo(w * 0.8, 0); mctx.lineTo(w, h * 0.42); }
+      mctx.closePath(); mctx.fill();
+    };
+    pil(-1); pil(1);
+    /* dashboard: a soft rise at the very bottom with a faint instrument glow */
+    const dg = mctx.createLinearGradient(0, h - Math.max(26, h * 0.08), 0, h);
+    dg.addColorStop(0, "rgba(0,0,0,0)");
+    dg.addColorStop(1, dark ? "rgba(2,2,4,0.9)" : "rgba(214,212,204,0.85)");
+    mctx.fillStyle = dg;
+    mctx.fillRect(0, h - Math.max(26, h * 0.08), w, Math.max(26, h * 0.08));
 
-    /* filmic bloom + vignette — applied here only on the 2D fallback path.
-       When a GPU pass owns them (post === "none") the engine emits the raw
-       scene so the shader pipeline can do real bright-pass bloom, radial
-       dispersion, tone-mapping and grain. */
+    /* ---- 2D post (fallback path only) ---- */
     if (post === "canvas") {
       if (dark) {
         mctx.save();
         mctx.globalCompositeOperation = "lighter";
-        mctx.globalAlpha = 0.3;
+        mctx.globalAlpha = 0.28;
         mctx.filter = "blur(6px)";
         mctx.drawImage(mainCv as CanvasImageSource, 0, 0, w, h);
         mctx.filter = "none";
         mctx.restore();
       }
       const vg = (rgb: string, ox: number, a: number) => {
-        const g = mctx.createRadialGradient(w / 2 + ox, h * 0.46, Math.min(w, h) * 0.3, w / 2, h * 0.5, Math.max(w, h) * 0.72);
+        const g = mctx.createRadialGradient(w / 2 + ox, h * 0.44, Math.min(w, h) * 0.28, w / 2, h * 0.5, Math.max(w, h) * 0.72);
         g.addColorStop(0, `rgba(${rgb},0)`);
         g.addColorStop(1, `rgba(${rgb},${a})`);
         mctx.fillStyle = g;
         mctx.fillRect(0, 0, w, h);
       };
-      if (dark) {
-        vg("150,70,95", -4, 0.09);
-        vg("70,95,140", 4, 0.09);
-        vg("3,3,5", 0, 0.52);
-      } else {
-        vg("196,120,120", -3, 0.05);
-        vg("120,140,180", 3, 0.05);
-        vg("210,208,198", 0, 0.42);
-      }
+      if (dark) { vg("150,70,95", -4, 0.08); vg("70,95,140", 4, 0.08); vg("3,3,5", 0, 0.5); }
+      else { vg("196,120,120", -3, 0.05); vg("120,140,180", 3, 0.05); vg("210,208,198", 0, 0.4); }
     }
 
-    /* composite the persistent trail and the crisp layer onto the output, in
-       device space (both buffers are already sized w*dpr). */
+    /* composite the trail + crisp layers onto the output (device space) */
     octx.setTransform(1, 0, 0, 1, 0, 0);
     octx.clearRect(0, 0, output.width, output.height);
     octx.drawImage(trailCv as CanvasImageSource, 0, 0);
     octx.drawImage(mainCv as CanvasImageSource, 0, 0);
+    void raf0;
   };
 
   return {
@@ -558,4 +421,9 @@ export function createHarborEngine(
     setPulse(at) { pulseAt = at; },
     setRuleMap(m) { ruleMap = m; },
   };
+}
+
+function smoothLocal(a: number, b: number, x: number) {
+  const v = (x - a) / (b - a);
+  return v < 0 ? 0 : v > 1 ? 1 : v;
 }
