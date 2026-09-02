@@ -28,9 +28,13 @@ export function Estimands() {
   return (
     <Station id="ST–05" name="Estimands" sub={`${estimands.length} defined · ${measured} measured · protocol ${proto.release_id ?? ""}`}>
       <div style={{ display: "flex", flexDirection: "column", justifyContent: "center", minHeight: "100%" }}>
-      <div className="note" style={{ marginBottom: "1.2rem" }}>
-        Every dial below is <b>defined, frozen, and dark</b>. The day one estimand earns retained evidence
-        under its preregistered protocol, its instrument ignites. That ignition is the roadmap.
+      <div style={{ display: "flex", alignItems: "baseline", gap: "1.1rem", marginBottom: "1rem", flexWrap: "wrap" }}>
+        <div className="big">{measured}<em>/{estimands.length}</em></div>
+        <div className="note" style={{ margin: 0, maxWidth: "34rem" }}>
+          measured. Every dial is <b>defined, frozen, and honestly dark</b> — no result exists until its gate
+          accepts it. The day one estimand earns retained evidence, its instrument ignites. That ignition is
+          the roadmap, not a promise.
+        </div>
       </div>
       <div className="estgrid">
         {estimands.map((e) => (
