@@ -1,0 +1,12 @@
+import puppeteer from "puppeteer-core";
+const OUT=process.argv[2];
+const b=await puppeteer.launch({executablePath:"/Applications/Google Chrome.app/Contents/MacOS/Google Chrome",headless:"new",args:["--hide-scrollbars"]});
+const p=await b.newPage(); await p.setViewport({width:1440,height:900,deviceScaleFactor:2});
+await p.evaluateOnNewDocument(()=>{try{localStorage.setItem("harbor-ground","dark")}catch{}});
+await p.goto("http://localhost:4600/",{waitUntil:"networkidle2"});
+await p.waitForSelector(".stage",{timeout:20000}); await new Promise(r=>setTimeout(r,1500));
+await p.mouse.move(300,300); await new Promise(r=>setTimeout(r,700));
+await p.screenshot({path:`${OUT}/par-left.png`});
+await p.mouse.move(1150,650); await new Promise(r=>setTimeout(r,900));
+await p.screenshot({path:`${OUT}/par-right.png`});
+await b.close(); console.log("done");
