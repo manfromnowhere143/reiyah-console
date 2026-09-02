@@ -135,7 +135,16 @@ button:focus-visible, a:focus-visible { outline: 2px solid var(--ink-soft); outl
 /* ============================================================
    THE STAGE — one permanent panel; content morphs in place
    ============================================================ */
-.viewport { position: fixed; inset: 0; overflow: hidden; background: var(--void); }
+/* full-screen root sized by the DYNAMIC viewport height, not a stale fixed
+   inset. On iOS, `inset: 0` locks bottom:0 to the initial containing block
+   (measured with the toolbar shown); when the toolbar retracts the app stays
+   short and the ground shows below it. 100dvh tracks the visible area as the
+   toolbar animates; 100vh is the fallback for engines without dvh. */
+.viewport {
+  position: fixed; top: 0; left: 0; width: 100%;
+  height: 100vh; height: 100dvh;
+  overflow: hidden; background: var(--void);
+}
 .viewport.stage {
   display: flex; flex-direction: column; gap: 0.65rem;
   padding: calc(2.5rem + var(--safe-t)) clamp(0.9rem, 2.5vw, 2.6rem) calc(0.5rem + var(--safe-b));
@@ -361,7 +370,8 @@ button:focus-visible, a:focus-visible { outline: 2px solid var(--ink-soft); outl
 
 /* prove overlay */
 .overlay {
-  position: fixed; inset: 0; z-index: 90;
+  position: fixed; top: 0; left: 0; width: 100%;
+  height: 100vh; height: 100dvh; z-index: 90;
   background: var(--scrim, rgba(12, 14, 18, 0.45));
   backdrop-filter: blur(2px); -webkit-backdrop-filter: blur(2px);
   display: flex; align-items: center; justify-content: center;
@@ -756,7 +766,8 @@ button:focus-visible, a:focus-visible { outline: 2px solid var(--ink-soft); outl
    PROOF BOOT
    ============================================================ */
 .boot {
-  position: fixed; inset: 0; z-index: 100; background: var(--void);
+  position: fixed; top: 0; left: 0; width: 100%;
+  height: 100vh; height: 100dvh; z-index: 100; background: var(--void);
   display: flex; align-items: center; justify-content: center; padding: 1.5rem;
 }
 /* the descent: the gate lifts, the harbor rises beneath it */

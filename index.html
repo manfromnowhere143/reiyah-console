@@ -112,7 +112,8 @@
          the identical geometry, so when it removes this node the eye and the
          wordmark never shift — the splash simply dissolves into the boot. */
       #boot {
-        position: fixed; inset: 0; z-index: 200;
+        position: fixed; top: 0; left: 0; width: 100%;
+        height: 100vh; height: 100dvh; z-index: 200;
         background: #f4f3ee; color: #101215;
         --ap-accent: #d61732; --ap-line: rgba(16,18,21,.16);
         --ap-faint: #686f78; --ap-ghost: #9aa0a7;
