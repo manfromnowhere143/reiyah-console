@@ -18,19 +18,23 @@ export function Lineage({ summary }: { summary: Summary }) {
 
   const { reports, recoveries } = state.data;
 
-  /* live reasoning over the committed reports — every value derived here,
-     recomputed on each re-verify, never asserted */
-  const series = reports
-    .filter((r: any) => r.state === "observed")
-    .map((r: any) => {
-      const ctrls = [...(r.data?.required_replay_controls ?? []), ...(r.data?.implementation_controls ?? [])];
-      const total = ctrls.length;
-      const pass = ctrls.filter((c: any) => c.state === "pass").length;
-      const diag = (r.data?.diagnostics ?? []).length;
-      const version = r.meta.path.split("/").pop()?.replace("gate-a-validation-", "").replace(".json", "") ?? "?";
-      const ok = (r.data?.status ?? r.data?.result) === "pass" && diag === 0 && (total === 0 || pass === total);
-      return { version, total, pass, diag, ok };
-    });
+  /* Separate record kinds — a canonical validation report and a decision-
+     interface contract report are different in kind and must not be conflated
+     (Reiyah law). The pass-streak is over canonical validations only. */
+  const observed = reports.filter((r: any) => r.state === "observed");
+  const isCanonical = (r: any) => (r.meta.path as string).includes("gate-a-validation-");
+  const canonical = observed.filter(isCanonical);
+  const ifaceReports = observed.filter((r: any) => !isCanonical(r));
+
+  const series = canonical.map((r: any) => {
+    const ctrls = [...(r.data?.required_replay_controls ?? []), ...(r.data?.implementation_controls ?? [])];
+    const total = ctrls.length;
+    const pass = ctrls.filter((c: any) => c.state === "pass").length;
+    const diag = (r.data?.diagnostics ?? []).length;
+    const version = r.meta.path.split("/").pop()?.replace("gate-a-validation-", "").replace(".json", "") ?? "?";
+    const ok = (r.data?.status ?? r.data?.result) === "pass" && diag === 0 && (total === 0 || pass === total);
+    return { version, total, pass, diag, ok };
+  });
   const headCtrls = series.filter((s) => s.total > 0).at(-1)?.total ?? 0;
   const allPass = series.length > 0 && series.every((s) => s.ok);
   const totalDiag = series.reduce((a, s) => a + s.diag, 0);
@@ -66,21 +70,24 @@ export function Lineage({ summary }: { summary: Summary }) {
       </div>
 
       <div className="ipanel" style={{ marginBottom: "0.8rem" }}>
-        <div className="ilabel">canonical validation reports · {reports.length}</div>
-        {reports.map((r, i) =>
-          r.state === "observed" ? (
-            <div key={i} className="bar" style={{ gridTemplateColumns: "8rem 1fr auto" }}>
-              <span className="bk">{r.meta.path.split("/").pop()?.replace("gate-a-validation-", "").replace(".json", "")}</span>
-              <span style={{ fontFamily: "var(--mono)", fontSize: "0.6rem", color: "var(--ink-faint)" }}>
-                {String(r.data?.status ?? r.data?.result ?? "recorded").toUpperCase()}
-                {" · "}{String(r.data?.architecture_status ?? "")}
-                {" · exit "}{String(r.data?.exit_code ?? "?")}
-              </span>
-              <Digest id={r.meta.id} sha={r.meta.sha256} path={r.meta.path} />
-            </div>
-          ) : (
-            <div key={i} className="note">a report surface is blocked: {(r as any).reason}</div>
-          )
+        <div className="ilabel">canonical validation reports · {canonical.length}</div>
+        {canonical.map((r: any, i: number) => (
+          <div key={i} className="bar" style={{ gridTemplateColumns: "8rem 1fr auto" }}>
+            <span className="bk">{r.meta.path.split("/").pop()?.replace("gate-a-validation-", "").replace(".json", "")}</span>
+            <span style={{ fontFamily: "var(--mono)", fontSize: "0.6rem", color: "var(--ink-faint)" }}>
+              {String(r.data?.status ?? r.data?.result ?? "recorded").toUpperCase()}
+              {" · "}{String(r.data?.architecture_status ?? "")}
+              {" · exit "}{String(r.data?.exit_code ?? "?")}
+            </span>
+            <Digest id={r.meta.id} sha={r.meta.sha256} path={r.meta.path} />
+          </div>
+        ))}
+        {ifaceReports.length > 0 && (
+          <div className="note" style={{ marginTop: "0.6rem" }}>
+            {ifaceReports.length} decision-interface contract report{ifaceReports.length > 1 ? "s" : ""} also present
+            (1.2.6–1.2.8, <b>validated, not implemented</b>) — a different kind of record, attributed to the
+            correction engine in <b>The Chair</b>, never counted as a canonical validation.
+          </div>
         )}
       </div>
 
