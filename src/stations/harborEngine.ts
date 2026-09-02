@@ -157,14 +157,14 @@ export function createHarborEngine(
     if (dark) glow(cx, horizon, Math.max(w, h) * 0.5, INK, 0.05);
 
     /* road edges converging to the vanishing point */
-    mctx.strokeStyle = `rgba(${INK},${dark ? 0.16 : 0.14})`;
-    mctx.lineWidth = 1.4; mctx.lineCap = "round";
+    mctx.strokeStyle = `rgba(${INK},${dark ? 0.34 : 0.28})`;
+    mctx.lineWidth = 1.5; mctx.lineCap = "round";
     mctx.beginPath();
     mctx.moveTo(cx - 22, horizon); mctx.lineTo(cx - w * 0.54, h);
     mctx.moveTo(cx + 22, horizon); mctx.lineTo(cx + w * 0.54, h);
     mctx.stroke();
     /* the horizon line */
-    mctx.strokeStyle = `rgba(${INK},${dark ? 0.14 : 0.12})`;
+    mctx.strokeStyle = `rgba(${INK},${dark ? 0.28 : 0.24})`;
     mctx.lineWidth = 1;
     mctx.beginPath(); mctx.moveTo(0, horizon); mctx.lineTo(w, horizon); mctx.stroke();
 
@@ -173,8 +173,8 @@ export function createHarborEngine(
     for (let k = 0; k < N; k++) {
       let p = ((k / N) + flow) % 1;
       const y = yAt(p), f = fAt(y);
-      mctx.strokeStyle = `rgba(${INK},${(0.05 + 0.2 * f).toFixed(3)})`;
-      mctx.lineWidth = 1 + f * 4;
+      mctx.strokeStyle = `rgba(${INK},${(0.18 + 0.34 * f).toFixed(3)})`;
+      mctx.lineWidth = 1.2 + f * 4;
       mctx.beginPath(); mctx.moveTo(cx, y); mctx.lineTo(cx, y - (6 + f * 34)); mctx.stroke();
     }
 
