@@ -341,7 +341,7 @@ button:focus-visible, a:focus-visible { outline: 2px solid var(--ink-soft); outl
 /* generic instrument surfaces */
 .ipanel { border: 1px solid var(--line); border-radius: 12px; background: var(--panel); padding: 1rem 1.1rem; }
 .ilabel { font-family: var(--mono); font-size: 0.58rem; letter-spacing: 0.16em; text-transform: uppercase; color: var(--ink-faint); margin-bottom: 0.6rem; }
-.big { font-family: var(--mono); font-size: 1.7rem; font-weight: 700; font-variant-numeric: tabular-nums; letter-spacing: -0.02em; line-height: 1; }
+.big { font-family: var(--mono); font-size: 1.28rem; font-weight: 600; font-variant-numeric: tabular-nums; letter-spacing: -0.01em; line-height: 1; }
 .big em { font-style: normal; color: var(--accent); }
 .sub { font-size: 0.7rem; color: var(--ink-faint); margin-top: 0.25rem; line-height: 1.4; }
 .grid2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(13rem, 1fr)); gap: 0.7rem; }
@@ -476,8 +476,8 @@ button:focus-visible, a:focus-visible { outline: 2px solid var(--ink-soft); outl
 }
 .mcard[data-dark="true"] .mname { color: var(--ink-faint); }
 .mglyph { color: var(--ink); opacity: 0.85; }
-.mbig { font-family: var(--mono); font-size: 1.7rem; font-weight: 700; font-variant-numeric: tabular-nums; line-height: 1; }
-.mbig em { font-style: normal; color: var(--ok); font-size: 1.1rem; }
+.mbig { font-family: var(--mono); font-size: 1.35rem; font-weight: 600; font-variant-numeric: tabular-nums; letter-spacing: -0.01em; line-height: 1; }
+.mbig em { font-style: normal; color: var(--ok); font-size: 0.85rem; }
 .mname { font-family: var(--mono); font-size: 0.6rem; letter-spacing: 0.16em; color: var(--ink); }
 .mline { font-size: 0.74rem; color: var(--ink-soft); line-height: 1.45; }
 .mline b { font-family: var(--mono); }
@@ -521,7 +521,7 @@ button:focus-visible, a:focus-visible { outline: 2px solid var(--ink-soft); outl
   .miris svg { max-height: 9rem; }
   .mmotto { max-width: 100%; padding: 0 0.5rem; }
   .mcard { padding: 1rem 1.1rem; }
-  .mbig { font-size: 2rem; }
+  .mbig { font-size: 1.5rem; }
   .mname { font-size: 0.66rem; }
   .mline { font-size: 0.82rem; }
   .mline.dim { font-size: 0.74rem; }
@@ -573,6 +573,76 @@ button:focus-visible, a:focus-visible { outline: 2px solid var(--ink-soft); outl
   border: 1px solid var(--line-soft); border-radius: 999px; padding: 0.28rem 0.6rem; color: var(--ink-faint);
 }
 .stagechip[data-now="true"] { color: var(--ink); border-color: var(--glass-rim); }
+
+/* ============================================================
+   THE ENCOUNTER — scroll is time. Pinned scene, narrated beats.
+   ============================================================ */
+.panelcontent:has(> .encounter2) { padding: 0; }
+.encounter2 {
+  position: absolute; inset: 0; overflow-y: auto; overflow-x: hidden;
+  scroll-behavior: smooth; scrollbar-width: none;
+  -webkit-overflow-scrolling: touch;
+}
+.encounter2::-webkit-scrollbar { display: none; }
+.encStage {
+  position: sticky; top: 0; z-index: 1;
+  height: 46vh; min-height: 15rem;
+  border-bottom: 1px solid var(--line-soft);
+}
+.encStage canvas { position: absolute; inset: 0; width: 100%; height: 100%; }
+.encTag {
+  position: absolute; top: 0.9rem; left: 1.1rem;
+  font-family: var(--mono); font-size: 0.6rem; letter-spacing: 0.16em; color: var(--ink-faint);
+}
+.encNonclaim {
+  position: absolute; bottom: 0.8rem; left: 1.1rem; right: 1.1rem;
+  font-family: var(--mono); font-size: 0.54rem; letter-spacing: 0.08em; color: var(--ink-ghost);
+  text-transform: uppercase;
+}
+.encBeats { position: relative; z-index: 2; padding: 0 clamp(1rem, 4vw, 3rem); }
+.encBeat {
+  min-height: 62vh; display: flex; align-items: center;
+  padding: 2rem 0;
+}
+.encBeatCard {
+  max-width: 32rem; border-radius: 16px; padding: 1.4rem 1.5rem;
+}
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    .encBeatCard {
+      animation: beatReveal linear both;
+      animation-timeline: view();
+      animation-range: entry 8% cover 32%;
+    }
+    @keyframes beatReveal {
+      from { opacity: 0; transform: translateY(26px); filter: blur(6px); }
+      to { opacity: 1; transform: none; filter: none; }
+    }
+  }
+}
+.encBeatT { font-family: var(--mono); font-size: 0.6rem; letter-spacing: 0.18em; color: var(--accent); text-transform: uppercase; }
+.encBeatK {
+  font-family: var(--display); font-weight: 600; text-transform: uppercase;
+  font-size: clamp(1.5rem, 5.5vw, 2.2rem); letter-spacing: 0.03em; line-height: 1;
+  margin: 0.5rem 0 0.7rem; text-wrap: balance;
+}
+.encBeatBody { font-size: 0.98rem; line-height: 1.6; color: var(--ink-soft); margin: 0; }
+.encBeatBody b { color: var(--ink); font-weight: 600; }
+.encBeatBody i { color: var(--ink); font-style: italic; }
+.encBeatBody .jt {
+  display: block; margin-top: 0.7rem; font-family: var(--mono);
+  font-size: 0.66rem; letter-spacing: 0.04em; color: var(--ink-faint);
+}
+.encEnd {
+  text-align: center; padding: 1.5rem 0 3rem;
+  font-family: var(--mono); font-size: 0.62rem; letter-spacing: 0.12em; color: var(--ink-ghost);
+}
+@media (max-width: 760px) {
+  .encStage { height: 42vh; min-height: 13rem; }
+  .encBeat { min-height: 58vh; padding: 1.6rem 0; }
+  .encBeatCard { padding: 1.2rem 1.2rem; }
+  .encBeatBody { font-size: 0.94rem; }
+}
 
 /* encounter (ontology) */
 .encounter { display: grid; grid-template-rows: 1fr auto; gap: 1rem; height: 100%; min-height: 0; }
