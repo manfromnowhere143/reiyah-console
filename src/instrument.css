@@ -595,26 +595,31 @@ button:focus-visible, a:focus-visible { outline: 2px solid var(--ink-soft); outl
   @keyframes raysBreathe { 0%, 100% { opacity: 0.16; } 50% { opacity: 0.3; } }
 }
 @media (max-width: 760px) {
-  /* phone: one flowing column — the iris a hero band, cards full-width */
+  /* phone: one screen, no scroll — a compact 2-column mandala with the iris
+     as a slim hero band across the top */
   .mandala {
-    display: flex; flex-direction: column; gap: 0.7rem;
-    height: auto; min-height: 100%; overflow-y: auto; padding-bottom: 0.5rem;
-    grid-template: none;
+    display: grid; height: 100%; overflow: hidden;
+    grid-template-columns: 1fr 1fr; gap: 0.4rem;
+    grid-auto-rows: min-content; align-content: start; grid-template-areas: none;
   }
-  .mcell { display: block; }
-  /* narrative order down the phone: law, eye, world, kinds, gate, sealed,
-     human, corrections, then the honest dark */
-  .m-n { order: 0; } .m-c { order: 1; } .m-w { order: 2; } .m-nw { order: 3; }
-  .m-sw { order: 4; } .m-e { order: 5; } .m-s { order: 6; } .m-se { order: 7; }
-  .m-ne { order: 8; }
-  .miris { min-height: 8.5rem; padding: 0.4rem 0; }
-  .miris svg { max-height: 9rem; }
-  .mmotto { max-width: 100%; padding: 0 0.5rem; }
-  .mcard { padding: 1rem 1.1rem; }
-  .mbig { font-size: 1.5rem; }
-  .mname { font-size: 0.66rem; }
-  .mline { font-size: 0.82rem; }
-  .mline.dim { font-size: 0.74rem; }
+  /* reset the desktop named grid-areas so the cells auto-place into 2 columns */
+  .m-n, .m-ne, .m-nw, .m-w, .m-c, .m-e, .m-sw, .m-s, .m-se { grid-area: auto; }
+  .mcell { display: block; min-width: 0; }
+  .m-n { grid-column: 1 / -1; order: 0; }
+  .m-c { grid-column: 1 / -1; order: 1; }
+  .m-w { order: 2; } .m-nw { order: 3; } .m-sw { order: 4; }
+  .m-e { order: 5; } .m-s { order: 6; } .m-se { order: 7; } .m-ne { order: 8; }
+  .miris { min-height: 4.4rem; padding: 0.1rem 0; }
+  .miris svg { max-height: 4.5rem; }
+  .mmotto { max-width: 100%; padding: 0; font-size: 0.5rem; line-height: 1.4; letter-spacing: 0.08em; }
+  .mcard { padding: 0.5rem 0.6rem; gap: 0.1rem; border-radius: 10px; }
+  .mbig { font-size: 1.05rem; }
+  .mname { font-size: 0.5rem; letter-spacing: 0.12em; }
+  .mline { font-size: 0.6rem; line-height: 1.32; }
+  .mline.dim { font-size: 0.52rem; }
+  .mchips { gap: 0.18rem; margin: 0.1rem 0; }
+  .mchips span { font-size: 0.46rem; padding: 0.05rem 0.3rem; }
+  .mglyph svg { width: 24px; height: 24px; }
 }
 
 /* the correction saga */
