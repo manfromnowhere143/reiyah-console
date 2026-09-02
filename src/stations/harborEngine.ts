@@ -66,7 +66,6 @@ export function createHarborEngine(
   const mctx = mainCv.getContext("2d") as Ctx;
   const octx = output.getContext("2d") as Ctx;
 
-  const mono = '11px "B612 Mono","SF Mono",Menlo,monospace';
   const monoSmall = '9px "B612 Mono","SF Mono",Menlo,monospace';
 
   let spawnIdx = 0, sealed = 0, spawnAcc = 0, raf0 = 0;
@@ -338,13 +337,15 @@ export function createHarborEngine(
     mctx.fillStyle = `rgba(${INK},${TA})`;
     mctx.fillText(`IN FLIGHT · ${packets.filter((p) => p.fall === 0).length}`, w - 14, horizon + 32);
 
-    /* ---- ticker: the nearest object's identity ---- */
+    /* ---- ticker: the nearest object's identity, as a HUD line under the title
+       (kept clear of the receipt chip and authority wall at the bottom) ---- */
     if (leading) {
-      mctx.font = mono; mctx.textAlign = "left";
+      mctx.font = monoSmall; mctx.textAlign = "left";
       mctx.fillStyle = `rgba(${INK},${TA})`;
       const name = leading.a.artifact.path.split("/").pop() ?? "";
       const label = `SENSING · ${name} · ${leading.a.artifact.sha256.slice(0, 16)}…`;
-      mctx.fillText(label.length > 84 ? label.slice(0, 84) + "…" : label, 14, h - 14);
+      const maxc = Math.max(16, Math.floor((w - 28) / 5.4));
+      mctx.fillText(label.length > maxc ? label.slice(0, maxc - 1) + "…" : label, 14, 44);
     }
 
     /* ---- hover: identify the exact record ---- */
