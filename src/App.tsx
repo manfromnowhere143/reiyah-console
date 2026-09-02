@@ -161,7 +161,7 @@ function Stage({ ev, onEvidence }: { ev: VerifiedEvidence; onEvidence: (e: Verif
       </nav>
 
       <div className="nonclaim shell">
-        renders committed machine records only · not a driver-monitoring system · creates no acceptance, evidence, or authority
+        renders committed machine records only · not a driver-monitoring system · creates no acceptance, evidence, or authority · build {__BUILD_ID__}
       </div>
     </div>
   );
