@@ -534,7 +534,11 @@ export function Harbor({ ev, go, pulse }: { ev: VerifiedEvidence; go: (id: strin
 
       if (!reduced) raf = requestAnimationFrame(draw);
     };
-    raf = requestAnimationFrame(draw);
+    /* Paint one frame synchronously at mount. Stations mount via flushSync
+       inside startViewTransition, so this fills the canvas before the new
+       snapshot is captured — the engine is already alive in the crossfade,
+       never popping in a frame late. draw() self-schedules the loop. */
+    draw(performance.now());
     if (reduced) requestAnimationFrame(draw);
     return () => {
       cancelAnimationFrame(raf);
