@@ -48,7 +48,7 @@ function glOpts(now: number): HarborGLOpts {
   return {
     dark,
     bloom: dark ? 0.9 : 0.34,
-    dispersion: dark ? 0.0012 : 0.0008,
+    dispersion: dark ? 0.0009 : 0.0006,
     vignette: dark ? 0.5 : 0.32,
     grain: dark ? 0.045 : 0.02,
     time: now / 1000,
