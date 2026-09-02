@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Always-on Reiyah live-publish pipeline (macOS launchd).
+     Install:
+       cp tools/dev.danielwahnich.reiyah-publish.plist ~/Library/LaunchAgents/
+       launchctl load ~/Library/LaunchAgents/dev.danielwahnich.reiyah-publish.plist
+     Stop:
+       launchctl unload ~/Library/LaunchAgents/dev.danielwahnich.reiyah-publish.plist
+     Edit WorkingDirectory / node path below if your paths differ. -->
+<plist version="1.0">
+<dict>
+  <key>Label</key><string>dev.danielwahnich.reiyah-publish</string>
+  <key>ProgramArguments</key>
+  <array>
+    <string>/Users/danielwahnich/.nvm/versions/node/v20.18.3/bin/node</string>
+    <string>tools/watch-and-publish.mjs</string>
+  </array>
+  <key>WorkingDirectory</key><string>/Users/danielwahnich/workspace/reiyah-console</string>
+  <key>EnvironmentVariables</key>
+  <dict>
+    <key>REIYAH_ROOT</key><string>/Users/danielwahnich/workspace/reiyah</string>
+    <key>PATH</key><string>/Users/danielwahnich/.nvm/versions/node/v20.18.3/bin:/usr/local/bin:/usr/bin:/bin</string>
+  </dict>
+  <key>RunAtLoad</key><true/>
+  <key>KeepAlive</key><true/>
+  <key>StandardOutPath</key><string>/tmp/reiyah-live.log</string>
+  <key>StandardErrorPath</key><string>/tmp/reiyah-live.err</string>
+</dict>
+</plist>
