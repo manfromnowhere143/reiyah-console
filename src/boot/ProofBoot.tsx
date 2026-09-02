@@ -182,7 +182,6 @@ export function ProofBoot({ onReady }: { onReady: (ev: VerifiedEvidence) => void
 
         <div className="apx-below">
           <div className="apx-word">REIYAH</div>
-          <div className="apx-sub">Harbor Instrument</div>
 
           <div className="apx-track"><span className="apx-fill" style={{ transform: `scaleX(${p})` }} /></div>
           <div className="apx-status" data-complete={String(complete)}>{status}</div>
