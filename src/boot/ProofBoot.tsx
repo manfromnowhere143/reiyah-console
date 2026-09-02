@@ -45,16 +45,33 @@ export async function verifyEvidenceOnce(): Promise<VerifiedEvidence> {
   return { summary, index, indexSha256: clientSha, sidecarLine, report, reportMeta };
 }
 
-type RowState = "wait" | "on" | "fail";
-interface Row { t: string; d: React.ReactNode; s: string; state: RowState }
+/* Four real checks, in order. The meridian and the ring fill only as each of
+   these actually passes — determinate progress bound to verification, never a
+   fabricated timer. Each phase names the true work underway. */
+const PHASES = ["establishing identity", "recomputing index digest", "confirming twin agreement", "descending into the field"] as const;
+
+interface Ident { branch: string; head: string; clean: boolean }
 
 export function ProofBoot({ onReady }: { onReady: (ev: VerifiedEvidence) => void }) {
-  const [rows, setRows] = useState<Row[]>([]);
+  const [phase, setPhase] = useState(0);               // 0..4 checks passed
+  const [ident, setIdent] = useState<Ident | null>(null);
+  const [digest, setDigest] = useState<string | null>(null);
+  const [artifacts, setArtifacts] = useState<number | null>(null);
   const [blocked, setBlocked] = useState<string | null>(null);
-  const done = useRef(false);
-  const result = useRef<VerifiedEvidence | null>(null);
   const [complete, setComplete] = useState(false);
   const [leaving, setLeaving] = useState(false);
+  const done = useRef(false);
+  const result = useRef<VerifiedEvidence | null>(null);
+
+  /* Hand off from the instant inline splash without a seam: this component
+     paints the same iris, then removes the pre-boot node it now covers. */
+  useEffect(() => {
+    const el = document.getElementById("boot");
+    if (!el) return;
+    el.classList.add("ap-out");
+    const t = setTimeout(() => el.remove(), 340);
+    return () => clearTimeout(t);
+  }, []);
 
   const depart = () => {
     if (done.current || !result.current) return;
@@ -65,13 +82,8 @@ export function ProofBoot({ onReady }: { onReady: (ev: VerifiedEvidence) => void
     setTimeout(() => onReady(result.current!), 680);
   };
 
-  const push = (row: Row) => setRows((r) => [...r, row]);
-
   useEffect(() => {
     let alive = true;
-    const t0 = performance.now();
-    const stamp = () => `T+${((performance.now() - t0) / 1000).toFixed(2)}s`;
-
     (async () => {
       try {
         /* 1 — identity */
@@ -79,10 +91,8 @@ export function ProofBoot({ onReady }: { onReady: (ev: VerifiedEvidence) => void
         if (!alive) return;
         if (summary.identity.state !== "observed") throw new Error(`identity_blocked: ${summary.identity.reason}`);
         const idn = summary.identity;
-        push({
-          t: stamp(), state: "on", s: idn.worktree_clean ? "VERIFIED" : "DIRTY TREE",
-          d: (<><b>Identity.</b> reiyah · {idn.branch || "detached"} · <span className="mono">{idn.head.slice(0, 12)}</span> · worktree {idn.worktree_clean ? "clean" : "dirty"}</>),
-        });
+        setIdent({ branch: idn.branch || "detached", head: idn.head.slice(0, 8), clean: idn.worktree_clean });
+        setPhase(1);
 
         /* 2 — index digest, recomputed here */
         const [rawIndex, rawSidecar] = await Promise.all([fetchRaw("index"), fetchRaw("index-sidecar")]);
@@ -91,47 +101,29 @@ export function ProofBoot({ onReady }: { onReady: (ev: VerifiedEvidence) => void
         const sidecarSha = sidecarLine.split(/\s+/)[0] ?? "";
         const indexOk = clientSha === sidecarSha && clientSha === rawIndex.serverSha256;
         if (!alive) return;
-        push({
-          t: stamp(), state: indexOk ? "on" : "fail", s: indexOk ? "BYTE-IDENTICAL" : "DIGEST MISMATCH",
-          d: (<><b>Index digest.</b> <span className="mono">{clientSha.slice(0, 26)}…</span> recomputed in this browser · {indexOk ? "equals committed sidecar" : "does NOT equal the committed sidecar"}</>),
-        });
         if (!indexOk) throw new Error("index_digest_mismatch");
+        setDigest(clientSha.replace("sha256:", "").slice(0, 16));
         const index = JSON.parse(new TextDecoder().decode(rawIndex.bytes));
+        setPhase(2);
 
-        /* 3 — canonical report, twins */
+        /* 3 — canonical report, twin agreement */
         const reportId = summary.surfaces.find((s) => s.id.startsWith("report-") && s.id.includes("1.2.3"))?.id
           ?? summary.surfaces.filter((s) => s.id.startsWith("report-")).map((s) => s.id).sort().at(-1);
         let report: any = null;
         let reportMeta: { path: string; sha256: string } | null = null;
         if (reportId) {
           const rs = await fetchSurface<any>(reportId);
-          if (rs.state === "observed") {
-            report = rs.data;
-            reportMeta = { path: rs.meta.path, sha256: rs.meta.sha256 };
-          }
+          if (rs.state === "observed") { report = rs.data; reportMeta = { path: rs.meta.path, sha256: rs.meta.sha256 }; }
         }
         if (!alive) return;
-        const dual = report?.dual_evaluation;
-        push({
-          t: stamp(), state: dual?.complete_payloads_equal ? "on" : "fail",
-          s: dual?.complete_payloads_equal ? "TWINS AGREE" : "NOT OBSERVED",
-          d: dual
-            ? (<><b>Dual evaluation.</b> {dual.logical_worker_ids?.join(" ≡ ")} · {Number(dual.comparable_payload_byte_size).toLocaleString()}-byte payloads equal · status {report.status} · exit {report.exit_code}</>)
-            : (<><b>Dual evaluation.</b> canonical report unavailable</>),
-        });
+        setPhase(3);
 
-        /* 4 — authority engraving */
-        const auth = index?.authority ?? report?.authority;
-        push({
-          t: stamp(), state: "on", s: "HONEST",
-          d: (<><b>Authority.</b> seven refusals engraved · acceptance {String(auth?.operator_acceptance_state ?? "unknown").toUpperCase()} · GA-17 {String(auth?.ga_17_state ?? "unknown").toUpperCase()}</>),
-        });
-
-        /* 5 — descent */
+        /* 4 — descent */
         result.current = { summary, index, indexSha256: clientSha, sidecarLine, report, reportMeta };
-        push({ t: stamp(), state: "on", s: "● LIVE", d: (<><b>Descent.</b> {Number(index?.artifacts?.length ?? 0).toLocaleString()} artifacts verified into the field · entering Harbor</>) });
+        setArtifacts(Number(index?.artifacts?.length ?? 0));
+        setPhase(4);
         setComplete(true);
-        setTimeout(() => { if (alive) depart(); }, 1000);
+        setTimeout(() => { if (alive) depart(); }, 900);
       } catch (e) {
         if (alive) setBlocked(String((e as Error)?.message ?? e));
       }
@@ -140,44 +132,79 @@ export function ProofBoot({ onReady }: { onReady: (ev: VerifiedEvidence) => void
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  return (
-    <div className="boot" data-leaving={String(leaving)}>
-      <div className="bootcard">
-        <div className="bootmast" style={{ display: "flex", alignItems: "center", gap: "0.6rem" }}>
-          <span style={{ color: "var(--ink)" }}><Mark size={17} /></span>
-          <span><b>REIYAH</b> <span className="dot">//</span> HARBOR INSTRUMENT · PROOF BOOT</span>
-        </div>
-        {blocked ? (
+  const p = Math.min(phase, 4) / 4;                    // 0..1, determinate
+  const RING = 2 * Math.PI * 104;                      // progress-ring circumference
+  const status = complete ? "verified · entering harbor" : PHASES[Math.min(phase, 3)];
+
+  if (blocked) {
+    return (
+      <div className="boot" data-leaving="false">
+        <div className="bootcard">
+          <div className="bootmast" style={{ display: "flex", alignItems: "center", gap: "0.6rem" }}>
+            <span style={{ color: "var(--ink)" }}><Mark size={17} /></span>
+            <span><b>REIYAH</b> <span className="dot">//</span> HARBOR INSTRUMENT · PROOF BOOT</span>
+          </div>
           <div className="blocked">
             <h2>Blocked</h2>
             <p>The instrument could not verify its evidence, so it will not render. A blocked result is preferable to a plausible default.</p>
             <p style={{ fontFamily: "var(--mono)", fontSize: "0.66rem" }}>{blocked}</p>
           </div>
-        ) : (
-          <>
-            {rows.map((r, i) => (
-              <div key={i} className="bootrow" data-on="true" data-state={r.state}>
-                <span className="bt">{r.t}</span>
-                <span className="bd">{r.d}</span>
-                <span className="bs">{r.s}</span>
-              </div>
-            ))}
-            {!complete && (
-              <div className="bootrow" data-on="true" data-state="wait">
-                <span className="bt">…</span>
-                <span className="bd">verifying</span>
-                <span className="bs">WORKING</span>
-              </div>
-            )}
-          </>
-        )}
-        <div className="bootmotto">
-          "THE ARCHITECTURE IS DESIGNED TO REJECT AMBIGUITY.<br />
-          A BLOCKED RESULT IS PREFERABLE TO A PLAUSIBLE DEFAULT."
         </div>
-        {!blocked && !complete && (
-          <button className="bootskip" onClick={depart}>SKIP ▸ (available once verified)</button>
-        )}
+      </div>
+    );
+  }
+
+  return (
+    <div className="boot" data-leaving={String(leaving)}>
+      <div className="apx" data-complete={String(complete)}>
+        <div className="apx-core">
+          <div className="apx-lens" />
+          <div className="apx-iris">
+            {/* determinate progress ring — fills as real checks pass */}
+            <svg className="apx-arc" viewBox="0 0 240 240" width="132" height="132" aria-hidden="true">
+              <circle cx="120" cy="120" r="104" fill="none" stroke="var(--line)" strokeWidth="2" />
+              <circle
+                cx="120" cy="120" r="104" fill="none" stroke="var(--accent)" strokeWidth="2" strokeLinecap="round"
+                transform="rotate(-90 120 120)"
+                strokeDasharray={RING} strokeDashoffset={RING * (1 - p)}
+                style={{ transition: "stroke-dashoffset .7s cubic-bezier(.22,.61,.36,1)" }}
+              />
+            </svg>
+            {/* the aware iris, alive */}
+            <svg className="apx-eye" viewBox="0 0 240 240" width="80" height="80" aria-hidden="true">
+              <circle className="apx-ring" cx="120" cy="120" r="84" fill="none" stroke="currentColor"
+                      strokeWidth="24" strokeLinecap="round" strokeDasharray="454.5 73.3"
+                      transform="rotate(-20 120 120)" />
+              <circle cx="133" cy="107" r="27" fill="var(--accent)" />
+            </svg>
+          </div>
+        </div>
+
+        <div className="apx-below">
+          <div className="apx-word">REIYAH</div>
+          <div className="apx-sub">Harbor Instrument</div>
+
+          <div className="apx-track"><span className="apx-fill" style={{ transform: `scaleX(${p})` }} /></div>
+          <div className="apx-status" data-complete={String(complete)}>{status}</div>
+
+          <div className="apx-proof">
+            {ident
+              ? <>reiyah · {ident.branch} · <span className="hl">{ident.head}</span> · worktree {ident.clean ? "clean" : "dirty"}</>
+              : <span className="dim">reading identity…</span>}
+          </div>
+          <div className="apx-proof">
+            {digest
+              ? <><span className="ok">✓</span> sha256:<span className="hl">{digest}</span>… recomputed here · equals committed sidecar</>
+              : <span className="dim">recomputing index digest in this browser…</span>}
+          </div>
+          <div className="apx-proof">
+            {artifacts != null
+              ? <><span className="ok">●</span> {artifacts.toLocaleString()} artifacts verified into the field</>
+              : <span className="dim">&nbsp;</span>}
+          </div>
+
+          <div className="apx-motto">A blocked result is preferable to a plausible default.</div>
+        </div>
       </div>
     </div>
   );

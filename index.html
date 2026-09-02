@@ -100,8 +100,124 @@
       ]
     }
     </script>
+    <!-- The Aperture: an instant, dependency-free boot that paints on the
+         first byte — before the module bundle or webfonts arrive — so the
+         instrument never shows a blank frame. It carries no fabricated
+         progress: at this stage the code itself is still loading, and the
+         meridian only breathes. The React proof-boot removes this node the
+         moment it mounts, continuing the same iris without a seam. -->
+    <style>
+      /* The iris is anchored at the exact viewport centre and every line of
+         text is placed a fixed distance below it. The React proof-boot uses
+         the identical geometry, so when it removes this node the eye and the
+         wordmark never shift — the splash simply dissolves into the boot. */
+      #boot {
+        position: fixed; inset: 0; z-index: 200;
+        background: #f4f3ee; color: #101215;
+        --ap-accent: #d61732; --ap-line: rgba(16,18,21,.16);
+        --ap-faint: #686f78; --ap-ghost: #9aa0a7;
+        transition: opacity .34s cubic-bezier(.22,.61,.36,1);
+        -webkit-tap-highlight-color: transparent;
+      }
+      html[data-ground="dark"] #boot {
+        background: #050507; color: #ffffff;
+        --ap-accent: #e31937; --ap-line: rgba(255,255,255,.15);
+        --ap-faint: #f2f4f6; --ap-ghost: #e3e6ea;
+      }
+      #boot.ap-out { opacity: 0; pointer-events: none; }
+      #boot .ap-core {
+        position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+      }
+      #boot .ap-lens {
+        position: absolute; width: 232px; height: 232px; border-radius: 50%;
+        top: 50%; left: 50%; transform: translate(-50%, -50%);
+        background:
+          radial-gradient(58% 58% at 50% 38%, rgba(255,255,255,.10), transparent 70%),
+          radial-gradient(closest-side, color-mix(in srgb, var(--ap-accent) 5%, transparent), transparent 78%);
+        border: 1px solid var(--ap-line);
+        box-shadow: inset 0 1px 0 rgba(255,255,255,.22), 0 30px 80px rgba(0,0,0,.10);
+        opacity: .5; animation: apLens 1s cubic-bezier(.22,.61,.36,1) both;
+      }
+      html[data-ground="dark"] #boot .ap-lens {
+        box-shadow: inset 0 1px 0 rgba(255,255,255,.10), 0 40px 120px rgba(0,0,0,.6);
+      }
+      #boot .ap-iris { display: block; overflow: visible; position: relative; }
+      #boot .ap-ring {
+        transform-box: fill-box; transform-origin: center;
+        animation: apRingIn .95s cubic-bezier(.22,.61,.36,1) both,
+                   apSpin 16s linear .95s infinite;
+      }
+      #boot .ap-pupil {
+        fill: var(--ap-accent); transform-box: fill-box; transform-origin: center;
+        animation: apPupil .7s cubic-bezier(.34,1.4,.5,1) .42s both;
+      }
+      #boot .ap-below {
+        position: absolute; top: 50%; left: 50%; transform: translateX(-50%);
+        margin-top: 66px; display: flex; flex-direction: column; align-items: center;
+        text-align: center; white-space: nowrap;
+      }
+      #boot .ap-word {
+        font-family: "Big Shoulders", "Arial Narrow", sans-serif;
+        font-weight: 700; font-size: 30px; letter-spacing: .34em;
+        text-indent: .34em; text-transform: uppercase; line-height: 1;
+        animation: apRise .7s cubic-bezier(.22,.61,.36,1) .28s both;
+      }
+      #boot .ap-sub {
+        margin-top: 9px;
+        font-family: "B612 Mono", "SF Mono", Menlo, monospace;
+        font-size: 9.5px; letter-spacing: .32em; text-indent: .32em;
+        text-transform: uppercase; color: var(--ap-faint);
+        animation: apRise .7s cubic-bezier(.22,.61,.36,1) .4s both;
+      }
+      #boot .ap-track {
+        position: relative; width: 168px; height: 1px; margin-top: 26px;
+        background: var(--ap-line); overflow: hidden;
+        animation: apRise .7s cubic-bezier(.22,.61,.36,1) .52s both;
+      }
+      #boot .ap-glint {
+        position: absolute; top: 0; left: 0; height: 100%; width: 46px;
+        background: linear-gradient(90deg, transparent, var(--ap-accent), transparent);
+        animation: apGlint 1.65s cubic-bezier(.5,0,.5,1) .7s infinite;
+      }
+      #boot .ap-status {
+        margin-top: 13px;
+        font-family: "B612 Mono", "SF Mono", Menlo, monospace;
+        font-size: 9.5px; letter-spacing: .2em; text-transform: uppercase;
+        color: var(--ap-ghost);
+        animation: apRise .7s cubic-bezier(.22,.61,.36,1) .64s both;
+      }
+      @keyframes apLens  { from { opacity: 0; transform: translate(-50%,-50%) scale(.82); } to { opacity: .5; } }
+      @keyframes apRingIn{ from { opacity: 0; transform: rotate(-46deg) scale(.62); } to { opacity: 1; transform: rotate(0) scale(1); } }
+      @keyframes apSpin  { to { transform: rotate(360deg); } }
+      @keyframes apPupil { from { opacity: 0; transform: scale(0); } to { opacity: 1; transform: scale(1); } }
+      @keyframes apRise  { from { opacity: 0; transform: translateY(7px); } to { opacity: 1; transform: none; } }
+      @keyframes apGlint { 0% { transform: translateX(-52px); } 100% { transform: translateX(168px); } }
+      @media (prefers-reduced-motion: reduce) {
+        #boot .ap-lens, #boot .ap-ring, #boot .ap-pupil,
+        #boot .ap-word, #boot .ap-sub, #boot .ap-track, #boot .ap-status { animation: none; opacity: 1; }
+        #boot .ap-lens { transform: translate(-50%,-50%); }
+        #boot .ap-glint { animation: none; opacity: .6; }
+      }
+    </style>
   </head>
   <body>
+    <div id="boot" aria-hidden="true">
+      <div class="ap-core">
+        <div class="ap-lens"></div>
+        <svg class="ap-iris" viewBox="0 0 240 240" width="80" height="80" aria-hidden="true">
+          <circle class="ap-ring" cx="120" cy="120" r="84" fill="none" stroke="currentColor"
+                  stroke-width="24" stroke-linecap="round" stroke-dasharray="454.5 73.3"
+                  transform="rotate(-20 120 120)" />
+          <circle class="ap-pupil" cx="133" cy="107" r="27" />
+        </svg>
+      </div>
+      <div class="ap-below">
+        <div class="ap-word">REIYAH</div>
+        <div class="ap-sub">Harbor Instrument</div>
+        <div class="ap-track"><span class="ap-glint"></span></div>
+        <div class="ap-status">initializing</div>
+      </div>
+    </div>
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
   </body>
