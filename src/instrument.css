@@ -346,8 +346,18 @@ button:focus-visible, a:focus-visible { outline: 2px solid var(--ink-soft); outl
 .overlay {
   position: fixed; inset: 0; z-index: 90;
   background: var(--scrim, rgba(12, 14, 18, 0.45));
+  backdrop-filter: blur(2px); -webkit-backdrop-filter: blur(2px);
   display: flex; align-items: center; justify-content: center;
   padding: 1.5rem;
+  animation: overlayIn 0.22s var(--ease) both;
+}
+@keyframes overlayIn { from { opacity: 0; } }
+/* one clean entrance at final size — the card never resizes */
+.provecard { animation: proveIn 0.36s var(--ease) both; will-change: transform, opacity; }
+@keyframes proveIn { from { opacity: 0; transform: scale(0.965) translateY(10px); filter: blur(7px); } }
+.proverow .v.compute { color: var(--ink-faint); }
+@media (prefers-reduced-motion: reduce) {
+  .overlay, .provecard { animation: none; }
 }
 :root[data-ground="dark"] .overlay { background: rgba(5, 5, 7, 0.6); }
 .provecard { width: min(34rem, 100%); border-radius: 14px; padding: 1.3rem 1.4rem; }

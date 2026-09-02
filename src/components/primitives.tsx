@@ -62,6 +62,9 @@ export function Digest({ id, sha, path }: { id: string; sha: string; path: strin
   };
 
   const proven = proof && "equal" in proof ? proof.equal : undefined;
+  const done = !!(proof && "equal" in proof);
+  const blocked = !!(proof && "reason" in proof);
+  const p = proof as Proof;
   return (
     <>
       <button className="digest" data-proven={proven === undefined ? undefined : String(proven)} onClick={run} title={`prove ${path}`}>
@@ -70,20 +73,31 @@ export function Digest({ id, sha, path }: { id: string; sha: string; path: strin
       </button>
       {open && (
         <div className="overlay" onClick={() => setOpen(false)}>
-          <div className="provecard glass" onClick={(e) => e.stopPropagation()}>
+          {/* Opens at final size with every field present, then the values
+              compute in place — no resize, one clean entrance. */}
+          <div className="provecard glass" onClick={(e) => e.stopPropagation()} role="dialog" aria-label="Press to prove">
             <h3>Press to Prove</h3>
-            {!proof && <div className="proverow"><span className="k">status</span><span className="v">refetching exact bytes · recomputing SHA-256 in this browser…</span></div>}
-            {proof && "equal" in proof && (
+            {done ? (
               <>
-                <div className="proverow"><span className="k">source</span><span className="v">{proof.path}</span></div>
-                <div className="proverow"><span className="k">bytes</span><span className="v">{proof.byteLength.toLocaleString()}</span></div>
-                <div className="proverow"><span className="k">server</span><span className="v">{proof.serverSha256}</span></div>
-                <div className="proverow"><span className="k">this browser</span><span className={`v ${proof.equal ? "eq" : "neq"}`}>{proof.clientSha256}</span></div>
-                <div className="proverow"><span className="k">verdict</span><span className={`v ${proof.equal ? "eq" : "neq"}`}>{proof.equal ? "BYTE-IDENTICAL" : "MISMATCH — do not trust this surface"}</span></div>
+                <div className="proverow"><span className="k">source</span><span className="v">{p.path}</span></div>
+                <div className="proverow"><span className="k">bytes</span><span className="v">{p.byteLength.toLocaleString()}</span></div>
+                <div className="proverow"><span className="k">server</span><span className="v">{p.serverSha256}</span></div>
+                <div className="proverow"><span className="k">this browser</span><span className={`v ${p.equal ? "eq" : "neq"}`}>{p.clientSha256}</span></div>
+                <div className="proverow"><span className="k">verdict</span><span className={`v ${p.equal ? "eq" : "neq"}`}>{p.equal ? "BYTE-IDENTICAL" : "MISMATCH — do not trust this surface"}</span></div>
               </>
-            )}
-            {proof && "reason" in proof && !("equal" in proof) && (
-              <div className="proverow"><span className="k">blocked</span><span className="v neq">{proof.reason}</span></div>
+            ) : blocked ? (
+              <>
+                <div className="proverow"><span className="k">source</span><span className="v">{path}</span></div>
+                <div className="proverow"><span className="k">blocked</span><span className="v neq">{(proof as { reason: string }).reason}</span></div>
+              </>
+            ) : (
+              <>
+                <div className="proverow"><span className="k">source</span><span className="v">{path}</span></div>
+                <div className="proverow"><span className="k">bytes</span><span className="v compute">measuring…</span></div>
+                <div className="proverow"><span className="k">server</span><span className="v">{sha}</span></div>
+                <div className="proverow"><span className="k">this browser</span><span className="v compute">recomputing SHA-256 in this browser…</span></div>
+                <div className="proverow"><span className="k">verdict</span><span className="v compute">…</span></div>
+              </>
             )}
             <button className="close" onClick={() => setOpen(false)}>CLOSE</button>
           </div>
