@@ -16,26 +16,77 @@
           document.documentElement.dataset.ground = "light";
         }
       })();
-      /* Exact app height — the definitive iOS fix. A fixed root sized by 100vh
-         or even 100dvh can lock to the small viewport on first paint (toolbar
-         shown) and never grow when it retracts, leaving the app short with the
-         ground showing below until a reload. We measure the real visible height
-         and re-sample it at every moment it can change — resize, orientation,
-         bfcache restore, the visual viewport, and several timeouts after load
-         to catch the toolbar settle Safari does not always signal. */
+      /* Exact app height and an unscrollable document — the iOS contract.
+         A fixed root sized by 100vh or 100dvh can lock to the wrong viewport
+         on first paint and never recover until a reload. Two facts must hold
+         at every moment: (1) --app-h equals the real visible height, and (2)
+         the document is scrolled to 0, because on iOS a fixed root above a
+         scrolled document appears pushed off the top of the screen. Both are
+         re-established at every moment they can change: resize, orientation,
+         bfcache restore, the visual viewport's own resize and scroll, page
+         scroll, and several timeouts after load to catch the toolbar settle
+         Safari does not always signal.
+         Diagnostics: open the site with ?diag=1 to see the live readings and
+         the timeline of what the browser reported since the first byte. */
       (function () {
         var d = document.documentElement;
-        function setH() {
+        var log = (window.__harborLog = []);
+        var t0 = performance.now();
+        function reading(why) {
           var vv = window.visualViewport;
-          var h = (vv && vv.height) ? vv.height : window.innerHeight;
-          if (h) d.style.setProperty("--app-h", h + "px");
+          return {
+            t: Math.round(performance.now() - t0), why: why,
+            ih: window.innerHeight, iw: window.innerWidth,
+            vvh: vv ? Math.round(vv.height) : null, vvw: vv ? Math.round(vv.width) : null,
+            vvot: vv ? Math.round(vv.offsetTop) : null, vvpt: vv ? Math.round(vv.pageTop) : null,
+            vvs: vv ? +vv.scale.toFixed(3) : null,
+            sy: Math.round(window.scrollY || window.pageYOffset || 0),
+            dch: d.clientHeight, dsh: d.scrollHeight, sh: screen.height,
+            apph: d.style.getPropertyValue("--app-h")
+          };
         }
-        setH();
-        addEventListener("resize", setH, { passive: true });
-        addEventListener("orientationchange", function () { setH(); setTimeout(setH, 300); });
-        addEventListener("pageshow", setH);
-        if (window.visualViewport) window.visualViewport.addEventListener("resize", setH, { passive: true });
-        addEventListener("load", function () { setH(); setTimeout(setH, 60); setTimeout(setH, 250); setTimeout(setH, 600); });
+        function setH(why) {
+          var r = reading(why);
+          if (log.length < 80) log.push(r);
+          var h = r.vvh || r.ih;
+          if (h) d.style.setProperty("--app-h", h + "px");
+          if (r.sy || r.vvpt) { try { window.scrollTo(0, 0); } catch (e) {} }
+        }
+        var fire = function (why) { return function () { setH(why); }; };
+        setH("first");
+        addEventListener("resize", fire("resize"), { passive: true });
+        addEventListener("scroll", fire("scroll"), { passive: true });
+        addEventListener("orientationchange", function () { setH("orient"); setTimeout(fire("orient+300"), 300); });
+        addEventListener("pageshow", fire("pageshow"));
+        addEventListener("focus", fire("focus"));
+        document.addEventListener("visibilitychange", fire("visibility"));
+        if (window.visualViewport) {
+          window.visualViewport.addEventListener("resize", fire("vv.resize"), { passive: true });
+          window.visualViewport.addEventListener("scroll", fire("vv.scroll"), { passive: true });
+        }
+        addEventListener("DOMContentLoaded", fire("dom"));
+        addEventListener("load", function () {
+          setH("load");
+          [60, 250, 600, 1200, 2500].forEach(function (ms) { setTimeout(fire("load+" + ms), ms); });
+        });
+        /* ---- the diagnostic overlay: readings, not assumptions ---- */
+        if (/[?&]diag=1/.test(location.search)) {
+          addEventListener("DOMContentLoaded", function () {
+            var o = document.createElement("pre");
+            o.id = "diag";
+            o.style.cssText = "position:fixed;left:0;right:0;top:35%;margin:0;z-index:100000;background:rgba(255,220,0,.94);color:#000;font:10px/1.35 Menlo,monospace;padding:6px 8px;white-space:pre-wrap;word-break:break-all;pointer-events:none;max-height:60%;overflow:hidden";
+            document.body.appendChild(o);
+            var render = function () {
+              var r = reading("now");
+              var lines = ["NOW ih=" + r.ih + " vvh=" + r.vvh + " vvot=" + r.vvot + " vvpt=" + r.vvpt + " sy=" + r.sy + " dch=" + r.dch + " dsh=" + r.dsh + " sh=" + r.sh + " apph=" + r.apph + " ua=" + navigator.userAgent.replace(/^.*(OS [0-9_]+|Version\/[0-9.]+).*$/, "$1")];
+              var rect = document.body.getBoundingClientRect();
+              lines.push("body top=" + Math.round(rect.top) + " h=" + Math.round(rect.height) + " · root bottom=" + Math.round(document.getElementById("root").getBoundingClientRect().bottom));
+              log.forEach(function (e) { lines.push(e.t + "ms " + e.why + " ih=" + e.ih + " vvh=" + e.vvh + " ot=" + e.vvot + " pt=" + e.vvpt + " sy=" + e.sy + " dsh=" + e.dsh + " app=" + e.apph); });
+              o.textContent = lines.join("\n");
+            };
+            render(); setInterval(render, 500);
+          });
+        }
       })();
     </script>
     <link rel="manifest" href="/manifest.webmanifest" />
@@ -132,6 +183,10 @@
          text is placed a fixed distance below it. The React proof-boot uses
          the identical geometry, so when it removes this node the eye and the
          wordmark never shift — the splash simply dissolves into the boot. */
+      /* the document never scrolls: on iOS, overflow:hidden alone is not
+         honored for touch, but a fixed body is. Every root is fixed anyway. */
+      html, body { overflow: hidden; overscroll-behavior: none; }
+      body { position: fixed; top: 0; left: 0; width: 100%; height: 100%; height: var(--app-h, 100dvh); }
       #boot {
         position: fixed; top: 0; left: 0; width: 100%;
         height: 100vh; height: var(--app-h, 100dvh); z-index: 200;
