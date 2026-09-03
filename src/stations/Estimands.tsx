@@ -27,25 +27,25 @@ export function Estimands() {
 
   return (
     <Station id="ST–05" name="Estimands" sub={`${estimands.length} defined · ${measured} measured · protocol ${proto.release_id ?? ""}`}>
-      <div style={{ display: "flex", flexDirection: "column", justifyContent: "center", minHeight: "100%" }}>
-      <div style={{ display: "flex", alignItems: "baseline", gap: "1.1rem", marginBottom: "1rem", flexWrap: "wrap" }}>
-        <div className="big">{measured}<em>/{estimands.length}</em></div>
-        <div className="note" style={{ margin: 0, maxWidth: "34rem" }}>
-          measured. Every dial is <b>defined, frozen, and honestly dark</b> — no result exists until its gate
-          accepts it. The day one estimand earns retained evidence, its instrument ignites. That ignition is
-          the roadmap, not a promise.
-        </div>
-      </div>
-      <div className="estgrid">
-        {estimands.map((e) => (
-          <div key={e.estimand_id} className="estcard">
-            <span className="sym">{PRETTY[e.symbol] ?? e.symbol}</span>
-            <span className="enm">{e.estimand_id.replace("reiyah.estimand.", "").replace(/-/g, " ")}</span>
-            <span className="edir">{String(e.direction ?? "").replace(/_/g, " ")}</span>
-            <span className="elc">{String(e.lifecycle_status).toUpperCase()} · AWAITING FIRST LIGHT</span>
+      <div className="onepage" style={{ justifyContent: "center", gap: "1rem" }}>
+        <div style={{ display: "flex", alignItems: "baseline", gap: "1.1rem", flexWrap: "wrap", flex: "none" }}>
+          <div className="big" style={{ fontSize: "2rem" }}>{measured}<em>/{estimands.length}</em></div>
+          <div className="note" style={{ margin: 0, maxWidth: "40rem" }}>
+            measured. Every dial is <b>defined, frozen, and honestly dark</b> — no result exists until its gate
+            accepts it. The day one estimand earns retained evidence, its instrument ignites. That ignition is
+            the roadmap, not a promise.
           </div>
-        ))}
-      </div>
+        </div>
+        <div className="estgrid estgridfill">
+          {estimands.map((e) => (
+            <div key={e.estimand_id} className="estcard">
+              <span className="sym">{PRETTY[e.symbol] ?? e.symbol}</span>
+              <span className="enm">{e.estimand_id.replace("reiyah.estimand.", "").replace(/-/g, " ")}</span>
+              <span className="edir">{String(e.direction ?? "").replace(/_/g, " ")}</span>
+              <span className="elc">{String(e.lifecycle_status).toUpperCase()} · AWAITING FIRST LIGHT</span>
+            </div>
+          ))}
+        </div>
       </div>
     </Station>
   );
