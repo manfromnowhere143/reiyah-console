@@ -92,65 +92,56 @@ export function Chair() {
 
   return (
     <Station id="ST–07" name="The Chair" sub="the engine that corrects itself, append-only · then the seat no tool may take">
-      <div className="grid2" style={{ alignItems: "start" }}>
-        {/* ---- the correction saga, auto-discovered ---- */}
-        <div>
-          <div className="ilabel" style={{ marginBottom: "0.8rem" }}>
-            the correction engine · {versions.length} versions · discovered live from the catalog
-          </div>
-          <div className="saga">
+      <div className="onepage">
+        {/* ---- the correction engine, as a horizontal timeline ---- */}
+        <div className="boardwrap" style={{ flex: "none" }}>
+          <div className="ilabel">the correction engine · {versions.length} versions · self-found defects, contract → review → seal, append-only</div>
+          <div className="ctimeline">
             {versions.map((v) => (
-              <div key={v.version} className="sagav" data-now={String(v.version === latest)}>
-                <div className="sagahead">
-                  <span className="sagaver">{v.version}</span>
-                  {v.incident && <span className="sagabadge">INCIDENT CAPTURED</span>}
-                  {v.version === latest && <span className="saganow">● FORGING NOW</span>}
-                </div>
-                {v.files.map((f) => (
-                  <div key={f.path} className="sagarow">
-                    <span className="sagakind">{f.kind}</span>
-                    <span className="sagares">{String(f.result ?? "retained").replace(/_/g, " ")}</span>
-                    <span className="sagasha">{f.sha256.slice(7, 15)}</span>
-                  </div>
-                ))}
+              <div key={v.version} className="cnode" data-now={String(v.version === latest)} data-incident={String(v.incident)}
+                title={v.files.map((f) => `${f.kind}: ${String(f.result ?? "retained").replace(/_/g, " ")}`).join("\n")}>
+                <span className="cnv">{v.version}</span>
+                <span className="cnc">{v.files.length} records</span>
+                <span className="cnt">
+                  {v.incident && <span className="cninc">incident</span>}
+                  {v.version === latest && <span className="cnnow">● forging</span>}
+                </span>
               </div>
             ))}
           </div>
-          <div className="note" style={{ marginTop: "0.8rem" }}>
-            Every version is a self-found defect with its contract, review, implementation, and seal.
-            Nothing is rewritten; corrections only append. This list grows by itself.
-          </div>
         </div>
 
-        {/* ---- the seat ---- */}
-        <div className="chair" style={{ margin: 0 }}>
-          <div className="chairseat">
-            <div className="cap">No tool may sit here.</div>
-            <div className="capsub">
-              The decision record below is deliberately invalid until an authorized human completes and
-              verifies it. {typeof itemCount === "number" ? `${itemCount} inventory items await individual human disposition.` : ""}
+        {/* ---- the seat, stages, and the empty form ---- */}
+        <div className="chairbottom">
+          <div className="chairleft">
+            <div className="chairseat">
+              <div className="cap">No tool may sit here.</div>
+              <div className="capsub">
+                The decision record is deliberately invalid until an authorized human completes and verifies it.
+                {typeof itemCount === "number" ? ` ${itemCount} inventory items await individual human disposition.` : ""}
+              </div>
             </div>
+            {stages.length > 0 && (
+              <div className="ipanel">
+                <div className="ilabel">decision interface stages · append-only</div>
+                <div className="stageflow">
+                  {stages.map((s, i) => (
+                    <span key={s} className="stagechip" data-now={String(i <= 3)}>{s}</span>
+                  ))}
+                </div>
+              </div>
+            )}
           </div>
-          {stages.length > 0 && (
-            <div className="ipanel" style={{ marginBottom: "0.8rem" }}>
-              <div className="ilabel">decision interface stages · append-only</div>
-              <div className="stageflow">
-                {stages.map((s, i) => (
-                  <span key={s} className="stagechip" data-now={String(i <= 3)}>{s}</span>
-                ))}
-              </div>
-              <div className="note">Identity and authority verification are separate series; neither may substitute for the other.</div>
-            </div>
-          )}
           {tplData && (
-            <div className="ipanel">
-              <div className="ilabel">
-                the empty form · {tplPath?.split("/").pop()?.replace(".template.json", "")} · {nulls.length} fields awaiting a human
+            <div className="ipanel chairform">
+              <div className="ilabel">the empty form · {tplPath?.split("/").pop()?.replace(".template.json", "")} · {nulls.length} fields</div>
+              {/* every field is NULL by design; the dashed ring is this
+                  instrument's mark for "missing", and it is said once, not
+                  once per field */}
+              <div className="nullrule"><span className="nv">∅ NULL · AWAITING HUMAN</span> · every field, by design · no tool may fill one</div>
+              <div className="nullcloud">
+                {nulls.map((n) => <span key={n} className="nullchip">{n}</span>)}
               </div>
-              {nulls.slice(0, 12).map((n) => (
-                <div key={n} className="nullfield"><span>{n}</span><span className="nv">NULL · AWAITING HUMAN</span></div>
-              ))}
-              {nulls.length > 12 && <div className="note" style={{ marginTop: "0.5rem" }}>… and {nulls.length - 12} more, all null by design.</div>}
             </div>
           )}
         </div>

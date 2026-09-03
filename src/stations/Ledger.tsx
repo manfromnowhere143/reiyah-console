@@ -1,6 +1,9 @@
-/* LEDGER — the evidence index, aggregated live from the verified bytes. */
+/* LEDGER — the evidence index, aggregated live from the verified bytes, on one
+   screen. A stat strip, one stacked bar for where the bytes live, then the
+   ranked roles and the media mix. Lists are measured, never scrolled: each
+   renders exactly the rows its space can hold and says what it withheld. */
 import type { VerifiedEvidence } from "../boot/ProofBoot";
-import { Digest, Station } from "../components/primitives";
+import { Digest, FitList, Station } from "../components/primitives";
 
 export function Ledger({ ev }: { ev: VerifiedEvidence }) {
   const artifacts: Array<{ artifact: { path: string; sha256: string }; byte_size: number; role: string; media_type: string }> =
@@ -15,61 +18,75 @@ export function Ledger({ ev }: { ev: VerifiedEvidence }) {
     byRole.set(a.role, r);
     byMedia.set(a.media_type, (byMedia.get(a.media_type) ?? 0) + 1);
   }
-  const roles = [...byRole.entries()].sort((a, b) => b[1].n - a[1].n).slice(0, 12);
+  const roles = [...byRole.entries()].sort((a, b) => b[1].n - a[1].n);
   const maxN = roles[0]?.[1].n ?? 1;
   const media = [...byMedia.entries()].sort((a, b) => b[1] - a[1]);
   const byBytes = [...byRole.entries()].sort((a, b) => b[1].bytes - a[1].bytes);
   const totalBytes = byBytes.reduce((s, [, v]) => s + v.bytes, 0) || 1;
-  const tone = (i: number) => `color-mix(in srgb, var(--ink) ${Math.max(14, 82 - i * 9)}%, transparent)`;
+
+  /* part-to-whole reads at a glance only up to six segments: the five heaviest
+     roles keep their identity, everything else folds into "other" */
+  const heavy = byBytes.slice(0, 5);
+  const otherBytes = byBytes.slice(5).reduce((s, [, v]) => s + v.bytes, 0);
+  const segments: Array<[string, number]> = [...heavy.map(([r, v]) => [r, v.bytes] as [string, number]), ["other", otherBytes]];
+  const tone = (i: number) => `color-mix(in srgb, var(--ink) ${Math.max(12, 78 - i * 12)}%, transparent)`;
+  const pct = (b: number) => Math.round((b / totalBytes) * 100);
 
   return (
     <Station id="ST–01" name="Ledger" sub="aggregated in this browser from the digest-verified index bytes">
-      <div className="grid3" style={{ marginBottom: "1rem" }}>
-        <div className="ipanel"><div className="ilabel">artifacts</div><div className="big">{artifacts.length.toLocaleString()}</div><div className="sub">rows in the canonical inventory</div></div>
-        <div className="ipanel"><div className="ilabel">tracked bytes</div><div className="big">{(Number(proj.total_bytes ?? 0) / 1e6).toFixed(2)}<em> MB</em></div><div className="sub">content-addressed, append-only</div></div>
-        <div className="ipanel"><div className="ilabel">worktree</div><div className="big" style={{ fontSize: "1.1rem" }}>{String(proj.worktree_state ?? "unknown").toUpperCase()}</div><div className="sub">commit {String(proj.git_commit ?? "").slice(0, 12)}</div></div>
-        <div className="ipanel"><div className="ilabel">index digest</div><div style={{ marginTop: "0.2rem" }}><Digest id="index" sha={ev.indexSha256} path="gate/GATE_A_EVIDENCE_INDEX.json" /></div><div className="sub">press to reprove in this browser</div></div>
-      </div>
-
-      <div className="ipanel" style={{ marginBottom: "0.8rem" }}>
-        <div className="ilabel">where the {(totalBytes / 1e6).toFixed(2)} MB lives · by role, derived live</div>
-        <div style={{ display: "flex", height: "16px", borderRadius: "8px", overflow: "hidden", border: "1px solid var(--line)" }}
-          role="img" aria-label="Byte allocation by role">
-          {byBytes.map(([role, v], i) => (
-            <div key={role} title={`${role} · ${(v.bytes / 1e6).toFixed(2)} MB · ${Math.round((v.bytes / totalBytes) * 100)}%`}
-              style={{ flex: v.bytes, background: tone(i), minWidth: v.bytes / totalBytes > 0.004 ? undefined : 0 }} />
-          ))}
+      <div className="onepage">
+        <div className="statstrip">
+          <div className="stat"><span className="sl">artifacts</span><span className="sv">{artifacts.length.toLocaleString()}</span><span className="sd">rows in the canonical inventory</span></div>
+          <div className="stat"><span className="sl">tracked bytes</span><span className="sv">{(Number(proj.total_bytes ?? 0) / 1e6).toFixed(2)}<em> MB</em></span><span className="sd">content-addressed, append-only</span></div>
+          <div className="stat"><span className="sl">worktree</span><span className="sv sm">{String(proj.worktree_state ?? "unknown").toUpperCase()}</span><span className="sd">commit {String(proj.git_commit ?? "").slice(0, 12)}</span></div>
+          <div className="stat statwide"><span className="sl">index digest</span><div style={{ marginTop: "0.28rem" }}><Digest id="index" sha={ev.indexSha256} path="gate/GATE_A_EVIDENCE_INDEX.json" /></div></div>
         </div>
-        <div style={{ display: "flex", gap: "1rem", flexWrap: "wrap", marginTop: "0.6rem" }}>
-          {byBytes.slice(0, 5).map(([role, v], i) => (
-            <span key={role} style={{ display: "inline-flex", alignItems: "center", gap: "0.4rem", fontFamily: "var(--mono)", fontSize: "0.58rem", color: "var(--ink-faint)" }}>
-              <span style={{ width: "0.6rem", height: "0.6rem", borderRadius: "2px", background: tone(i) }} />
-              {role} · {Math.round((v.bytes / totalBytes) * 100)}%
-            </span>
-          ))}
+
+        <div className="ipanel" style={{ flex: "none" }}>
+          <div className="ilabel">where the {(totalBytes / 1e6).toFixed(2)} MB lives · by role · derived live</div>
+          <div className="stackbar" role="img" aria-label="Byte allocation by role">
+            {segments.map(([role, b], i) => (
+              <div key={role} className="seg" title={`${role} · ${(b / 1e6).toFixed(2)} MB · ${pct(b)}%`}
+                style={{ flex: b, background: tone(i) }} />
+            ))}
+          </div>
+          <div className="stacklegend">
+            {segments.map(([role, b], i) => (
+              <span key={role}><i style={{ background: tone(i) }} />{role} · {pct(b)}%</span>
+            ))}
+          </div>
         </div>
-      </div>
 
-      <div className="ipanel" style={{ marginBottom: "0.8rem" }}>
-        <div className="ilabel">roles · top {roles.length} of {byRole.size}</div>
-        {roles.map(([role, { n }]) => (
-          <div key={role} className="bar">
-            <span className="bk">{role}</span>
-            <span className="bt"><span className="bf" style={{ width: `${(n / maxN) * 100}%` }} /></span>
-            <span className="bn">{n.toLocaleString()}</span>
+        <div className="grid2 fillgrid">
+          <div className="ipanel fillpanel">
+            <div className="ilabel">roles · {byRole.size} distinct · ranked by count</div>
+            <FitList
+              items={roles}
+              render={([role, { n }]) => (
+                <div key={role} className="bar">
+                  <span className="bk">{role}</span>
+                  <span className="bt"><span className="bf" style={{ width: `${(n / maxN) * 100}%` }} /></span>
+                  <span className="bn">{n.toLocaleString()}</span>
+                </div>
+              )}
+              more={(k) => <>+ {k} more roles, all counted above</>}
+            />
           </div>
-        ))}
-      </div>
-
-      <div className="ipanel">
-        <div className="ilabel">media</div>
-        {media.map(([m, n]) => (
-          <div key={m} className="bar">
-            <span className="bk">{m}</span>
-            <span className="bt"><span className="bf" style={{ width: `${(n / artifacts.length) * 100}%` }} /></span>
-            <span className="bn">{n.toLocaleString()}</span>
+          <div className="ipanel fillpanel">
+            <div className="ilabel">media · {media.length} types</div>
+            <FitList
+              items={media}
+              render={([m, n]) => (
+                <div key={m} className="bar">
+                  <span className="bk">{m}</span>
+                  <span className="bt"><span className="bf" style={{ width: `${(n / artifacts.length) * 100}%` }} /></span>
+                  <span className="bn">{n.toLocaleString()}</span>
+                </div>
+              )}
+              more={(k) => <>+ {k} more media types</>}
+            />
           </div>
-        ))}
+        </div>
       </div>
     </Station>
   );

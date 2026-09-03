@@ -20,31 +20,33 @@ export function Frontier() {
 
   return (
     <Station id="ST–08" name="Frontier" sub={`register ${reg.version ?? ""} · ${records.length} pointers · ${eligible} evidence-eligible`}>
-      <div className="grid3" style={{ marginBottom: "0.8rem" }}>
-        <div className="ipanel"><div className="ilabel">discovery pointers</div><div className="big">{records.length}</div><div className="sub">38 inherited + 16 appended, append-only</div></div>
-        <div className="ipanel"><div className="ilabel">evidence-eligible</div><div className="big">{eligible}</div><div className="sub">a URL without retained bytes is not evidence · the zero is the discipline</div></div>
-        <div className="ipanel"><div className="ilabel">register digest</div><div style={{ marginTop: "0.2rem" }}><Digest id="frontier" sha={meta.sha256} path={meta.path} /></div><div className="sub">press to reprove</div></div>
-      </div>
-
-      <div className="ipanel" style={{ marginBottom: "0.8rem" }}>
-        <div className="ilabel">source kinds</div>
-        {kinds.map(([k, n]) => (
-          <div key={k} className="bar">
-            <span className="bk">{k}</span>
-            <span className="bt"><span className="bf" style={{ width: `${(n / maxK) * 100}%` }} /></span>
-            <span className="bn">{n}</span>
+      <div className="onepage">
+        <div className="statstrip">
+          <div className="stat"><span className="sl">discovery pointers</span><span className="sv">{records.length}</span><span className="sd">38 inherited + 16 appended</span></div>
+          <div className="stat"><span className="sl">evidence-eligible</span><span className="sv">{eligible}</span><span className="sd">the zero is the discipline</span></div>
+          <div className="stat statwide"><span className="sl">register digest</span><div style={{ marginTop: "0.28rem" }}><Digest id="frontier" sha={meta.sha256} path={meta.path} /></div></div>
+        </div>
+        <div className="grid2" style={{ flex: 1, minHeight: 0, alignItems: "stretch" }}>
+          <div className="ipanel" style={{ minHeight: 0, overflow: "hidden" }}>
+            <div className="ilabel">source kinds</div>
+            {kinds.map(([k, n]) => (
+              <div key={k} className="bar">
+                <span className="bk">{k}</span>
+                <span className="bt"><span className="bf" style={{ width: `${(n / maxK) * 100}%` }} /></span>
+                <span className="bn">{n}</span>
+              </div>
+            ))}
           </div>
-        ))}
-      </div>
-
-      <div className="ipanel">
-        <div className="ilabel">latest pointers</div>
-        {records.slice(-8).reverse().map((r) => (
-          <div key={r.discovery_id} className="bar" style={{ gridTemplateColumns: "1fr auto" }}>
-            <span className="bk" style={{ fontSize: "0.62rem" }}>{r.title}</span>
-            <span className="bn" style={{ textTransform: "uppercase", fontSize: "0.54rem" }}>{String(r.custody_state ?? "pointer_only").replace(/_/g, " ")}</span>
+          <div className="ipanel" style={{ minHeight: 0, overflow: "hidden" }}>
+            <div className="ilabel">latest pointers · a URL without retained bytes is not evidence</div>
+            {records.slice(-8).reverse().map((r) => (
+              <div key={r.discovery_id} className="bar" style={{ gridTemplateColumns: "1fr auto" }}>
+                <span className="bk" style={{ fontSize: "0.62rem" }}>{r.title}</span>
+                <span className="bn" style={{ textTransform: "uppercase", fontSize: "0.54rem" }}>{String(r.custody_state ?? "pointer_only").replace(/_/g, " ")}</span>
+              </div>
+            ))}
           </div>
-        ))}
+        </div>
       </div>
     </Station>
   );

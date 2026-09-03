@@ -449,6 +449,148 @@ button:focus-visible, a:focus-visible { outline: 2px solid var(--ink-soft); outl
 .ctrl[data-state="fail"] .cst { color: var(--accent); }
 .ctrl .cobs { font-family: var(--mono); font-size: 0.56rem; color: var(--ink-ghost); }
 
+/* ---------- one-page station scaffold (fills the screen, never scrolls) ---------- */
+.onepage { display: flex; flex-direction: column; gap: 0.7rem; height: 100%; min-height: 0; }
+.statstrip { flex: none; display: grid; grid-template-columns: repeat(auto-fit, minmax(8.5rem, 1fr)); gap: 0.5rem; }
+.stat {
+  border-radius: 10px; padding: 0.55rem 0.7rem;
+  background: color-mix(in srgb, var(--panel) 74%, transparent);
+  box-shadow: inset 0 1px 0 color-mix(in srgb, var(--sheen) 45%, transparent);
+  display: flex; flex-direction: column; gap: 0.1rem; min-width: 0;
+}
+.stat .sl { font-family: var(--mono); font-size: 0.5rem; letter-spacing: 0.16em; text-transform: uppercase; color: var(--ink-faint); }
+.stat .sv { font-family: var(--mono); font-size: 1.5rem; font-weight: 600; line-height: 1; font-variant-numeric: tabular-nums; color: var(--ink); }
+.stat .sv.sm { font-size: 1rem; letter-spacing: 0.02em; }
+.stat .sv em { font-style: normal; color: var(--ink-faint); font-size: 0.7em; }
+.stat .sd { font-size: 0.62rem; color: var(--ink-faint); margin-top: 0.15rem; }
+
+/* the control-health board */
+.boardwrap { flex: 1; min-height: 0; display: flex; flex-direction: column; gap: 0.45rem; }
+.cboard { flex: 1; min-height: 4rem; display: grid; grid-template-columns: repeat(auto-fill, minmax(1.5rem, 1fr)); grid-auto-rows: 1fr; gap: 5px; }
+.ccell {
+  border-radius: 5px; min-height: 1.3rem;
+  background: color-mix(in srgb, var(--ok) calc(var(--o, 0.5) * 100%), color-mix(in srgb, var(--ink) 8%, transparent));
+  box-shadow: inset 0 1px 0 color-mix(in srgb, var(--sheen) 30%, transparent);
+  transition: transform 0.12s var(--ease);
+}
+.ccell:hover { transform: scale(1.12); z-index: 2; }
+.ccell[data-state="fail"] { background: var(--accent); }
+.ccell[data-deep="true"] { box-shadow: 0 0 0 1px var(--ink), 0 0 10px color-mix(in srgb, var(--ok) 70%, transparent); }
+@media (prefers-reduced-motion: no-preference) {
+  .ccell[data-deep="true"] { animation: cellPulse 2.4s ease-in-out infinite; }
+  @keyframes cellPulse { 0%,100% { box-shadow: 0 0 0 1px var(--ink), 0 0 8px color-mix(in srgb, var(--ok) 55%, transparent); } 50% { box-shadow: 0 0 0 1px var(--ink), 0 0 16px color-mix(in srgb, var(--ok) 85%, transparent); } }
+}
+
+/* compact capability truth */
+.captable { flex: none; display: flex; flex-direction: column; gap: 0.4rem; }
+.capgrid { display: grid; grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr)); gap: 0.3rem 1rem; }
+.caprow { display: grid; grid-template-columns: auto 1fr auto; align-items: baseline; gap: 0.6rem; min-width: 0; }
+.caprow .capname { font-family: var(--mono); font-size: 0.6rem; color: var(--ink); white-space: nowrap; }
+.caprow .capval { font-family: var(--mono); font-size: 0.56rem; color: var(--ink-ghost); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; min-width: 0; }
+.caprow[data-true="true"] .capval { color: var(--ink-soft); }
+.caprow .capmark { font-size: 0.7rem; color: var(--ink-faint); }
+.caprow[data-true="true"] .capmark { color: var(--ok); }
+@media (max-width: 760px) {
+  .stat .sv { font-size: 1.2rem; }
+  .cboard { grid-template-columns: repeat(auto-fill, minmax(1.2rem, 1fr)); }
+}
+
+/* THE CHAIR — correction timeline + compact seat/form */
+.ctimeline { display: flex; gap: 0.5rem; flex-wrap: wrap; }
+.cnode {
+  flex: 1 1 7rem; min-width: 5.5rem;
+  border-radius: 10px; padding: 0.55rem 0.7rem;
+  background: color-mix(in srgb, var(--panel) 70%, transparent);
+  box-shadow: inset 0 1px 0 color-mix(in srgb, var(--sheen) 45%, transparent);
+  display: flex; flex-direction: column; gap: 0.15rem;
+}
+.cnode[data-now="true"] { background: color-mix(in srgb, var(--panel) 58%, var(--ink) 8%); box-shadow: inset 0 1px 0 var(--sheen), 0 0 0 1px color-mix(in srgb, var(--ink) 22%, transparent); }
+.cnode .cnv { font-family: var(--display); font-weight: 700; font-size: 1.05rem; letter-spacing: 0.03em; color: var(--ink); line-height: 1; }
+.cnode .cnc { font-family: var(--mono); font-size: 0.54rem; color: var(--ink-faint); }
+.cnode .cnt { display: flex; gap: 0.5rem; font-family: var(--mono); font-size: 0.48rem; letter-spacing: 0.1em; text-transform: uppercase; margin-top: 0.15rem; min-height: 0.7rem; }
+.cnode .cninc { color: var(--ink-soft); }
+.cnode .cnnow { color: var(--ok); }
+.chairbottom { flex: 1; min-height: 0; display: grid; grid-template-columns: 1fr 1fr; gap: 0.8rem; align-items: start; align-content: center; }
+.chairleft { display: flex; flex-direction: column; gap: 0.7rem; }
+.chairform { min-height: 0; }
+@media (max-width: 760px) {
+  .onepage { gap: 0.4rem; }
+  .chairbottom { grid-template-columns: 1fr; gap: 0.45rem; }
+  .chairseat { padding: 0.7rem 0.85rem; }
+  .chairseat .cap { font-size: 1.05rem; }
+  .chairseat .capsub { font-size: 0.64rem; margin-top: 0.2rem; }
+  .chairleft .ipanel { padding: 0.6rem 0.75rem; }
+  .stageflow { margin: 0.4rem 0 0; }
+  .stagechip { padding: 0.2rem 0.5rem; }
+  .cnode { flex: 1 1 5rem; min-width: 4.5rem; padding: 0.4rem 0.55rem; }
+  .cnode .cnv { font-size: 0.92rem; }
+  .cnode .cnt { min-height: 0; margin-top: 0.08rem; }
+}
+
+/* the empty form: field names as dashed chips (dashed = missing, the same
+   mark the EpistemicValue uses), the NULL verdict said once */
+.nullrule { font-family: var(--mono); font-size: 0.56rem; letter-spacing: 0.06em; color: var(--ink-faint); margin-bottom: 0.5rem; }
+.nullrule .nv { color: var(--ink); letter-spacing: 0.12em; }
+.nullcloud { display: flex; flex-wrap: wrap; gap: 0.35rem; }
+.nullchip {
+  font-family: var(--mono); font-size: 0.58rem; letter-spacing: 0.03em; color: var(--ink-soft);
+  border: 1px dashed var(--line); border-radius: 999px; padding: 0.22rem 0.55rem;
+  min-width: 0; overflow-wrap: anywhere;
+}
+@media (max-width: 760px) {
+  .cnode { flex: 1 1 28%; min-width: 0; padding: 0.4rem 0.55rem; }
+  .cnode .cnv { font-size: 0.95rem; }
+  .chairseat { padding: 0.8rem 0.9rem 0.8rem 1.1rem; margin-bottom: 0; }
+  .chairleft { gap: 0.55rem; }
+  .chairform .ilabel { margin-bottom: 0.4rem; }
+  .nullchip { font-size: 0.52rem; padding: 0.16rem 0.45rem; }
+}
+
+/* Estimands — the dials fill the screen; Frontier stat width */
+.estgridfill { flex: 1; min-height: 0; align-content: center; }
+.statwide { min-width: 11rem; }
+
+/* ---------- measured lists and fill panels ---------- */
+/* a panel that takes the remaining height and gives it to a FitList */
+.fillgrid { flex: 1; min-height: 0; align-items: stretch; }
+.fillpanel { flex: 1; display: flex; flex-direction: column; min-height: 0; overflow: hidden; }
+.fillpanel > .ilabel { flex: none; }
+.fitlist { flex: 1; min-height: 0; overflow: hidden; }
+.fitmore { font-family: var(--mono); font-size: 0.56rem; letter-spacing: 0.06em; color: var(--ink-ghost); padding: 0.35rem 0 0; }
+.railnote { flex: none; margin-top: 0.5rem; font-size: 0.66rem; }
+@media (max-width: 760px) { .fillgrid { grid-template-columns: 1fr; grid-auto-rows: minmax(0, 1fr); } .railnote { display: none; } }
+
+/* one stacked bar for part-to-whole: at most six segments, a 2px surface gap
+   between fills so every boundary is a real edge, no outline */
+.stackbar { display: flex; gap: 2px; height: 14px; border-radius: 7px; overflow: hidden; }
+.stackbar .seg { min-width: 2px; }
+.stackbar .seg:first-child { border-radius: 7px 0 0 7px; }
+.stackbar .seg:last-child { border-radius: 0 7px 7px 0; }
+.stacklegend { display: flex; gap: 0.35rem 1rem; flex-wrap: wrap; margin-top: 0.55rem; font-family: var(--mono); font-size: 0.56rem; color: var(--ink-faint); }
+.stacklegend span { display: inline-flex; align-items: center; gap: 0.4rem; }
+.stacklegend i { width: 0.55rem; height: 0.55rem; border-radius: 2px; display: inline-block; }
+
+/* THE RAIL — chain of custody: one node per canonical validation */
+.rail { display: flex; gap: 0.45rem; }
+.rnode {
+  flex: 1 1 0; min-width: 0;
+  border-radius: 10px; padding: 0.5rem 0.65rem;
+  background: color-mix(in srgb, var(--panel) 70%, transparent);
+  box-shadow: inset 0 1px 0 color-mix(in srgb, var(--sheen) 45%, transparent);
+  display: flex; flex-direction: column; gap: 0.2rem;
+}
+.rnode .rv { display: flex; align-items: center; gap: 0.4rem; font-family: var(--display); font-weight: 700; font-size: 1.05rem; letter-spacing: 0.03em; line-height: 1; color: var(--ink); }
+.rnode .rdot { width: 0.5rem; height: 0.5rem; border-radius: 50%; background: var(--ok); flex: none; }
+.rnode[data-ok="false"] .rdot { background: transparent; box-shadow: inset 0 0 0 1px var(--accent); }
+.rnode .rs { font-family: var(--mono); font-size: 0.5rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink-faint); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.rnode .rd { margin-top: 0.15rem; min-width: 0; }
+.rnode .rd .digest { max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+@media (max-width: 760px) {
+  .rail { display: grid; grid-template-columns: 1fr 1fr; gap: 0.4rem; }
+  .rnode { padding: 0.4rem 0.55rem; }
+  .rnode .rv { font-size: 0.95rem; }
+}
+
 /* authority wall — one refractive glass panel lensing the living engine */
 .authwall {
   display: grid; grid-template-columns: 1fr 1fr; gap: 0;
@@ -479,6 +621,11 @@ button:focus-visible, a:focus-visible { outline: 2px solid var(--ink-soft); outl
   border-radius: 10px; background: color-mix(in srgb, var(--field) 70%, transparent);
   box-shadow: inset 0 1px 0 color-mix(in srgb, var(--sheen) 40%, transparent);
   padding: 0.85rem 0.95rem; display: flex; flex-direction: column; gap: 0.25rem;
+}
+@media (max-width: 760px) {
+  .estgrid { gap: 0.45rem; grid-template-columns: repeat(auto-fit, minmax(9.5rem, 1fr)); }
+  .estcard { padding: 0.6rem 0.7rem; }
+  .estcard .sym { font-size: 0.92rem; }
 }
 .estcard .sym { font-family: var(--mono); font-size: 1.05rem; font-weight: 700; color: var(--ink-ghost); }
 .estcard .enm { font-size: 0.72rem; color: var(--ink-soft); }
@@ -669,12 +816,6 @@ button:focus-visible, a:focus-visible { outline: 2px solid var(--ink-soft); outl
 }
 .chairseat .cap { font-family: var(--display); font-weight: 600; text-transform: uppercase; font-size: 1.5rem; letter-spacing: 0.04em; }
 .chairseat .capsub { font-size: 0.78rem; color: var(--ink-soft); margin-top: 0.3rem; }
-.nullfield {
-  display: flex; justify-content: space-between; gap: 1rem; align-items: baseline;
-  border-bottom: 1px solid var(--line-soft); padding: 0.45rem 0;
-  font-family: var(--mono); font-size: 0.64rem; color: var(--ink-soft);
-}
-.nullfield .nv { color: var(--ink-ghost); letter-spacing: 0.1em; }
 .stageflow { display: flex; flex-wrap: wrap; gap: 0.4rem; margin: 0.8rem 0; }
 .stagechip {
   font-family: var(--mono); font-size: 0.56rem; letter-spacing: 0.08em;

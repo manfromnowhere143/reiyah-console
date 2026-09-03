@@ -1,8 +1,54 @@
 /* Primitives: EpistemicValue, Digest (press-to-prove), TruthPill, StationShell.
    The EpistemicValue is the atomic component of the whole instrument —
    six states, never merged, never coerced to zero or false. */
-import { useEffect, useState } from "react";
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { prove, proveInclusion, type Proof, type LiveState, type InclusionProof } from "../lib/evidence";
+
+/* ---------- FitList: a list that is measured, not hoped ----------
+   One page, one screen, no scrolling is a law here. A list that might not
+   fit its container renders exactly as many rows as the container can hold
+   (measured with a ResizeObserver, re-measured on every resize) and says
+   how many it withheld. Nothing is ever clipped mid-row, and nothing scrolls. */
+export function FitList<T>({ items, render, row = 24, more, className, style }: {
+  items: T[];
+  render: (item: T, i: number) => React.ReactNode;
+  row?: number;                              // fallback row height in px before the first measurement
+  more?: (hidden: number) => React.ReactNode; // footer for the withheld rows
+  className?: string;
+  style?: React.CSSProperties;
+}) {
+  const ref = useRef<HTMLDivElement>(null);
+  const [n, setN] = useState(items.length);
+  useLayoutEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    const measure = () => {
+      const h = el.clientHeight;
+      if (h <= 0) return;
+      const first = el.firstElementChild as HTMLElement | null;
+      const rowH = Math.max(1, first?.offsetHeight || row);
+      const reserve = more ? rowH : 0;
+      const overflowing = el.scrollHeight > h + 1;
+      const fits = Math.max(1, Math.min(items.length, Math.floor((h - reserve) / rowH)));
+      /* shrink only when rows actually overflow; otherwise only grow. In a box
+         whose height is its own content this keeps the list stable instead of
+         eating itself one row per measurement. */
+      setN((cur) => (overflowing ? Math.min(cur, fits) : Math.max(cur, fits)));
+    };
+    measure();
+    const ro = new ResizeObserver(measure);
+    ro.observe(el);
+    return () => ro.disconnect();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [items.length, row, !!more]);
+  const shown = items.slice(0, n);
+  return (
+    <div ref={ref} className={`fitlist${className ? ` ${className}` : ""}`} style={style}>
+      {shown.map(render)}
+      {n < items.length && more && <div className="fitmore">{more(items.length - n)}</div>}
+    </div>
+  );
+}
 
 /* ---------- The mark: the aware iris ---------- */
 export function Mark({ size = 15 }: { size?: number }) {
