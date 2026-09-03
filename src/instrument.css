@@ -883,7 +883,16 @@ button:focus-visible, a:focus-visible { outline: 2px solid var(--ink-soft); outl
   transition: color 0.2s var(--ease), background 0.2s var(--ease);
 }
 .encPlay:hover { color: var(--ink); background: color-mix(in srgb, var(--ink) 13%, transparent); }
-.encTrack { position: relative; flex: 1; height: 22px; display: flex; align-items: center; cursor: pointer; touch-action: none; }
+.encTrack { position: relative; flex: 1; height: 34px; display: flex; align-items: center; cursor: pointer; touch-action: none; }
+/* the outcome window is a span of time, drawn as one */
+.encSpan { position: absolute; top: 50%; height: 5px; transform: translateY(-50%); border-radius: 3px; background: color-mix(in srgb, var(--ink) 10%, transparent); transition: background 0.3s var(--ease); }
+.encSpan[data-on="true"] { background: color-mix(in srgb, var(--accent) 22%, transparent); }
+/* every mark is one of the six kinds; the concept mark is the only red one */
+.encMarkL { position: absolute; top: 9px; left: 50%; transform: translateX(-50%); font-family: var(--mono); font-size: 0.48rem; letter-spacing: 0.1em; color: var(--ink-ghost); white-space: nowrap; transition: color 0.3s var(--ease); }
+.encMark[data-on="true"] .encMarkL { color: var(--ink-faint); }
+.encMark[data-jsm="true"] .encMarkL { color: var(--accent); }
+.encMark[data-jsm="true"] { box-shadow: 0 0 0 1px var(--accent) inset; background: transparent; }
+.encMark[data-jsm="true"][data-on="true"] { background: var(--accent); }
 .encTrack::before { content: ""; position: absolute; left: 0; right: 0; height: 1px; background: var(--line); }
 .encTrackFill {
   position: absolute; left: 0; height: 1px; width: 100%; transform-origin: left center;
@@ -907,6 +916,8 @@ button:focus-visible, a:focus-visible { outline: 2px solid var(--ink-soft); outl
 }
 @media (max-width: 760px) {
   .encCaption { bottom: 1rem; max-width: 86vw; }
+  .encTag { font-size: 0.5rem; }
+  .encMarkL { font-size: 0.42rem; letter-spacing: 0.06em; }
   .encBeatBody { font-size: 0.76rem; }
   .encNonclaim { display: none; } /* the disclaimer lives in the page footer; no room beside the tag */
 }
