@@ -491,7 +491,17 @@ button:focus-visible, a:focus-visible { outline: 2px solid var(--ink-soft); outl
 .caprow .capmark { font-size: 0.7rem; color: var(--ink-faint); }
 .caprow[data-true="true"] .capmark { color: var(--ok); }
 @media (max-width: 760px) {
-  .stat .sv { font-size: 1.2rem; }
+  /* phone: three tight columns, the wide digest cell spans two, so five stats
+     take two rows instead of three and the instrument below gets the screen */
+  .statstrip { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 0.35rem; }
+  .stat { padding: 0.45rem 0.55rem; border-radius: 8px; }
+  .stat .sl { font-size: 0.44rem; letter-spacing: 0.12em; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .stat .sv { font-size: 1.05rem; }
+  .stat .sv.sm { font-size: 0.8rem; }
+  .stat .sd { font-size: 0.5rem; line-height: 1.3; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+  .statwide { grid-column: span 2; min-width: 0; }
+  .statstrip .stat:nth-child(3n+1):last-child { grid-column: 1 / -1; }
+  .statwide .digest { max-width: 100%; }
   .cboard { grid-template-columns: repeat(auto-fill, minmax(1.2rem, 1fr)); }
 }
 
@@ -1061,4 +1071,56 @@ button:focus-visible, a:focus-visible { outline: 2px solid var(--ink-soft); outl
   .miris { min-height: 9rem; }
   .miris svg { max-height: 10rem; }
   .nonclaim.shell { font-size: 0.48rem; letter-spacing: 0.06em; }
+}
+
+/* ============================================================
+   THE WALL — ST-06 adversaries: every fixture a measured cell
+   ============================================================ */
+.wallgrid { grid-template-columns: minmax(0, 1.6fr) minmax(13rem, 1fr); }
+.wallwrap { min-height: 0; }
+.wall {
+  flex: 1; min-height: 0; overflow: hidden;
+  display: flex; flex-wrap: wrap; align-content: flex-start; gap: 3px;
+}
+.wcell {
+  width: var(--cs, 10px); height: var(--cs, 10px); border-radius: 2px; display: block;
+  background: color-mix(in srgb, var(--ink) 62%, transparent);
+  transition: opacity 0.25s var(--ease), transform 0.18s var(--ease), background 0.18s var(--ease);
+}
+.wcell[data-c="good"] { background: transparent; box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--ink) 55%, transparent); }
+.wcell[data-r="retained"] { opacity: 0.32; }
+.wcell[data-cur="true"] { background: var(--accent); box-shadow: 0 0 0 2px var(--void), 0 0 0 3px var(--accent); transform: scale(1.5); z-index: 2; position: relative; opacity: 1; }
+.wcell[data-cur="true"][data-c="good"] { background: var(--ok); box-shadow: 0 0 0 2px var(--void), 0 0 0 3px var(--ok); }
+/* a family under the pointer lifts; the rest recede */
+.wall[data-hl]:not([data-hl=""]) .wcell { opacity: 0.1; }
+.wall[data-hl="scientific_contract"] .wcell[data-f="scientific_contract"],
+.wall[data-hl="retained_historical"] .wcell[data-f="retained_historical"],
+.wall[data-hl="validator_security"] .wcell[data-f="validator_security"],
+.wall[data-hl="transport_governance"] .wcell[data-f="transport_governance"],
+.wall[data-hl="publication_governance"] .wcell[data-f="publication_governance"] { opacity: 1; }
+.wall[data-hl]:not([data-hl=""]) .wcell[data-r="retained"] { opacity: 0.1; }
+.wall[data-hl="retained_historical"] .wcell[data-f="retained_historical"][data-r="retained"] { opacity: 0.55; }
+.wallcap {
+  flex: none; display: grid; grid-template-columns: auto 1fr auto; gap: 0.8rem; align-items: baseline;
+  font-family: var(--mono); font-size: 0.6rem; color: var(--ink-soft); min-height: 1.2rem;
+}
+.wallcap > * { min-width: 0; }
+.wallcap .wcidx { color: var(--ink-faint); font-variant-numeric: tabular-nums; letter-spacing: 0.06em; }
+.wallcap .wcpath { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.wallcap .wcrule { color: var(--ink-faint); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; letter-spacing: 0.04em; }
+.wallcap .wcrule b { font-weight: 600; color: var(--ink); }
+.wallcap .wcrule[data-c="bad"] b { color: var(--accent); }
+.walllegend { flex: none; display: flex; gap: 0.3rem 0.9rem; flex-wrap: wrap; font-family: var(--mono); font-size: 0.56rem; letter-spacing: 0.06em; color: var(--ink-faint); }
+.walllegend button { color: inherit; padding: 0.1rem 0; transition: color 0.2s var(--ease); }
+.walllegend button em { font-style: normal; color: var(--ink-ghost); margin-left: 0.15rem; }
+.walllegend button[data-on="true"], .walllegend button:hover { color: var(--ink); }
+.rulebar { grid-template-columns: 1fr 3.5rem 2rem; }
+.rulebar .bk { font-size: 0.56rem; }
+.rulebar .bf { background: color-mix(in srgb, var(--accent) 55%, var(--ink-ghost)); }
+@media (max-width: 760px) {
+  .wallgrid { grid-template-columns: 1fr; grid-template-rows: minmax(0, 2.1fr) minmax(0, 1fr); }
+  .wallcap { grid-template-columns: auto 1fr; }
+  .wallcap .wcrule { grid-column: 1 / -1; }
+  .walllegend { gap: 0.2rem 0.6rem; font-size: 0.5rem; }
+  .rulebar { grid-template-columns: 1fr 2.5rem 1.8rem; }
 }
