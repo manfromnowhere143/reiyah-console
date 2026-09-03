@@ -31,6 +31,20 @@ type MakeCanvas = (w: number, h: number) => AnyCanvas;
 
 const TAU = Math.PI * 2;
 const KINDS = ["OBS", "BEL", "DEC", "INT", "OUT", "EVD"];
+/* the shape is the role: every sensed object is drawn as what it is */
+type Shape = "diamond" | "square" | "circle" | "hex";
+const shapeOf = (role: string): Shape =>
+  role.includes("schema") ? "square" :
+  role.includes("historical") || role.includes("recovery") ? "circle" :
+  role.includes("validator") || role.includes("toolchain") || role.includes("launcher") ? "hex" : "diamond";
+const drawShape = (c: Ctx, shape: Shape, x: number, y: number, s: number) => {
+  c.beginPath();
+  if (shape === "diamond") { c.moveTo(x, y - s); c.lineTo(x + s, y); c.lineTo(x, y + s); c.lineTo(x - s, y); }
+  else if (shape === "square") { const q = s * 0.8; c.rect(x - q, y - q, q * 2, q * 2); }
+  else if (shape === "circle") { c.arc(x, y, s * 0.9, 0, TAU); }
+  else { for (let i = 0; i < 6; i++) { const a = i * TAU / 6 + TAU / 12; const px = x + Math.cos(a) * s, py = y + Math.sin(a) * s; if (i === 0) c.moveTo(px, py); else c.lineTo(px, py); } }
+  c.closePath();
+};
 const KIND_T = [0.10, 0.24, 0.38, 0.54, 0.70, 0.86]; // where each kind lives along the approach
 const GATE_T = 0.46;                                  // the gate: bad fixtures are rejected here
 
@@ -39,6 +53,7 @@ interface Packet {
   t: number;        // 0 (far, at the horizon) -> 1 (near, passing the ego)
   speed: number;
   bad: boolean;
+  shape: Shape;
   lane: number;     // -1..1 across the road
   mass: number;     // 0..1, real byte size (log-scaled)
   fall: number;     // > 0 once rejected
@@ -90,6 +105,7 @@ export function createHarborEngine(
     packets.push({
       a, t: 0, speed: 0.055 + hh * 0.05,
       bad: a.role === "known_bad_fixture",
+      shape: shapeOf(a.role),
       lane: (hh2 - 0.5) * 1.7,
       mass: massOf(a.byte_size),
       fall: 0, vx: 0, vy: 0, px: 0, py: 0, seen: false,
@@ -127,7 +143,7 @@ export function createHarborEngine(
 
     /* ---- perspective of the road ---- */
     const horizon = Math.round(h * 0.40);
-    const cx = w / 2;
+    const cx = w / 2 + (reduced ? 0 : Math.sin(t * 0.37) * 3 + Math.sin(t * 1.3) * 0.8);
     const groundH = h - horizon;
     const yAt = (p: number) => horizon + groundH * (p * p);
     const fAt = (y: number) => (y - horizon) / groundH;               // 0 at horizon, 1 at ego
@@ -168,6 +184,14 @@ export function createHarborEngine(
     mctx.lineWidth = 1;
     mctx.beginPath(); mctx.moveTo(0, horizon); mctx.lineTo(w, horizon); mctx.stroke();
 
+    /* ground ticks: faint cross-lines flowing toward the ego, so the road has depth */
+    for (let k = 0; k < 8; k++) {
+      const p = ((k / 8) + flow * 0.5) % 1;
+      const y = yAt(p), f = fAt(y), hw = halfAt(f);
+      mctx.strokeStyle = `rgba(${INK},${(0.03 + 0.07 * f).toFixed(3)})`;
+      mctx.lineWidth = 1;
+      mctx.beginPath(); mctx.moveTo(cx - hw, y); mctx.lineTo(cx + hw, y); mctx.stroke();
+    }
     /* centre lane dashes, scrolling toward the ego (forward motion) */
     const N = 11;
     for (let k = 0; k < N; k++) {
@@ -263,12 +287,15 @@ export function createHarborEngine(
         glow(pr.x, pr.y, s * 2.6, rgb, 0.16 + pr.f * 0.14);
         mctx.globalCompositeOperation = "source-over";
       }
+      /* a ground shadow beneath near objects: they stand on the road */
+      if (pr.f > 0.25) {
+        mctx.fillStyle = `rgba(${dark ? "0,0,0" : INK},${(0.10 * pr.f).toFixed(3)})`;
+        mctx.beginPath(); mctx.ellipse(pr.x, pr.y + s * 1.15, s * 1.1, s * 0.28, 0, 0, TAU); mctx.fill();
+      }
       mctx.strokeStyle = `rgba(${rgb},${(0.5 + pr.f * 0.45).toFixed(2)})`;
       mctx.lineWidth = Math.max(1, s * 0.16);
-      mctx.beginPath();
-      mctx.moveTo(pr.x, pr.y - s); mctx.lineTo(pr.x + s, pr.y);
-      mctx.lineTo(pr.x, pr.y + s); mctx.lineTo(pr.x - s, pr.y);
-      mctx.closePath(); mctx.stroke();
+      drawShape(mctx, pk.shape, pr.x, pr.y, s);
+      mctx.stroke();
       if (pr.f > 0.3) {
         mctx.fillStyle = `rgba(${rgb},${(0.7 * pr.f).toFixed(2)})`;
         mctx.beginPath(); mctx.arc(pr.x, pr.y, s * 0.28, 0, TAU); mctx.fill();
@@ -303,8 +330,10 @@ export function createHarborEngine(
 
     /* ---- the gate across the road: fails closed ---- */
     const gy = yAt(GATE_T), gf = fAt(gy), ghw = halfAt(gf) * 0.82;
-    mctx.strokeStyle = `rgba(${INK},${dark ? 0.5 : 0.4})`;
-    mctx.lineWidth = 1;
+    const fire = Math.max(0, 1 - (now - lastRejectAt) / 700);
+    if (fire > 0 && dark) { mctx.globalCompositeOperation = "lighter"; glow(cx, gy, ghw * 0.6, RED, 0.12 * fire); mctx.globalCompositeOperation = "source-over"; }
+    mctx.strokeStyle = fire > 0 ? `rgba(${RED},${(0.35 + 0.6 * fire).toFixed(2)})` : `rgba(${INK},${dark ? 0.5 : 0.4})`;
+    mctx.lineWidth = 1 + fire;
     mctx.setLineDash([5, 5]);
     mctx.beginPath(); mctx.moveTo(cx - ghw, gy); mctx.lineTo(cx + ghw, gy); mctx.stroke();
     mctx.setLineDash([]);
@@ -336,6 +365,9 @@ export function createHarborEngine(
     mctx.fillText(`SEALED · ${artifacts.length}`, w - 14, horizon + 18);
     mctx.fillStyle = `rgba(${INK},${TA})`;
     mctx.fillText(`IN FLIGHT · ${packets.filter((p) => p.fall === 0).length}`, w - 14, horizon + 32);
+    mctx.fillStyle = `rgba(${INK},${dark ? 0.7 : 0.6})`;
+    if (w < 560) { mctx.fillText("◇ FIXTURE  ▢ SCHEMA", w - 14, horizon + 46); mctx.fillText("○ HISTORY  ⬡ VALIDATOR", w - 14, horizon + 60); }
+    else mctx.fillText("◇ FIXTURE  ▢ SCHEMA  ○ HISTORY  ⬡ VALIDATOR", w - 14, horizon + 46);
 
     /* ---- ticker: the nearest object's identity, as a HUD line under the title
        (kept clear of the receipt chip and authority wall at the bottom) ---- */
