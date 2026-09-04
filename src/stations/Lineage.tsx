@@ -54,6 +54,8 @@ export function Lineage({ summary }: { summary: Summary }) {
         continuity: String(rec.data?.custody_continuity ?? "unrecorded").replace(/_/g, " "),
         broken: String(rec.data?.custody_continuity ?? "").startsWith("interrupted"),
         meta: rec.meta,
+        disp: rec.data?.public_dispositions ?? null,
+        recovered: Array.isArray(rec.data?.recovered_artifacts) ? rec.data.recovered_artifacts.length : null,
       } : null,
     };
   });
@@ -95,6 +97,14 @@ export function Lineage({ summary }: { summary: Summary }) {
                   <span className="rrec" data-broken={String(s.recovery.broken)}>
                     <b>{s.recovery.continuity}</b>
                     <span>{s.recovery.method}</span>
+                    {s.recovery.broken && s.recovery.disp && (
+                      <span className="rbreak" aria-label="the break, as disclosed">
+                        <em data-v={String(!!s.recovery.disp.exact_bytes_publicly_verifiable)}>{s.recovery.disp.exact_bytes_publicly_verifiable ? "◆" : "∅"} bytes publicly verifiable</em>
+                        <em data-v={String(!!s.recovery.disp.recovery_derivation_publicly_replayable)}>{s.recovery.disp.recovery_derivation_publicly_replayable ? "◆" : "∅"} derivation replayable</em>
+                        <em data-v={String(!!s.recovery.disp.uninterrupted_custody_claimed)}>{s.recovery.disp.uninterrupted_custody_claimed ? "◆" : "∅"} unbroken custody claimed</em>
+                        {s.recovery.recovered !== null && <em data-v="true">◆ {s.recovery.recovered} artifacts reconstructed from digests</em>}
+                      </span>
+                    )}
                   </span>
                 ) : (
                   <span className="rrec dim"><b>no recovery record</b><span>identity carried by the report itself</span></span>
