@@ -7,7 +7,7 @@
    exact rule it must fail against; hovering takes the cursor. */
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { fetchSurface } from "../lib/evidence";
-import { Blocked, Digest, FitList, Station, useSurfaceState } from "../components/primitives";
+import { Blocked, Digest, FitList, Stat, Station, useSurfaceState } from "../components/primitives";
 
 interface Fixture {
   fixture_id: string;
@@ -48,6 +48,7 @@ function Wall({ meta, fixtures }: { meta: { sha256: string; path: string }; fixt
   for (const f of fixtures) if (f.expected_primary_rule_id) byRule.set(f.expected_primary_rule_id, (byRule.get(f.expected_primary_rule_id) ?? 0) + 1);
   const rules = [...byRule.entries()].sort((a, b) => b[1] - a[1]);
   const maxRule = rules[0]?.[1] ?? 1;
+  const FX = [{ id: "fixtures", path: meta.path, sha256: meta.sha256 }];
 
   /* ---- the cell size is measured: the largest square such that every fixture fits ---- */
   const wallRef = useRef<HTMLDivElement>(null);
@@ -92,11 +93,17 @@ function Wall({ meta, fixtures }: { meta: { sha256: string; path: string }; fixt
     <Station id="ST–06" name="Adversaries" sub="every known-bad fails for its exact declared reason, through the production validator">
       <div className="onepage">
         <div className="statstrip">
-          <div className="stat"><span className="sl">built to be rejected</span><span className="sv">{bad}</span><span className="sd">{pct}% of the corpus exists to prove rejection</span></div>
-          <div className="stat"><span className="sl">built to pass</span><span className="sv">{good}</span><span className="sd">known-good, every one must pass</span></div>
-          <div className="stat"><span className="sl">declared reasons</span><span className="sv">{byRule.size}</span><span className="sd">distinct rules a known-bad must fail against</span></div>
-          <div className="stat"><span className="sl">current replay</span><span className="sv">{current}<em>/{fixtures.length}</em></span><span className="sd">{retained} retained history, shown, never counted</span></div>
-          <div className="stat statwide"><span className="sl">catalog digest</span><div style={{ marginTop: "0.28rem" }}><Digest id="fixtures" sha={meta.sha256} path={meta.path} /></div></div>
+          <Stat label="built to be rejected" value={bad} sub={`${pct}% of the corpus exists to prove rejection`}
+            rule="count of fixtures whose classification is known_bad; the percentage is that count over all fixtures" from={FX} />
+          <Stat label="built to pass" value={good} sub="known-good, every one must pass"
+            rule="count of fixtures whose classification is not known_bad" from={FX} />
+          <Stat label="declared reasons" value={byRule.size} sub="distinct rules a known-bad must fail against"
+            rule="count of distinct expected_primary_rule_id values across the fixtures" from={FX} />
+          <Stat label="current replay" value={<>{current}<em>/{fixtures.length}</em></>} sub={`${retained} retained history, shown, never counted`}
+            rule="fixtures whose replay_mode is not retained_not_replayed, over all fixtures; the catalog itself states that historical rows are not current replay evidence" from={FX} />
+          <Stat label="catalog digest" wide rule="SHA-256 of the fixture catalog bytes as recorded in the evidence index; press the chip to recompute it here" from={FX}>
+            <div style={{ marginTop: "0.28rem" }}><Digest id="fixtures" sha={meta.sha256} path={meta.path} /></div>
+          </Stat>
         </div>
 
         <div className="grid2 fillgrid wallgrid">

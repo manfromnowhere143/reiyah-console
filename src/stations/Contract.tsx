@@ -6,7 +6,7 @@
    wall of what is not claimed, read from the bytes that say so. */
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { fetchSchemaIndex, fetchSurface, fetchSurfaceByPath, type SchemaRow } from "../lib/evidence";
-import { Blocked, FitList, Station, useSurfaceState } from "../components/primitives";
+import { Blocked, FitList, Stat, Station, useSurfaceState } from "../components/primitives";
 
 const short = (s: unknown) => String(s ?? "").replace(/_/g, " ");
 
@@ -19,12 +19,14 @@ export function Contract() {
       fetchSurface<any>("frontier"),
       fetchSurface<any>("mission"),
     ]);
+    const src = (s: any, id?: string) => (s.state === "observed" ? [{ id: id ?? s.meta.id, path: s.meta.path, sha256: s.meta.sha256 }] : []);
     return {
       rows,
       fixtures: fixtures.state === "observed" ? (fixtures.data.fixtures ?? []) : [],
       profile: profile.state === "observed" ? profile.data : null,
       register: register.state === "observed" ? register.data : null,
       mission: mission.state === "observed" ? mission.data : null,
+      SRC: { fixtures: src(fixtures, "fixtures"), profile: src(profile), register: src(register, "frontier") },
     };
   });
 
@@ -59,7 +61,7 @@ export function Contract() {
   if (state.phase === "loading") return <Station id="ST–10" name="The Contract"><div className="note">reading the contract layer…</div></Station>;
   if (state.phase === "blocked") return <Station id="ST–10" name="The Contract"><Blocked reason={state.reason} /></Station>;
 
-  const { fixtures, profile, register, mission } = state.data;
+  const { fixtures, profile, register, mission, SRC } = state.data;
   const families = new Set(rows.map((r) => r.family)).size;
   const closed = rows.filter((r) => r.additional_properties_closed).length;
   const dialects = new Set(rows.map((r) => r.dialect).filter(Boolean)).size;
@@ -98,10 +100,14 @@ export function Contract() {
     <Station id="ST–10" name="The Contract" sub="every schema digest-bound · coverage · what is not claimed">
       <div className="onepage">
         <div className="statstrip">
-          <div className="stat"><span className="sl">schemas</span><span className="sv">{rows.length}</span><span className="sd">{families} families · {dialects} dialect{dialects === 1 ? "" : "s"} pinned</span></div>
-          <div className="stat"><span className="sl">closed to unknowns</span><span className="sv">{closed}<em>/{rows.length}</em></span><span className="sd">additionalProperties false</span></div>
-          <div className="stat"><span className="sl">production rules</span><span className="sv">{rules.length}</span><span className="sd">named rule ids a record can fail against</span></div>
-          <div className="stat"><span className="sl">claims admitted</span><span className="sv sm">{register ? (register.claims_admitted ? "YES" : "NONE") : "∅"}</span><span className="sd">read from the register, not from prose</span></div>
+          <Stat label="schemas" value={rows.length} sub={`${families} families · ${dialects} dialect${dialects === 1 ? "" : "s"} pinned`}
+            rule="count of *.schema.json files under schemas/, each read and digested at seal or read time; families are the file names without version; dialects are the distinct $schema values" from={[]} />
+          <Stat label="closed to unknowns" value={<>{closed}<em>/{rows.length}</em></>} sub="additionalProperties false"
+            rule="count of schemas whose top-level additionalProperties is false, over all schemas" from={[]} />
+          <Stat label="production rules" value={rules.length} sub="named rule ids a record can fail against"
+            rule="length of production_rule_ids in the scientific contract profile" from={SRC.profile} />
+          <Stat label="claims admitted" value={register ? (register.claims_admitted ? "YES" : "NONE") : "∅"} small sub="read from the register, not from prose"
+            rule="the frontier register's claims_admitted field, read verbatim" from={SRC.register} />
         </div>
 
         <div className="grid2 fillgrid congrid">

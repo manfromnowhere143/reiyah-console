@@ -5,7 +5,7 @@
    different kind of record and sit on their own lower rail, never counted
    as canonical validations. Enumerated live from the repository. */
 import { fetchCatalog, fetchSurface, fetchSurfaceByPath, type Summary } from "../lib/evidence";
-import { Blocked, Digest, Station, useSurfaceState } from "../components/primitives";
+import { Blocked, Digest, Stat, Station, useSurfaceState } from "../components/primitives";
 
 export function Lineage({ summary }: { summary: Summary }) {
   const reportIds = summary.surfaces.filter((s) => s.id.startsWith("report-")).map((s) => s.id).sort();
@@ -64,19 +64,22 @@ export function Lineage({ summary }: { summary: Summary }) {
   const archs = [...new Set(series.map((s) => s.arch).filter(Boolean))];
   const sharedArch = archs.length === 1 ? archs[0] : null;
   const breaks = series.filter((s) => s.recovery?.broken).length;
+  const RPT = series.map((s) => ({ id: s.meta.id, path: s.meta.path, sha256: s.meta.sha256 }));
+  const REC = recoveries.filter((r: any) => r.state === "observed").map((r: any) => ({ id: r.meta.id, path: r.meta.path, sha256: r.meta.sha256 }));
 
   return (
     <Station id="ST–02" name="Lineage" sub="append-only history · nothing regenerated, nothing relabeled">
       <div className="onepage">
         <div className="statstrip">
-          <div className="stat">
-            <span className="sl">releases</span>
-            <span className="sv">{series.filter((s) => s.ok).length}<em>/{series.length}</em></span>
-            <span className="sd" style={{ color: unbroken ? "var(--ok)" : "var(--accent)" }}>{unbroken ? "every validation passing" : "attention"}</span>
-          </div>
-          <div className="stat"><span className="sl">diagnostics</span><span className="sv">{totalDiag}</span><span className="sd">across the entire chain</span></div>
-          <div className="stat"><span className="sl">controls at head</span><span className="sv">{headCtrls}</span><span className="sd">replay + implementation</span></div>
-          <div className="stat"><span className="sl">custody breaks</span><span className="sv">{breaks}</span><span className="sd">{breaks ? "disclosed, reconstructed from digests" : "none disclosed"}</span></div>
+          <Stat label="releases" value={<>{series.filter((s) => s.ok).length}<em>/{series.length}</em></>}
+            sub={<span style={{ color: unbroken ? "var(--ok)" : "var(--accent)" }}>{unbroken ? "every validation passing" : "attention"}</span>}
+            rule="for each canonical validation report: status is pass, its diagnostics array is empty, and every listed control passes; the count of such reports over all canonical reports" from={RPT} />
+          <Stat label="diagnostics" value={totalDiag} sub="across the entire chain"
+            rule="sum of the length of the diagnostics array over every canonical validation report" from={RPT} />
+          <Stat label="controls at head" value={headCtrls} sub="replay + implementation"
+            rule="count of replay plus implementation controls in the newest canonical report that lists controls" from={RPT.slice(-1)} />
+          <Stat label="custody breaks" value={breaks} sub={breaks ? "disclosed, reconstructed from digests" : "none disclosed"}
+            rule="count of RECOVERY records whose custody_continuity begins with interrupted" from={REC} />
         </div>
 
         <div className="graph">

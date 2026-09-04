@@ -7,7 +7,7 @@
    seat: the decision record is invalid until an authorized human completes it. */
 import { useState } from "react";
 import { fetchCatalog, fetchSurfaceByPath, fetchSurface } from "../lib/evidence";
-import { Blocked, FitList, Station, useSurfaceState } from "../components/primitives";
+import { Blocked, FitList, Stat, Station, useSurfaceState } from "../components/primitives";
 
 type Kind = "incident" | "correction" | "review" | "report" | "plan" | "lock" | "fixtures" | "interface" | "inventory" | "template" | "record";
 const ORDER: Kind[] = ["incident", "correction", "review", "report", "plan", "lock", "fixtures", "interface", "inventory", "template"];
@@ -104,15 +104,23 @@ export function Chair() {
   const totalRegs = versions.reduce((a, v) => a + (v.pos ?? 0) + (v.neg ?? 0), 0);
   const totalRecs = versions.reduce((a, v) => a + v.recs.length, 0);
   const incidents = versions.filter((v) => v.recs.some((r) => r.kind === "incident")).length;
+  const INC = versions.flatMap((v) => v.recs.filter((r) => r.kind === "incident").map((r) => ({ path: r.path, sha256: r.sha256 })));
+  const COR = versions.flatMap((v) => v.recs.filter((r) => r.kind === "correction").map((r) => ({ path: r.path, sha256: r.sha256 })));
+  const ALL = versions.flatMap((v) => v.recs.map((r) => ({ path: r.path, sha256: r.sha256 })));
+  const ODI = odi.state === "observed" ? [{ id: "odi", path: odi.meta.path, sha256: odi.meta.sha256 }] : [];
 
   return (
     <Station id="ST–07" name="The Chair" sub="the engine that corrects itself, append-only · then the seat no tool may take">
       <div className="onepage">
         <div className="statstrip">
-          <div className="stat"><span className="sl">corrections</span><span className="sv">{versions.length}</span><span className="sd">{totalRecs} records · {incidents} incidents filed against itself</span></div>
-          <div className="stat"><span className="sl">named defects</span><span className="sv">{totalDefects}</span><span className="sd">each with an id, a claim, an impact</span></div>
-          <div className="stat"><span className="sl">regressions required</span><span className="sv">{totalRegs}</span><span className="sd">positive and negative, before any fix counts</span></div>
-          <div className="stat"><span className="sl">acceptance</span><span className="sv sm">{acceptance}</span><span className="sd">{typeof itemCount === "number" ? `${itemCount} items await human disposition` : "awaiting a human"}</span></div>
+          <Stat label="corrections" value={versions.length} sub={`${totalRecs} records · ${incidents} incidents filed against itself`}
+            rule="distinct 1.2.x versions among every operator-decision record in the catalog; records are all such files; incidents are versions holding an incident record" from={ALL.slice(0, 12)} />
+          <Stat label="named defects" value={totalDefects} sub="each with an id, a claim, an impact"
+            rule="sum of the length of the defects array across every incident record" from={INC} />
+          <Stat label="regressions required" value={totalRegs} sub="positive and negative, before any fix counts"
+            rule="sum of required_positive_regressions and required_negative_regressions (or required_contract_adversaries) across every correction contract" from={COR} />
+          <Stat label="acceptance" value={acceptance} small sub={typeof itemCount === "number" ? `${itemCount} items await human disposition` : "awaiting a human"}
+            rule="authority.operator_acceptance_state and unresolved_inventory_contract.item_count of the operator decision interface record" from={ODI} />
         </div>
 
         {/* the spine: one column per version, one mark per record kind */}
