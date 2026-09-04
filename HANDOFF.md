@@ -164,6 +164,53 @@ Adversaries = THE WALL; Encounter v3 at the fixture's own clock; Harbor shape =
 role, ground depth, the gate fires; body-lock and single-fixed-layer iOS steps
 (now superseded by the static document).
 
+## MISSION PLAN 2026-09-04 · exposure audit verdict (PLANNING ONLY, not started)
+**Engine state:** head 74fbacc on gate-a-1.2.9-readiness-input-seal-truth-contract,
+clean. Six commits since the public seal (4990a3d, 1 Sept, 1.2.7 dirty):
++2 incidents (1.2.8 R1 continuity, 1.2.9 seal truth), +2 corrections, +3 reviews,
++1 interface contract report, +4 fixture catalogs, +~50 schemas, +7 validation
+plans/locks. The evidence index itself is unchanged (934 artifacts; it is
+regenerated only at release closeouts), so Harbor/Ledger numbers are current
+while Chair/Lineage are two versions behind. The publisher (watch-and-publish)
+is not running.
+
+**Verdict:** the instrument exposes the evidence SURFACE brilliantly (index,
+reports, controls, fixtures, chain, frontier, estimand names, decision seat)
+and leaves the contract DEPTH invisible: 221 schemas in 133 families; 318
+adversaries aimed at 10 application schemas (per-schema coverage); the
+incident anatomy (named defects such as K129-D01..D04, 8 obligations, 10
+positive + 44 negative required regressions, all-false authority ceilings,
+dispositions like absent_not_attempted_blocked_unretained_nonreusable); the
+toolchain lock (exact interpreter, module origins, deadline contract); the
+scientific contract profile (production rules, cross-cutting rule contracts,
+closure policy); the mission thesis and invariants; the dated standards
+crosswalk; the 77-item decision inventory. Roughly a third of what makes
+Reiyah remarkable is not on screen.
+
+**Plan, ranked (each: measured fit, real bytes, visuals over text):**
+0. Reseal now (engine is clean) and install the publisher launchd job so the
+   public instrument mirrors every clean engine commit. Extend the sealer's
+   catalog roots to `validation/`, `schemas/`, `evidence/` (crosswalk).
+1. ST-07 → THE CORRECTION ENGINE anatomy: per version a spine
+   incident → named defects → root cause → obligations → required regressions
+   (positive/negative bars) → review verdict → implementation result → seal;
+   every disposition state its own mark, never collapsed. Tap a defect to read it.
+2. New ST-10 THE CONTRACT: schema lattice (221 × 133 families, measured cells
+   like the wall), adversarial coverage per application schema as a depth
+   strip, the claims register as an explicit "what Reiyah does not claim" wall
+   (support/safety/compliance/superiority all FALSE, from bytes).
+3. ST-04 Controls → the toolchain lock: exact interpreter and digests, module
+   origins, deadline contract; the byte-bound launcher story.
+4. ST-02 Lineage → the stage machine: ordered stage ids and the append-only
+   sequence as a rail with current_authorized_stage and current_hard_stop_before.
+5. ST-08 Frontier → the standards crosswalk as a second horizon (evidence and
+   gaps, dated, never a compliance claim).
+6. ST-05 Estimands → tap reveals identification assumptions, validity
+   conditions, abstention rule, required reporting.
+7. Cross-cutting: ⌘K palette over artifacts/rules/schemas (yes); press-to-prove
+   from any cursor in live mode (yes); WebGPU (still no: nothing to compute);
+   sonification (no, for now).
+
 ## NEXT STEPS (in order)
 1. Read the user's `?diag=1` screenshot (opened from WhatsApp); confirm the
    static document fixed the off-top open, or act on the readout.
