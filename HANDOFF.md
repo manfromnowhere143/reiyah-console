@@ -134,6 +134,13 @@ uses it). Repository text contains no em dash.
 - macOS Safari `?diag=1` proved the continuous viewport tracking: the height
   changed 888 → 808 as Safari's banner appeared and `--app-h` followed.
 
+## Shipped 2026-09-04 (sixth pass)
+- Ledger skyline precision: labelled log gridlines (1 KB / 10 KB / 100 KB /
+  1 MB), the rejected band tinted, the exact byte reading on a plate beside
+  the cursor.
+- Controls: the twin has a fixed footprint; the capability list is a FitList
+  (no overlap on the smallest phone). FitList now counts the grid row gap.
+
 ## Shipped 2026-09-03 (first pass)
 One-screen everywhere with `FitList`; Ledger, Lineage, Chair one-page;
 Adversaries = THE WALL; Encounter v3 at the fixture's own clock; Harbor shape =

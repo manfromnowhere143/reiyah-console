@@ -7,7 +7,7 @@
    nothing tweens. */
 import { useState } from "react";
 import type { VerifiedEvidence } from "../boot/ProofBoot";
-import { Digest, Station } from "../components/primitives";
+import { Digest, FitList, Station } from "../components/primitives";
 
 interface Ctl { control_id: string; state: string; observation_count: number; evidence_sha256?: string }
 
@@ -77,15 +77,18 @@ export function Controls({ ev }: { ev: VerifiedEvidence }) {
 
         <div className="captable">
           <div className="ilabel">capability truth · {capTrue}/{caps.length} implemented · {caps.length - capTrue} honestly declared unimplemented</div>
-          <div className="capgrid">
-            {caps.map((c) => (
+          <FitList
+            className="capgrid"
+            items={caps}
+            render={(c) => (
               <div key={c.capability_id} className="caprow" data-true={String(!!c.claimed_value)}>
                 <span className="capname">{c.capability_id.replace(/_implemented$/, "").replace(/_/g, " ")}</span>
                 <span className="capval">{c.claimed_value ? `${c.negative_adversary_count} adversaries rejected` : c.nonimplementation_reason}</span>
                 <span className="capmark">{c.claimed_value ? "◆" : "∅"}</span>
               </div>
-            ))}
-          </div>
+            )}
+            more={(k) => <>+ {k} more capabilities, all in the report</>}
+          />
         </div>
       </div>
     </Station>
