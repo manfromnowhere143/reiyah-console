@@ -58,11 +58,14 @@ function Wall({ meta, fixtures }: { meta: { sha256: string; path: string }; fixt
     const fit = () => {
       const W = el.clientWidth, H = el.clientHeight, n = cells.length;
       if (W <= 0 || H <= 0 || n === 0) return;
-      const gap = 3;
+      const gap = 3, bandH = 17, bands = families.length;
       let s = 4;
       for (let t = 36; t >= 4; t--) {
-        const cols = Math.floor((W + gap) / (t + gap)), rows = Math.floor((H + gap) / (t + gap));
-        if (cols * rows >= n) { s = t; break; }
+        const cols = Math.floor((W + gap) / (t + gap));
+        /* each family band starts a fresh row under its label */
+        let rows = 0;
+        for (const [f, k] of families) { void f; rows += Math.ceil(k / cols); }
+        if (rows * (t + gap) + bands * (bandH + gap) <= H - 2) { s = t; break; }
       }
       setCs(s);
     };
@@ -70,7 +73,8 @@ function Wall({ meta, fixtures }: { meta: { sha256: string; path: string }; fixt
     const ro = new ResizeObserver(fit);
     ro.observe(el);
     return () => ro.disconnect();
-  }, [cells.length]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [cells.length, families.length]);
 
   /* ---- the interrogation cursor: one fixture at a time, hover takes over ---- */
   const [cur, setCur] = useState(0);
@@ -102,14 +106,19 @@ function Wall({ meta, fixtures }: { meta: { sha256: string; path: string }; fixt
             </div>
             <div className="wall" ref={wallRef} data-hl={hl ?? ""} style={{ ["--cs" as any]: `${cs}px` }}
               onPointerLeave={() => setHover(null)}>
-              {cells.map((f, i) => (
+              {cells.map((f, i) => (<>
+                {(i === 0 || cells[i - 1].fixture_family !== f.fixture_family) && (
+                  <span key={`band-${f.fixture_family}`} className="wband" data-on={String(hl === f.fixture_family)}>
+                    {f.fixture_family.replace(/_/g, " ")} · {famCount.get(f.fixture_family)} · {cells.filter((x) => x.fixture_family === f.fixture_family && x.classification === "known_bad").length} reject / {cells.filter((x) => x.fixture_family === f.fixture_family && x.classification === "known_good").length} pass
+                  </span>
+                )}
                 <i key={f.fixture_id} className="wcell"
                   data-c={f.classification === "known_bad" ? "bad" : "good"}
                   data-r={isRetained(f) ? "retained" : "current"}
                   data-f={f.fixture_family}
                   data-cur={String(i === (hover ?? cur))}
                   onPointerEnter={() => setHover(i)} />
-              ))}
+              </>))}
             </div>
             <div className="wallcap" aria-live="polite">
               <span className="wcidx">{(hover ?? cur) + 1} / {cells.length}</span>

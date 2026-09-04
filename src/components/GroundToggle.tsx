@@ -32,7 +32,7 @@ export function GroundToggle() {
       aria-label={ground === "dark" ? "Switch to paper ground" : "Switch to obsidian ground"}
       title={ground === "dark" ? "Paper" : "Obsidian"}
     >
-      <span className="half" aria-hidden="true" />
+      <span className="disc" aria-hidden="true" />
     </button>
   );
 }

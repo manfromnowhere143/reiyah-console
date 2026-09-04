@@ -25,7 +25,7 @@ export default function App() {
   const [evidence, setEvidence] = useState<VerifiedEvidence | null>(null);
   return (
     <>
-      <GroundToggle />
+      {!evidence && <GroundToggle />}
       {!evidence
         ? <ProofBoot onReady={setEvidence} />
         : <Stage ev={evidence} onEvidence={setEvidence} />}
@@ -156,6 +156,7 @@ function Stage({ ev, onEvidence }: { ev: VerifiedEvidence; onEvidence: (e: Verif
         <div style={{ display: "flex", alignItems: "center", gap: "0.55rem" }}>
           <span style={{ color: "var(--ink)" }}><Mark /></span>
           <span style={{ whiteSpace: "nowrap" }}><b>REIYAH</b><span className="brandfull"> <span className="dot">//</span> HARBOR INSTRUMENT</span></span>
+          <GroundToggle />
         </div>
         <div style={{ display: "flex", gap: "0.6rem", alignItems: "center" }}>
           {idn.state === "observed" && (
