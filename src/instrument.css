@@ -1409,3 +1409,71 @@ button:focus-visible, a:focus-visible { outline: 2px solid var(--ink-soft); outl
   .hlabel { height: 18px; padding-top: 3px; }
   .horizon::before { bottom: 18px; }
 }
+
+/* ============================================================
+   THE CORRECTION ENGINE — ST-07 anatomy
+   ============================================================ */
+.cspine { flex: none; display: grid; grid-auto-flow: column; grid-auto-columns: minmax(0, 1fr); gap: 0.45rem; }
+.cver {
+  text-align: left; border-radius: 10px; padding: 0.5rem 0.65rem; min-width: 0;
+  background: color-mix(in srgb, var(--panel) 70%, transparent);
+  box-shadow: inset 0 1px 0 color-mix(in srgb, var(--sheen) 45%, transparent);
+  display: flex; flex-direction: column; gap: 0.3rem; transition: background 0.2s var(--ease), box-shadow 0.2s var(--ease);
+}
+.cver[data-on="true"] { background: color-mix(in srgb, var(--panel) 58%, var(--ink) 8%); box-shadow: inset 0 1px 0 var(--sheen), 0 0 0 1px color-mix(in srgb, var(--ink) 22%, transparent); }
+.cver .cvv { font-family: var(--display); font-weight: 700; font-size: 1.05rem; letter-spacing: 0.03em; line-height: 1; color: var(--ink); }
+.cver .cvk { display: flex; gap: 3px; }
+.cver .ck { width: 100%; max-width: 14px; height: 6px; border-radius: 2px; background: var(--ink); opacity: 0.85; }
+.cver .ck[data-on="false"] { background: transparent; box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--ink) 25%, transparent); opacity: 0.6; }
+.cver .ck[data-k="incident"][data-on="true"] { background: var(--accent); }
+.cver .ck[data-k="review"][data-on="true"], .cver .ck[data-k="report"][data-on="true"] { background: var(--ok); }
+.cver .cvs { font-family: var(--mono); font-size: 0.5rem; letter-spacing: 0.06em; color: var(--ink-faint); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.cver[data-now="true"] .cvs { color: var(--ok); }
+.canat { flex: 1; min-height: 0; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 0.6rem; }
+.cpane { display: flex; flex-direction: column; min-height: 0; overflow: hidden; border-radius: 12px; padding: 0.7rem 0.85rem; background: color-mix(in srgb, var(--panel) 78%, transparent); box-shadow: inset 0 1px 0 color-mix(in srgb, var(--sheen) 55%, transparent); }
+.cpane > .ilabel { flex: none; margin-bottom: 0.45rem; }
+.ccause { flex: none; font-family: var(--mono); font-size: 0.6rem; line-height: 1.45; color: var(--ink); margin-bottom: 0.5rem; overflow-wrap: anywhere; }
+.ccause.dim { color: var(--ink-ghost); }
+.cdef { display: grid; grid-template-columns: auto auto 1fr; gap: 0.5rem; align-items: baseline; padding: 0.28rem 0; border-bottom: 1px solid var(--line-soft); min-width: 0; }
+.cdef .cdid { font-family: var(--mono); font-size: 0.56rem; font-weight: 600; color: var(--accent); letter-spacing: 0.04em; white-space: nowrap; }
+.cdef .cdst { font-family: var(--mono); font-size: 0.48rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--ink-faint); white-space: nowrap; }
+.cdef .cdcl { font-family: var(--mono); font-size: 0.54rem; color: var(--ink-soft); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; min-width: 0; }
+.crow { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.2fr); gap: 0.6rem; padding: 0.24rem 0; border-bottom: 1px solid var(--line-soft); font-family: var(--mono); font-size: 0.54rem; }
+.crow .crk { color: var(--ink-faint); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.crow .crv { color: var(--ink); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.cregs { flex: none; display: flex; gap: 0.8rem; flex-wrap: wrap; margin-bottom: 0.45rem; font-family: var(--mono); font-size: 0.54rem; color: var(--ink-faint); }
+.creg b { font-size: 0.9rem; font-weight: 600; color: var(--ink); margin-right: 0.3rem; }
+.creg[data-side="neg"] b { color: var(--accent); }
+.cverdict { display: grid; grid-template-columns: 3.2rem auto; gap: 0.1rem 0.6rem; padding: 0.35rem 0; border-bottom: 1px solid var(--line-soft); align-items: baseline; }
+.cverdict .cvl { font-family: var(--mono); font-size: 0.5rem; letter-spacing: 0.14em; text-transform: uppercase; color: var(--ink-faint); }
+.cverdict .cvv2 { font-family: var(--mono); font-size: 0.7rem; font-weight: 600; color: var(--ink); letter-spacing: 0.06em; }
+.cverdict .cvv2[data-v="go"], .cverdict .cvv2[data-v="pass"] { color: var(--ok); }
+.cverdict .cvv2.dim { color: var(--ink-ghost); font-weight: 400; }
+.cverdict .cvd { grid-column: 2; font-family: var(--mono); font-size: 0.52rem; color: var(--ink-faint); line-height: 1.4; overflow-wrap: anywhere; }
+.seatline2 { flex: none; display: flex; align-items: center; gap: 0.7rem; padding-top: 0.3rem; color: var(--ink); }
+.seatglyph2 { width: 26px; height: 26px; flex: none; }
+.seatline2 .seatkick { font-size: 0.52rem; }
+.seatline2 .seatmeta { font-family: var(--mono); font-size: 0.54rem; color: var(--ink-faint); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; min-width: 0; }
+@media (max-width: 760px) {
+  .cspine { grid-auto-flow: row; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 0.35rem; }
+  .cver { padding: 0.35rem 0.5rem; gap: 0.2rem; }
+  .cver .cvv { font-size: 0.9rem; }
+  .cver .cvs { display: none; }
+  .canat { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); grid-template-rows: minmax(0, 1fr) auto; gap: 0.4rem; }
+  .cpane:nth-child(3) { grid-column: 1 / -1; }
+  .cpane { padding: 0.5rem 0.6rem; }
+  .cregs { flex-direction: column; gap: 0.15rem; }
+  .cverdict { grid-template-columns: 2.6rem auto; }
+  .cverdict .cvv2 { font-size: 0.6rem; }
+  .seatline2 .seatkick { white-space: nowrap; font-size: 0.46rem; letter-spacing: 0.16em; }
+  .cdef { grid-template-columns: auto 1fr; }
+  .cdef .cdcl { display: none; }
+  .cverdict { padding: 0.22rem 0; }
+  .cverdict .cvd { font-size: 0.48rem; display: -webkit-box; -webkit-line-clamp: 1; -webkit-box-orient: vertical; overflow: hidden; }
+  .seatline2 .seatmeta { font-size: 0.48rem; }
+}
+@media (max-width: 760px) and (max-height: 800px) {
+  .cregs { margin-bottom: 0.25rem; }
+  .ccause { font-size: 0.52rem; margin-bottom: 0.3rem; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+  .cpane > .ilabel { margin-bottom: 0.25rem; }
+}
