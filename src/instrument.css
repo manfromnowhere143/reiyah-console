@@ -219,21 +219,6 @@ button:focus-visible, a:focus-visible { outline: 2px solid var(--ink-soft); outl
 @keyframes panelOut { to { opacity: 0; transform: scale(0.992); } }
 @keyframes panelIn { from { opacity: 0; transform: scale(1.008); } }
 
-/* the forge: the pressed dock button's geometry morphs (expands) into the new
-   panel content — the screen forms out of what you pressed. The View
-   Transition interpolates position and size automatically; these only crossfade
-   the pixels so the small button dissolves as the content materialises. */
-::view-transition-group(forge) { animation-duration: 0.46s; animation-timing-function: var(--damped); z-index: 5; }
-/* the button snapshot blips out fast so its stretched text never lingers; the
-   content grows from the button position and fades up */
-::view-transition-old(forge) { animation: forgeOut 0.15s var(--ease) both; }
-::view-transition-new(forge) { animation: forgeIn 0.46s var(--damped) both; }
-@keyframes forgeOut { to { opacity: 0; } }
-@keyframes forgeIn { 0% { opacity: 0; } 55% { opacity: 0.9; } 100% { opacity: 1; } }
-@media (prefers-reduced-motion: reduce) {
-  ::view-transition-group(forge), ::view-transition-old(forge), ::view-transition-new(forge) { animation: none; }
-}
-
 /* the dock: persistent station cards */
 .dock {
   flex: none; display: flex; gap: 0.5rem;

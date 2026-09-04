@@ -99,6 +99,30 @@ export async function fetchCatalog(): Promise<CatalogEntry[]> {
 /** Fetch any cataloged evidence file by repo-relative path. */
 export async function fetchSurfaceByPath<T = unknown>(rel: string): Promise<SurfaceState<T>> {
   if (mode === "sealed") {
+    if (!bypass && pathMemo.has(rel)) return pathMemo.get(rel)! as Promise<SurfaceState<T>>;
+    const job = fetchSurfaceByPathUncached<T>(rel);
+    pathMemo.set(rel, job as Promise<SurfaceState<unknown>>);
+    job.then((r) => { if (r.state !== "observed") pathMemo.delete(rel); }, () => pathMemo.delete(rel));
+    return job;
+  }
+  return fetchSurfaceByPathUncached<T>(rel);
+}
+
+/** Warm every sealed surface and the catalog's decision records in idle time. */
+export function warmSealedSurfaces() {
+  if (mode !== "sealed" || !sealedManifest) return;
+  const idle = (cb: () => void) => ((window as any).requestIdleCallback ? (window as any).requestIdleCallback(cb, { timeout: 4000 }) : setTimeout(cb, 800));
+  idle(async () => {
+    for (const row of sealedManifest!.surfaces) { try { await fetchRaw(row.id); } catch { /* the station will report it */ } }
+    try {
+      const cat = await fetchCatalog();
+      for (const c of cat) if (/operator-decision|OPERATOR_DECISION/.test(c.path) && c.path.endsWith(".json")) { try { await fetchSurfaceByPath(c.path); } catch { /* reported by the station */ } }
+    } catch { /* reported by the station */ }
+  });
+}
+
+async function fetchSurfaceByPathUncached<T = unknown>(rel: string): Promise<SurfaceState<T>> {
+  if (mode === "sealed") {
     try {
       const r = await fetch(`/snapshot/p/${rel.replaceAll("/", "__")}`);
       if (!r.ok) return { state: "blocked", reason: `sealed_missing_${r.status}` };
@@ -179,14 +203,24 @@ export interface RawResult {
   byteLength: number;
 }
 
+/* sealed bytes are immutable within a snapshot: fetched once, kept. A retry
+   with cache bypass ignores the memo and refills it. */
+const rawMemo = new Map<string, Promise<RawResult>>();
+const pathMemo = new Map<string, Promise<SurfaceState<unknown>>>();
 export async function fetchRaw(id: string): Promise<RawResult> {
   if (mode === "sealed") {
     const row = sealedManifest?.surfaces.find((s) => s.id === id);
     if (!row) throw new Error("unknown_sealed_surface");
-    const r = await fetch(`/snapshot/raw/${id}`, opts());
-    if (!r.ok) throw new Error(`sealed_raw_http_${r.status}`);
-    const bytes = await r.arrayBuffer();
-    return { bytes, path: row.path, serverSha256: row.sha256 ?? "unknown", byteLength: bytes.byteLength };
+    if (!bypass && rawMemo.has(id)) return rawMemo.get(id)!;
+    const job = (async () => {
+      const r = await fetch(`/snapshot/raw/${id}`, opts());
+      if (!r.ok) throw new Error(`sealed_raw_http_${r.status}`);
+      const bytes = await r.arrayBuffer();
+      return { bytes, path: row.path, serverSha256: row.sha256 ?? "unknown", byteLength: bytes.byteLength };
+    })();
+    rawMemo.set(id, job);
+    job.catch(() => rawMemo.delete(id));
+    return job;
   }
   const r = await fetch(`/api/raw/${id}`, opts());
   if (!r.ok) throw new Error(`raw_http_${r.status}`);
