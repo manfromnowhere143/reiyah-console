@@ -163,6 +163,24 @@ export async function fetchSummary(): Promise<Summary> {
   throw new Error("no_evidence_source: live api unreachable and no sealed snapshot present");
 }
 
+/* ---- the contract layer: every schema, digest-bound, bodies not shipped ---- */
+export interface SchemaRow {
+  path: string; bytes: number; sha256: string; id: string | null; dialect: string | null; title: string | null;
+  family: string; version: string | null; additional_properties_closed: boolean; required_count: number | null; property_count: number | null;
+}
+let schemaMemo: Promise<SchemaRow[]> | null = null;
+export function fetchSchemaIndex(): Promise<SchemaRow[]> {
+  if (schemaMemo && !bypass) return schemaMemo;
+  schemaMemo = (async () => {
+    const r = await fetch(mode === "sealed" ? "/snapshot/schemas-index.json" : "/api/schemas", opts());
+    if (!r.ok) throw new Error(`schema_index_http_${r.status}`);
+    const j = await r.json();
+    return (j.rows ?? []) as SchemaRow[];
+  })();
+  schemaMemo.catch(() => { schemaMemo = null; });
+  return schemaMemo;
+}
+
 /* Merkle inclusion over the sealed surface set — built once, cached. */
 let merkleCache: { key: string; tree: import("./merkle").MerkleTree } | null = null;
 export async function getMerkle(): Promise<import("./merkle").MerkleTree | null> {
