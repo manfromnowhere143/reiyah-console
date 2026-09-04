@@ -6,6 +6,7 @@
    takes it. The rings size themselves to the screen. */
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { fetchCatalog, fetchSurface, fetchSurfaceByPath } from "../lib/evidence";
+import { getAt, setAt } from "../lib/urlstate";
 import { Blocked, Digest, Stat, Station, useSurfaceState } from "../components/primitives";
 
 const ev = (x: any) => (x && typeof x === "object" && "state" in x ? (x.state === "observed" ? String(x.value) : `∅ ${x.state}`) : String(x ?? ""));
@@ -25,6 +26,7 @@ export function Frontier() {
   const [ring, setRing] = useState(10);
   const [cur, setCur] = useState(0);
   const [hover, setHover] = useState<number | null>(null);
+  const [seeded, setSeeded] = useState(false);
 
   const records: any[] = state.phase === "ready" && state.data.state === "observed" ? state.data.data.records ?? [] : [];
   const kinds = new Map<string, any[]>();
@@ -50,10 +52,17 @@ export function Frontier() {
   }, [columns.length, maxCol]);
 
   useEffect(() => {
+    if (seeded || ordered.length === 0) return;
+    setSeeded(true);
+    const a = getAt(); const i = a ? ordered.findIndex((r) => r.discovery_id === a) : -1;
+    if (i >= 0) { setCur(i); setHover(i); }
+  }, [ordered.length, seeded]);
+  useEffect(() => {
     if (matchMedia("(prefers-reduced-motion: reduce)").matches || hover !== null || ordered.length === 0) return;
     const t = setInterval(() => setCur((c) => (c + 1) % ordered.length), 1300);
     return () => clearInterval(t);
   }, [hover, ordered.length]);
+  const pick = (i: number) => { setHover(i); setAt(ordered[i]?.discovery_id ?? null); };
 
   if (state.phase === "loading") return <Station id="ST–08" name="Frontier"><div className="note">reading discovery register…</div></Station>;
   if (state.phase === "blocked" || state.data.state !== "observed")
@@ -92,7 +101,7 @@ export function Frontier() {
                       <i key={r.discovery_id} className="hring"
                         data-filled={String(String(r.evidence_eligibility ?? "").startsWith("eligible"))}
                         data-cur={String(i === (hover ?? cur))}
-                        onPointerEnter={() => setHover(i)} onPointerDown={() => setHover(i)} title={r.title} />
+                        onPointerEnter={() => pick(i)} onPointerDown={() => pick(i)} title={r.title} />
                     );
                   })}
                 </div>

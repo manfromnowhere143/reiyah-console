@@ -7,6 +7,7 @@
 import { useEffect, useRef, useState } from "react";
 import type { VerifiedEvidence } from "../boot/ProofBoot";
 import { Digest, FitList, Stat, Station } from "../components/primitives";
+import { getAt, setAt } from "../lib/urlstate";
 
 interface Row { artifact: { path: string; sha256: string }; byte_size: number; role: string; media_type: string }
 
@@ -39,8 +40,8 @@ export function Ledger({ ev }: { ev: VerifiedEvidence }) {
   const n = sorted.length;
 
   const cvRef = useRef<HTMLCanvasElement>(null);
-  const [cur, setCur] = useState(0);
-  const [hover, setHover] = useState<number | null>(null);
+  const [cur, setCur] = useState(() => { const a = getAt(); const i = a ? sorted.findIndex((x) => x.artifact.path === a) : -1; return i >= 0 ? i : 0; });
+  const [hover, setHover] = useState<number | null>(() => { const a = getAt(); const i = a ? sorted.findIndex((x) => x.artifact.path === a) : -1; return i >= 0 ? i : null; });
   const at = sorted[hover ?? cur];
 
   useEffect(() => {
@@ -135,7 +136,8 @@ export function Ledger({ ev }: { ev: VerifiedEvidence }) {
 
   const onPointer = (e: React.PointerEvent<HTMLCanvasElement>) => {
     const r = e.currentTarget.getBoundingClientRect();
-    setHover(Math.max(0, Math.min(n - 1, Math.floor(((e.clientX - r.left) / r.width) * n))));
+    const i = Math.max(0, Math.min(n - 1, Math.floor(((e.clientX - r.left) / r.width) * n)));
+    setHover(i); setAt(sorted[i]?.artifact.path ?? null);
   };
 
   return (
