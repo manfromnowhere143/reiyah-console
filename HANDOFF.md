@@ -53,42 +53,51 @@ uses it). Repository text contains no em dash.
   it); use `awk 'END{print NR}'`.
 - Disk can fill up: clean `dist/`, scratch shots, `npm cache clean --force`.
 
-## Shipped this session (2026-09-03), all live
-- **Every station one screen** on desktop and phone, both grounds (40/40 fit).
-  Ledger (stat strip, one stacked byte bar ≤6 segments, measured role/media
-  lists), Lineage (stat strip, chain-of-custody rail, measured recovery list),
-  Chair (correction timeline, seat, dashed empty-form chip cloud), Controls,
-  Estimands, Frontier one-page.
-- **Adversaries = THE WALL**: 569 fixtures as measured cells; filled = must be
-  rejected, hollow = must pass, faded = retained history never counted as
-  current replay; slow interrogation cursor reads the real path + declared
-  rule; family legend lifts a family; rules as a measured list.
-- **Encounter v3**: the film at the fixture's own clock (OBS t0, BEL t1, DEC t2,
-  INT t3, OUT 4–10, EVD after); object holds station (observed relative speed
-  0 m/s); human (dashed) and automation (solid) sightlines; joint silent miss =
-  both look away at once, labelled concept; diegetic tags on ground plates;
-  six-kind timeline with the outcome window as a span; space toggles play.
-- **Harbor**: shape = role (◇ fixture ▢ schema ○ history ⬡ validator), ground
-  shadows, flowing ground ticks, cabin sway, the gate fires red on rejection.
-- **iOS "opens pushed off the top from a link" bug**: three measures shipped,
-  root cause NOT yet confirmed from the device:
-  1. body is `position: fixed` (the one no-scroll iOS honors) and any non-zero
-     document scroll is reset at every viewport event;
-  2. only the body is fixed; root, HUD, ground toggle, boot, splash are
-     absolute inside it (one layer for iOS to place, not five);
-  3. `?diag=1` overlays a live readout + timeline of innerHeight, visualViewport
-     height/offsetTop/pageTop, scrollY, doc heights, --app-h since first byte.
-  **Ask the user for a screenshot of `https://reiyah.danielwahnich.dev/?diag=1`
-  opened from WhatsApp.** If `body top` is negative with `sy=0` and `pt=0`, the
-  offset is a rendering placement, not a scroll: next step would be to size
-  and translate the root from `visualViewport.offsetTop` explicitly.
+## Shipped 2026-09-04 (second pass), all live
+- **Measured at real Safari heights.** The phone rig now runs 430x745 and
+  390x660 (Safari's visible area with its chrome), not 430x932. All ten
+  stations fit on desktop 1280x820 and both phone views, both grounds (60/60).
+  Compact rules live under `@media (max-width: 760px) and (max-height: 800px)`.
+- **iOS off-top bug, third measure:** no `position: fixed` anywhere in the
+  document. `html`/`body` are static, the body is exactly `--app-h` tall, all
+  roots are absolute inside it, the prove overlay renders through a portal to
+  the body. `?diag=1` still records the viewport timeline. Root cause still
+  NOT confirmed from the device; the clue that a touch settles it, and that
+  LinkedIn's in-app browser is fine, points at Safari's tab-open animation
+  placing fixed layers against a stale viewport.
+- **Controls = THE TWIN SEAM.** Every control a column, height = log
+  observations, mirrored above and below the seam where the two isolated
+  evaluations met; seam reads BYTE-IDENTICAL, bytes, payload digest, with a
+  running light; hover/touch reads control id, state, observations, digest.
+- **Estimands = the dial bank.** Ten dark dials (dashed arc = missing, no
+  needle), symbol on the face, direction glyph, sized to the screen by
+  measurement; touch reads unit of analysis, uncertainty method, lifecycle.
+- **Adversaries:** the wall has named family bands with reject/pass counts;
+  the cell-size fit accounts for the bands.
+- **Chair = the decision chamber.** Stat strip, correction rail, the seat drawn
+  (glyph, kicker "no tool may sit here", one line), a stage-rail stepper, the
+  empty form as dashed chips. The boxed seat is gone.
+- **Encounter graphics pass:** horizon wash, flowing ground grid, wire cuboid
+  object toward the vanishing point, gradient sightlines with scan beams,
+  captions cut to one line.
+- **HUD:** the mark first, then REIYAH, then a 22px liquid-glass ground toggle
+  in flow (no longer a separate corner control); during boot the toggle sits
+  at top-left as before.
+
+## Shipped 2026-09-03 (first pass)
+One-screen everywhere with `FitList`; Ledger, Lineage, Chair one-page;
+Adversaries = THE WALL; Encounter v3 at the fixture's own clock; Harbor shape =
+role, ground depth, the gate fires; body-lock and single-fixed-layer iOS steps
+(now superseded by the static document).
 
 ## NEXT STEPS (in order)
-1. Read the user's `?diag=1` screenshot; confirm or correct the iOS fix.
-2. Keep every change measured: run the overflow rig on all 10 stations, both
+1. Read the user's `?diag=1` screenshot (opened from WhatsApp); confirm the
+   static document fixed the off-top open, or act on the readout.
+2. Pages not yet given a "drastic" pass this round: Ledger, Lineage, Frontier,
+   The Seeing, Harbor HUD. Same bar: measured fit, real bytes, visuals over text.
+3. Keep every change measured: run the overflow rig on all 10 stations, three
    viewports, both grounds, before committing.
-3. Candidate next-level work (from `reiyah-next-level-research-verdict`):
-   ⌘K palette over artifacts/rules/estimands, signed proof cards, honest
+4. Candidates from the research verdict: ⌘K palette, signed proof cards, honest
    sonification (off by default). Only if clearly brilliant and honest.
 
 ## Do NOT repeat
