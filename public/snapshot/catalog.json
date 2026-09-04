@@ -1,8 +1,16 @@
 {
  "entries": [
   {
+   "path": "gate/operator-decision-interface-corrections/reiyah.operator-decision-interface-r1-continuity-correction-1.2.8.json",
+   "bytes": 9454
+  },
+  {
    "path": "gate/operator-decision-interface-corrections/reiyah.operator-decision-interface-readiness-correction-1.2.5.json",
    "bytes": 20732
+  },
+  {
+   "path": "gate/operator-decision-interface-corrections/reiyah.operator-decision-interface-readiness-input-seal-truth-correction-1.2.9.json",
+   "bytes": 28870
   },
   {
    "path": "gate/operator-decision-interface-corrections/reiyah.operator-decision-interface-readiness-route-activation-1.2.6.json",
@@ -13,6 +21,18 @@
    "bytes": 10985
   },
   {
+   "path": "gate/operator-decision-interface-incidents/reiyah.operator-decision-interface-r1-continuity-1.2.8.json",
+   "bytes": 9217
+  },
+  {
+   "path": "gate/operator-decision-interface-incidents/reiyah.operator-decision-interface-readiness-input-seal-truth-1.2.9.json",
+   "bytes": 12367
+  },
+  {
+   "path": "gate/operator-decision-interface-incidents/reiyah.operator-decision-interface-readiness-worker-liveness-1.2.7.json",
+   "bytes": 10479
+  },
+  {
    "path": "gate/operator-decision-interface-reviews/reiyah.operator-decision-interface-contract-review-1.2.4.json",
    "bytes": 20854
   },
@@ -21,8 +41,20 @@
    "bytes": 23786
   },
   {
+   "path": "gate/operator-decision-interface-reviews/reiyah.operator-decision-interface-implementation-review-1.2.7.json",
+   "bytes": 12049
+  },
+  {
    "path": "gate/operator-decision-interface-reviews/reiyah.operator-decision-interface-mapping-review-1.2.6.json",
    "bytes": 6662
+  },
+  {
+   "path": "gate/operator-decision-interface-reviews/reiyah.operator-decision-interface-mapping-review-1.2.7.json",
+   "bytes": 5356
+  },
+  {
+   "path": "gate/operator-decision-interface-reviews/reiyah.operator-decision-interface-r1-continuity-contract-review-1.2.8.json",
+   "bytes": 29737
   },
   {
    "path": "gate/operator-decision-interface-reviews/reiyah.operator-decision-interface-readiness-correction-contract-review-1.2.5.json",
@@ -109,6 +141,10 @@
    "bytes": 17292
   },
   {
+   "path": "gate/validation-reports/operator-decision-interface-r1-continuity-contract-1.2.8.json",
+   "bytes": 12517
+  },
+  {
    "path": "gate/validation-reports/operator-decision-interface-readiness-route-activation-contract-1.2.6.json",
    "bytes": 6852
   },
@@ -161,8 +197,20 @@
    "bytes": 43284
   },
   {
+   "path": "validation/operator-decision-interface-implementation-plan-1.2.8.json",
+   "bytes": 21796
+  },
+  {
    "path": "validation/operator-decision-interface-plan-1.2.4.json",
    "bytes": 10522
+  },
+  {
+   "path": "validation/operator-decision-interface-r1-continuity-contract-review-plan-1.2.8.json",
+   "bytes": 28659
+  },
+  {
+   "path": "validation/operator-decision-interface-r1-continuity-correction-plan-1.2.8.json",
+   "bytes": 9371
   },
   {
    "path": "validation/operator-decision-interface-readiness-correction-contract-review-plan-1.2.5.json",
@@ -171,6 +219,10 @@
   {
    "path": "validation/operator-decision-interface-readiness-correction-plan-1.2.5.json",
    "bytes": 5975
+  },
+  {
+   "path": "validation/operator-decision-interface-readiness-input-seal-truth-correction-plan-1.2.9.json",
+   "bytes": 20491
   },
   {
    "path": "validation/operator-decision-interface-readiness-route-activation-contract-review-plan-1.2.6.json",
@@ -193,6 +245,10 @@
    "bytes": 8904
   },
   {
+   "path": "validation/operator-decision-interface-ready-plan-1.2.7.json",
+   "bytes": 4972
+  },
+  {
    "path": "validation/operator-decision-interface-toolchain-lock-1.2.4.json",
    "bytes": 14669
   },
@@ -207,6 +263,10 @@
   {
    "path": "validation/operator-decision-interface-toolchain-lock-1.2.7.json",
    "bytes": 62653
+  },
+  {
+   "path": "validation/operator-decision-interface-toolchain-lock-1.2.8.json",
+   "bytes": 58812
   },
   {
    "path": "validation/toolchain-lock-1.2.0.json",
@@ -231,6 +291,54 @@
   {
    "path": "validation/validation-plan.json",
    "bytes": 9095
+  },
+  {
+   "path": "evidence/frontier-discovery-register-1.1.0.json",
+   "bytes": 70081
+  },
+  {
+   "path": "evidence/frontier-discovery-register-1.2.0.json",
+   "bytes": 119407
+  },
+  {
+   "path": "evidence/public-distribution-inventory-1.1.0.json",
+   "bytes": 8717
+  },
+  {
+   "path": "evidence/public-evidence-custody-profile-1.1.0.json",
+   "bytes": 5296
+  },
+  {
+   "path": "evidence/public-rights-revalidation-2026-08-23.json",
+   "bytes": 4629
+  },
+  {
+   "path": "evidence/public-rights-revalidation-2026-08-24-1.1.2.json",
+   "bytes": 4964
+  },
+  {
+   "path": "evidence/public-rights-revalidation-2026-08-24.json",
+   "bytes": 4955
+  },
+  {
+   "path": "evidence/public-rights-revalidation-2026-08-25-gate-a-static-correction-1.2.0.json",
+   "bytes": 8393
+  },
+  {
+   "path": "evidence/source-ledger-1.1.0.json",
+   "bytes": 32634
+  },
+  {
+   "path": "evidence/source-ledger.json",
+   "bytes": 23378
+  },
+  {
+   "path": "evidence/standards-crosswalk-1.1.0.json",
+   "bytes": 22977
+  },
+  {
+   "path": "evidence/standards-crosswalk.json",
+   "bytes": 21223
   },
   {
    "path": "manifests/mission/reiyah-mission-1.0.0.json",
@@ -259,6 +367,54 @@
   {
    "path": "manifests/scientific/harbor-scientific-contract-profile-1.2.0.json",
    "bytes": 358540
+  },
+  {
+   "path": "fixtures/v1.2.1/continuity-fixture-catalog.json",
+   "bytes": 8195
+  },
+  {
+   "path": "fixtures/v1.2.2/dependence-fixture-catalog.json",
+   "bytes": 17440
+  },
+  {
+   "path": "fixtures/v1.2.2/distribution-fixture-catalog.json",
+   "bytes": 16443
+  },
+  {
+   "path": "fixtures/v1.2.3/release-readiness-fixture-catalog.json",
+   "bytes": 8502
+  },
+  {
+   "path": "fixtures/v1.2.4/operator-decision-interface-fixture-catalog.json",
+   "bytes": 457987
+  },
+  {
+   "path": "fixtures/v1.2.5/operator-decision-interface-fixture-catalog.json",
+   "bytes": 16720
+  },
+  {
+   "path": "fixtures/v1.2.6/operator-decision-interface-fixture-catalog.json",
+   "bytes": 48176
+  },
+  {
+   "path": "fixtures/v1.2.7/operator-decision-interface-implementation-fixture-catalog.json",
+   "bytes": 67477
+  },
+  {
+   "path": "fixtures/v1.2.7/operator-decision-interface-readiness-worker-liveness-fixture-catalog.json",
+   "bytes": 13459
+  },
+  {
+   "path": "fixtures/v1.2.8/operator-decision-interface-implementation-fixture-catalog.json",
+   "bytes": 26944
+  },
+  {
+   "path": "fixtures/v1.2.8/operator-decision-interface-r1-continuity-fixture-catalog.json",
+   "bytes": 20852
+  },
+  {
+   "path": "fixtures/v1.2.9/operator-decision-interface-readiness-input-seal-truth-fixture-catalog.json",
+   "bytes": 36398
   }
  ]
 }

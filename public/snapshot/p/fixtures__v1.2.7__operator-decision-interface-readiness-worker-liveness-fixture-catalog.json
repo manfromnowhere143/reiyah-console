@@ -1,0 +1,354 @@
+{
+  "schema_id": "https://schemas.reiyah.invalid/gate-a/1.2.7/operator-decision-interface-readiness-worker-liveness-fixture-catalog.schema.json",
+  "artifact_id": "reiyah.artifact.operator-decision-interface-readiness-worker-liveness-fixture-catalog-1.2.7",
+  "catalog_id": "reiyah.fixture-catalog.operator-decision-interface-readiness-worker-liveness@1.2.7",
+  "record_kind": "operator_decision_interface_readiness_worker_liveness_fixture_catalog",
+  "version": "1.2.7",
+  "lifecycle_status": "proposed",
+  "as_of_date": "2026-09-01",
+  "stage_id": "DI127-readiness-worker-liveness-incident-contract",
+  "evaluation_order": "derive_actual_outcomes_before_loading_catalog_expected_outcomes",
+  "family_diagnostics": [
+    {"family": "authority_ceiling", "expected_code": "DI127C-AUTHORITY-CONTRACT", "expected_path": "gate/operator-decision-interface-corrections/reiyah.operator-decision-interface-readiness-worker-liveness-correction-1.2.7.json/authority"},
+    {"family": "incident_custody", "expected_code": "DI127C-INCIDENT-SEMANTICS", "expected_path": "gate/operator-decision-interface-incidents/reiyah.operator-decision-interface-readiness-worker-liveness-1.2.7.json/incident_custody"},
+    {"family": "population_preservation", "expected_code": "DI127C-POPULATION-CONTRACT", "expected_path": "gate/operator-decision-interface-corrections/reiyah.operator-decision-interface-readiness-worker-liveness-correction-1.2.7.json/correction_obligations/population_preservation"},
+    {"family": "raw_subject_recapture", "expected_code": "DI127C-RAW-SUBJECT-CONTRACT", "expected_path": "gate/operator-decision-interface-corrections/reiyah.operator-decision-interface-readiness-worker-liveness-correction-1.2.7.json/correction_obligations/single_bootstrap_free_raw_subject_resolver"},
+    {"family": "replacement_readiness_inputs", "expected_code": "DI127C-N127-CONTRACT", "expected_path": "gate/operator-decision-interface-corrections/reiyah.operator-decision-interface-readiness-worker-liveness-correction-1.2.7.json/correction_obligations/replacement_readiness_inputs"},
+    {"family": "review_independence", "expected_code": "DI127C-REVIEW-CONTRACT", "expected_path": "gate/operator-decision-interface-corrections/reiyah.operator-decision-interface-readiness-worker-liveness-correction-1.2.7.json/review_contract"},
+    {"family": "schema_finder_lifecycle", "expected_code": "DI127C-SCHEMA-FINDER-CONTRACT", "expected_path": "gate/operator-decision-interface-corrections/reiyah.operator-decision-interface-readiness-worker-liveness-correction-1.2.7.json/correction_obligations/exact_schema_finder_lifecycle"},
+    {"family": "transition_topology", "expected_code": "DI127C-TOPOLOGY-CONTRACT", "expected_path": "gate/operator-decision-interface-corrections/reiyah.operator-decision-interface-readiness-worker-liveness-correction-1.2.7.json/future_transition_model"},
+    {"family": "worker_failure_custody", "expected_code": "DI127C-WORKER-FAILURE-CONTRACT", "expected_path": "gate/operator-decision-interface-corrections/reiyah.operator-decision-interface-readiness-worker-liveness-correction-1.2.7.json/correction_obligations/bounded_typed_worker_failure_custody"},
+    {"family": "worker_liveness", "expected_code": "DI127C-WORKER-LIVENESS-CONTRACT", "expected_path": "gate/operator-decision-interface-corrections/reiyah.operator-decision-interface-readiness-worker-liveness-correction-1.2.7.json/correction_obligations/fresh_worker_schedule_and_budget"}
+  ],
+  "cases": [
+    {
+      "case_id": "DI127C-001",
+      "family": "incident_custody",
+      "mutation": "N126_commit_substitution",
+      "expected_boundary": "semantic_reject"
+    },
+    {
+      "case_id": "DI127C-002",
+      "family": "incident_custody",
+      "mutation": "N126_parent_substitution",
+      "expected_boundary": "semantic_reject"
+    },
+    {
+      "case_id": "DI127C-003",
+      "family": "incident_custody",
+      "mutation": "N126_input_blob_substitution",
+      "expected_boundary": "semantic_reject"
+    },
+    {
+      "case_id": "DI127C-004",
+      "family": "incident_custody",
+      "mutation": "failure_stderr_byte_substitution",
+      "expected_boundary": "semantic_reject"
+    },
+    {
+      "case_id": "DI127C-005",
+      "family": "incident_custody",
+      "mutation": "failure_stderr_digest_substitution",
+      "expected_boundary": "semantic_reject"
+    },
+    {
+      "case_id": "DI127C-006",
+      "family": "incident_custody",
+      "mutation": "wrapper_exit_coerced_to_route_exit",
+      "expected_boundary": "semantic_reject"
+    },
+    {
+      "case_id": "DI127C-007",
+      "family": "incident_custody",
+      "mutation": "diagnostic_digest_promoted_to_payload_evidence",
+      "expected_boundary": "semantic_reject"
+    },
+    {
+      "case_id": "DI127C-008",
+      "family": "incident_custody",
+      "mutation": "causal_hypothesis_promoted_to_external_attestation",
+      "expected_boundary": "semantic_reject"
+    },
+    {
+      "case_id": "DI127C-009",
+      "family": "raw_subject_recapture",
+      "mutation": "schema_bootstrap_allowed",
+      "expected_boundary": "semantic_reject"
+    },
+    {
+      "case_id": "DI127C-010",
+      "family": "raw_subject_recapture",
+      "mutation": "admission_token_creation_allowed",
+      "expected_boundary": "semantic_reject"
+    },
+    {
+      "case_id": "DI127C-011",
+      "family": "raw_subject_recapture",
+      "mutation": "cached_live_identity_allowed",
+      "expected_boundary": "semantic_reject"
+    },
+    {
+      "case_id": "DI127C-012",
+      "family": "schema_finder_lifecycle",
+      "mutation": "DI124_guard_weakened",
+      "expected_boundary": "semantic_reject"
+    },
+    {
+      "case_id": "DI127C-013",
+      "family": "schema_finder_lifecycle",
+      "mutation": "general_reentrancy_allowed",
+      "expected_boundary": "semantic_reject"
+    },
+    {
+      "case_id": "DI127C-014",
+      "family": "schema_finder_lifecycle",
+      "mutation": "double_release_allowed",
+      "expected_boundary": "semantic_reject"
+    },
+    {
+      "case_id": "DI127C-015",
+      "family": "worker_failure_custody",
+      "mutation": "nonzero_status_enters_success_parser",
+      "expected_boundary": "semantic_reject"
+    },
+    {
+      "case_id": "DI127C-016",
+      "family": "worker_failure_custody",
+      "mutation": "diagnostic_selects_authority",
+      "expected_boundary": "semantic_reject"
+    },
+    {
+      "case_id": "DI127C-017",
+      "family": "worker_liveness",
+      "mutation": "worker_overlap_allowed",
+      "expected_boundary": "semantic_reject"
+    },
+    {
+      "case_id": "DI127C-018",
+      "family": "worker_liveness",
+      "mutation": "same_process_reused",
+      "expected_boundary": "semantic_reject"
+    },
+    {
+      "case_id": "DI127C-019",
+      "family": "worker_liveness",
+      "mutation": "payload_equality_optional",
+      "expected_boundary": "semantic_reject"
+    },
+    {
+      "case_id": "DI127C-020",
+      "family": "worker_liveness",
+      "mutation": "pair_budget_not_greater_than_worker_sum_and_margin",
+      "expected_boundary": "semantic_reject"
+    },
+    {
+      "case_id": "DI127C-021",
+      "family": "population_preservation",
+      "mutation": "inherited_population_truncated",
+      "expected_boundary": "semantic_reject"
+    },
+    {
+      "case_id": "DI127C-022",
+      "family": "population_preservation",
+      "mutation": "DI126_population_truncated",
+      "expected_boundary": "semantic_reject"
+    },
+    {
+      "case_id": "DI127C-023",
+      "family": "population_preservation",
+      "mutation": "finding_closed_count_promoted",
+      "expected_boundary": "semantic_reject"
+    },
+    {
+      "case_id": "DI127C-024",
+      "family": "replacement_readiness_inputs",
+      "mutation": "N126_reused_as_current_admission",
+      "expected_boundary": "semantic_reject"
+    },
+    {
+      "case_id": "DI127C-025",
+      "family": "replacement_readiness_inputs",
+      "mutation": "N127_extra_path",
+      "expected_boundary": "semantic_reject"
+    },
+    {
+      "case_id": "DI127C-026",
+      "family": "replacement_readiness_inputs",
+      "mutation": "N127_executable_mode",
+      "expected_boundary": "semantic_reject"
+    },
+    {
+      "case_id": "DI127C-027",
+      "family": "transition_topology",
+      "mutation": "merge_parent_allowed",
+      "expected_boundary": "semantic_reject"
+    },
+    {
+      "case_id": "DI127C-028",
+      "family": "transition_topology",
+      "mutation": "R0_committed_or_installed",
+      "expected_boundary": "semantic_reject"
+    },
+    {
+      "case_id": "DI127C-029",
+      "family": "authority_ceiling",
+      "mutation": "interface_readiness_promoted",
+      "expected_boundary": "semantic_reject"
+    },
+    {
+      "case_id": "DI127C-030",
+      "family": "authority_ceiling",
+      "mutation": "operator_acceptance_promoted",
+      "expected_boundary": "semantic_reject"
+    },
+    {
+      "case_id": "DI127C-031",
+      "family": "authority_ceiling",
+      "mutation": "science_or_benchmark_evidence_promoted",
+      "expected_boundary": "semantic_reject"
+    },
+    {
+      "case_id": "DI127C-032",
+      "family": "authority_ceiling",
+      "mutation": "R1_P_R2_C_Q_main_merge_or_push_authorized",
+      "expected_boundary": "semantic_reject"
+    },
+    {
+      "case_id": "DI127C-033",
+      "family": "incident_custody",
+      "mutation": "N126_tree_substitution",
+      "expected_boundary": "semantic_reject"
+    },
+    {
+      "case_id": "DI127C-034",
+      "family": "incident_custody",
+      "mutation": "DI126_evaluator_binding_substitution",
+      "expected_boundary": "semantic_reject"
+    },
+    {
+      "case_id": "DI127C-035",
+      "family": "incident_custody",
+      "mutation": "DI126_launcher_binding_substitution",
+      "expected_boundary": "semantic_reject"
+    },
+    {
+      "case_id": "DI127C-036",
+      "family": "incident_custody",
+      "mutation": "core_binding_substitution",
+      "expected_boundary": "semantic_reject"
+    },
+    {
+      "case_id": "DI127C-037",
+      "family": "incident_custody",
+      "mutation": "empty_stdout_identity_corruption",
+      "expected_boundary": "semantic_reject"
+    },
+    {
+      "case_id": "DI127C-038",
+      "family": "incident_custody",
+      "mutation": "public_wrapper_child_exit_layers_coerced",
+      "expected_boundary": "semantic_reject"
+    },
+    {
+      "case_id": "DI127C-039",
+      "family": "schema_finder_lifecycle",
+      "mutation": "owned_finder_missing",
+      "expected_boundary": "semantic_reject"
+    },
+    {
+      "case_id": "DI127C-040",
+      "family": "schema_finder_lifecycle",
+      "mutation": "finder_displaced_foreign_or_duplicated",
+      "expected_boundary": "semantic_reject"
+    },
+    {
+      "case_id": "DI127C-041",
+      "family": "schema_finder_lifecycle",
+      "mutation": "operation_exception_cleanup_optional",
+      "expected_boundary": "semantic_reject"
+    },
+    {
+      "case_id": "DI127C-042",
+      "family": "raw_subject_recapture",
+      "mutation": "wrong_index_status_administration_or_executed_binding",
+      "expected_boundary": "semantic_reject"
+    },
+    {
+      "case_id": "DI127C-043",
+      "family": "worker_failure_custody",
+      "mutation": "malformed_or_noncanonical_failure_record",
+      "expected_boundary": "semantic_reject"
+    },
+    {
+      "case_id": "DI127C-044",
+      "family": "worker_failure_custody",
+      "mutation": "oversized_failure_record",
+      "expected_boundary": "semantic_reject"
+    },
+    {
+      "case_id": "DI127C-045",
+      "family": "worker_failure_custody",
+      "mutation": "worker_kind_role_or_status_mismatch",
+      "expected_boundary": "semantic_reject"
+    },
+    {
+      "case_id": "DI127C-046",
+      "family": "worker_liveness",
+      "mutation": "worker_order_reversal_or_incomplete_reap",
+      "expected_boundary": "semantic_reject"
+    },
+    {
+      "case_id": "DI127C-047",
+      "family": "worker_liveness",
+      "mutation": "outer_launcher_budget_not_greater_than_pair_plus_margin",
+      "expected_boundary": "semantic_reject"
+    },
+    {
+      "case_id": "DI127C-048",
+      "family": "replacement_readiness_inputs",
+      "mutation": "N127_wrong_parent_or_changed_existing_path",
+      "expected_boundary": "semantic_reject"
+    },
+    {
+      "case_id": "DI127C-049",
+      "family": "transition_topology",
+      "mutation": "self_or_future_commit_identity",
+      "expected_boundary": "semantic_reject"
+    },
+    {
+      "case_id": "DI127C-050",
+      "family": "population_preservation",
+      "mutation": "catalog_expectations_loaded_before_actual_freeze",
+      "expected_boundary": "semantic_reject"
+    },
+    {
+      "case_id": "DI127C-051",
+      "family": "review_independence",
+      "mutation": "author_reviewer_role_overlap",
+      "expected_boundary": "semantic_reject"
+    },
+    {
+      "case_id": "DI127C-052",
+      "family": "review_independence",
+      "mutation": "internal_review_promoted_to_external_independence",
+      "expected_boundary": "semantic_reject"
+    },
+    {
+      "case_id": "DI127C-053",
+      "family": "incident_custody",
+      "mutation": "toolchain_lock_binding_substitution",
+      "expected_boundary": "semantic_reject"
+    }
+  ],
+  "summary": {
+    "case_count": 53,
+    "family_count": 10,
+    "expected_rejected_count": 53,
+    "finding_closed_count": 0
+  },
+  "authority": {
+    "fixture_expectations_are_scientific_evidence": false,
+    "fixture_pass_confers_readiness": false,
+    "independent_external_review_completed": false
+  }
+}

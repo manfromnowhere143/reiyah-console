@@ -1,0 +1,683 @@
+{
+  "schema_id": "https://schemas.reiyah.invalid/gate-a/1.2.8/operator-decision-interface-r1-continuity-contract-review-plan.schema.json",
+  "artifact_id": "reiyah.artifact.operator-decision-interface-r1-continuity-contract-review-plan-1.2.8",
+  "plan_id": "reiyah.validation-plan.operator-decision-interface-r1-continuity-contract-review@1.2.8",
+  "record_kind": "operator_decision_interface_r1_continuity_contract_review_validation_plan",
+  "version": "1.2.8",
+  "lifecycle_status": "proposed",
+  "as_of_date": "2026-09-02",
+  "stage_id": "V128-r1-continuity-correction-review",
+  "repository_identity": {
+    "project": "Reiyah",
+    "canonical_root": "/Users/danielwahnich/workspace/reiyah",
+    "git_root": "/Users/danielwahnich/workspace/reiyah",
+    "configured_remote": "https://github.com/manfromnowhere143/reiyah.git",
+    "authoring_branch_context": "gate-a-1.2.8-r1-continuity-review",
+    "branch_is_scientific_safety_acceptance_or_review_identity": false
+  },
+  "authorization": {
+    "operator_instruction_scope": "append_only_V128_role_separated_internal_review_of_retained_K128_preserve_all_1_2_8_bytes_stop_before_C128_I128_readiness_inputs_main_merge_push",
+    "current_review_recording_and_validation_authorized": true,
+    "K128_historical_V128_authorized_false_must_remain_unchanged": true,
+    "review_may_create_operator_acceptance": false,
+    "review_may_create_scientific_or_benchmark_evidence": false,
+    "review_may_authorize_implementation": false,
+    "review_may_modify_retained_contract_artifact_bytes": false,
+    "review_may_read_or_import_private_archive_payloads": false,
+    "review_may_append_exact_handoff_prefix_only": true
+  },
+  "predecessor": {
+    "stage_id": "K128-r1-continuity-correction-contract",
+    "commit": "e72b3c425d671ab25835d54d697ff8a9c6425183",
+    "tree": "5c338b8c7448abb12f1041f33209f22eac56d4da",
+    "sole_parent": "674d29cf88156abe1f1931a1cb7e8e69936af772",
+    "parent_tree": "7d128dfe9498eeb5714f6a798602dddb1eee7a30",
+    "subject_lineage": "exact_direct_single_parent_child_of_N127",
+    "subject_bytes_source": "rehash_verified_raw_git_commit_tree_and_blobs",
+    "raw_commit_tree_and_blob_rehash_required": true,
+    "full_raw_closure": {
+      "file_count": 1103,
+      "tree_object_count": 73,
+      "aggregate_blob_byte_size": 19588827,
+      "descriptor_byte_size": 119511,
+      "descriptor_sha256": "sha256:a145c21129eb69e34abbc098506127e5a9b6b805da6b37d607caf1aec7f73b7e"
+    }
+  },
+  "immutable_contract_subject": {
+    "contract_artifact_bundle": {
+      "artifact_paths": [
+        "docs/OPERATOR_DECISION_INTERFACE_R1_CONTINUITY_CORRECTION_1_2_8.md",
+        "fixtures/v1.2.8/operator-decision-interface-r1-continuity-fixture-catalog.json",
+        "gate/operator-decision-interface-corrections/reiyah.operator-decision-interface-r1-continuity-correction-1.2.8.json",
+        "gate/operator-decision-interface-incidents/reiyah.operator-decision-interface-r1-continuity-1.2.8.json",
+        "schemas/operator-decision-interface-r1-continuity-contract-report-1.2.8.schema.json",
+        "schemas/operator-decision-interface-r1-continuity-correction-1.2.8.schema.json",
+        "schemas/operator-decision-interface-r1-continuity-correction-plan-1.2.8.schema.json",
+        "schemas/operator-decision-interface-r1-continuity-fixture-catalog-1.2.8.schema.json",
+        "schemas/operator-decision-interface-r1-continuity-incident-1.2.8.schema.json",
+        "tools/gate_a_1_2_8_r1_continuity_contract.py",
+        "tools/gate_a_1_2_8_r1_continuity_contract.sh",
+        "validation/operator-decision-interface-r1-continuity-correction-plan-1.2.8.json"
+      ],
+      "path_count": 12,
+      "aggregate_byte_size": 301420,
+      "descriptor_serialization_rule": "sorted_path_NUL_mode_NUL_git_blob_oid_NUL_byte_size_NUL_sha256_LF",
+      "descriptor_byte_size": 2451,
+      "descriptor_sha256": "sha256:53517eb84b41d672db9b15500e6fcdfd7a5f94332ee049609ce46443ec332967",
+      "artifact_bytes_may_change": false
+    },
+    "subject_transition_projection": {
+      "path_count": 13,
+      "aggregate_byte_size": 612589,
+      "descriptor_serialization_rule": "sorted_path_NUL_mode_NUL_git_blob_oid_NUL_byte_size_NUL_sha256_LF",
+      "descriptor_byte_size": 2602,
+      "descriptor_sha256": "sha256:1719532d333b8e7f07e2c05380981cfed3fb0aec2f125e73cb8d9e3b8ef1f1ad"
+    },
+    "handoff_operand": {
+      "path": "docs/SESSION_HANDOFF.md",
+      "git_mode": "100644",
+      "git_blob_oid": "b19e3e37ba507fda35e0ffb27a862f328f6373c0",
+      "byte_size": 311169,
+      "sha256": "sha256:d52cb80a5d05a56fd430404ceeb297d7c664da57dc2258278cfa18d5ee8cccc7",
+      "review_transition_rule": "exact_subject_bytes_prefix_plus_nonempty_suffix"
+    }
+  },
+  "retained_contract_report_operand": {
+    "path": "gate/validation-reports/operator-decision-interface-r1-continuity-contract-1.2.8.json",
+    "git_mode": "100644",
+    "expected_git_blob_oid": "127d2465a3f567eb85cb8f17b76c1561254ceb24",
+    "byte_size": 12517,
+    "sha256": "sha256:5e4de2d56a86a386948f7f0c9d8c30d8252bcfb8dc881ca5307e1a6081747485",
+    "schema_path": "schemas/operator-decision-interface-r1-continuity-contract-report-1.2.8.schema.json",
+    "schema_sha256": "sha256:c0bd15a0f1711890aa94c962d4307e2a3adb4d5d28198ecaf8cce4f94a88fee6",
+    "snapshot_mode": "contract",
+    "status": "pass",
+    "result": "r1_continuity_correction_contracted_not_reviewed_not_implemented",
+    "equal_external_capture_count": 2,
+    "external_captures_byte_identical": true,
+    "one_byte_identical_representative_retained": true,
+    "semantic_subject_join_must_be_recomputed": true,
+    "execution_independently_attested": false,
+    "private_archive_payloads_rehashed_by_V128": false,
+    "retention_role": "internal_subject_integrity_operand_not_independent_or_scientific_evidence"
+  },
+  "review_artifact_paths": {
+    "record_path": "gate/operator-decision-interface-reviews/reiyah.operator-decision-interface-r1-continuity-contract-review-1.2.8.json",
+    "retained_contract_report_path": "gate/validation-reports/operator-decision-interface-r1-continuity-contract-1.2.8.json",
+    "record_schema_path": "schemas/operator-decision-interface-r1-continuity-contract-review-1.2.8.schema.json",
+    "plan_schema_path": "schemas/operator-decision-interface-r1-continuity-contract-review-plan-1.2.8.schema.json",
+    "report_schema_path": "schemas/operator-decision-interface-r1-continuity-contract-review-report-1.2.8.schema.json",
+    "evaluator_path": "tools/gate_a_1_2_8_r1_continuity_review.py",
+    "launcher_path": "tools/gate_a_1_2_8_r1_continuity_review.sh",
+    "plan_path": "validation/operator-decision-interface-r1-continuity-contract-review-plan-1.2.8.json",
+    "emitted_review_report_installed_in_repository": false
+  },
+  "review_completion_contract": {
+    "review_kind": "role_separated_read_only_internal_advisory_review",
+    "required_roles": [
+      "retained_R0_and_archive_binding_reviewer",
+      "DI127_reachability_and_lifecycle_reviewer",
+      "future_route_and_reproduction_reviewer",
+      "authority_and_nonclaim_reviewer"
+    ],
+    "required_review_count": 4,
+    "required_distinct_role_count": 4,
+    "required_check_ids": [
+      "V128R-CHECK-001-seven-file-R0-capture-identity-and-single-invocation",
+      "V128R-CHECK-002-private-archive-binding-and-nonauthority",
+      "V128R-CHECK-003-retained-report-and-subject-raw-byte-joins",
+      "V128R-CHECK-004-custody-replay-and-scientific-evidence-separation",
+      "V128R-CHECK-005-DI127-route-selector-consumer-and-status-enumeration",
+      "V128R-CHECK-006-R1-not-attempted-versus-failed-lifecycle-truth",
+      "V128R-CHECK-007-retained-1-2-7-preservation-and-no-retry",
+      "V128R-CHECK-008-contract-review-go-no-go-lifecycle-closure",
+      "V128R-CHECK-009-R0-R1-P-R2-state-classifier-completeness-before-R0",
+      "V128R-CHECK-010-shared-argv-raw-state-selection-and-fail-closed-ambiguity",
+      "V128R-CHECK-011-whole-stream-identity-and-self-reference-avoidance",
+      "V128R-CHECK-012-ordered-topology-locked-bootstrap-and-process-custody-limitations",
+      "V128R-CHECK-013-forty-case-actual-before-expectation-closure",
+      "V128R-CHECK-014-historical-R0-archive-engineering-integrity-only-boundary",
+      "V128R-CHECK-015-authority-science-readiness-and-acceptance-ceiling",
+      "V128R-CHECK-016-review-independence-limitations-and-successor-revalidation"
+    ],
+    "required_check_count": 16,
+    "checks_per_role": 4,
+    "reviewer_identity_state": "self_asserted_internal_model_roles_not_externally_verified",
+    "all_reviewer_self_identifiers_unique_required": true,
+    "all_reviewer_task_paths_unique_required": true,
+    "author_and_reviewer_role_overlap_allowed": false,
+    "actual_observations_must_bind_exact_subject_and_report": true,
+    "record_verdict_policy": "derive_from_complete_actual_review_outcomes_not_preregistered_expectation",
+    "go_requires_all_checks_pass_and_zero_blockers": true,
+    "no_go_requires_at_least_one_typed_open_blocker": true,
+    "inability_to_complete_required_check_is_typed_blocker": true,
+    "semantically_valid_no_go_is_valid_review_record": true,
+    "validator_success_is_distinct_from_review_go": true,
+    "review_confers_operator_acceptance": false,
+    "review_confers_implementation_authority": false,
+    "review_creates_scientific_evidence": false,
+    "subject_change_requires_review_restart": true,
+    "successor_revalidation_required": true
+  },
+  "preservation_contract": {
+    "exact_predecessor_tree_required": true,
+    "all_nonhandoff_predecessor_tree_entries_preserved": true,
+    "all_twelve_contract_artifact_blobs_preserved": true,
+    "handoff_exact_prefix_plus_nonempty_suffix_required": true,
+    "README_and_ARCHITECTURE_unchanged": true,
+    "all_retained_1_2_8_bytes_preserved": true,
+    "all_retained_1_2_7_bytes_preserved": true,
+    "immutable_core_1_0_0_preserved": true,
+    "retained_DI127_launcher_or_evaluator_invocation_allowed": false,
+    "private_archive_read_or_import_allowed": false,
+    "unknown_or_removed_path_allowed": false
+  },
+  "incoming_transition_contract": {
+    "transition_id": "reiyah.transition.K128-r1-continuity-correction-contract-to-V128-review",
+    "from_stage": "K128-r1-continuity-correction-contract",
+    "to_stage": "V128-r1-continuity-correction-review",
+    "baseline_commit": "e72b3c425d671ab25835d54d697ff8a9c6425183",
+    "baseline_tree": "5c338b8c7448abb12f1041f33209f22eac56d4da",
+    "direct_single_parent_required": true,
+    "changed_existing_paths": [
+      "docs/SESSION_HANDOFF.md"
+    ],
+    "added_paths": [
+      "gate/operator-decision-interface-reviews/reiyah.operator-decision-interface-r1-continuity-contract-review-1.2.8.json",
+      "gate/validation-reports/operator-decision-interface-r1-continuity-contract-1.2.8.json",
+      "schemas/operator-decision-interface-r1-continuity-contract-review-1.2.8.schema.json",
+      "schemas/operator-decision-interface-r1-continuity-contract-review-plan-1.2.8.schema.json",
+      "schemas/operator-decision-interface-r1-continuity-contract-review-report-1.2.8.schema.json",
+      "tools/gate_a_1_2_8_r1_continuity_review.py",
+      "tools/gate_a_1_2_8_r1_continuity_review.sh",
+      "validation/operator-decision-interface-r1-continuity-contract-review-plan-1.2.8.json"
+    ],
+    "removed_paths": [],
+    "executable_paths": [
+      "tools/gate_a_1_2_8_r1_continuity_review.py",
+      "tools/gate_a_1_2_8_r1_continuity_review.sh"
+    ],
+    "changed_path_count": 1,
+    "added_path_count": 8,
+    "removed_path_count": 0,
+    "total_delta_path_count": 9,
+    "executable_path_count": 2,
+    "unknown_delta_policy": "reject",
+    "retained_contract_artifact_bytes_may_change": false,
+    "handoff_predecessor_bytes_may_change": false,
+    "handoff_append_only_allowed": true,
+    "result_commit_binding_state": "deferred_to_post_commit_raw_git_observation_not_self_bound"
+  },
+  "validation_contract": {
+    "launcher_path": "tools/gate_a_1_2_8_r1_continuity_review.sh",
+    "evaluator_path": "tools/gate_a_1_2_8_r1_continuity_review.py",
+    "development_argv": [
+      "tools/gate_a_1_2_8_r1_continuity_review.sh",
+      "--snapshot-mode",
+      "development",
+      "--render",
+      "review-report",
+      "--output",
+      "raw"
+    ],
+    "review_argv": [
+      "tools/gate_a_1_2_8_r1_continuity_review.sh",
+      "--snapshot-mode",
+      "review",
+      "--render",
+      "review-report",
+      "--output",
+      "raw"
+    ],
+    "stdin_policy": "eof",
+    "launcher_enters_no_network_read_only_policy_before_python": true,
+    "executed_evaluator_bytes_descriptor_bound": true,
+    "executed_evaluator_source_byte_limit": 2097152,
+    "whole_evaluator_stdout_byte_limit": 4194304,
+    "whole_evaluator_stderr_byte_limit": 4194304,
+    "dedicated_evaluator_process_group": true,
+    "residual_evaluator_process_group_kill_attempted_unconditionally": true,
+    "direct_evaluator_child_wait_attempted_unconditionally": true,
+    "outer_supervisor_cleanup_independently_attested": false,
+    "strict_duplicate_key_json": true,
+    "candidate_snapshot_policy": {
+      "development_basis": "bounded_live_review_projection_over_exact_subject",
+      "development_candidate_commit_tree_closures_rehashed": false,
+      "review_basis": "immutable_committed_review_projection",
+      "review_candidate_commit_tree_closures_rehashed": true,
+      "review_commit_and_tree_must_differ_from_subject": true
+    },
+    "full_raw_git_closure_required_in_review_mode": true,
+    "raw_index_git_administration_ignored_and_unexpected_untracked_state_bound": true,
+    "schema_count": 8,
+    "metaschema_pass_count_required": 8,
+    "instance_count": 7,
+    "instance_pass_count_required": 7,
+    "retained_contract_report_schema_and_semantic_join_required": true,
+    "record_schema_accepts_coherent_go_and_no_go": true,
+    "record_semantic_consumer_derives_roles_checks_blockers_and_verdict": true,
+    "candidate_projection_bound_in_report": true,
+    "actual_outcomes_derived_before_expectations": true,
+    "complete_report_semantic_consumer_required": true,
+    "two_unchanged_runs_must_be_byte_identical": true,
+    "repository_write_allowed": false,
+    "outer_supervisor_cleanup_reserve_seconds": 5,
+    "retained_contract_fixture_actuals_reexecuted_from_K128_primitives": true,
+    "private_archive_is_validation_dependency": false,
+    "captured_stage_timeout_seconds": 240,
+    "captured_stage_cleanup_reserve_seconds": 5,
+    "timeout_scope": "captured_stage_after_outer_bootstrap_and_import_not_total_command_wall_time",
+    "stage_zero_and_host_toolchain_byte_attested": false,
+    "OS_memory_CPU_and_process_count_limits_present": false,
+    "K128_predecessor_stream_wrapper_registration_limitation_recorded": true,
+    "V128_stream_wrappers_registered_immediately_after_Popen_before_fallible_custody_assertion": true
+  },
+  "known_bad_contract": {
+    "actual_outcomes_derived_before_expected_comparison": true,
+    "schema_mutation_count": 18,
+    "schema_mutation_ids": [
+      "V128RSM-001",
+      "V128RSM-002",
+      "V128RSM-003",
+      "V128RSM-004",
+      "V128RSM-005",
+      "V128RSM-006",
+      "V128RSM-007",
+      "V128RSM-008",
+      "V128RSM-009",
+      "V128RSM-010",
+      "V128RSM-011",
+      "V128RSM-012",
+      "V128RSM-013",
+      "V128RSM-014",
+      "V128RSM-015",
+      "V128RSM-016",
+      "V128RSM-017",
+      "V128RSM-018"
+    ],
+    "semantic_mutation_count": 12,
+    "semantic_mutation_ids": [
+      "V128RSB-001",
+      "V128RSB-002",
+      "V128RSB-003",
+      "V128RSB-004",
+      "V128RSB-005",
+      "V128RSB-006",
+      "V128RSB-007",
+      "V128RSB-008",
+      "V128RSB-009",
+      "V128RSB-010",
+      "V128RSB-011",
+      "V128RSB-012"
+    ],
+    "schema_valid_report_consumer_mutation_count": 20,
+    "schema_valid_report_consumer_mutation_ids": [
+      "V128RRC-001",
+      "V128RRC-002",
+      "V128RRC-003",
+      "V128RRC-004",
+      "V128RRC-005",
+      "V128RRC-006",
+      "V128RRC-007",
+      "V128RRC-008",
+      "V128RRC-009",
+      "V128RRC-010",
+      "V128RRC-011",
+      "V128RRC-012",
+      "V128RRC-013",
+      "V128RRC-014",
+      "V128RRC-015",
+      "V128RRC-016",
+      "V128RRC-017",
+      "V128RRC-018",
+      "V128RRC-019",
+      "V128RRC-020"
+    ],
+    "required_mutation_classes": [
+      "root_unknown_property",
+      "K128_subject_commit_tree_parent_or_closure_substitution",
+      "retained_K128_report_digest_schema_result_or_preliminary_hash_substitution",
+      "required_role_omission_duplication_identity_collision_or_author_overlap",
+      "required_check_omission_duplication_substitution_or_blocker_join_drift",
+      "go_with_blocker_or_no_go_without_typed_open_blocker",
+      "R1_not_attempted_structurally_unreachable_relabelled_as_failed_or_reproduced",
+      "private_archive_promoted_to_runtime_scientific_transport_or_independent_authority",
+      "retained_1_2_7_byte_retry_or_DI127_route_invocation_promotion",
+      "R0_R1_P_R2_classifier_or_raw_state_selector_incompleteness",
+      "stage_skip_merge_self_reference_or_whole_stream_identity_weakening",
+      "review_delta_widening_or_handoff_nonprefix",
+      "implementation_readiness_acceptance_science_runtime_distribution_or_git_authority_promotion",
+      "schema_valid_cross_mode_repository_projection_or_verdict_authority_forgery"
+    ],
+    "schema_valid_report_mutations_must_reach_semantic_consumer": true,
+    "mutable_graph_aliasing_forbidden": true,
+    "complete_expected_report_comparison_required": true,
+    "schema_mutations": [
+      {
+        "case_id": "V128RSM-001",
+        "target": "review_record",
+        "mutation": "root_unknown_property",
+        "expected_boundary": "schema_reject"
+      },
+      {
+        "case_id": "V128RSM-002",
+        "target": "review_record",
+        "mutation": "subject_commit_substitution",
+        "expected_boundary": "schema_reject"
+      },
+      {
+        "case_id": "V128RSM-003",
+        "target": "review_record",
+        "mutation": "retained_contract_report_digest_substitution",
+        "expected_boundary": "schema_reject"
+      },
+      {
+        "case_id": "V128RSM-004",
+        "target": "review_record",
+        "mutation": "required_role_omission",
+        "expected_boundary": "schema_reject"
+      },
+      {
+        "case_id": "V128RSM-005",
+        "target": "review_record",
+        "mutation": "required_role_duplication",
+        "expected_boundary": "schema_reject"
+      },
+      {
+        "case_id": "V128RSM-006",
+        "target": "review_record",
+        "mutation": "required_check_identity_substitution",
+        "expected_boundary": "schema_reject"
+      },
+      {
+        "case_id": "V128RSM-007",
+        "target": "review_record",
+        "mutation": "go_with_nonzero_blocker_count",
+        "expected_boundary": "schema_reject"
+      },
+      {
+        "case_id": "V128RSM-008",
+        "target": "review_record",
+        "mutation": "no_go_with_empty_blockers",
+        "expected_boundary": "schema_reject"
+      },
+      {
+        "case_id": "V128RSM-009",
+        "target": "review_record",
+        "mutation": "blocker_unknown_property",
+        "expected_boundary": "schema_reject"
+      },
+      {
+        "case_id": "V128RSM-010",
+        "target": "review_record",
+        "mutation": "readiness_authority_promotion",
+        "expected_boundary": "schema_reject"
+      },
+      {
+        "case_id": "V128RSM-011",
+        "target": "review_record",
+        "mutation": "implementation_state_promotion",
+        "expected_boundary": "schema_reject"
+      },
+      {
+        "case_id": "V128RSM-012",
+        "target": "review_record",
+        "mutation": "R1_not_attempted_relabelled_as_failed",
+        "expected_boundary": "schema_reject"
+      },
+      {
+        "case_id": "V128RSM-013",
+        "target": "review_plan",
+        "mutation": "review_delta_widening",
+        "expected_boundary": "schema_reject"
+      },
+      {
+        "case_id": "V128RSM-014",
+        "target": "review_plan",
+        "mutation": "required_role_omission",
+        "expected_boundary": "schema_reject"
+      },
+      {
+        "case_id": "V128RSM-015",
+        "target": "review_plan",
+        "mutation": "retained_contract_report_digest_substitution",
+        "expected_boundary": "schema_reject"
+      },
+      {
+        "case_id": "V128RSM-016",
+        "target": "review_report",
+        "mutation": "root_unknown_property",
+        "expected_boundary": "schema_reject"
+      },
+      {
+        "case_id": "V128RSM-017",
+        "target": "review_report",
+        "mutation": "illegal_snapshot_mode",
+        "expected_boundary": "schema_reject"
+      },
+      {
+        "case_id": "V128RSM-018",
+        "target": "review_report",
+        "mutation": "runtime_authority_promotion",
+        "expected_boundary": "schema_reject"
+      }
+    ],
+    "semantic_mutations": [
+      {
+        "case_id": "V128RSB-001",
+        "mutation": "role_verdict_and_role_blocker_ids_disagree",
+        "expected_boundary": "semantic_reject"
+      },
+      {
+        "case_id": "V128RSB-002",
+        "mutation": "blocking_check_without_check_blocker_identity",
+        "expected_boundary": "semantic_reject"
+      },
+      {
+        "case_id": "V128RSB-003",
+        "mutation": "role_blocker_not_linked_by_any_check",
+        "expected_boundary": "semantic_reject"
+      },
+      {
+        "case_id": "V128RSB-004",
+        "mutation": "global_blocker_not_linked_by_any_role",
+        "expected_boundary": "semantic_reject"
+      },
+      {
+        "case_id": "V128RSB-005",
+        "mutation": "orphan_role_blocker_identity",
+        "expected_boundary": "semantic_reject"
+      },
+      {
+        "case_id": "V128RSB-006",
+        "mutation": "blocker_origin_role_differs_from_linking_role",
+        "expected_boundary": "semantic_reject"
+      },
+      {
+        "case_id": "V128RSB-007",
+        "mutation": "blocker_origin_check_differs_from_linking_check",
+        "expected_boundary": "semantic_reject"
+      },
+      {
+        "case_id": "V128RSB-008",
+        "mutation": "passed_check_count_differs_from_derived_count",
+        "expected_boundary": "semantic_reject"
+      },
+      {
+        "case_id": "V128RSB-009",
+        "mutation": "blocking_check_count_differs_from_derived_count",
+        "expected_boundary": "semantic_reject"
+      },
+      {
+        "case_id": "V128RSB-010",
+        "mutation": "blocker_count_differs_from_global_array",
+        "expected_boundary": "semantic_reject"
+      },
+      {
+        "case_id": "V128RSB-011",
+        "mutation": "global_blocker_union_order_noncanonical",
+        "expected_boundary": "semantic_reject"
+      },
+      {
+        "case_id": "V128RSB-012",
+        "mutation": "role_blocker_union_order_noncanonical",
+        "expected_boundary": "semantic_reject"
+      }
+    ],
+    "schema_valid_report_consumer_mutations": [
+      {
+        "case_id": "V128RRC-001",
+        "mutation": "raw_index_size_substitution",
+        "expected_boundary": "report_consumer_reject"
+      },
+      {
+        "case_id": "V128RRC-002",
+        "mutation": "raw_index_digest_substitution",
+        "expected_boundary": "report_consumer_reject"
+      },
+      {
+        "case_id": "V128RRC-003",
+        "mutation": "index_semantic_size_substitution",
+        "expected_boundary": "report_consumer_reject"
+      },
+      {
+        "case_id": "V128RRC-004",
+        "mutation": "index_semantic_digest_substitution",
+        "expected_boundary": "report_consumer_reject"
+      },
+      {
+        "case_id": "V128RRC-005",
+        "mutation": "git_administration_descriptor_tuple_substitution",
+        "expected_boundary": "report_consumer_reject"
+      },
+      {
+        "case_id": "V128RRC-006",
+        "mutation": "git_administration_profile_tuple_substitution",
+        "expected_boundary": "report_consumer_reject"
+      },
+      {
+        "case_id": "V128RRC-007",
+        "mutation": "status_tuple_substitution",
+        "expected_boundary": "report_consumer_reject"
+      },
+      {
+        "case_id": "V128RRC-008",
+        "mutation": "head_closure_aggregate_substitution",
+        "expected_boundary": "report_consumer_reject"
+      },
+      {
+        "case_id": "V128RRC-009",
+        "mutation": "head_closure_descriptor_substitution",
+        "expected_boundary": "report_consumer_reject"
+      },
+      {
+        "case_id": "V128RRC-010",
+        "mutation": "head_tree_closure_coherent_substitution",
+        "expected_boundary": "report_consumer_reject"
+      },
+      {
+        "case_id": "V128RRC-011",
+        "mutation": "candidate_aggregate_size_substitution",
+        "expected_boundary": "report_consumer_reject"
+      },
+      {
+        "case_id": "V128RRC-012",
+        "mutation": "candidate_descriptor_size_substitution",
+        "expected_boundary": "report_consumer_reject"
+      },
+      {
+        "case_id": "V128RRC-013",
+        "mutation": "candidate_descriptor_digest_substitution",
+        "expected_boundary": "report_consumer_reject"
+      },
+      {
+        "case_id": "V128RRC-014",
+        "mutation": "candidate_binding_blob_substitution",
+        "expected_boundary": "report_consumer_reject"
+      },
+      {
+        "case_id": "V128RRC-015",
+        "mutation": "candidate_binding_size_and_digest_substitution",
+        "expected_boundary": "report_consumer_reject"
+      },
+      {
+        "case_id": "V128RRC-016",
+        "mutation": "review_record_binding_tuple_substitution",
+        "expected_boundary": "report_consumer_reject"
+      },
+      {
+        "case_id": "V128RRC-017",
+        "mutation": "schema_registry_binding_tuple_substitution",
+        "expected_boundary": "report_consumer_reject"
+      },
+      {
+        "case_id": "V128RRC-018",
+        "mutation": "mutation_actuals_tuple_substitution",
+        "expected_boundary": "report_consumer_reject"
+      },
+      {
+        "case_id": "V128RRC-019",
+        "mutation": "coordinated_cross_mode_repository_forgery",
+        "expected_boundary": "report_consumer_reject"
+      },
+      {
+        "case_id": "V128RRC-020",
+        "mutation": "coherent_verdict_result_gate_and_authority_flip",
+        "expected_boundary": "report_consumer_reject"
+      }
+    ]
+  },
+  "next_transition_policy": {
+    "go_allows_only_exact_review_commit_to_feed_separately_authorized_implementation": true,
+    "no_go_blocks_implementation_until_new_exact_review_transition": true,
+    "review_itself_authorizes_implementation": false,
+    "existing_operator_instruction_permits_implementation_after_retained_go": false,
+    "new_explicit_operator_instruction_required_for_I128": true,
+    "review_result_commit_must_be_resolved_after_commit": true,
+    "review_result_commit_must_be_revalidated_by_implementation_successor": true,
+    "maximum_review_result": "internal_review_go_correction_not_implemented",
+    "maximum_implementation_result": "r1_continuity_corrected_N128_absent_not_ready",
+    "replacement_readiness_inputs_authorized_at_review_stage": false,
+    "R0_authorized_at_review_stage": false,
+    "R1_P_R2_C_Q_main_merge_and_push_authorized": false
+  },
+  "authority": {
+    "K128_contract_state": "retained_validated_not_implemented",
+    "V128_review_state": "authorized_in_progress",
+    "I128_implementation_state": "not_implemented",
+    "replacement_readiness_inputs_state": "absent",
+    "interface_readiness_state": "not_ready",
+    "operator_acceptance_state": "unaccepted",
+    "ga_17_state": "not_evaluated",
+    "transport_verification_state": "not_evaluated",
+    "independent_external_review_completed": false,
+    "human_decision_process_authorized": false,
+    "scientific_evidence_created": false,
+    "scientific_claim_authority": false,
+    "publication_acceptance_authorized": false,
+    "public_distribution_eligible": false,
+    "public_distribution_authorized": false,
+    "runtime_authorized": false,
+    "cloud_execution_authorized": false,
+    "private_data_ingestion_authorized": false,
+    "physical_control_authorized": false,
+    "gate_b_authorized": false,
+    "I128_implementation_authorized": false,
+    "N128_readiness_inputs_authorized": false,
+    "R0_128_authorized": false,
+    "R1_128_authorized": false,
+    "P128_authorized": false,
+    "R2_128_authorized": false,
+    "C128_authorized": false,
+    "Q128_authorized": false,
+    "main_ref_change_authorized": false,
+    "merge_commit_authorized": false,
+    "public_push_authorized": false,
+    "review_confers_operator_acceptance": false,
+    "review_confers_implementation_authority": false
+  },
+  "expected_valid_record_results": [
+    "internal_review_go_correction_not_implemented",
+    "internal_review_no_go_correction_not_implemented"
+  ]
+}

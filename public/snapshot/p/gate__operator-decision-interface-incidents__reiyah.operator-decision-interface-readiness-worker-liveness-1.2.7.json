@@ -1,0 +1,237 @@
+{
+  "schema_id": "https://schemas.reiyah.invalid/gate-a/1.2.7/operator-decision-interface-readiness-worker-liveness-incident.schema.json",
+  "artifact_id": "reiyah.artifact.operator-decision-interface-readiness-worker-liveness-incident-1.2.7",
+  "incident_id": "reiyah.incident.operator-decision-interface-readiness-worker-liveness@1.2.7",
+  "record_kind": "operator_decision_interface_readiness_worker_liveness_incident",
+  "version": "1.2.7",
+  "lifecycle_status": "failed",
+  "as_of_date": "2026-09-01",
+  "stage_id": "DI127-readiness-worker-liveness-incident-contract",
+  "subject": {
+    "repository": "https://github.com/manfromnowhere143/reiyah.git",
+    "canonical_root": "/Users/danielwahnich/workspace/reiyah",
+    "branch_at_observation": "gate-a-1.2.6-readiness-route-activation",
+    "branch_is_identity": false,
+    "commit": "7ed76fa8a7a2a82fda5396a0ae63ceee4e0f8bc8",
+    "tree": "4d04d9ccf3ec36909989dc9f4c2d99fef942519a",
+    "sole_parent": "f8e15ec9402245b189b3ac36ed81e50ef7bf6bb7",
+    "index_equal_head": true,
+    "worktree_clean": true,
+    "readiness_report_path_absent": true
+  },
+  "retained_DI126_bindings": {
+    "evaluator": {
+      "path": "tools/gate_a_1_2_6_decision_interface.py",
+      "git_mode": "100755",
+      "blob_oid": "e67f06b5d674f1172a58156aed2ba4eb7468dcad",
+      "byte_size": 450847,
+      "sha256": "sha256:51cdd2b3ce66e371c086b6bf2db9bcce79503311ccd88fdb54f8a8bf9a82e01f"
+    },
+    "launcher": {
+      "path": "tools/gate_a_1_2_6_decision_interface.sh",
+      "git_mode": "100755",
+      "blob_oid": "2bd9ff8b9c08da72a09bd5f2beb02092ec10c05a",
+      "byte_size": 22443,
+      "sha256": "sha256:782df64dac8a9ac67aad405430ff0dd0ef4551e4fd50e527d46135058bbc57db"
+    },
+    "core": {
+      "path": "tools/reiyah_gate_core_1_0_0.py",
+      "git_mode": "100644",
+      "blob_oid": "609c3dd16be1539518139754a63643c12a8ced71",
+      "byte_size": 112256,
+      "sha256": "sha256:ba257dcec605b2da59356a987ff1229bb61ba5fdffbf158ece2a420d6656225f"
+    },
+    "toolchain_lock": {
+      "path": "validation/operator-decision-interface-toolchain-lock-1.2.6.json",
+      "git_mode": "100644",
+      "blob_oid": "cf0045924370f3c250bf3fd465649909b4fe0c15",
+      "byte_size": 65633,
+      "sha256": "sha256:e4459a042efa1bca64bba43b833e511d8f3602dfce6c729a1a5680929277245f"
+    }
+  },
+  "transitive_oracle_bindings": {
+    "DI125": {
+      "commit": "1910afeff5ee625ab1a0295a271d4abe153e92c3",
+      "tree": "f05d7ed103a8a27fcbcc5dfa2391696104fd5244",
+      "sole_parent": "c821a99f31a1d90f41cb398ebb6f91df38b4dce9",
+      "evaluator_path": "tools/gate_a_1_2_5_decision_interface.py",
+      "evaluator_git_mode": "100755",
+      "evaluator_blob_oid": "ec25ef80deb3d7c6a6d068ab8ff9d3d84f767754",
+      "evaluator_byte_size": 351237,
+      "evaluator_sha256": "sha256:8296cedc9457b660701171b13c7edece43e8ed294bb2441975f9b4621c6dc216"
+    },
+    "DI124": {
+      "commit": "858f394893055288db8772f758414c5c2653b1d7",
+      "tree": "98012d9a66ed32b4e19d1eacfab62135ee26a83c",
+      "sole_parent": "148ed1a329bd14681bb35b0e7142c4772783df6d",
+      "evaluator_path": "tools/gate_a_1_2_4_decision_interface.py",
+      "evaluator_git_mode": "100755",
+      "evaluator_blob_oid": "49da73810c32880fa1c1bcd36543ffb7bc4f763d",
+      "evaluator_byte_size": 341809,
+      "evaluator_sha256": "sha256:b9f4febdc7ac19a020c143cafcd8604b6b6da3efda6a03a48a8e6982a8eedeee"
+    }
+  },
+  "retained_N126_inputs": {
+    "transition_path_count": 3,
+    "aggregate_byte_size": 39352,
+    "binding_serialization_rule": "sort_complete_six_key_records_by_path_then_canonical_compact_sorted_key_ASCII_JSON_array_plus_LF",
+    "binding_serialization_byte_size": 905,
+    "binding_serialization_sha256": "sha256:bbf3ef396dcf5f98292b68d2f38b8c2c567e2999be948871bb62f7c6a354c059",
+    "records": [
+      {
+        "role": "implementation_review",
+        "path": "gate/operator-decision-interface-reviews/reiyah.operator-decision-interface-implementation-review-1.2.6.json",
+        "git_mode": "100644",
+        "blob_oid": "837457f6c02c50965f13357875befcbffbc7e7aa",
+        "byte_size": 23786,
+        "sha256": "sha256:cea3c297eff34bba8923b51ba56f19a637b10d2373514e0b53fbdd183b7df094"
+      },
+      {
+        "role": "mapping_review",
+        "path": "gate/operator-decision-interface-reviews/reiyah.operator-decision-interface-mapping-review-1.2.6.json",
+        "git_mode": "100644",
+        "blob_oid": "c737121082faec0c77247231370ee811ebfe99a5",
+        "byte_size": 6662,
+        "sha256": "sha256:3c331bc90513cd3ca6ce8a6a1d083b6ce3d9154510b499a3ed926393084fb24b"
+      },
+      {
+        "role": "ready_plan",
+        "path": "validation/operator-decision-interface-ready-plan-1.2.6.json",
+        "git_mode": "100644",
+        "blob_oid": "56af137fdc4395180dee2c56a48ea31192a1daf9",
+        "byte_size": 8904,
+        "sha256": "sha256:4c9ca0b0ed84aac716bc51401a81838d384d94ec3e61c290c9bf692768d4b034"
+      }
+    ],
+    "historical_only_after_N127": true,
+    "deleted_or_modified": false
+  },
+  "public_failure_observation": {
+    "observation_id": "DI127-OBS-N126-R0-001",
+    "observation_scope": "self_observed_locked_immutable_engineering_integrity_event",
+    "started_at": "2026-09-01T06:40:46Z",
+    "ended_at": "2026-09-01T06:44:28Z",
+    "time_basis": "self_reported_host_clock_not_independent_time_authority",
+    "argv": [
+      "tools/gate_a_1_2_6_decision_interface.sh",
+      "--snapshot-mode",
+      "readiness",
+      "--render",
+      "readiness-report",
+      "--output",
+      "raw"
+    ],
+    "stdin_policy": "eof",
+    "exit_code": null,
+    "exit_code_retention_state": "not_retained_by_original_wrapper",
+    "wrapper_overall_exit_code": 0,
+    "wrapper_overall_exit_is_route_exit": false,
+    "session_summary_reported_route_exit_code": 1,
+    "frozen_outer_translation_expected_exit_code": 2,
+    "exit_code_claim_disposition": "inconclusive_do_not_coerce_layers",
+    "stdout": {
+      "byte_size": 0,
+      "sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "base64": ""
+    },
+    "stderr": {
+      "byte_size": 114,
+      "sha256": "sha256:c92856b37f14ead93ff2358fa758822deab40b6b40a96c1be914db286278e26f",
+      "base64": "eyJjb2RlIjoiREkxMjZJLUNPUkUtRkFJTFVSRSIsIm1lc3NhZ2UiOiJpbW11dGFibGUgY29yZSByZXR1cm5lZCBSR0NPUkUtUFJPQ0VTUy1TVEFUVVMiLCJwYXRoIjoiL3Byb2Nlc3Mvc3RhdHVzIn0K",
+      "canonical_diagnostic": {
+        "code": "DI126I-CORE-FAILURE",
+        "message": "immutable core returned RGCORE-PROCESS-STATUS",
+        "path": "/process/status"
+      }
+    },
+    "pre_post_repository_identity_equal": true,
+    "repository_write_performed": false,
+    "readiness_report_emitted": false,
+    "R1_P_R2_C_Q_created": false,
+    "independent_external_observation": false
+  },
+  "diagnostic_followup": {
+    "observation_id": "DI127-OBS-N126-DIAGNOSTIC-001",
+    "scope": "deny_write_no_network_instrumented_diagnostic_not_release_evidence",
+    "child_exit_code": 1,
+    "stdout_byte_size": 0,
+    "stderr_byte_size": 4832,
+    "stderr_sha256": "sha256:735e502cad0585bfea2ae5e74b5f1e418c36921eeada4bf0d7818ad9a8b22bde",
+    "exact_stream_bytes_retained": false,
+    "digest_is_not_payload_evidence": true,
+    "claim_eligibility": "causal_hypothesis_only"
+  },
+  "causal_hypothesis": {
+    "status": "supported_source_trace_requires_closed_regression_confirmation",
+    "failure_before_consumer": "consume_readiness_inputs_126",
+    "sequence": [
+      "N126 resolves before observed implementation evidence evaluation",
+      "load_di125_oracle executes the exact nested DI125 and DI124 replay",
+      "the nested replay leaves its exact DI124 closed schema finder resident",
+      "DI126 adversary quorum recapture calls the full readiness route resolver",
+      "the full resolver attempts a second schema bootstrap",
+      "frozen DI124 rejects the nonbaseline meta-path without weakening its guard"
+    ],
+    "first_rejector": {
+      "code": "DI124I-SCHEMA-RUNTIME",
+      "message": "interpreter meta-path differs before closed schema-runtime installation",
+      "path": "/runtime/meta_path"
+    },
+    "primary_source_locations": [
+      "tools/gate_a_1_2_6_decision_interface.py::_readiness_worker_envelope_126",
+      "tools/gate_a_1_2_6_decision_interface.py::_evaluate_observed_implementation_evidence_126",
+      "tools/gate_a_1_2_6_decision_interface.py::_current_quorum_subject_snapshot_126",
+      "tools/gate_a_1_2_6_decision_interface.py::_resolve_public_route_context_126",
+      "tools/gate_a_1_2_4_decision_interface.py::load_schema_runtime"
+    ],
+    "DI124_guard_must_be_weakened": false,
+    "general_bootstrap_reentrancy_allowed": false
+  },
+  "incident_disposition": {
+    "incident_confirmed": true,
+    "DI126_R0_valid_readiness_evidence": false,
+    "retry_DI126_R0_expected_to_help": false,
+    "correction_release_required": true,
+    "correction_release": "1.2.7",
+    "N126_remains_discoverable": true,
+    "N126_current_admission_after_N127": false,
+    "incident_closed": false,
+    "closure_requires": "one_clean_immutable_N127_R0_with_closed_lifecycle_regressions"
+  },
+  "nonclaims": [
+    "incident_is_not_scientific_evidence",
+    "incident_is_not_an_empirical_benchmark",
+    "diagnostic_digest_is_not_retained_diagnostic_payload",
+    "source_trace_is_not_independent_external_attestation",
+    "root_cause_is_not_closed_until_production_regressions_pass",
+    "DI126_readiness_was_not_created",
+    "operator_acceptance_was_not_created",
+    "R1_P_R2_C_Q_were_not_created",
+    "main_merge_and_push_were_not_performed"
+  ],
+  "authority": {
+    "interface_readiness_state": "not_ready",
+    "operator_acceptance_state": "unaccepted",
+    "ga_17_state": "not_evaluated",
+    "transport_verification_state": "not_evaluated",
+    "independent_external_review_completed": false,
+    "scientific_evidence_created": false,
+    "scientific_claim_authority": false,
+    "publication_acceptance_authorized": false,
+    "public_distribution_eligible": false,
+    "public_distribution_authorized": false,
+    "runtime_authorized": false,
+    "cloud_execution_authorized": false,
+    "private_data_ingestion_authorized": false,
+    "physical_control_authorized": false,
+    "gate_b_authorized": false,
+    "R1_authorized": false,
+    "P_authorized": false,
+    "R2_authorized": false,
+    "C_authorized": false,
+    "Q_authorized": false,
+    "main_ref_change_authorized": false,
+    "merge_commit_authorized": false,
+    "public_push_authorized": false
+  }
+}
