@@ -7,7 +7,23 @@
    nothing tweens. */
 import { useState } from "react";
 import type { VerifiedEvidence } from "../boot/ProofBoot";
-import { Digest, FitList, Station } from "../components/primitives";
+import { fetchCatalog, fetchSurfaceByPath } from "../lib/evidence";
+import { Digest, FitList, Station, useSurfaceState } from "../components/primitives";
+
+/* the toolchain lock: the newest one in the catalog, read live. It pins the
+   exact interpreter, every module origin, the stdlib and third-party
+   aggregates, the launcher policy and the deadline the gate ran under. */
+function useToolchainLock() {
+  return useSurfaceState(async () => {
+    const cat = await fetchCatalog();
+    const all = cat.map((c) => c.path).filter((x) => /toolchain-lock-\d/.test(x));
+    const odi = all.filter((x) => x.includes("operator-decision-interface-toolchain-lock-"));
+    const p = (odi.length ? odi : all).sort((a, b) => a.localeCompare(b, undefined, { numeric: true })).at(-1);
+    if (!p) return null;
+    const s = await fetchSurfaceByPath<any>(p);
+    return s.state === "observed" ? { path: p, sha256: s.meta.sha256, d: s.data } : null;
+  });
+}
 
 interface Ctl { control_id: string; state: string; observation_count: number; evidence_sha256?: string }
 
@@ -32,6 +48,10 @@ export function Controls({ ev }: { ev: VerifiedEvidence }) {
 
   const [hover, setHover] = useState<number | null>(null);
   const cur = hover !== null ? allC[hover] : deepest;
+  const lock = useToolchainLock();
+  const L = lock.phase === "ready" && lock.data ? lock.data : null;
+  const pol = L?.d?.launcher_policy ?? {};
+  const polOn = Object.entries(pol).filter(([, v]) => v === true).map(([k]) => k.replace(/_/g, " "));
 
   const column = (c: Ctl, i: number, side: "a" | "b") => (
     <span key={`${side}-${c.control_id}`} className="tcol"
@@ -75,6 +95,17 @@ export function Controls({ ev }: { ev: VerifiedEvidence }) {
           </div>
         </div>
 
+        {L && (
+          <div className="lockrow" title={L.path}>
+            <span className="lk">toolchain lock</span>
+            <span className="lc"><b>python {String(L.d.python_version ?? "?")}</b> · {String(L.d.python_executable?.sha256 ?? "").slice(7, 19)}</span>
+            <span className="lc"><b>{Number(Array.isArray(L.d.module_origins) ? L.d.module_origins.length : 0)}</b> module origins</span>
+            <span className="lc"><b>{Number(L.d.stdlib_aggregate?.file_count ?? 0).toLocaleString()}</b> stdlib files · <b>{Number(L.d.third_party_aggregate?.file_count ?? 0)}</b> third-party</span>
+            <span className="lc"><b>{Number(L.d.deadline_contract?.absolute_outer_seconds ?? 0)} s</b> deadline</span>
+            <span className="lc lpol">{polOn.slice(0, 6).join(" · ")}</span>
+            <span className="lc"><Digest id={`p/${L.path}`} sha={L.sha256} path={L.path} /></span>
+          </div>
+        )}
         <div className="captable">
           <div className="ilabel">capability truth · {capTrue}/{caps.length} implemented · {caps.length - capTrue} honestly declared unimplemented</div>
           <FitList

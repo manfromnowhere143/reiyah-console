@@ -103,7 +103,8 @@ export function Estimands() {
             <>
               <span className="dcsym">{pretty(at.symbol)}</span>
               <span className="dcline">{(DIR[at.direction] ?? ["", String(at.direction)])[1]} · unit of analysis {String(at.unit_of_analysis ?? "").replace(/_/g, " ")} · uncertainty {String(at.uncertainty_method ?? "").replace(/_/g, " ")}</span>
-              <span className="dcline dim">{String(at.estimand_id)} · {String(at.lifecycle_status).toUpperCase()} · awaiting first light</span>
+              <span className="dcline">abstention · {String(at.abstention_rule ?? "∅ not stated")}</span>
+              <span className="dcline dim">{Array.isArray(at.identification_assumptions) ? `${at.identification_assumptions.length} identification assumptions` : "∅ assumptions"} · {Array.isArray(at.validity_conditions) ? `${at.validity_conditions.length} validity conditions` : "∅ conditions"} · reports {Array.isArray(at.required_reporting) ? at.required_reporting.join(", ") : "∅"} · {String(at.lifecycle_status).toUpperCase()}</span>
             </>
           ) : (
             <span className="dcline dim">touch a dial to read its contract · no dial has a needle until retained evidence is accepted</span>

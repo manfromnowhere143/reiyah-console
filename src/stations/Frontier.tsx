@@ -5,13 +5,22 @@
    zero is the discipline. A slow cursor reads each pointer; hover or touch
    takes it. The rings size themselves to the screen. */
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
-import { fetchSurface } from "../lib/evidence";
+import { fetchCatalog, fetchSurface, fetchSurfaceByPath } from "../lib/evidence";
 import { Blocked, Digest, Station, useSurfaceState } from "../components/primitives";
 
 const ev = (x: any) => (x && typeof x === "object" && "state" in x ? (x.state === "observed" ? String(x.value) : `∅ ${x.state}`) : String(x ?? ""));
 
 export function Frontier() {
   const state = useSurfaceState(() => fetchSurface<any>("frontier"));
+  const xw = useSurfaceState(async () => {
+    const cat = await fetchCatalog();
+    const p = cat.map((c) => c.path).filter((x) => /standards-crosswalk-\d/.test(x)).sort((a, b) => a.localeCompare(b, undefined, { numeric: true })).at(-1);
+    if (!p) return null;
+    const s = await fetchSurfaceByPath<any>(p);
+    return s.state === "observed" ? { path: p, sha256: s.meta.sha256, d: s.data } : null;
+  });
+  const X = xw.phase === "ready" && xw.data ? xw.data : null;
+  const xEntries: any[] = X?.d?.entries ?? [];
   const fieldRef = useRef<HTMLDivElement>(null);
   const [ring, setRing] = useState(10);
   const [cur, setCur] = useState(0);
@@ -85,6 +94,18 @@ export function Frontier() {
               </div>
             ))}
           </div>
+          {X && (
+            <div className="xwalk">
+              <span className="subrailk">standards crosswalk · {xEntries.length} mappings · evidence and gaps only · compliance claimed {String(!!X.d.compliance_claimed).toUpperCase()}</span>
+              <div className="xrail">
+                {xEntries.map((e) => (
+                  <span key={e.mapping_id} className="xnode" data-state={String(e.mapping_state)} title={`${ev(e.external_reference?.title)} · ${String(e.mapping_state).replace(/_/g, " ")}`}>
+                    <i /><b>{ev(e.external_reference?.document_identifier)}</b><span>{String(e.mapping_state).replace(/_/g, " ")}</span>
+                  </span>
+                ))}
+              </div>
+            </div>
+          )}
           <div className="wallcap" aria-live="polite">
             <span className="wcidx">{(hover ?? cur) + 1} / {ordered.length}</span>
             <span className="wcpath">{at?.title} · {ev(at?.publisher)} · {ev(at?.publication_date)}</span>

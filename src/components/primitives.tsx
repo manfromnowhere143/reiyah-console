@@ -27,11 +27,14 @@ export function FitList<T>({ items, render, row = 24, more, className, style }: 
       const h = el.clientHeight;
       if (h <= 0) return;
       const first = el.firstElementChild as HTMLElement | null;
-      const gap = parseFloat(getComputedStyle(el).rowGap) || 0;
+      const cs = getComputedStyle(el);
+      const gap = parseFloat(cs.rowGap) || 0;
       const rowH = Math.max(1, (first?.offsetHeight || row) + gap);
       const reserve = more ? rowH : 0;
+      /* a grid list holds several items per row */
+      const cols = cs.display === "grid" ? Math.max(1, cs.gridTemplateColumns.split(" ").filter(Boolean).length) : 1;
       const overflowing = el.scrollHeight > h + 1;
-      const fits = Math.max(1, Math.min(items.length, Math.floor((h - reserve) / rowH)));
+      const fits = Math.max(1, Math.min(items.length, cols * Math.floor((h - reserve) / rowH)));
       /* shrink only when rows actually overflow; otherwise only grow. In a box
          whose height is its own content this keeps the list stable instead of
          eating itself one row per measurement. */
