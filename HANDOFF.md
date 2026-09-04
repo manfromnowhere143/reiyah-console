@@ -45,10 +45,12 @@ uses it). Repository text contains no em dash.
 - GitHub: `github.com/manfromnowhere143/reiyah-console` — push after every commit.
 - Verify workflow: headless `puppeteer-core` against the dev server (`npx vite`
   on :4610; evidence server `npm run serve` on :4600). Always check **desktop
-  1280×820 AND mobile 430×932**, both grounds: screenshot + measure `.stbody`
-  scrollHeight vs clientHeight. Capture → view → iterate. The rig used this
-  session lived in the scratchpad (`ov.mjs`: all stations × both viewports,
-  `--dark`; `enc.mjs`: the Encounter at eight clock moments).
+  1280×820, phone 430×745 and phone 390×660** (Safari's visible area with its
+  chrome; never 430×932, the phone never shows that height in Safari), both
+  grounds: screenshot + measure `.stbody` scrollHeight vs clientHeight.
+  Capture → view → iterate. The rig lived in the session scratchpad (`ov.mjs`:
+  all stations × three viewports, `--dark`; `enc.mjs`: the Encounter at
+  chosen clock moments).
 - Shell note: never use `wc` in this machine's shell (a profile hook hijacks
   it); use `awk 'END{print NR}'`.
 - Disk can fill up: clean `dist/`, scratch shots, `npm cache clean --force`.
