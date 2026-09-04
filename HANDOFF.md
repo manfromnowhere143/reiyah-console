@@ -191,7 +191,14 @@ role, ground depth, the gate fires; body-lock and single-fixed-layer iOS steps
 - Cache note: a viewer can see a stale shell for one load after a deploy (the
   worker no longer seizes pages); production is verified byte-identical to
   the committed build after every deploy.
-Remaining from the verdict: B (THE BURNED NAMES) and C (THE BREAK).
+- B THE BURNED NAMES (Chair, third pane): the incident's required_future_sequence
+  drawn as a time rail (now = filled blue, hard stop = red ring, STOP = red
+  square, future = hollow) and the identities declared nonreusable
+  (N128, R0_128) struck through, "never again". Fields only.
+- C THE BREAK (Lineage, 1.0.0 node): the recovery record's public
+  dispositions as marks (bytes publicly verifiable ◆, derivation replayable ∅,
+  unbroken custody claimed ∅, 4 artifacts reconstructed from digests).
+All three Nolan acts are live.
 
 ## THE NOLAN MOVE · research verdict 2026-09-04 (night) · PLANNING ONLY
 Engine unchanged since the seal (74fbacc); instrument fully current. Candidates,

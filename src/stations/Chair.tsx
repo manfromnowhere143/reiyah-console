@@ -43,6 +43,8 @@ interface Version {
   report: { result: string; status: string; exit: string; diag: number } | null;
   nonclaims: number;
   fixtures: number;
+  futureSeq: string[];
+  burned: string[];
 }
 
 const short = (s: unknown) => String(s ?? "").replace(/_/g, " ");
@@ -72,7 +74,16 @@ function anatomy(version: string, recs: Rec[]): Version {
   const report = rep ? { result: String(rep.result ?? ""), status: String(rep.status ?? ""), exit: String(rep.exit_code ?? "?"), diag: Array.isArray(rep.diagnostics) ? rep.diagnostics.length : 0 } : null;
   const nonclaims = [inc, cor, rev, rep].reduce((a, d) => a + (Array.isArray(d?.nonclaims) ? d.nonclaims.length : 0), 0);
   const fixtures = recs.filter((r) => r.kind === "fixtures").reduce((a, r) => a + (Array.isArray(r.data?.fixtures) ? r.data.fixtures.length : 0), 0);
-  return { version, recs, defects, rootCause, disposition: dispo, obligations, pos, neg, resultContract, stage, review, report, nonclaims, fixtures };
+  /* time as structure: the contracted future sequence, and the identities the
+     engine declared it will never use again */
+  const dispoObj = (inc?.incident_disposition && typeof inc.incident_disposition === "object") ? inc.incident_disposition : {};
+  const futureSeq: string[] = Array.isArray(dispoObj.required_future_sequence) ? dispoObj.required_future_sequence.map(String) : [];
+  const burnedSet = new Set<string>();
+  for (const [k, v] of Object.entries(dispoObj)) {
+    if (k.endsWith("_identity_reusable") && v === false) burnedSet.add(k.replace(/_identity_reusable$/, ""));
+    if (k.endsWith("_state") && typeof v === "string" && v.includes("nonreusable")) burnedSet.add(k.replace(/_state$/, ""));
+  }
+  return { version, recs, defects, rootCause, disposition: dispo, obligations, pos, neg, resultContract, stage, review, report, nonclaims, fixtures, futureSeq, burned: [...burnedSet] };
 }
 
 export function Chair() {
@@ -194,11 +205,36 @@ export function Chair() {
                   <><span className="cvl">report</span><span className="cvv2" data-v={cur.report.status}>{cur.report.status.toUpperCase()}</span><span className="cvd">exit {cur.report.exit} · {cur.report.diag} diagnostics · {short(cur.report.result)}</span></>
                 ) : <><span className="cvl">report</span><span className="cvv2 dim">ABSENT</span><span className="cvd">no contract report in this version</span></>}
               </div>
-              <div className="cverdict">
-                <span className="cvl">stage</span>
-                <span className="cvv2">{cur.stage.now ? short(cur.stage.now).replace(/^([A-Z]\d+)/, "$1") : "—"}</span>
-                <span className="cvd">{cur.stage.stop ? `hard stop before ${short(cur.stage.stop)}` : "no future transition recorded"}{cur.nonclaims ? ` · ${cur.nonclaims} non-claims` : ""}{cur.fixtures ? ` · ${cur.fixtures} fixtures` : ""}</span>
-              </div>
+              {cur.futureSeq.length > 0 ? (
+                <div className="timerail" aria-label="the contracted future">
+                  <span className="cvl">time</span>
+                  <div className="tsteps">
+                    {cur.futureSeq.map((step) => {
+                      const isStop = /^STOP/i.test(step) || (cur.stage.stop ? step === cur.stage.stop : false);
+                      const isNow = cur.stage.now ? step === cur.stage.now : false;
+                      const isHardStop = cur.stage.stop ? step === cur.stage.stop : false;
+                      return (
+                        <span key={step} className="tstep" data-s={isNow ? "now" : isStop ? "stop" : isHardStop ? "hardstop" : "future"} title={step}>
+                          <i />{step.replace(/-/g, " ").replace(/^STOP before separately authorized /i, "STOP · before ")}
+                        </span>
+                      );
+                    })}
+                  </div>
+                  {cur.burned.length > 0 && (
+                    <div className="burned">
+                      <span className="cvl">burned</span>
+                      {cur.burned.map((b) => <span key={b} className="bname" title="absent · not attempted · blocked · unretained · nonreusable"><s>{b}</s> never again</span>)}
+                    </div>
+                  )}
+                  <span className="cvd">{cur.stage.stop ? `hard stop before ${short(cur.stage.stop)}` : ""}{cur.nonclaims ? ` · ${cur.nonclaims} non-claims` : ""}{cur.fixtures ? ` · ${cur.fixtures} fixtures` : ""}</span>
+                </div>
+              ) : (
+                <div className="cverdict">
+                  <span className="cvl">stage</span>
+                  <span className="cvv2">{cur.stage.now ? short(cur.stage.now) : "—"}</span>
+                  <span className="cvd">{cur.stage.stop ? `hard stop before ${short(cur.stage.stop)}` : "no future transition recorded"}{cur.nonclaims ? ` · ${cur.nonclaims} non-claims` : ""}{cur.fixtures ? ` · ${cur.fixtures} fixtures` : ""}</span>
+                </div>
+              )}
             </div>
           </div>
         )}

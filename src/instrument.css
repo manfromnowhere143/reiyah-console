@@ -1442,11 +1442,11 @@ button:focus-visible, a:focus-visible { outline: 2px solid var(--ink-soft); outl
 .creg b { font-size: 0.9rem; font-weight: 600; color: var(--ink); margin-right: 0.3rem; }
 .creg[data-side="neg"] b { color: var(--accent); }
 .cverdict { display: grid; grid-template-columns: 3.2rem auto; gap: 0.1rem 0.6rem; padding: 0.35rem 0; border-bottom: 1px solid var(--line-soft); align-items: baseline; }
-.cverdict .cvl { font-family: var(--mono); font-size: 0.5rem; letter-spacing: 0.14em; text-transform: uppercase; color: var(--ink-faint); }
+.cverdict .cvl, .timerail .cvl, .burned .cvl { font-family: var(--mono); font-size: 0.5rem; letter-spacing: 0.14em; text-transform: uppercase; color: var(--ink-faint); }
 .cverdict .cvv2 { font-family: var(--mono); font-size: 0.7rem; font-weight: 600; color: var(--ink); letter-spacing: 0.06em; }
 .cverdict .cvv2[data-v="go"], .cverdict .cvv2[data-v="pass"] { color: var(--ok); }
 .cverdict .cvv2.dim { color: var(--ink-ghost); font-weight: 400; }
-.cverdict .cvd { grid-column: 2; font-family: var(--mono); font-size: 0.52rem; color: var(--ink-faint); line-height: 1.4; overflow-wrap: anywhere; }
+.cverdict .cvd, .timerail > .cvd { grid-column: 2; font-family: var(--mono); font-size: 0.52rem; color: var(--ink-faint); line-height: 1.4; overflow-wrap: anywhere; }
 .seatline2 { flex: none; display: flex; align-items: center; gap: 0.7rem; padding-top: 0.3rem; color: var(--ink); }
 .seatglyph2 { width: 26px; height: 26px; flex: none; }
 .seatline2 .seatkick { font-size: 0.52rem; }
@@ -1604,3 +1604,32 @@ button:focus-visible, a:focus-visible { outline: 2px solid var(--ink-soft); outl
 .fold { display: block; width: 100%; height: 190px; }
 .provecard { width: min(40rem, 100%); }
 @media (max-width: 760px) { .fold { height: 150px; } }
+
+
+/* ============================================================
+   THE BURNED NAMES — time as structure (ST-07)
+   ============================================================ */
+.timerail { display: flex; flex-direction: column; gap: 0.35rem; padding: 0.35rem 0; border-bottom: 1px solid var(--line-soft); }
+.tsteps { display: flex; flex-wrap: wrap; gap: 0.3rem 0.7rem; align-items: center; }
+.tstep { display: inline-flex; align-items: center; gap: 0.35rem; font-family: var(--mono); font-size: 0.52rem; letter-spacing: 0.04em; color: var(--ink-ghost); }
+.tstep i { width: 8px; height: 8px; border-radius: 50%; box-shadow: inset 0 0 0 1.2px var(--ink-ghost); display: inline-block; flex: none; }
+.tstep[data-s="now"] { color: var(--ink); }
+.tstep[data-s="now"] i { background: var(--ok); box-shadow: 0 0 0 2px var(--void), 0 0 0 3px var(--ok); }
+.tstep[data-s="hardstop"] { color: var(--ink-soft); }
+.tstep[data-s="hardstop"] i { box-shadow: inset 0 0 0 1.5px var(--accent); }
+.tstep[data-s="stop"] { color: var(--accent); }
+.tstep[data-s="stop"] i { border-radius: 1px; box-shadow: inset 0 0 0 1.5px var(--accent); }
+@media (prefers-reduced-motion: no-preference) {
+  .tstep[data-s="now"] i { animation: nowPulse 2.6s ease-in-out infinite; }
+  @keyframes nowPulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.45; } }
+}
+.burned { display: flex; flex-wrap: wrap; gap: 0.3rem 0.7rem; align-items: center; }
+.bname { font-family: var(--mono); font-size: 0.52rem; letter-spacing: 0.06em; color: var(--ink-faint); }
+.bname s { color: var(--accent); text-decoration-thickness: 1.5px; font-weight: 600; margin-right: 0.3rem; }
+
+/* THE BREAK — the 1.0.0 custody interruption, as disclosed (ST-02) */
+.rbreak { display: flex; flex-direction: column; gap: 0.1rem; margin-top: 0.25rem; }
+.rbreak em { font-style: normal; font-family: var(--mono); font-size: 0.46rem; letter-spacing: 0.04em; color: var(--ink-faint); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.rbreak em[data-v="true"] { color: var(--ok); }
+@media (max-width: 760px) { .rbreak em:nth-child(n+3) { display: none; } .tstep { font-size: 0.46rem; } .bname { font-size: 0.46rem; } .timerail > .cvd { display: none; } .timerail { gap: 0.25rem; padding: 0.25rem 0; } .tsteps { gap: 0.2rem 0.5rem; } }
+@media (max-width: 760px) and (max-height: 800px) { .rbreak { display: none; } }
