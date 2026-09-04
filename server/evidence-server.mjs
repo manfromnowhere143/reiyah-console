@@ -200,6 +200,29 @@ const server = http.createServer((req, res) => {
         surfaces,
       });
     }
+    if (p === "/api/schemas") {
+      const rows = [];
+      try {
+        for (const f of fs.readdirSync(path.join(REPO, "schemas")).sort()) {
+          if (!f.endsWith(".json")) continue;
+          const rel = `schemas/${f}`;
+          const bytes = fs.readFileSync(path.join(REPO, rel));
+          let j = {};
+          try { j = JSON.parse(bytes.toString("utf8")); } catch { /* recorded as unparsed */ }
+          const m = f.match(/^(.*?)-(\d+\.\d+\.\d+)\.schema\.json$/);
+          rows.push({
+            path: rel, bytes: bytes.length,
+            sha256: "sha256:" + createHash("sha256").update(bytes).digest("hex"),
+            id: j.$id ?? null, dialect: j.$schema ?? null, title: j.title ?? null,
+            family: m ? m[1] : f.replace(/\.schema\.json$/, ""), version: m ? m[2] : null,
+            additional_properties_closed: j.additionalProperties === false,
+            required_count: Array.isArray(j.required) ? j.required.length : null,
+            property_count: j.properties && typeof j.properties === "object" ? Object.keys(j.properties).length : null,
+          });
+        }
+      } catch { /* no schemas directory */ }
+      return json(res, 200, { state: "observed", kind: "schema_index", generatedAt: new Date().toISOString(), identity: gitIdentity(), rows });
+    }
     if (p === "/api/catalog") {
       return json(res, 200, {
         state: "observed",

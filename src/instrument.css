@@ -1477,3 +1477,43 @@ button:focus-visible, a:focus-visible { outline: 2px solid var(--ink-soft); outl
   .ccause { font-size: 0.52rem; margin-bottom: 0.3rem; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
   .cpane > .ilabel { margin-bottom: 0.25rem; }
 }
+
+/* ============================================================
+   THE CONTRACT — ST-10 lattice, coverage, the claims wall
+   ============================================================ */
+.congrid { grid-template-columns: minmax(0, 1.5fr) minmax(14rem, 1fr); }
+.conwrap { min-height: 0; }
+.lattice { flex: 1; min-height: 0; overflow: hidden; display: flex; flex-wrap: wrap; align-content: flex-start; gap: 3px; }
+.lcell { width: var(--cs, 10px); height: var(--cs, 10px); border-radius: 2px; display: block; background: color-mix(in srgb, var(--ink) 58%, transparent); transition: transform 0.18s var(--ease), background 0.18s var(--ease); }
+.lcell[data-closed="false"] { background: transparent; box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--ink) 50%, transparent); }
+.lcell[data-cur="true"] { background: var(--ink); box-shadow: 0 0 0 2px var(--void), 0 0 0 3px var(--ink); transform: scale(1.5); position: relative; z-index: 2; }
+.thesis { flex: none; display: grid; grid-template-columns: auto 1fr; gap: 0.15rem 0.7rem; margin-top: 0.4rem; padding-top: 0.4rem; border-top: 1px solid var(--line-soft); }
+.thesis .thk { font-family: var(--mono); font-size: 0.5rem; letter-spacing: 0.16em; text-transform: uppercase; color: var(--ink-faint); padding-top: 0.15rem; }
+.thesis .thv { font-size: 0.68rem; color: var(--ink-soft); line-height: 1.4; }
+.concol { display: flex; flex-direction: column; gap: 0.6rem; min-height: 0; }
+.concol .fillpanel { flex: 1; }
+.covbar { grid-template-columns: minmax(0, 1fr) 5rem 3.4rem; }
+.covbar .bk { font-size: 0.56rem; }
+.covt { display: flex; gap: 2px; background: transparent; }
+.covbad { background: color-mix(in srgb, var(--accent) 60%, var(--ink-ghost)); }
+.covgood { background: var(--ok); }
+.covbar .bn em { font-style: normal; color: var(--ok); font-size: 0.9em; margin-left: 0.15rem; }
+.claimwall { flex: none; }
+.claims { display: grid; grid-template-columns: 1fr 1fr; gap: 0.2rem 0.8rem; }
+.claim { display: grid; grid-template-columns: auto 1fr auto; gap: 0.4rem; align-items: baseline; font-family: var(--mono); font-size: 0.54rem; color: var(--ink-soft); min-width: 0; }
+.claim i { font-style: normal; color: var(--ink-faint); }
+.claim b { font-weight: 600; letter-spacing: 0.1em; color: var(--ink); }
+.claim[data-v="true"] i, .claim[data-v="true"] b { color: var(--ok); }
+.closure { display: flex; flex-wrap: wrap; gap: 0.3rem; margin-top: 0.5rem; align-items: center; }
+.closure .clk { font-family: var(--mono); font-size: 0.48rem; letter-spacing: 0.14em; text-transform: uppercase; color: var(--ink-faint); margin-right: 0.2rem; }
+.closure .clc { font-family: var(--mono); font-size: 0.5rem; border: 1px solid var(--line-soft); border-radius: 999px; padding: 0.12rem 0.45rem; color: var(--ink-soft); white-space: nowrap; }
+@media (max-width: 760px) {
+  .congrid { grid-template-columns: 1fr; grid-template-rows: minmax(0, 1fr) minmax(0, 1.35fr); }
+  .thesis { display: none; }
+  .claims { grid-template-columns: 1fr 1fr; gap: 0.05rem 0.6rem; }
+  .claim { font-size: 0.46rem; gap: 0.3rem; }
+  .closure { display: none; }
+  .concol { gap: 0.4rem; }
+  .concol .fillpanel { flex: 1; min-height: 0; }
+  .claimwall { flex: none; padding: 0.5rem 0.6rem; }
+}
