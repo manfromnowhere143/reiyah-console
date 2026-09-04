@@ -38,7 +38,7 @@ export function Frontier() {
     const el = fieldRef.current;
     if (!el || columns.length === 0) return;
     const fit = () => {
-      const H = el.clientHeight, W = el.clientWidth, labelH = 30, gap = 3;
+      const H = el.clientHeight - 6, W = el.clientWidth - 12, labelH = 30, gap = 3;
       const byH = Math.floor((H - labelH) / maxCol) - gap;
       const byW = Math.floor(W / columns.length) - 8;
       setRing(Math.max(5, Math.min(14, byH, byW)));

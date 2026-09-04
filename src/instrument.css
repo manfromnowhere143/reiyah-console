@@ -1101,8 +1101,11 @@ button:focus-visible, a:focus-visible { outline: 2px solid var(--ink-soft); outl
    ============================================================ */
 .wallgrid { grid-template-columns: minmax(0, 1.6fr) minmax(13rem, 1fr); }
 .wallwrap { min-height: 0; }
+/* the cursor cell scales to 1.5x with a ring: the field never clips, and it
+   carries an inset equal to that overhang so the first row and column are
+   whole. The fit calculation subtracts the same inset. */
 .wall {
-  flex: 1; min-height: 0; overflow: hidden;
+  flex: 1; min-height: 0; overflow: visible; padding: 5px;
   display: flex; flex-wrap: wrap; align-content: flex-start; gap: 3px;
 }
 .wcell {
@@ -1387,7 +1390,7 @@ button:focus-visible, a:focus-visible { outline: 2px solid var(--ink-soft); outl
    THE HORIZON — ST-08 frontier
    ============================================================ */
 .horizonwrap { flex: 1; min-height: 0; display: flex; flex-direction: column; gap: 0.4rem; }
-.horizon { flex: 1; min-height: 0; display: flex; gap: 6px; align-items: flex-end; position: relative; }
+.horizon { flex: 1; min-height: 0; display: flex; gap: 6px; align-items: flex-end; position: relative; padding: 6px 6px 0; }
 .horizon::before { content: ""; position: absolute; left: 0; right: 0; bottom: 30px; height: 1px; background: color-mix(in srgb, var(--ink) 40%, transparent); }
 .hcol { flex: 1 1 0; min-width: 0; display: flex; flex-direction: column; align-items: center; justify-content: flex-end; height: 100%; }
 .hstack { display: flex; flex-direction: column-reverse; align-items: center; gap: 3px; padding-bottom: 4px; }
@@ -1477,7 +1480,7 @@ button:focus-visible, a:focus-visible { outline: 2px solid var(--ink-soft); outl
    ============================================================ */
 .congrid { grid-template-columns: minmax(0, 1.5fr) minmax(14rem, 1fr); }
 .conwrap { min-height: 0; }
-.lattice { flex: 1; min-height: 0; overflow: hidden; display: flex; flex-wrap: wrap; align-content: flex-start; gap: 3px; }
+.lattice { flex: 1; min-height: 0; overflow: visible; padding: 5px; display: flex; flex-wrap: wrap; align-content: flex-start; gap: 3px; }
 .lcell { width: var(--cs, 10px); height: var(--cs, 10px); border-radius: 2px; display: block; background: color-mix(in srgb, var(--ink) 58%, transparent); transition: transform 0.18s var(--ease), background 0.18s var(--ease); }
 .lcell[data-closed="false"] { background: transparent; box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--ink) 50%, transparent); }
 .lcell[data-cur="true"] { background: var(--ink); box-shadow: 0 0 0 2px var(--void), 0 0 0 3px var(--ink); transform: scale(1.5); position: relative; z-index: 2; }
