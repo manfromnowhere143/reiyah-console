@@ -104,6 +104,22 @@ uses it). Repository text contains no em dash.
 - Lesson recorded: a hook after an early return blanked the page; hooks stay
   above every return.
 
+## Shipped 2026-09-04 (fourth pass), all live
+- **Dock missing on first load (reported):** the app height was sampled at
+  fixed moments (events + timeouts ending at 2.5 s); iOS does not always fire
+  resize when its toolbars appear during a tab-open, so a late toolbar left the
+  app taller than the screen and the dock below the fold until a touch. Now
+  `--app-h` tracks the visual viewport continuously: every frame for 12 s,
+  then twice a second, writing only on change, and always the smaller of
+  visualViewport.height and innerHeight. `.glass` surfaces get their own
+  compositor layer (iOS can leave backdrop-filtered elements unpainted until
+  interaction). `?diag=1` now prints the dock's top/bottom and whether it is
+  on screen.
+- **Estimands tap disruption:** click toggled the dial off after pointer-enter
+  had selected it, and a growing caption re-flowed the bank and resized every
+  dial. Click now only selects; the caption reserves a fixed height. Verified:
+  dial sizes identical before and after a tap.
+
 ## Shipped 2026-09-03 (first pass)
 One-screen everywhere with `FitList`; Ledger, Lineage, Chair one-page;
 Adversaries = THE WALL; Encounter v3 at the fixture's own clock; Harbor shape =
