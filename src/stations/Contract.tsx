@@ -38,7 +38,7 @@ export function Contract() {
     const el = latRef.current;
     if (!el || rows.length === 0) return;
     const fit = () => {
-      const W = el.clientWidth, H = el.clientHeight, gap = 3, n = rows.length;
+      const W = el.clientWidth - 10, H = el.clientHeight - 10, gap = 3, n = rows.length;
       let s = 4;
       for (let t = 44; t >= 4; t--) {
         const cols = Math.floor((W + gap) / (t + gap)), r = Math.floor((H + gap) / (t + gap));

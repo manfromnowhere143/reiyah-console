@@ -56,7 +56,7 @@ function Wall({ meta, fixtures }: { meta: { sha256: string; path: string }; fixt
     const el = wallRef.current;
     if (!el) return;
     const fit = () => {
-      const W = el.clientWidth, H = el.clientHeight, n = cells.length;
+      const W = el.clientWidth - 10, H = el.clientHeight - 10, n = cells.length;
       if (W <= 0 || H <= 0 || n === 0) return;
       const gap = 3, bandH = 17, bands = families.length;
       let s = 4;
