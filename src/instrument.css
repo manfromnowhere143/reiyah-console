@@ -1549,3 +1549,31 @@ button:focus-visible, a:focus-visible { outline: 2px solid var(--ink-soft); outl
 .xnode[data-state="full_mapping"] i { background: var(--ok); box-shadow: none; }
 .xnode[data-state="evidence_gap"] i { box-shadow: inset 0 0 0 1.2px var(--accent); }
 @media (max-width: 760px) { .xnode { font-size: 0.46rem; } .xnode span { display: none; } .xrail { gap: 0.2rem 0.6rem; } }
+
+
+/* ============================================================
+   THE PALETTE — ⌘K over everything the instrument knows
+   ============================================================ */
+.palbtn { letter-spacing: 0.06em; }
+.palover { align-items: flex-start; padding-top: clamp(2rem, 10vh, 7rem); }
+.palette { width: min(44rem, 100%); border-radius: 14px; padding: 0.6rem 0.6rem 0.5rem; display: flex; flex-direction: column; gap: 0.4rem; max-height: min(70vh, 34rem); }
+.palin { width: 100%; box-sizing: border-box; border: none; outline: none; background: color-mix(in srgb, var(--ink) 5%, transparent); color: var(--ink); border-radius: 9px; padding: 0.6rem 0.8rem; font-family: var(--mono); font-size: 0.78rem; letter-spacing: 0.02em; }
+.palin::placeholder { color: var(--ink-ghost); }
+.palcounts { display: flex; flex-wrap: wrap; gap: 0.3rem 0.9rem; padding: 0 0.3rem; font-family: var(--mono); font-size: 0.5rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-faint); }
+.pallist { flex: 1; min-height: 0; overflow: auto; scrollbar-width: thin; display: flex; flex-direction: column; }
+.palrow { display: grid; grid-template-columns: 4.2rem minmax(0, 1.2fr) minmax(0, 1fr) auto; gap: 0.7rem; align-items: center; padding: 0.42rem 0.55rem; border-radius: 8px; cursor: pointer; }
+.palrow[data-on="true"] { background: color-mix(in srgb, var(--ink) 7%, transparent); }
+.palrow.dim { color: var(--ink-ghost); }
+.palk { font-family: var(--mono); font-size: 0.5rem; letter-spacing: 0.14em; text-transform: uppercase; color: var(--ink-faint); }
+.pall { font-family: var(--mono); font-size: 0.66rem; color: var(--ink); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.pals { font-family: var(--mono); font-size: 0.56rem; color: var(--ink-faint); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.palsha { font-family: var(--mono); font-size: 0.54rem; color: var(--ink-ghost); }
+.palfoot { font-family: var(--mono); font-size: 0.5rem; letter-spacing: 0.06em; color: var(--ink-ghost); padding: 0.1rem 0.3rem; }
+@media (max-width: 760px) {
+  .palover { padding: calc(0.6rem + var(--safe-t)) 0.5rem 0; align-items: flex-start; }
+  .palette { max-height: calc(100% - 1.2rem); border-radius: 12px; }
+  .palin { font-size: 16px; } /* iOS: no zoom on focus */
+  .palrow { grid-template-columns: 3.4rem minmax(0, 1fr) auto; }
+  .pals { display: none; }
+  .palbtn { padding: 0.2rem 0.4rem; }
+}
