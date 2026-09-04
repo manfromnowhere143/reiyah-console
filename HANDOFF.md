@@ -141,6 +141,20 @@ uses it). Repository text contains no em dash.
 - Controls: the twin has a fixed footprint; the capability list is a FitList
   (no overlap on the smallest phone). FitList now counts the grid row gap.
 
+## Shipped 2026-09-04 (eighth pass): THE FLICKER, root cause found in frames
+Screen recording at 17:49 showed the Controls page alternating every ~100 ms
+between the full page and a page where only the two backdrop-filtered digest
+chips were painted (HUD and dock intact). Cause: the film-grain overlay, a
+full-panel `mix-blend-mode` layer animated in 3 steps every 0.5 s. On WebKit a
+blended overlay over content with backdrop-filtered children re-composites
+the whole group on every step and intermittently paints it empty. This also
+explains the earlier "torn" transitions. Fix: grain is static and unblended;
+every pulse is compositor-only (deepest-control glow = opacity of a pseudo,
+seam light = translateX, dial pivot = opacity, crossing lights = translateX,
+no filter in entrance keyframes). LAW: never blend or animate a full-panel
+overlay; never animate box-shadow, background-position, filter, or SVG
+attributes.
+
 ## Shipped 2026-09-04 (seventh pass): the torn transition, warmed stations, CDN
 - **Torn mid-transition on iPhone (from a screen recording):** the "forge"
   shared-element morph named the pressed dock tab and the new panel; WebKit

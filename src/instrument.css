@@ -190,23 +190,17 @@ button:focus-visible, a:focus-visible { outline: 2px solid var(--ink-soft); outl
   padding: 1.1rem 1.3rem 0.9rem;
   min-height: 0;
 }
-/* film grain — dissolves gradient banding in the blooms, adds cinema tooth */
+/* film grain: a static, unblended tooth. It was a mix-blend-mode layer moved
+   six times a second; on WebKit that re-composited the whole panel on every
+   step and intermittently painted it empty (only backdrop-filtered chips
+   survived). Never blend, never animate a full-panel overlay. */
 .grain {
-  position: absolute; inset: -8%; z-index: 3; pointer-events: none;
-  opacity: 0.05; mix-blend-mode: soft-light;
+  position: absolute; inset: 0; z-index: 3; pointer-events: none;
+  opacity: 0.035;
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
   background-size: 140px 140px;
 }
-:root[data-ground="dark"] .grain { opacity: 0.07; mix-blend-mode: overlay; }
-@media (prefers-reduced-motion: no-preference) {
-  .grain { animation: grainShift 0.5s steps(3) infinite; }
-  @keyframes grainShift {
-    0% { transform: translate(0, 0); }
-    33% { transform: translate(-3%, 2%); }
-    66% { transform: translate(2%, -3%); }
-    100% { transform: translate(0, 0); }
-  }
-}
+:root[data-ground="dark"] .grain { opacity: 0.05; }
 /* the morph: only the panel transitions; chrome stays welded.
    Compositor-only — opacity and transform, never filter/blur. Animating
    blur here forced a full re-raster of the panel (which already carries a
@@ -238,9 +232,9 @@ button:focus-visible, a:focus-visible { outline: 2px solid var(--ink-soft); outl
     transition: none;
   }
   @keyframes crossLight {
-    0% { background-position: 200% 0; }
-    55% { background-position: -42% 0; }
-    100% { background-position: -42% 0; }
+    0% { transform: translateX(-100%); }
+    55% { transform: translateX(100%); }
+    100% { transform: translateX(100%); }
   }
 }
 .nonclaim.shell { flex: none; margin-top: 0; }
@@ -402,7 +396,7 @@ button:focus-visible, a:focus-visible { outline: 2px solid var(--ink-soft); outl
 @keyframes overlayIn { from { opacity: 0; } }
 /* one clean entrance at final size — the card never resizes */
 .provecard { animation: proveIn 0.36s var(--ease) both; will-change: transform, opacity; }
-@keyframes proveIn { from { opacity: 0; transform: scale(0.965) translateY(10px); filter: blur(7px); } }
+@keyframes proveIn { from { opacity: 0; transform: scale(0.965) translateY(10px); } }
 .proverow .v.compute { color: var(--ink-faint); }
 @media (prefers-reduced-motion: reduce) {
   .overlay, .provecard { animation: none; }
@@ -497,10 +491,6 @@ button:focus-visible, a:focus-visible { outline: 2px solid var(--ink-soft); outl
 .ccell:hover { transform: scale(1.12); z-index: 2; }
 .ccell[data-state="fail"] { background: var(--accent); }
 .ccell[data-deep="true"] { box-shadow: 0 0 0 1px var(--ink), 0 0 10px color-mix(in srgb, var(--ok) 70%, transparent); }
-@media (prefers-reduced-motion: no-preference) {
-  .ccell[data-deep="true"] { animation: cellPulse 2.4s ease-in-out infinite; }
-  @keyframes cellPulse { 0%,100% { box-shadow: 0 0 0 1px var(--ink), 0 0 8px color-mix(in srgb, var(--ok) 55%, transparent); } 50% { box-shadow: 0 0 0 1px var(--ink), 0 0 16px color-mix(in srgb, var(--ok) 85%, transparent); } }
-}
 
 /* compact capability truth */
 .captable { flex: 1; min-height: 0; display: flex; flex-direction: column; gap: 0.4rem; }
@@ -629,9 +619,8 @@ button:focus-visible, a:focus-visible { outline: 2px solid var(--ink-soft); outl
 /* perpetual specular sweep — the liquid in liquid glass */
 @media (prefers-reduced-motion: no-preference) {
   .authwall::after {
-    content: ""; position: absolute; inset: 0; border-radius: inherit; pointer-events: none;
+    content: ""; position: absolute; top: 0; bottom: 0; left: 0; width: 100%; pointer-events: none;
     background: linear-gradient(100deg, transparent 38%, var(--cross) 50%, transparent 62%);
-    background-size: 260% 100%;
     animation: crossLight 7s ease-in-out infinite;
   }
 }
@@ -696,18 +685,17 @@ button:focus-visible, a:focus-visible { outline: 2px solid var(--ink-soft); outl
 }
 /* the light that crosses the glass — never lift (portfolio law) */
 .navcard::after {
-  content: ""; position: absolute; inset: 0; border-radius: inherit;
+  content: ""; position: absolute; top: 0; bottom: 0; left: 0; width: 100%;
   pointer-events: none;
   background: linear-gradient(100deg, transparent 34%, var(--cross) 50%, transparent 64%);
-  background-size: 240% 100%; background-position: 200% 0;
-  opacity: 0;
-  transition: background-position 0.85s ease, opacity 0.32s ease;
+  opacity: 0; transform: translateX(-100%);
+  transition: transform 0.85s ease, opacity 0.32s ease;
 }
 .navcard:hover { border-color: var(--glass-rim); }
 @media (hover: hover) and (pointer: fine) {
-  .navcard:hover::after { opacity: 1; background-position: -42% 0; }
+  .navcard:hover::after { opacity: 1; transform: translateX(100%); }
 }
-.navcard:focus-visible::after { opacity: 1; background-position: -42% 0; }
+.navcard:focus-visible::after { opacity: 1; transform: translateX(100%); }
 .navcard .nid { font-family: var(--mono); font-size: 0.54rem; letter-spacing: 0.16em; color: var(--ink-faint); }
 .navcard .nnm { font-family: var(--display); font-weight: 600; text-transform: uppercase; font-size: 0.95rem; letter-spacing: 0.05em; }
 .navcard .nds { font-size: 0.62rem; color: var(--ink-faint); line-height: 1.35; }
@@ -881,7 +869,7 @@ button:focus-visible, a:focus-visible { outline: 2px solid var(--ink-soft); outl
   position: absolute; left: clamp(1rem, 4vw, 3rem); bottom: 1.3rem;
   max-width: min(29rem, 74vw); animation: encCapIn 0.5s var(--ease) both;
 }
-@keyframes encCapIn { from { opacity: 0; transform: translateY(9px); filter: blur(4px); } to { opacity: 1; transform: none; filter: none; } }
+@keyframes encCapIn { from { opacity: 0; transform: translateY(9px); } to { opacity: 1; transform: none; } }
 @media (prefers-reduced-motion: reduce) { .encCaption { animation: none; } }
 .encBeatT { font-family: var(--mono); font-size: 0.54rem; letter-spacing: 0.22em; color: var(--ink-faint); text-transform: uppercase; }
 .encBeatK {
@@ -1179,19 +1167,25 @@ button:focus-visible, a:focus-visible { outline: 2px solid var(--ink-soft); outl
 }
 .spectrum[data-side="b"] .tcol { border-radius: 1px 1px 3px 3px; }
 .tcol[data-state="fail"] { background: var(--accent); }
-.tcol[data-deep="true"] { box-shadow: 0 0 0 1px var(--ink), 0 0 10px color-mix(in srgb, var(--ok) 70%, transparent); }
+.tcol { position: relative; }
+.tcol[data-deep="true"] { box-shadow: 0 0 0 1px var(--ink); }
+.tcol[data-deep="true"]::after { content: ""; position: absolute; inset: -6px; border-radius: 8px; box-shadow: 0 0 14px color-mix(in srgb, var(--ok) 80%, transparent); pointer-events: none; opacity: 0.6; }
+@media (prefers-reduced-motion: no-preference) {
+  .tcol[data-deep="true"]::after { animation: deepPulse 2.4s ease-in-out infinite; }
+  @keyframes deepPulse { 0%, 100% { opacity: 0.35; } 50% { opacity: 1; } }
+}
 .twin:has(.tcol[data-hot="true"]) .tcol:not([data-hot="true"]) { opacity: 0.45; }
 .tcol[data-hot="true"] { filter: brightness(1.12); }
 .seam { flex: none; display: flex; align-items: center; gap: 0.7rem; position: relative; }
 .seamline { flex: 1; height: 1px; background: color-mix(in srgb, var(--ink) 35%, transparent); position: relative; overflow: hidden; }
 .twin[data-equal="true"] .seamline::after {
-  content: ""; position: absolute; inset: 0;
-  background: linear-gradient(90deg, transparent 30%, var(--ok) 50%, transparent 70%);
-  background-size: 200% 100%; opacity: 0.9;
+  content: ""; position: absolute; top: 0; bottom: 0; left: 0; width: 40%;
+  background: linear-gradient(90deg, transparent, var(--ok), transparent); opacity: 0.9;
+  transform: translateX(-100%);
 }
 @media (prefers-reduced-motion: no-preference) {
   .twin[data-equal="true"] .seamline::after { animation: seamLight 3.2s linear infinite; }
-  @keyframes seamLight { from { background-position: 200% 0; } to { background-position: -100% 0; } }
+  @keyframes seamLight { from { transform: translateX(-100%); } to { transform: translateX(350%); } }
 }
 .twin[data-equal="false"] .seamline { background: var(--accent); }
 .seamtext { font-family: var(--mono); font-size: 0.58rem; letter-spacing: 0.12em; color: var(--ok); white-space: nowrap; }
@@ -1232,7 +1226,7 @@ button:focus-visible, a:focus-visible { outline: 2px solid var(--ink-soft); outl
 .dial[data-on="true"] .dtick { stroke: var(--ink); }
 @media (prefers-reduced-motion: no-preference) {
   .dial[data-on="true"] .dpivot { animation: pivotBreathe 2.4s ease-in-out infinite; }
-  @keyframes pivotBreathe { 0%, 100% { r: 2.2; } 50% { r: 3.2; } }
+  @keyframes pivotBreathe { 0%, 100% { opacity: 0.45; } 50% { opacity: 1; } }
 }
 /* the caption reserves its height: selecting a dial must never re-flow the
    bank above it (a growing caption would shrink the bank and resize every dial) */
