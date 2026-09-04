@@ -518,8 +518,10 @@ button:focus-visible, a:focus-visible { outline: 2px solid var(--ink-soft); outl
 }
 
 /* compact capability truth */
-.captable { flex: none; display: flex; flex-direction: column; gap: 0.4rem; }
-.capgrid { display: grid; grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr)); gap: 0.3rem 1rem; }
+.captable { flex: 1; min-height: 0; display: flex; flex-direction: column; gap: 0.4rem; }
+.captable > .ilabel { flex: none; }
+.capgrid { flex: 1; min-height: 0; overflow: hidden; display: grid; grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr)); gap: 0.3rem 1rem; align-content: start; }
+.capgrid .fitmore { grid-column: 1 / -1; }
 .caprow { display: grid; grid-template-columns: auto 1fr auto; align-items: baseline; gap: 0.6rem; min-width: 0; }
 .caprow .capname { font-family: var(--mono); font-size: 0.6rem; color: var(--ink); white-space: nowrap; }
 .caprow .capval { font-family: var(--mono); font-size: 0.56rem; color: var(--ink-ghost); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; min-width: 0; }
@@ -1177,9 +1179,11 @@ button:focus-visible, a:focus-visible { outline: 2px solid var(--ink-soft); outl
 /* ============================================================
    THE TWIN SEAM — ST-04 controls: two isolated evaluations, one truth
    ============================================================ */
-.twin { flex: 1; min-height: 0; display: flex; flex-direction: column; justify-content: center; gap: 0.3rem; }
+/* the twin has a fixed footprint; the capability list below takes what is
+   left and renders only the rows that fit, so nothing can overlap */
+.twin { flex: none; display: flex; flex-direction: column; justify-content: center; gap: 0.3rem; }
 .twinlabel { flex: none; display: flex; justify-content: space-between; font-family: var(--mono); font-size: 0.52rem; letter-spacing: 0.14em; text-transform: uppercase; color: var(--ink-faint); }
-.spectrum { flex: 1; min-height: 3rem; max-height: 11rem; display: flex; gap: 3px; align-items: flex-end; }
+.spectrum { height: clamp(3rem, 20vh, 11rem); display: flex; gap: 3px; align-items: flex-end; }
 .spectrum[data-side="b"] { align-items: flex-start; }
 .tcol {
   flex: 1 1 0; min-width: 0; height: calc(var(--h, 0.5) * 100%);
@@ -1208,13 +1212,14 @@ button:focus-visible, a:focus-visible { outline: 2px solid var(--ink-soft); outl
 .seamtext { font-family: var(--mono); font-size: 0.58rem; letter-spacing: 0.12em; color: var(--ok); white-space: nowrap; }
 .twin[data-equal="false"] .seamtext { color: var(--accent); }
 .seamtext em { font-style: normal; color: var(--ink-ghost); letter-spacing: 0.02em; }
-.twincap { flex: none; display: flex; gap: 0.8rem; align-items: baseline; flex-wrap: wrap; font-family: var(--mono); font-size: 0.6rem; color: var(--ink-faint); margin-top: 0.2rem; min-height: 1.1rem; }
+.twincap { flex: none; display: flex; gap: 0.8rem; align-items: baseline; flex-wrap: nowrap; overflow: hidden; font-family: var(--mono); font-size: 0.6rem; color: var(--ink-faint); margin-top: 0.2rem; height: 1.1rem; }
+.twincap > * { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; min-width: 0; }
 .twincap .tcid { color: var(--ink); font-weight: 600; letter-spacing: 0.04em; }
 .twincap .tcst { letter-spacing: 0.14em; color: var(--ok); }
 .twincap .tcst[data-state="fail"] { color: var(--accent); }
 .twincap .tcsha { color: var(--ink-ghost); }
 @media (max-width: 760px) {
-  .spectrum { gap: 2px; max-height: 8rem; }
+  .spectrum { gap: 2px; height: clamp(2.6rem, 16vh, 8rem); }
   .seamtext { font-size: 0.5rem; letter-spacing: 0.08em; }
   .seamtext em { display: none; }
   .twinlabel { font-size: 0.46rem; }

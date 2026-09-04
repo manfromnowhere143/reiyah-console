@@ -69,6 +69,18 @@ export function Ledger({ ev }: { ev: VerifiedEvidence }) {
       const base = h - 16, top = 14;
       const xOf = (i: number) => (i / n) * w;
       const yOf = (b: number) => base - (top < base ? (base - top) * ((Math.log((b || 1) + 1) - lmin) / Math.max(1e-9, lmax - lmin)) : 0);
+      /* a real log scale: gridlines at every power of ten between the smallest
+         and the largest artifact, labelled, so height is readable, not felt */
+      ctx.font = '8px "B612 Mono", Menlo, monospace'; ctx.textBaseline = "middle"; ctx.textAlign = "right";
+      for (let p = 1; p <= 8; p++) {
+        const v = Math.pow(10, p);
+        const y = yOf(v);
+        if (y <= top || y >= base) continue;
+        ctx.strokeStyle = `rgba(${INK},0.09)`; ctx.lineWidth = 1;
+        ctx.beginPath(); ctx.moveTo(0, Math.round(y) + 0.5); ctx.lineTo(w, Math.round(y) + 0.5); ctx.stroke();
+        ctx.fillStyle = `rgba(${INK},0.45)`;
+        ctx.fillText(v >= 1e6 ? `${v / 1e6} MB` : v >= 1e3 ? `${v / 1e3} KB` : `${v} B`, w - 4, y - 6);
+      }
       /* role bands, alternately shaded, named when wide enough */
       let start = 0;
       ctx.font = '8px "B612 Mono", Menlo, monospace'; ctx.textBaseline = "top";
@@ -76,7 +88,9 @@ export function Ledger({ ev }: { ev: VerifiedEvidence }) {
         if (i === n || sorted[i].role !== sorted[start].role) {
           const x0 = xOf(start), x1 = xOf(i);
           const band = rank.get(sorted[start].role)! % 2 === 0;
-          if (band) { ctx.fillStyle = `rgba(${INK},${dark ? 0.045 : 0.035})`; ctx.fillRect(x0, 0, x1 - x0, h); }
+          const rejected = sorted[start].role === "known_bad_fixture";
+          if (rejected) { ctx.fillStyle = `rgba(${RED},${dark ? 0.07 : 0.05})`; ctx.fillRect(x0, 0, x1 - x0, h); }
+          else if (band) { ctx.fillStyle = `rgba(${INK},${dark ? 0.045 : 0.035})`; ctx.fillRect(x0, 0, x1 - x0, h); }
           const label = sorted[start].role.replace(/_/g, " ");
           if (x1 - x0 > ctx.measureText(label).width + 10) { ctx.fillStyle = `rgba(${INK},0.55)`; ctx.textAlign = "left"; ctx.fillText(label, x0 + 5, 2); }
           start = i;
@@ -99,8 +113,17 @@ export function Ledger({ ev }: { ev: VerifiedEvidence }) {
       ctx.beginPath(); ctx.moveTo(cx, top - 4); ctx.lineTo(cx, base); ctx.stroke();
       ctx.fillStyle = `rgba(${bad ? RED : INK},1)`;
       ctx.beginPath(); ctx.arc(cx, cy, 3, 0, Math.PI * 2); ctx.fill();
-      ctx.fillStyle = dark ? "rgba(5,5,7,0.8)" : "rgba(244,243,238,0.85)";
       ctx.beginPath(); ctx.arc(cx, cy, 6, 0, Math.PI * 2); ctx.stroke();
+      /* the exact reading, on a ground plate beside the cursor */
+      const label = `${Number(sorted[i].byte_size).toLocaleString()} B`;
+      ctx.font = '9px "B612 Mono", Menlo, monospace'; ctx.textBaseline = "middle";
+      const tw = ctx.measureText(label).width + 10;
+      const lx = cx + 10 + tw > w ? cx - 10 - tw : cx + 10;
+      const ly = Math.max(top + 8, Math.min(base - 8, cy));
+      ctx.fillStyle = dark ? "rgba(5,5,7,0.82)" : "rgba(244,243,238,0.88)";
+      ctx.beginPath(); ctx.roundRect(lx, ly - 8, tw, 16, 4); ctx.fill();
+      ctx.fillStyle = `rgba(${bad ? RED : INK},0.95)`; ctx.textAlign = "left";
+      ctx.fillText(label, lx + 5, ly);
     };
     draw();
     const ro = new ResizeObserver(draw); ro.observe(cv);
