@@ -6,7 +6,7 @@
    dial to read its contract. */
 import { useLayoutEffect, useRef, useState } from "react";
 import { fetchSurface } from "../lib/evidence";
-import { Blocked, Station, useSurfaceState } from "../components/primitives";
+import { Blocked, Stat, Station, useSurfaceState } from "../components/primitives";
 
 const pretty = (sym: string) => sym
   .replace(/theta/g, "θ").replace(/tau/g, "τ").replace(/pi_1/g, "π₁").replace(/pi_0/g, "π₀").replace(/pi/g, "π")
@@ -58,6 +58,7 @@ export function Estimands() {
     return <Station id="ST–05" name="Estimands"><Blocked reason={state.phase === "blocked" ? state.reason : (state.data as any).reason} /></Station>;
 
   const proto = state.data.data;
+  const PR = [{ id: "protocol", path: state.data.meta.path, sha256: state.data.meta.sha256 }];
   const measured = estimands.filter((e) => ["supported", "replicated", "corrected"].includes(e.lifecycle_status)).length;
   const lifecycles = [...new Set(estimands.map((e) => String(e.lifecycle_status)))];
   const at = cur !== null ? estimands[cur] : null;
@@ -67,9 +68,12 @@ export function Estimands() {
     <Station id="ST–05" name="Estimands" sub={`${n} defined · ${measured} measured · protocol ${proto.release_id ?? ""}`}>
       <div className="onepage">
         <div className="statstrip">
-          <div className="stat"><span className="sl">measured</span><span className="sv">{measured}<em>/{n}</em></span><span className="sd">no result exists until its gate accepts it</span></div>
-          <div className="stat"><span className="sl">lifecycle</span><span className="sv sm">{lifecycles.map((l) => l.toUpperCase()).join(" · ")}</span><span className="sd">every dial defined, frozen, honestly dark</span></div>
-          <div className="stat"><span className="sl">protocol</span><span className="sv sm">{String(proto.release_id ?? "").replace("reiyah.protocol.", "")}</span><span className="sd">the ignition is the roadmap, not a promise</span></div>
+          <Stat label="measured" value={<>{measured}<em>/{n}</em></>} sub="no result exists until its gate accepts it"
+            rule="count of protocol estimands whose lifecycle_status is supported, replicated or corrected, over the count of estimands defined" from={PR} />
+          <Stat label="lifecycle" value={lifecycles.map((l) => l.toUpperCase()).join(" · ")} small sub="every dial defined, frozen, honestly dark"
+            rule="the distinct lifecycle_status values across the protocol's estimands" from={PR} />
+          <Stat label="protocol" value={String(proto.release_id ?? "").replace("reiyah.protocol.", "")} small sub="the ignition is the roadmap, not a promise"
+            rule="release_id of the protocol manifest these estimands are defined in" from={PR} />
         </div>
 
         <div className="bank" ref={bankRef} style={{ ["--cols" as any]: geo.cols, ["--s" as any]: `${s}px` }} onPointerLeave={() => setCur(null)}>

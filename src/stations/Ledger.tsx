@@ -6,13 +6,14 @@
    digest-verified index bytes; nothing here is a placeholder. */
 import { useEffect, useRef, useState } from "react";
 import type { VerifiedEvidence } from "../boot/ProofBoot";
-import { Digest, FitList, Station } from "../components/primitives";
+import { Digest, FitList, Stat, Station } from "../components/primitives";
 
 interface Row { artifact: { path: string; sha256: string }; byte_size: number; role: string; media_type: string }
 
 export function Ledger({ ev }: { ev: VerifiedEvidence }) {
   const artifacts: Row[] = ev.index?.artifacts ?? [];
   const proj = ev.index?.candidate_projection ?? {};
+  const IDX = [{ id: "index", path: "gate/GATE_A_EVIDENCE_INDEX.json", sha256: ev.indexSha256 }];
 
   const byRole = new Map<string, { n: number; bytes: number }>();
   const byMedia = new Map<string, number>();
@@ -141,10 +142,15 @@ export function Ledger({ ev }: { ev: VerifiedEvidence }) {
     <Station id="ST–01" name="Ledger" sub="aggregated in this browser from the digest-verified index bytes">
       <div className="onepage">
         <div className="statstrip">
-          <div className="stat"><span className="sl">artifacts</span><span className="sv">{artifacts.length.toLocaleString()}</span><span className="sd">{byRole.size} roles · {byMedia.size} media types</span></div>
-          <div className="stat"><span className="sl">tracked bytes</span><span className="sv">{(Number(proj.total_bytes ?? 0) / 1e6).toFixed(2)}<em> MB</em></span><span className="sd">content-addressed, append-only</span></div>
-          <div className="stat"><span className="sl">worktree</span><span className="sv sm">{String(proj.worktree_state ?? "unknown").toUpperCase()}</span><span className="sd">commit {String(proj.git_commit ?? "").slice(0, 12)}</span></div>
-          <div className="stat statwide"><span className="sl">index digest</span><div style={{ marginTop: "0.28rem" }}><Digest id="index" sha={ev.indexSha256} path="gate/GATE_A_EVIDENCE_INDEX.json" /></div></div>
+          <Stat label="artifacts" value={artifacts.length.toLocaleString()} sub={`${byRole.size} roles · ${byMedia.size} media types`}
+            rule="count of rows in the evidence index's artifacts array; roles and media types are the distinct values of each row's role and media_type" from={IDX} />
+          <Stat label="tracked bytes" value={<>{(Number(proj.total_bytes ?? 0) / 1e6).toFixed(2)}<em> MB</em></>} sub="content-addressed, append-only"
+            rule="candidate_projection.total_bytes of the evidence index, shown in megabytes to two decimals" from={IDX} />
+          <Stat label="worktree" value={String(proj.worktree_state ?? "unknown").toUpperCase()} small sub={`commit ${String(proj.git_commit ?? "").slice(0, 12)}`}
+            rule="candidate_projection.worktree_state and candidate_projection.git_commit of the evidence index, as recorded at index generation" from={IDX} />
+          <Stat label="index digest" wide rule="SHA-256 of the index bytes, recomputed in this browser at boot and required to equal the committed sidecar before anything rendered" from={IDX}>
+            <div style={{ marginTop: "0.28rem" }}><Digest id="index" sha={ev.indexSha256} path="gate/GATE_A_EVIDENCE_INDEX.json" /></div>
+          </Stat>
         </div>
 
         <div className="stackrow">

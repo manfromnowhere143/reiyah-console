@@ -8,7 +8,7 @@
 import { useState } from "react";
 import type { VerifiedEvidence } from "../boot/ProofBoot";
 import { fetchCatalog, fetchSurfaceByPath } from "../lib/evidence";
-import { Digest, FitList, Station, useSurfaceState } from "../components/primitives";
+import { Digest, FitList, Stat, Station, useSurfaceState } from "../components/primitives";
 
 /* the toolchain lock: the newest one in the catalog, read live. It pins the
    exact interpreter, every module origin, the stdlib and third-party
@@ -45,6 +45,7 @@ export function Controls({ ev }: { ev: VerifiedEvidence }) {
   const equal = !!dual.complete_payloads_equal;
   const workers: string[] = dual.logical_worker_ids ?? ["worker-1", "worker-2"];
   const diag = r.diagnostics?.length ?? 0;
+  const REP = ev.reportMeta ? [{ id: `report-${r.version}`, path: ev.reportMeta.path, sha256: ev.reportMeta.sha256 }] : [];
 
   const [hover, setHover] = useState<number | null>(null);
   const cur = hover !== null ? allC[hover] : deepest;
@@ -65,12 +66,18 @@ export function Controls({ ev }: { ev: VerifiedEvidence }) {
     <Station id="ST–04" name="Controls" sub={`report ${r.version} · status ${String(r.status).toUpperCase()} · exit ${r.exit_code}`}>
       <div className="onepage">
         <div className="statstrip">
-          <div className="stat"><span className="sl">replay</span><span className="sv">{replayPass}<em>/{replay.length}</em></span><span className="sd">GA-01 … GA122</span></div>
-          <div className="stat"><span className="sl">implementation</span><span className="sv">{implPass}<em>/{impl.length}</em></span><span className="sd">GA123 production checks</span></div>
-          <div className="stat"><span className="sl">observations</span><span className="sv">{totalObs.toLocaleString()}</span><span className="sd">every control replayed</span></div>
-          <div className="stat"><span className="sl">diagnostics</span><span className="sv">{diag}</span><span className="sd">status {String(r.status).toUpperCase()} · exit {String(r.exit_code)}</span></div>
+          <Stat label="replay" value={<>{replayPass}<em>/{replay.length}</em></>} sub="GA-01 … GA122"
+            rule="count of required_replay_controls whose state is pass, over the count of required_replay_controls, in the canonical validation report" from={REP} />
+          <Stat label="implementation" value={<>{implPass}<em>/{impl.length}</em></>} sub="GA123 production checks"
+            rule="count of implementation_controls whose state is pass, over the count of implementation_controls" from={REP} />
+          <Stat label="observations" value={totalObs.toLocaleString()} sub="every control replayed"
+            rule="sum of observation_count over every replay and implementation control in the report" from={REP} />
+          <Stat label="diagnostics" value={diag} sub={`status ${String(r.status).toUpperCase()} · exit ${String(r.exit_code)}`}
+            rule="length of the report's diagnostics array; status and exit_code are the report's own fields" from={REP} />
           {ev.reportMeta && (
-            <div className="stat statwide"><span className="sl">report digest</span><div style={{ marginTop: "0.28rem" }}><Digest id={`report-${r.version}`} sha={ev.reportMeta.sha256} path={ev.reportMeta.path} /></div></div>
+            <Stat label="report digest" wide rule="SHA-256 of the canonical report bytes as recorded in the evidence index; press the chip to recompute it in this browser" from={REP}>
+              <div style={{ marginTop: "0.28rem" }}><Digest id={`report-${r.version}`} sha={ev.reportMeta.sha256} path={ev.reportMeta.path} /></div>
+            </Stat>
           )}
         </div>
 

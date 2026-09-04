@@ -6,7 +6,7 @@
    takes it. The rings size themselves to the screen. */
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { fetchCatalog, fetchSurface, fetchSurfaceByPath } from "../lib/evidence";
-import { Blocked, Digest, Station, useSurfaceState } from "../components/primitives";
+import { Blocked, Digest, Stat, Station, useSurfaceState } from "../components/primitives";
 
 const ev = (x: any) => (x && typeof x === "object" && "state" in x ? (x.state === "observed" ? String(x.value) : `∅ ${x.state}`) : String(x ?? ""));
 
@@ -63,15 +63,21 @@ export function Frontier() {
   const reg = state.data.data;
   const eligible = records.filter((r) => String(r.evidence_eligibility ?? "").startsWith("eligible")).length;
   const at = ordered[hover ?? cur];
+  const FR = [{ id: "frontier", path: meta.path, sha256: meta.sha256 }];
 
   return (
     <Station id="ST–08" name="Frontier" sub={`register ${reg.version ?? ""} · ${records.length} pointers · ${eligible} evidence-eligible`}>
       <div className="onepage">
         <div className="statstrip">
-          <div className="stat"><span className="sl">discovery pointers</span><span className="sv">{records.length}</span><span className="sd">{columns.length} source kinds · append-only</span></div>
-          <div className="stat"><span className="sl">evidence-eligible</span><span className="sv">{eligible}</span><span className="sd">a URL without retained bytes is not evidence · the zero is the discipline</span></div>
-          <div className="stat"><span className="sl">claims admitted</span><span className="sv sm">{reg.scientific_support_claimed ? "SUPPORT" : "NONE"}</span><span className="sd">safety {String(!!reg.safety_claimed).toUpperCase()} · compliance {String(!!reg.compliance_claimed).toUpperCase()} · superiority {String(!!reg.comparative_superiority_claimed).toUpperCase()}</span></div>
-          <div className="stat statwide"><span className="sl">register digest</span><div style={{ marginTop: "0.28rem" }}><Digest id="frontier" sha={meta.sha256} path={meta.path} /></div></div>
+          <Stat label="discovery pointers" value={records.length} sub={`${columns.length} source kinds · append-only`}
+            rule="count of records in the frontier discovery register; source kinds are the distinct source_kind values" from={FR} />
+          <Stat label="evidence-eligible" value={eligible} sub="a URL without retained bytes is not evidence · the zero is the discipline"
+            rule="count of records whose evidence_eligibility begins with eligible; every record today is ineligible_pointer_only" from={FR} />
+          <Stat label="claims admitted" value={reg.scientific_support_claimed ? "SUPPORT" : "NONE"} small sub={`safety ${String(!!reg.safety_claimed).toUpperCase()} · compliance ${String(!!reg.compliance_claimed).toUpperCase()} · superiority ${String(!!reg.comparative_superiority_claimed).toUpperCase()}`}
+            rule="the register's own scientific_support_claimed, safety_claimed, compliance_claimed and comparative_superiority_claimed fields, read verbatim" from={FR} />
+          <Stat label="register digest" wide rule="SHA-256 of the register bytes as recorded in the evidence index; press the chip to recompute it here" from={FR}>
+            <div style={{ marginTop: "0.28rem" }}><Digest id="frontier" sha={meta.sha256} path={meta.path} /></div>
+          </Stat>
         </div>
 
         <div className="horizonwrap">

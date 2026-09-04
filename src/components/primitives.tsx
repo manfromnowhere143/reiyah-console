@@ -243,6 +243,71 @@ export function Station({
   );
 }
 
+/* ---------- Stat: a figure that explains itself ----------
+   Every headline number on the instrument is derived in this browser from
+   digest-verified bytes. A Stat carries that derivation: the rule in words,
+   the source records with their digests (press to prove), and the moment it
+   was computed. Tap the figure to read it. The popover is placed against the
+   figure's own box (absolute inside the static document; no fixed layers). */
+export interface Source { id?: string; path: string; sha256: string }
+export function Stat({ label, value, sub, rule, from, wide, small, children }: {
+  label: string; value?: React.ReactNode; sub?: React.ReactNode;
+  rule?: string; from?: Source[]; wide?: boolean; small?: boolean; children?: React.ReactNode;
+}) {
+  const [open, setOpen] = useState(false);
+  const [box, setBox] = useState<{ left: number; top: number; width: number } | null>(null);
+  const ref = useRef<HTMLDivElement>(null);
+  const at = useRef<string>("");
+  const explain = !!rule;
+  const toggle = () => {
+    if (!explain) return;
+    if (!open) {
+      const r = ref.current?.getBoundingClientRect();
+      if (r) {
+        const w = Math.min(340, window.innerWidth - 16);
+        const left = Math.max(8, Math.min(window.innerWidth - w - 8, r.left));
+        setBox({ left, top: r.bottom + 6, width: w });
+      }
+      at.current = new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit", second: "2-digit" });
+    }
+    setOpen(!open);
+  };
+  useEffect(() => {
+    if (!open) return;
+    const onKey = (e: KeyboardEvent) => { if (e.key === "Escape") setOpen(false); };
+    const onDown = (e: PointerEvent) => { if (!(e.target as HTMLElement)?.closest?.(".derive, .stat[data-explain]")) setOpen(false); };
+    window.addEventListener("keydown", onKey, true); window.addEventListener("pointerdown", onDown, true);
+    return () => { window.removeEventListener("keydown", onKey, true); window.removeEventListener("pointerdown", onDown, true); };
+  }, [open]);
+  return (
+    <div ref={ref} className={`stat${wide ? " statwide" : ""}`} data-explain={explain ? "true" : undefined} data-open={String(open)}
+      role={explain ? "button" : undefined} tabIndex={explain ? 0 : undefined}
+      onClick={toggle} onKeyDown={(e) => { if (explain && (e.key === "Enter" || e.key === " ")) { e.preventDefault(); toggle(); } }}
+      aria-expanded={explain ? open : undefined} title={explain ? "how this figure was derived" : undefined}>
+      <span className="sl">{label}{explain && <i className="slq" aria-hidden="true">?</i>}</span>
+      {value !== undefined && <span className={`sv${small ? " sm" : ""}`}>{value}</span>}
+      {children}
+      {sub !== undefined && <span className="sd">{sub}</span>}
+      {open && box && createPortal(
+        <div className="derive glass" style={{ left: box.left, top: box.top, width: box.width }} role="dialog" aria-label={`derivation of ${label}`} onClick={(e) => e.stopPropagation()}>
+          <div className="dvk">how this figure was derived</div>
+          <div className="dvrule">{rule}</div>
+          <div className="dvk">from these committed bytes</div>
+          {(from ?? []).length === 0 && <div className="dvsrc dim">the record shown on this station</div>}
+          {(from ?? []).map((f) => (
+            <div key={f.path} className="dvsrc">
+              <span className="dvpath">{f.path}</span>
+              <Digest id={f.id ?? `p/${f.path}`} sha={f.sha256} path={f.path} />
+            </div>
+          ))}
+          <div className="dvat">computed in this browser at {at.current} · nothing on this instrument is a placeholder</div>
+        </div>,
+        document.body
+      )}
+    </div>
+  );
+}
+
 /* ---------- blocked panel (fail-closed rendering) ---------- */
 export function Blocked({ reason }: { reason: string }) {
   return (
