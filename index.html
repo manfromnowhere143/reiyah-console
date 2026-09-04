@@ -183,10 +183,12 @@
          text is placed a fixed distance below it. The React proof-boot uses
          the identical geometry, so when it removes this node the eye and the
          wordmark never shift — the splash simply dissolves into the boot. */
-      /* the document never scrolls: on iOS, overflow:hidden alone is not
-         honored for touch, but a fixed body is. Every root is fixed anyway. */
-      html, body { overflow: hidden; overscroll-behavior: none; }
-      body { position: fixed; top: 0; left: 0; width: 100%; height: 100%; height: var(--app-h, 100dvh); }
+      /* no fixed positioning anywhere in the document. Safari, opening a link
+         from another app, can place a fixed layer against a stale viewport
+         until the next touch; a static document has no layer to misplace. The
+         body is exactly the visible height, so there is nothing to scroll. */
+      html { height: 100%; overflow: hidden; overscroll-behavior: none; }
+      body { position: relative; margin: 0; width: 100%; height: 100%; height: var(--app-h, 100dvh); overflow: hidden; overscroll-behavior: none; }
       #boot {
         position: absolute; top: 0; left: 0; width: 100%;
         height: 100vh; height: var(--app-h, 100dvh); z-index: 200;

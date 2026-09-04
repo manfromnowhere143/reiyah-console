@@ -2,6 +2,7 @@
    The EpistemicValue is the atomic component of the whole instrument —
    six states, never merged, never coerced to zero or false. */
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
+import { createPortal } from "react-dom";
 import { prove, proveInclusion, type Proof, type LiveState, type InclusionProof } from "../lib/evidence";
 
 /* ---------- FitList: a list that is measured, not hoped ----------
@@ -123,7 +124,7 @@ export function Digest({ id, sha, path }: { id: string; sha: string; path: strin
         <span className="mark">{proven === undefined ? "◇" : proven ? "◆" : "✕"}</span>
         sha256:{short}…
       </button>
-      {open && (
+      {open && createPortal(
         <div className="overlay" onClick={() => setOpen(false)}>
           {/* Opens at final size with every field present, then the values
               compute in place — no resize, one clean entrance. */}
@@ -171,7 +172,8 @@ export function Digest({ id, sha, path }: { id: string; sha: string; path: strin
             )}
             <button className="close" onClick={() => setOpen(false)}>CLOSE</button>
           </div>
-        </div>
+        </div>,
+        document.body
       )}
     </>
   );

@@ -158,6 +158,27 @@ export function Encounter() {
       const horizon = h * 0.42;
       const cx = w / 2;
       const roadW = w * 0.44;
+      /* the horizon wash: light gathers where the road vanishes */
+      const sky = ctx.createLinearGradient(0, horizon - h * 0.28, 0, horizon);
+      sky.addColorStop(0, `rgba(${INK},0)`); sky.addColorStop(1, `rgba(${INK},${dark ? 0.06 : 0.045})`);
+      ctx.fillStyle = sky; ctx.fillRect(-10, horizon - h * 0.28, w + 20, h * 0.28);
+      const gnd = ctx.createLinearGradient(0, horizon, 0, h);
+      gnd.addColorStop(0, `rgba(${INK},${dark ? 0.05 : 0.04})`); gnd.addColorStop(0.5, `rgba(${INK},0)`);
+      ctx.fillStyle = gnd; ctx.fillRect(-10, horizon, w + 20, h - horizon);
+      /* the ground grid, flowing toward the cabin: depth you can feel */
+      const phase0 = reduced ? 0 : (s * 0.32) % 1;
+      for (let i = 0; i < 12; i++) {
+        const f = ((i + phase0) % 12) / 12;
+        const y = horizon + (h - horizon) * f * f;
+        ctx.strokeStyle = `rgba(${INK},${(0.03 + f * 0.09).toFixed(3)})`;
+        ctx.lineWidth = 1;
+        ctx.beginPath(); ctx.moveTo(-10, y); ctx.lineTo(w + 10, y); ctx.stroke();
+      }
+      ctx.strokeStyle = `rgba(${INK},0.07)`;
+      for (let k = -4; k <= 4; k++) {
+        if (k === 0) continue;
+        ctx.beginPath(); ctx.moveTo(cx + k * 6, horizon); ctx.lineTo(cx + k * w * 0.34, h + 20); ctx.stroke();
+      }
       ctx.strokeStyle = `rgba(${INK},0.34)`;
       ctx.lineWidth = 1.3;
       ctx.beginPath();
@@ -199,10 +220,17 @@ export function Encounter() {
         ctx.save();
         ctx.beginPath();
         ctx.moveTo(apex.x, apex.y); ctx.lineTo(fx + px * hw, fy + py * hw); ctx.lineTo(fx - px * hw, fy - py * hw); ctx.closePath();
-        ctx.fillStyle = `rgba(${INK},${(0.032 * alpha).toFixed(3)})`; ctx.fill();
-        ctx.strokeStyle = `rgba(${INK},${(0.28 * alpha).toFixed(3)})`; ctx.lineWidth = 1;
+        const cg = ctx.createLinearGradient(apex.x, apex.y, fx, fy);
+        cg.addColorStop(0, `rgba(${INK},${(0.075 * alpha).toFixed(3)})`); cg.addColorStop(1, `rgba(${INK},0)`);
+        ctx.fillStyle = cg; ctx.fill();
+        ctx.strokeStyle = `rgba(${INK},${(0.26 * alpha).toFixed(3)})`; ctx.lineWidth = 1;
         if (dashed) ctx.setLineDash([3, 4]);
         ctx.stroke();
+        /* the scan beam sweeps the field of view */
+        ctx.setLineDash([]);
+        const sw = reduced ? 0 : Math.sin(s * (dashed ? 1.9 : 3.1) + (dashed ? 0 : 2));
+        ctx.strokeStyle = `rgba(${INK},${(0.22 * alpha).toFixed(3)})`;
+        ctx.beginPath(); ctx.moveTo(apex.x, apex.y); ctx.lineTo(fx + px * hw * sw, fy + py * hw * sw); ctx.stroke();
         ctx.restore();
       };
       cone(apexL, aimL, true, coneOn);
@@ -240,8 +268,20 @@ export function Encounter() {
           ctx.fillStyle = grd; ctx.beginPath(); ctx.arc(cx, objY, r + 24 * doubt, 0, TAU); ctx.fill();
         }
         ctx.globalAlpha = seen;
-        ctx.strokeStyle = `rgba(${INK},0.88)`; ctx.lineWidth = 1.6;
-        ctx.beginPath(); ctx.moveTo(cx, objY - r); ctx.lineTo(cx + r, objY); ctx.lineTo(cx, objY + r); ctx.lineTo(cx - r, objY); ctx.closePath(); ctx.stroke();
+        /* a wire cuboid, its back face drawn toward the vanishing point */
+        const fw = r * 1.15, fh = r * 0.95, kq = 0.72;
+        const bx = cx, by = objY - (objY - horizon) * (1 - kq) * 0.5;
+        const F = [[cx - fw, objY - fh], [cx + fw, objY - fh], [cx + fw, objY + fh], [cx - fw, objY + fh]];
+        const B = [[bx - fw * kq, by - fh * kq], [bx + fw * kq, by - fh * kq], [bx + fw * kq, by + fh * kq], [bx - fw * kq, by + fh * kq]];
+        ctx.strokeStyle = `rgba(${INK},0.42)`; ctx.lineWidth = 1;
+        ctx.beginPath();
+        for (let i = 0; i < 4; i++) { ctx.moveTo(B[i][0], B[i][1]); ctx.lineTo(B[(i + 1) % 4][0], B[(i + 1) % 4][1]); ctx.moveTo(F[i][0], F[i][1]); ctx.lineTo(B[i][0], B[i][1]); }
+        ctx.stroke();
+        ctx.fillStyle = `rgba(${VOID},0.55)`;
+        ctx.beginPath(); ctx.rect(cx - fw, objY - fh, fw * 2, fh * 2); ctx.fill();
+        ctx.strokeStyle = `rgba(${INK},0.9)`; ctx.lineWidth = 1.5;
+        ctx.beginPath(); ctx.rect(cx - fw, objY - fh, fw * 2, fh * 2); ctx.stroke();
+        ctx.fillStyle = `rgba(${INK},0.75)`; ctx.beginPath(); ctx.arc(cx, objY, 1.8, 0, TAU); ctx.fill();
         /* lock brackets: the observation happened; the object is a record now */
         const b = r + 7, k = 5;
         ctx.strokeStyle = `rgba(${INK},0.5)`; ctx.lineWidth = 1;
@@ -390,21 +430,21 @@ export function Encounter() {
   const [w0, w1] = chain.window;
   const beats: Array<{ t: number; label: string; k: string; body: React.ReactNode; kind?: string; jsm?: boolean }> = [
     { t: T0, label: "prelude", k: "THE ENCOUNTER",
-      body: <>One person-vehicle-automation encounter. Synthetic fixture 001. The object ahead holds station: its observed relative speed is <b>{evTxt(chain.speed)}</b>. What changes is not the world but what is known of it.</> },
+      body: <>One person, one vehicle, one automation, one object ahead. What changes is not the world but what is known of it.</> },
     { t: 0, label: "t 0", k: "OBSERVATION", kind: "OBS",
-      body: <>The object is recorded. Relative speed <b>{evTxt(chain.speed)}</b>, observed. Its colour? <b>{chain.color.state}</b>. Reiyah will not guess a value it never measured.</> },
+      body: <>Relative speed <b>{evTxt(chain.speed)}</b>, observed. Colour <b>{chain.color.state}</b>: Reiyah will not guess what it never measured.</> },
     { t: 1, label: "t 1", k: "BELIEF", kind: "BEL",
-      body: <>A belief forms over the object: <b>{chain.p1} relevant</b>, <b>{chain.p2} not</b>. The two sum to one within a millionth. A distribution, never a certainty.</> },
+      body: <><b>{chain.p1} relevant</b>, <b>{chain.p2} not</b>. A distribution, never a certainty.</> },
     { t: 2, label: "t 2", k: "DECISION", kind: "DEC",
-      body: <>A decision forms: <b>{chain.action}</b>. {chain.researchOnly ? "Research only." : ""} It references the belief and the moment's information, and it never touches the wheel.</> },
+      body: <><b>{chain.action}</b>{chain.researchOnly ? ", research only" : ""}. It never touches the wheel.</> },
     { t: 3, label: "t 3", k: "INTERVENTION", kind: "INT",
-      body: <>The prompt is <b>assigned</b>. Delivered? Received? Adhered to? <b>Unmeasured.</b> Assignment is not delivery, and Reiyah keeps them apart.</> },
+      body: <><b>Assigned</b> is not delivered. Delivery, receipt, adherence: <b>unmeasured</b>, and kept apart.</> },
     { t: w0, label: `t ${w0}-${w1}`, k: "OUTCOME WINDOW", kind: "OUT",
-      body: <>The window opens, where recoverability, readiness, and the miss that hides all live. Count <b>{chain.count.state === "observed" ? String(chain.count.value) : evTxt(chain.count)}</b>, {chain.count.state}; censoring <b>{chain.censoring.replace(/_/g, " ")}</b>.</> },
+      body: <>Where recoverability, readiness, and the miss that hides all live. Count <b>{chain.count.state === "observed" ? String(chain.count.value) : evTxt(chain.count)}</b>, {chain.censoring.replace(/_/g, " ")}.</> },
     { t: 6.5, label: "the measure", k: "THE JOINT SILENT MISS", jsm: true,
-      body: <>Both sightlines leave the <i>same</i> object in the <i>same</i> window, with no warning: a <b>joint silent miss</b>. Multiplying two marginal rates hides it; modelling their dependence reveals it. This is the one thing Reiyah exists to measure. Drawn here as a concept; this fixture does not measure it.</> },
+      body: <>Both sightlines leave the <i>same</i> object in the <i>same</i> window, unwarned. Two marginal rates hide it; their dependence reveals it. The one thing Reiyah exists to measure.</> },
     { t: w1, label: `after t ${w1}`, k: "EVIDENCE", kind: "EVD",
-      body: <>Basis: <b>{chain.basis.replace(/_/g, " ")}</b>. Validity <b>{chain.validity}</b>. A gap stays a gap; retention is identity, not truth. Nothing becomes a result until its gate accepts it.</> },
+      body: <>Basis <b>{chain.basis.replace(/_/g, " ")}</b>, validity <b>{chain.validity}</b>. A gap stays a gap until a gate accepts a result.</> },
   ];
   function beatFor(t: number) {
     let i = 0;
