@@ -164,7 +164,25 @@ Adversaries = THE WALL; Encounter v3 at the fixture's own clock; Harbor shape =
 role, ground depth, the gate fires; body-lock and single-fixed-layer iOS steps
 (now superseded by the static document).
 
-## MISSION PLAN 2026-09-04 · exposure audit verdict (PLANNING ONLY, not started)
+## MISSION PLAN 2026-09-04 · exposure audit — EXECUTED the same day
+Status of the ranked plan (all live in production):
+0. DONE: resealed at engine 1.2.9 (74fbacc, clean); sealer catalogs incidents,
+   evidence, versioned fixture catalogs; digest-bound schema index
+   (`schemas-index.json` sealed, `/api/schemas` live); publisher holds when the
+   console tree is dirty; launchd job installed (`dev.danielwahnich.reiyah-publish`,
+   log /tmp/reiyah-live.log).
+1. DONE: Chair = THE CORRECTION ENGINE anatomy.
+2. DONE: ST-10 THE CONTRACT (lattice, coverage, claims wall, thesis).
+3. DONE: Controls toolchain lock strip.
+4. DONE: Lineage stage machine.
+5. DONE: Frontier standards crosswalk rail.
+6. DONE: Estimands contract sheet on tap.
+7. DONE: ⌘K palette (stations, artifacts, rules, schemas, estimands, controls;
+   press-to-prove where bytes are present). Not done by decision: WebGPU,
+   sonification.
+Rig: `ov.mjs` now includes the `contract` station (33 views per ground).
+
+## (original plan text, kept for lineage)
 **Engine state:** head 74fbacc on gate-a-1.2.9-readiness-input-seal-truth-contract,
 clean. Six commits since the public seal (4990a3d, 1 Sept, 1.2.7 dirty):
 +2 incidents (1.2.8 R1 continuity, 1.2.9 seal truth), +2 corrections, +3 reviews,

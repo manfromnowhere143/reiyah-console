@@ -10,6 +10,7 @@ import { STATIONS } from "./lib/camera";
 import { getSealedInfo, subscribeEvents, warmSealedSurfaces } from "./lib/evidence";
 import { Mark, TruthPill } from "./components/primitives";
 import { GroundToggle } from "./components/GroundToggle";
+import { Palette } from "./components/Palette";
 import { Harbor } from "./stations/Harbor";
 import { Ledger } from "./stations/Ledger";
 import { Lineage } from "./stations/Lineage";
@@ -160,6 +161,7 @@ function Stage({ ev, onEvidence }: { ev: VerifiedEvidence; onEvidence: (e: Verif
             </span>
           )}
           <TruthPill lastEventAt={lastEventAt} connected={connected} sealed={sealed} violated={violated} />
+          <Palette ev={ev} go={go} />
           {active !== "harbor" ? (
             <button className="hudbtn" onClick={() => go("harbor")}>⌂<span className="brandfull"> HARBOR · ESC</span></button>
           ) : (
