@@ -1168,7 +1168,7 @@ button:focus-visible, a:focus-visible { outline: 2px solid var(--ink-soft); outl
    left and renders only the rows that fit, so nothing can overlap */
 .twin { flex: none; display: flex; flex-direction: column; justify-content: center; gap: 0.3rem; }
 .twinlabel { flex: none; display: flex; justify-content: space-between; font-family: var(--mono); font-size: 0.52rem; letter-spacing: 0.14em; text-transform: uppercase; color: var(--ink-faint); }
-.spectrum { height: clamp(3rem, 20vh, 11rem); display: flex; gap: 3px; align-items: flex-end; }
+.spectrum { height: clamp(3rem, 15vh, 9rem); display: flex; gap: 3px; align-items: flex-end; }
 .spectrum[data-side="b"] { align-items: flex-start; }
 .tcol {
   flex: 1 1 0; min-width: 0; height: calc(var(--h, 0.5) * 100%);
@@ -1204,7 +1204,7 @@ button:focus-visible, a:focus-visible { outline: 2px solid var(--ink-soft); outl
 .twincap .tcst[data-state="fail"] { color: var(--accent); }
 .twincap .tcsha { color: var(--ink-ghost); }
 @media (max-width: 760px) {
-  .spectrum { gap: 2px; height: clamp(2.6rem, 16vh, 8rem); }
+  .spectrum { gap: 2px; height: clamp(2.6rem, 12vh, 7rem); }
   .seamtext { font-size: 0.5rem; letter-spacing: 0.08em; }
   .seamtext em { display: none; }
   .twinlabel { font-size: 0.46rem; }
@@ -1236,7 +1236,7 @@ button:focus-visible, a:focus-visible { outline: 2px solid var(--ink-soft); outl
 }
 /* the caption reserves its height: selecting a dial must never re-flow the
    bank above it (a growing caption would shrink the bank and resize every dial) */
-.dialcap { flex: none; display: flex; flex-direction: column; justify-content: center; gap: 0.15rem; height: 3.1rem; overflow: hidden; font-family: var(--mono); font-size: 0.6rem; color: var(--ink-soft); }
+.dialcap { flex: none; display: flex; flex-direction: column; justify-content: center; gap: 0.15rem; height: 4rem; overflow: hidden; font-family: var(--mono); font-size: 0.6rem; color: var(--ink-soft); }
 .dialcap .dcsym { color: var(--ink); font-weight: 700; font-size: 0.72rem; }
 .dialcap .dcline { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .dialcap .dim { color: var(--ink-ghost); }
@@ -1517,3 +1517,35 @@ button:focus-visible, a:focus-visible { outline: 2px solid var(--ink-soft); outl
   .concol .fillpanel { flex: 1; min-height: 0; }
   .claimwall { flex: none; padding: 0.5rem 0.6rem; }
 }
+
+
+/* the toolchain lock strip (ST-04) */
+.lockrow { flex: none; display: flex; flex-wrap: wrap; align-items: center; gap: 0.35rem 1rem; padding: 0.45rem 0.7rem; border-radius: 10px; background: color-mix(in srgb, var(--panel) 70%, transparent); box-shadow: inset 0 1px 0 color-mix(in srgb, var(--sheen) 45%, transparent); font-family: var(--mono); font-size: 0.54rem; color: var(--ink-faint); min-width: 0; }
+.lockrow .lk { letter-spacing: 0.16em; text-transform: uppercase; color: var(--ink); font-size: 0.5rem; }
+.lockrow .lc b { color: var(--ink); font-weight: 600; }
+.lockrow .lpol { color: var(--ink-ghost); letter-spacing: 0.04em; }
+@media (max-width: 760px) { .lockrow { gap: 0.2rem 0.6rem; padding: 0.35rem 0.55rem; font-size: 0.48rem; } .lockrow .lpol { display: none; } }
+@media (max-width: 760px) and (max-height: 800px) { .lockrow .lc:nth-child(4), .lockrow .lc:nth-child(5) { display: none; } }
+
+/* the stage machine (ST-02) */
+.machine { flex: none; display: flex; flex-direction: column; gap: 0.3rem; }
+.mrail { display: flex; flex-wrap: wrap; gap: 0.3rem 0.8rem; align-items: center; }
+.mstage { display: inline-flex; align-items: center; gap: 0.35rem; font-family: var(--mono); font-size: 0.54rem; color: var(--ink-faint); letter-spacing: 0.04em; }
+.mstage i { width: 7px; height: 7px; border-radius: 50%; box-shadow: inset 0 0 0 1.2px var(--ink-faint); display: inline-block; }
+.mstage[data-now="true"] { color: var(--ink); }
+.mstage[data-now="true"] i { background: var(--ink); box-shadow: 0 0 0 2px var(--void), 0 0 0 3px var(--ink); }
+.mstage[data-stop="true"] { color: var(--accent); }
+.mstage[data-stop="true"] i { box-shadow: inset 0 0 0 1.5px var(--accent); }
+@media (max-width: 760px) { .mstage { font-size: 0.46rem; } .mrail { gap: 0.2rem 0.5rem; } }
+@media (max-width: 760px) and (max-height: 800px) { .mstage[data-i] { display: none; } }
+
+/* the standards crosswalk rail (ST-08) */
+.xwalk { flex: none; display: flex; flex-direction: column; gap: 0.3rem; padding-top: 0.2rem; }
+.xrail { display: flex; flex-wrap: wrap; gap: 0.3rem 0.9rem; }
+.xnode { display: inline-flex; align-items: center; gap: 0.35rem; font-family: var(--mono); font-size: 0.54rem; color: var(--ink-faint); }
+.xnode b { color: var(--ink); font-weight: 600; }
+.xnode i { width: 8px; height: 8px; border-radius: 50%; box-shadow: inset 0 0 0 1.2px color-mix(in srgb, var(--ink) 60%, transparent); display: inline-block; }
+.xnode[data-state="partial_mapping"] i { background: linear-gradient(90deg, var(--ink) 50%, transparent 50%); }
+.xnode[data-state="full_mapping"] i { background: var(--ok); box-shadow: none; }
+.xnode[data-state="evidence_gap"] i { box-shadow: inset 0 0 0 1.2px var(--accent); }
+@media (max-width: 760px) { .xnode { font-size: 0.46rem; } .xnode span { display: none; } .xrail { gap: 0.2rem 0.6rem; } }

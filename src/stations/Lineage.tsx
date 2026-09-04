@@ -4,7 +4,7 @@
    A break is drawn as a break. Decision-interface contract reports are a
    different kind of record and sit on their own lower rail, never counted
    as canonical validations. Enumerated live from the repository. */
-import { fetchSurface, type Summary } from "../lib/evidence";
+import { fetchCatalog, fetchSurface, fetchSurfaceByPath, type Summary } from "../lib/evidence";
 import { Blocked, Digest, Station, useSurfaceState } from "../components/primitives";
 
 export function Lineage({ summary }: { summary: Summary }) {
@@ -14,13 +14,20 @@ export function Lineage({ summary }: { summary: Summary }) {
   const state = useSurfaceState(async () => {
     const reports = await Promise.all(reportIds.map((id) => fetchSurface<any>(id)));
     const recoveries = await Promise.all(recoveryIds.map((id) => fetchSurface<any>(id)));
-    return { reports, recoveries };
+    /* the stage machine: the ordered stage ids of the decision interface and
+       the newest correction's future transition model */
+    const cat = await fetchCatalog();
+    const corr = cat.map((c) => c.path).filter((x) => x.includes("-corrections/")).sort((a, b) => a.localeCompare(b, undefined, { numeric: true })).at(-1);
+    const [odi, latestCorr] = await Promise.all([fetchSurface<any>("odi"), corr ? fetchSurfaceByPath<any>(corr) : Promise.resolve(null)]);
+    const stages: string[] = odi.state === "observed" ? odi.data?.stage_contract?.ordered_stage_ids ?? [] : [];
+    const ftm = latestCorr && latestCorr.state === "observed" ? latestCorr.data?.future_transition_model ?? {} : {};
+    return { reports, recoveries, stages, now: ftm.current_authorized_stage ?? null, stop: ftm.current_hard_stop_before ?? null, corrPath: corr ?? null };
   }, [reportIds.join(","), recoveryIds.join(",")]);
 
   if (state.phase === "loading") return <Station id="ST–02" name="Lineage"><div className="note">reading custody chain…</div></Station>;
   if (state.phase === "blocked") return <Station id="ST–02" name="Lineage"><Blocked reason={state.reason} /></Station>;
 
-  const { reports, recoveries } = state.data;
+  const { reports, recoveries, stages, now, stop, corrPath } = state.data;
   const observed = reports.filter((r: any) => r.state === "observed");
   const isCanonical = (r: any) => (r.meta.path as string).includes("gate-a-validation-");
   const canonical = observed.filter(isCanonical);
@@ -104,6 +111,16 @@ export function Lineage({ summary }: { summary: Summary }) {
               </div>
             </div>
           )}
+        {(stages.length > 0 || now) && (
+          <div className="machine">
+            <span className="subrailk">stage machine · {stages.length} ordered stages · current authorized stage and hard stop from {corrPath ? corrPath.split("/").pop()?.replace(".json", "") : "the interface"}</span>
+            <div className="mrail">
+              {stages.map((sname, i) => <span key={sname} className="mstage" data-i={i}><i />{sname}</span>)}
+              {now && <span className="mstage" data-now="true"><i />{String(now).replace(/_/g, " ")}</span>}
+              {stop && <span className="mstage" data-stop="true"><i />hard stop before {String(stop).replace(/_/g, " ")}</span>}
+            </div>
+          </div>
+        )}
         </div>
         <div className="note railnote">
           The 1.0.0 record discloses an interrupted custody continuity and reconstructs identity from retained digests.
