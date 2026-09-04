@@ -178,6 +178,21 @@ Adversaries = THE WALL; Encounter v3 at the fixture's own clock; Harbor shape =
 role, ground depth, the gate fires; body-lock and single-fixed-layer iOS steps
 (now superseded by the static document).
 
+## Shipped 2026-09-04 (night): THE FOLD (Nolan move A) + obsidian default
+- `src/components/Fold.tsx`, mounted in press-to-prove: the sealed surfaces
+  fold pair by pair into one root, live, every node a real WebCrypto hash
+  from `getMerkle()`; the audit path lit; the root typed as reached; compute
+  first, reveal over 2.4 s; reduced motion = instant. Labels only on the path,
+  side chosen by room. Verified desktop + phone, sealed mode.
+- Obsidian is the default ground (index.html fallback, theme-color). The rig
+  now runs `--light` for the paper sweep (default run is obsidian).
+- A digest press stops propagation so the Stat's derivation never opens
+  behind the prove card.
+- Cache note: a viewer can see a stale shell for one load after a deploy (the
+  worker no longer seizes pages); production is verified byte-identical to
+  the committed build after every deploy.
+Remaining from the verdict: B (THE BURNED NAMES) and C (THE BREAK).
+
 ## THE NOLAN MOVE · research verdict 2026-09-04 (night) · PLANNING ONLY
 Engine unchanged since the seal (74fbacc); instrument fully current. Candidates,
 all built only from bytes the engine already holds:
