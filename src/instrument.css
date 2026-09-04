@@ -4,8 +4,7 @@
    Red is spent in three places only: the live cursor, a violated
    invariant, and the chair.
    ============================================================ */
-/* Two grounds, one meaning. Paper is the default; obsidian is the night
-   watch. Every color reads from these tokens — a ground swap never changes
+/* Two grounds, one meaning. Obsidian is the default; paper is for daylight. Every color reads from these tokens — a ground swap never changes
    what anything means. Restored pre-paint; persisted per operator. */
 :root, :root[data-ground="light"] {
   color-scheme: light;
@@ -1596,3 +1595,12 @@ button:focus-visible, a:focus-visible { outline: 2px solid var(--ink-soft); outl
 .derive .dvpath { font-family: var(--mono); font-size: 0.54rem; color: var(--ink-soft); overflow-wrap: anywhere; }
 .derive .dvat { font-family: var(--mono); font-size: 0.5rem; color: var(--ink-ghost); margin-top: 0.2rem; }
 @media (prefers-reduced-motion: reduce) { .derive { animation: none; } }
+
+
+/* ============================================================
+   THE FOLD — the Merkle proof as a set piece
+   ============================================================ */
+.foldwrap { margin: 0.6rem 0 0.2rem; border-radius: 10px; background: color-mix(in srgb, var(--ink) 4%, transparent); box-shadow: inset 0 1px 0 color-mix(in srgb, var(--sheen) 35%, transparent); }
+.fold { display: block; width: 100%; height: 190px; }
+.provecard { width: min(40rem, 100%); }
+@media (max-width: 760px) { .fold { height: 150px; } }

@@ -1,4 +1,4 @@
-/* The ground toggle. Paper by default; obsidian for the night watch.
+/* The ground toggle. Obsidian by default; paper for daylight reading.
    Persisted per operator, restored before first paint by the inline script
    in index.html, committed through a View Transition where available. */
 import { useState } from "react";
