@@ -32,7 +32,11 @@ function head() { try { return git(["rev-parse", "HEAD"]); } catch { return null
 function clean() { try { return git(["status", "--porcelain=v1"]) === ""; } catch { return false; } }
 /* the console itself must be committed too: a publish must never carry a
    half-edited instrument to production */
-function consoleClean() { try { return execFileSync("git", ["-C", CONSOLE_DIR, "status", "--porcelain=v1"], { encoding: "utf8" }).trim() === ""; } catch { return false; } }
+function consoleClean() {
+  /* the publisher's own outputs (the resealed snapshot, its state file) are
+     not edits; everything else must be committed */
+  try { return execFileSync("git", ["-C", CONSOLE_DIR, "status", "--porcelain=v1", "--", ".", ":!public/snapshot", ":!.live-state.json"], { encoding: "utf8" }).trim() === ""; } catch { return false; }
+}
 function lastPublished() { try { return JSON.parse(fs.readFileSync(STATE, "utf8")).commit; } catch { return null; } }
 function record(commit) { fs.writeFileSync(STATE, JSON.stringify({ commit, publishedAt: new Date().toISOString() }, null, 1)); }
 
