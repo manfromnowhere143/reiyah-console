@@ -7,7 +7,7 @@ import { useEffect, useRef, useState } from "react";
 import { flushSync } from "react-dom";
 import { ProofBoot, verifyEvidenceOnce, type VerifiedEvidence } from "./boot/ProofBoot";
 import { STATIONS } from "./lib/camera";
-import { getSealedInfo, subscribeEvents } from "./lib/evidence";
+import { getSealedInfo, subscribeEvents, warmSealedSurfaces } from "./lib/evidence";
 import { Mark, TruthPill } from "./components/primitives";
 import { GroundToggle } from "./components/GroundToggle";
 import { Harbor } from "./stations/Harbor";
@@ -44,11 +44,11 @@ function Stage({ ev, onEvidence }: { ev: VerifiedEvidence; onEvidence: (e: Verif
   const sealed = getSealedInfo();
   const reverifying = useRef(false);
 
-  /* the forge: the screen forms out of the tab you pressed. The destination's
-     dock button carries a shared view-transition-name into the old snapshot,
-     then the new panel content adopts it — so the button's geometry morphs
-     (expands) into the presented content. Falls back to a plain commit under
-     reduced motion or without the View Transitions API. */
+  /* navigation: the panel content cross-morphs in place through the View
+     Transitions API (compositor-only opacity + scale on the stage panel).
+     The earlier shared-element "forge" morph is gone: WebKit snapshots only
+     the composited parts of a named element, so mid-morph the new station
+     appeared torn, a canvas and a chip floating with the rest missing. */
   const go = (id: string, push = true) => {
     if (id === active) return;
     const commit = () => {
@@ -58,19 +58,7 @@ function Stage({ ev, onEvidence }: { ev: VerifiedEvidence; onEvidence: (e: Verif
     const reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
     const svt = (document as any).startViewTransition?.bind(document);
     if (reduced || !svt) { commit(); return; }
-    const card = document.querySelector<HTMLElement>(`.dock [data-station="${id}"]`);
-    if (!card) { svt(commit); return; }
-    card.style.viewTransitionName = "forge";
-    const vt = svt(() => {
-      card.style.viewTransitionName = "";
-      commit();
-      const content = document.querySelector<HTMLElement>(".panelcontent");
-      if (content) content.style.viewTransitionName = "forge";
-    });
-    vt.finished?.finally?.(() => {
-      const content = document.querySelector<HTMLElement>(".panelcontent");
-      if (content) content.style.viewTransitionName = "";
-    });
+    svt(commit);
   };
 
   useEffect(() => {
@@ -95,6 +83,11 @@ function Stage({ ev, onEvidence }: { ev: VerifiedEvidence; onEvidence: (e: Verif
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [active]);
+
+  /* after boot, in idle time, warm every station's bytes. Sealed bytes are
+     content-addressed and immutable within a snapshot, so this is honest
+     caching: a station then renders at once, with no loading flash. */
+  useEffect(() => { warmSealedSurfaces(); }, []);
 
   useEffect(() => {
     const off = subscribeEvents((kind, at) => {

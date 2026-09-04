@@ -141,6 +141,23 @@ uses it). Repository text contains no em dash.
 - Controls: the twin has a fixed footprint; the capability list is a FitList
   (no overlap on the smallest phone). FitList now counts the grid row gap.
 
+## Shipped 2026-09-04 (seventh pass): the torn transition, warmed stations, CDN
+- **Torn mid-transition on iPhone (from a screen recording):** the "forge"
+  shared-element morph named the pressed dock tab and the new panel; WebKit
+  snapshots only composited parts of a named element, so mid-morph the new
+  station showed as a floating canvas + chip with the rest missing, and the
+  tab vanished from the dock. The forge is removed; the stage-panel crossfade
+  (compositor-only) remains. Never name dock tabs or station content for
+  view transitions again.
+- **Loading flash ("reading custody chain…" on an empty page):** sealed bytes
+  are memoized (content-addressed, immutable within a snapshot) and every
+  surface + decision record is warmed in idle time after boot
+  (`warmSealedSurfaces`); stations then render with zero requests. A retry
+  with cache bypass ignores the memo. Live mode is never memoized.
+- **Scale:** `vercel.json` cache headers: hashed assets immutable, snapshot
+  5 min edge + SWR, sw.js no-cache.
+- Also: `.mandala` phones use `space-evenly`; The Seeing rays.
+
 ## Shipped 2026-09-03 (first pass)
 One-screen everywhere with `FitList`; Ledger, Lineage, Chair one-page;
 Adversaries = THE WALL; Encounter v3 at the fixture's own clock; Harbor shape =
