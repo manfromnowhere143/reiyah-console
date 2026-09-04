@@ -45,15 +45,25 @@
             apph: d.style.getPropertyValue("--app-h")
           };
         }
+        var lastH = 0;
         function setH(why) {
           var r = reading(why);
-          if (log.length < 80) log.push(r);
-          var h = r.vvh || r.ih;
-          if (h) d.style.setProperty("--app-h", h + "px");
+          /* the smaller of the two viewport heights: never taller than what is
+             visible, so the dock can never sit below the screen */
+          var h = r.vvh && r.ih ? Math.min(r.vvh, r.ih) : (r.vvh || r.ih);
+          var changed = h && h !== lastH;
+          if (changed || (why !== "raf" && why !== "tick")) { if (log.length < 80) log.push(r); }
+          if (changed) { lastH = h; d.style.setProperty("--app-h", h + "px"); }
           if (r.sy || r.vvpt) { try { window.scrollTo(0, 0); } catch (e) {} }
         }
         var fire = function (why) { return function () { setH(why); }; };
         setH("first");
+        /* track the visual viewport continuously: every frame while the page
+           settles (Safari does not always signal a toolbar appearing during a
+           tab-open), then twice a second for the life of the page. One property
+           read per frame; writes only on change. */
+        var settleUntil = performance.now() + 12000;
+        (function loop() { setH("raf"); if (performance.now() < settleUntil) requestAnimationFrame(loop); else setInterval(fire("tick"), 500); })();
         addEventListener("resize", fire("resize"), { passive: true });
         addEventListener("scroll", fire("scroll"), { passive: true });
         addEventListener("orientationchange", function () { setH("orient"); setTimeout(fire("orient+300"), 300); });
@@ -80,7 +90,8 @@
               var r = reading("now");
               var lines = ["NOW ih=" + r.ih + " vvh=" + r.vvh + " vvot=" + r.vvot + " vvpt=" + r.vvpt + " sy=" + r.sy + " dch=" + r.dch + " dsh=" + r.dsh + " sh=" + r.sh + " apph=" + r.apph + " ua=" + navigator.userAgent.replace(/^.*(OS [0-9_]+|Version\/[0-9.]+).*$/, "$1")];
               var rect = document.body.getBoundingClientRect();
-              lines.push("body top=" + Math.round(rect.top) + " h=" + Math.round(rect.height) + " · root bottom=" + Math.round(document.getElementById("root").getBoundingClientRect().bottom));
+              var dock = document.querySelector(".dock"); var dr = dock ? dock.getBoundingClientRect() : null;
+              lines.push("body top=" + Math.round(rect.top) + " h=" + Math.round(rect.height) + " · root bottom=" + Math.round(document.getElementById("root").getBoundingClientRect().bottom) + (dr ? " · dock top=" + Math.round(dr.top) + " bottom=" + Math.round(dr.bottom) + " vis=" + (dr.bottom <= (window.visualViewport ? window.visualViewport.height : window.innerHeight) + 1 ? "YES" : "NO") : " · dock: none"));
               log.forEach(function (e) { lines.push(e.t + "ms " + e.why + " ih=" + e.ih + " vvh=" + e.vvh + " ot=" + e.vvot + " pt=" + e.vvpt + " sy=" + e.sy + " dsh=" + e.dsh + " app=" + e.apph); });
               o.textContent = lines.join("\n");
             };

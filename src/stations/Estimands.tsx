@@ -78,7 +78,7 @@ export function Estimands() {
             const a0 = Math.PI * 0.75, a1 = Math.PI * 2.25;
             return (
               <button key={e.estimand_id} className="dial" data-on={String(cur === i)}
-                onPointerEnter={() => setCur(i)} onFocus={() => setCur(i)} onClick={() => setCur(cur === i ? null : i)}
+                onPointerEnter={() => setCur(i)} onFocus={() => setCur(i)} onClick={() => setCur(i)}
                 aria-label={`${e.estimand_id} · ${dirName} · ${e.lifecycle_status}`}>
                 <svg viewBox="0 0 100 100" width={s} height={s} aria-hidden="true">
                   <path d={arc(50, 50, 42, a0, a1)} className="dtrack" />
