@@ -1,13 +1,17 @@
-/* LEDGER — the evidence index, aggregated live from the verified bytes, on one
-   screen. A stat strip, one stacked bar for where the bytes live, then the
-   ranked roles and the media mix. Lists are measured, never scrolled: each
-   renders exactly the rows its space can hold and says what it withheld. */
+/* ST-01 · LEDGER — THE BYTE SKYLINE. Every one of the index's artifacts is a
+   point on one line: sorted by role, then by size, its height the log of its
+   bytes. Role bands are shaded and named where they are wide enough to carry
+   a name. A slow cursor sweeps the skyline reading the exact record under it;
+   hover or touch takes the cursor. Aggregated in this browser from the
+   digest-verified index bytes; nothing here is a placeholder. */
+import { useEffect, useRef, useState } from "react";
 import type { VerifiedEvidence } from "../boot/ProofBoot";
 import { Digest, FitList, Station } from "../components/primitives";
 
+interface Row { artifact: { path: string; sha256: string }; byte_size: number; role: string; media_type: string }
+
 export function Ledger({ ev }: { ev: VerifiedEvidence }) {
-  const artifacts: Array<{ artifact: { path: string; sha256: string }; byte_size: number; role: string; media_type: string }> =
-    ev.index?.artifacts ?? [];
+  const artifacts: Row[] = ev.index?.artifacts ?? [];
   const proj = ev.index?.candidate_projection ?? {};
 
   const byRole = new Map<string, { n: number; bytes: number }>();
@@ -19,71 +23,141 @@ export function Ledger({ ev }: { ev: VerifiedEvidence }) {
     byMedia.set(a.media_type, (byMedia.get(a.media_type) ?? 0) + 1);
   }
   const roles = [...byRole.entries()].sort((a, b) => b[1].n - a[1].n);
+  const rank = new Map(roles.map(([r], i) => [r, i]));
   const maxN = roles[0]?.[1].n ?? 1;
-  const media = [...byMedia.entries()].sort((a, b) => b[1] - a[1]);
   const byBytes = [...byRole.entries()].sort((a, b) => b[1].bytes - a[1].bytes);
   const totalBytes = byBytes.reduce((s, [, v]) => s + v.bytes, 0) || 1;
-
-  /* part-to-whole reads at a glance only up to six segments: the five heaviest
-     roles keep their identity, everything else folds into "other" */
   const heavy = byBytes.slice(0, 5);
   const otherBytes = byBytes.slice(5).reduce((s, [, v]) => s + v.bytes, 0);
   const segments: Array<[string, number]> = [...heavy.map(([r, v]) => [r, v.bytes] as [string, number]), ["other", otherBytes]];
   const tone = (i: number) => `color-mix(in srgb, var(--ink) ${Math.max(12, 78 - i * 12)}%, transparent)`;
   const pct = (b: number) => Math.round((b / totalBytes) * 100);
 
+  /* the skyline order: role by count, then bytes descending inside the role */
+  const sorted = [...artifacts].sort((a, b) => (rank.get(a.role)! - rank.get(b.role)!) || (b.byte_size - a.byte_size));
+  const n = sorted.length;
+
+  const cvRef = useRef<HTMLCanvasElement>(null);
+  const [cur, setCur] = useState(0);
+  const [hover, setHover] = useState<number | null>(null);
+  const at = sorted[hover ?? cur];
+
+  useEffect(() => {
+    if (matchMedia("(prefers-reduced-motion: reduce)").matches || hover !== null || n === 0) return;
+    const step = Math.max(1, Math.round(n / 90));
+    const t = setInterval(() => setCur((c) => (c + step) % n), 700);
+    return () => clearInterval(t);
+  }, [hover, n]);
+
+  useEffect(() => {
+    const cv = cvRef.current;
+    if (!cv || n === 0) return;
+    const ctx = cv.getContext("2d");
+    if (!ctx) return;
+    const lmax = Math.log(Math.max(...sorted.map((a) => a.byte_size || 1)) + 1);
+    const lmin = Math.log(Math.max(1, Math.min(...sorted.map((a) => a.byte_size || 1))) + 1);
+    const draw = () => {
+      const dpr = Math.min(2, window.devicePixelRatio || 1);
+      const w = cv.clientWidth, h = cv.clientHeight;
+      if (w === 0 || h === 0) return;
+      if (cv.width !== w * dpr || cv.height !== h * dpr) { cv.width = w * dpr; cv.height = h * dpr; }
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      ctx.clearRect(0, 0, w, h);
+      const dark = document.documentElement.dataset.ground === "dark";
+      const INK = dark ? "255,255,255" : "16,18,21";
+      const RED = dark ? "227,25,55" : "214,23,50";
+      const base = h - 16, top = 14;
+      const xOf = (i: number) => (i / n) * w;
+      const yOf = (b: number) => base - (top < base ? (base - top) * ((Math.log((b || 1) + 1) - lmin) / Math.max(1e-9, lmax - lmin)) : 0);
+      /* role bands, alternately shaded, named when wide enough */
+      let start = 0;
+      ctx.font = '8px "B612 Mono", Menlo, monospace'; ctx.textBaseline = "top";
+      for (let i = 1; i <= n; i++) {
+        if (i === n || sorted[i].role !== sorted[start].role) {
+          const x0 = xOf(start), x1 = xOf(i);
+          const band = rank.get(sorted[start].role)! % 2 === 0;
+          if (band) { ctx.fillStyle = `rgba(${INK},${dark ? 0.045 : 0.035})`; ctx.fillRect(x0, 0, x1 - x0, h); }
+          const label = sorted[start].role.replace(/_/g, " ");
+          if (x1 - x0 > ctx.measureText(label).width + 10) { ctx.fillStyle = `rgba(${INK},0.55)`; ctx.textAlign = "left"; ctx.fillText(label, x0 + 5, 2); }
+          start = i;
+        }
+      }
+      /* the skyline */
+      ctx.beginPath(); ctx.moveTo(0, base);
+      for (let i = 0; i < n; i++) { const y = yOf(sorted[i].byte_size); ctx.lineTo(xOf(i), y); ctx.lineTo(xOf(i + 1), y); }
+      ctx.lineTo(w, base); ctx.closePath();
+      const g = ctx.createLinearGradient(0, top, 0, base);
+      g.addColorStop(0, `rgba(${INK},${dark ? 0.55 : 0.5})`); g.addColorStop(1, `rgba(${INK},${dark ? 0.12 : 0.1})`);
+      ctx.fillStyle = g; ctx.fill();
+      ctx.strokeStyle = `rgba(${INK},0.35)`; ctx.lineWidth = 1;
+      ctx.beginPath(); ctx.moveTo(0, base + 0.5); ctx.lineTo(w, base + 0.5); ctx.stroke();
+      /* the cursor */
+      const i = hover ?? cur;
+      const cx = xOf(i + 0.5), cy = yOf(sorted[i].byte_size);
+      const bad = sorted[i].role === "known_bad_fixture";
+      ctx.strokeStyle = `rgba(${bad ? RED : INK},0.7)`;
+      ctx.beginPath(); ctx.moveTo(cx, top - 4); ctx.lineTo(cx, base); ctx.stroke();
+      ctx.fillStyle = `rgba(${bad ? RED : INK},1)`;
+      ctx.beginPath(); ctx.arc(cx, cy, 3, 0, Math.PI * 2); ctx.fill();
+      ctx.fillStyle = dark ? "rgba(5,5,7,0.8)" : "rgba(244,243,238,0.85)";
+      ctx.beginPath(); ctx.arc(cx, cy, 6, 0, Math.PI * 2); ctx.stroke();
+    };
+    draw();
+    const ro = new ResizeObserver(draw); ro.observe(cv);
+    const mo = new MutationObserver(draw); mo.observe(document.documentElement, { attributes: true, attributeFilter: ["data-ground"] });
+    return () => { ro.disconnect(); mo.disconnect(); };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [cur, hover, n]);
+
+  const onPointer = (e: React.PointerEvent<HTMLCanvasElement>) => {
+    const r = e.currentTarget.getBoundingClientRect();
+    setHover(Math.max(0, Math.min(n - 1, Math.floor(((e.clientX - r.left) / r.width) * n))));
+  };
+
   return (
     <Station id="ST–01" name="Ledger" sub="aggregated in this browser from the digest-verified index bytes">
       <div className="onepage">
         <div className="statstrip">
-          <div className="stat"><span className="sl">artifacts</span><span className="sv">{artifacts.length.toLocaleString()}</span><span className="sd">rows in the canonical inventory</span></div>
+          <div className="stat"><span className="sl">artifacts</span><span className="sv">{artifacts.length.toLocaleString()}</span><span className="sd">{byRole.size} roles · {byMedia.size} media types</span></div>
           <div className="stat"><span className="sl">tracked bytes</span><span className="sv">{(Number(proj.total_bytes ?? 0) / 1e6).toFixed(2)}<em> MB</em></span><span className="sd">content-addressed, append-only</span></div>
           <div className="stat"><span className="sl">worktree</span><span className="sv sm">{String(proj.worktree_state ?? "unknown").toUpperCase()}</span><span className="sd">commit {String(proj.git_commit ?? "").slice(0, 12)}</span></div>
           <div className="stat statwide"><span className="sl">index digest</span><div style={{ marginTop: "0.28rem" }}><Digest id="index" sha={ev.indexSha256} path="gate/GATE_A_EVIDENCE_INDEX.json" /></div></div>
         </div>
 
-        <div className="ipanel" style={{ flex: "none" }}>
-          <div className="ilabel">where the {(totalBytes / 1e6).toFixed(2)} MB lives · by role · derived live</div>
+        <div className="stackrow">
           <div className="stackbar" role="img" aria-label="Byte allocation by role">
             {segments.map(([role, b], i) => (
-              <div key={role} className="seg" title={`${role} · ${(b / 1e6).toFixed(2)} MB · ${pct(b)}%`}
-                style={{ flex: b, background: tone(i) }} />
+              <div key={role} className="seg" title={`${role} · ${(b / 1e6).toFixed(2)} MB · ${pct(b)}%`} style={{ flex: b, background: tone(i) }} />
             ))}
           </div>
           <div className="stacklegend">
-            {segments.map(([role, b], i) => (
-              <span key={role}><i style={{ background: tone(i) }} />{role} · {pct(b)}%</span>
-            ))}
+            {segments.map(([role, b], i) => <span key={role}><i style={{ background: tone(i) }} />{role.replace(/_/g, " ")} · {pct(b)}%</span>)}
           </div>
         </div>
 
-        <div className="grid2 fillgrid">
+        <div className="grid2 fillgrid skygrid">
+          <div className="skywrap">
+            <div className="ilabel">the byte skyline · every artifact, by role then size · height = log bytes</div>
+            <canvas ref={cvRef} className="sky" onPointerMove={onPointer} onPointerDown={onPointer} onPointerLeave={() => setHover(null)}
+              aria-label="Skyline of every artifact's byte size, grouped by role" />
+            <div className="skycap" aria-live="polite">
+              <span className="wcidx">{(hover ?? cur) + 1} / {n}</span>
+              <span className="wcpath">{at?.artifact.path}</span>
+              <span className="skymeta">{at?.role.replace(/_/g, " ")} · {Number(at?.byte_size ?? 0).toLocaleString()} B · {String(at?.artifact.sha256 ?? "").slice(7, 19)}</span>
+            </div>
+          </div>
           <div className="ipanel fillpanel">
             <div className="ilabel">roles · {byRole.size} distinct · ranked by count</div>
             <FitList
               items={roles}
-              render={([role, { n }]) => (
+              render={([role, { n: k }]) => (
                 <div key={role} className="bar">
                   <span className="bk">{role}</span>
-                  <span className="bt"><span className="bf" style={{ width: `${(n / maxN) * 100}%` }} /></span>
-                  <span className="bn">{n.toLocaleString()}</span>
+                  <span className="bt"><span className="bf" style={{ width: `${(k / maxN) * 100}%` }} /></span>
+                  <span className="bn">{k.toLocaleString()}</span>
                 </div>
               )}
-              more={(k) => <>+ {k} more roles, all counted above</>}
-            />
-          </div>
-          <div className="ipanel fillpanel">
-            <div className="ilabel">media · {media.length} types</div>
-            <FitList
-              items={media}
-              render={([m, n]) => (
-                <div key={m} className="bar">
-                  <span className="bk">{m}</span>
-                  <span className="bt"><span className="bf" style={{ width: `${(n / artifacts.length) * 100}%` }} /></span>
-                  <span className="bn">{n.toLocaleString()}</span>
-                </div>
-              )}
-              more={(k) => <>+ {k} more media types</>}
+              more={(k) => <>+ {k} more roles, all on the skyline</>}
             />
           </div>
         </div>
