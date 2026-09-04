@@ -178,6 +178,31 @@ Adversaries = THE WALL; Encounter v3 at the fixture's own clock; Harbor shape =
 role, ground depth, the gate fires; body-lock and single-fixed-layer iOS steps
 (now superseded by the static document).
 
+## THE NOLAN MOVE · research verdict 2026-09-04 (night) · PLANNING ONLY
+Engine unchanged since the seal (74fbacc); instrument fully current. Candidates,
+all built only from bytes the engine already holds:
+A. **THE FOLD** (recommended). Every press-to-prove becomes a set-piece: the
+   sealed surfaces fold pair by pair into one root, live, every hash computed
+   by WebCrypto in the viewer's browser, the pressed record's audit path lit,
+   the root written digit by digit as it is computed. Compute first, reveal at
+   cinematic pace (~1.6 s); reduced motion = instant. Practical effect, not
+   CGI: nothing on screen the browser did not just compute. Extends to the
+   full index on the Ledger (934 leaves, 10 hops; root labelled "computed here,
+   not a committed value"). merkle.ts + proveInclusion already exist.
+B. **THE BURNED NAMES** (second act, in the Chair). Time as structure: the
+   contracted future K129 → V129 → I129 → N129 → STOP before R0_129 drawn as
+   reserved hollow stages with a hard stop, and the two identities that can
+   never be used again (N128, R0_128: absent, not attempted, blocked,
+   unretained, nonreusable) as extinguished marks the timeline routes around.
+   Every element is a field in incident_disposition / future_transition_model.
+C. **THE BREAK** (small). Lineage's 1.0.0 custody interruption dramatized as a
+   spine torn and re-joined by digest proof (exact bytes publicly verifiable,
+   derivation not replayable, from RECOVERY.json's public_dispositions).
+Rejected: three synchronized clocks (gimmick), anything that is not a
+computation or a committed field.
+Order if approved: A, then B, then C. No new dependencies, canvas 2D, one
+page each, measured on all three viewports.
+
 ## Shipped 2026-09-04 (late): the research verdict, executed
 1. DONE: every figure explains itself. `Stat` primitive (primitives.tsx):
    tap a headline figure for the rule in words, the committed source records
