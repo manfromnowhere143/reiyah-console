@@ -1,157 +1,211 @@
-/* ST–07 · THE CHAIR — the engine that corrects itself, then the seat no
-   tool may take. The correction saga is discovered live from the catalog:
-   every DI version the engine ships appears here, contract → review →
-   implementation → seal, append-only. Then the decision chamber: the empty
-   seat, drawn, not boxed; the stage rail the decision must walk; and the
-   empty form, every field null by design, said once. */
+/* ST–07 · THE CHAIR — THE CORRECTION ENGINE, then the seat no tool may take.
+   Reiyah files incidents against itself: a named defect set, a root cause, a
+   correction contract with obligations and required regressions, a
+   role-separated review, a contract report, an implementation, a seal. Every
+   version of that saga is discovered live from the catalog and drawn as its
+   anatomy; a state that is absent is drawn as absent, never as done. Then the
+   seat: the decision record is invalid until an authorized human completes it. */
+import { useState } from "react";
 import { fetchCatalog, fetchSurfaceByPath, fetchSurface } from "../lib/evidence";
-import { Blocked, Station, useSurfaceState } from "../components/primitives";
+import { Blocked, FitList, Station, useSurfaceState } from "../components/primitives";
 
-interface SagaFile { path: string; kind: string; sha256: string; result?: string; incident: boolean }
-interface SagaVersion { version: string; files: SagaFile[]; incident: boolean }
-
-const KIND_OF = (p: string): string => {
+type Kind = "incident" | "correction" | "review" | "report" | "plan" | "lock" | "fixtures" | "interface" | "inventory" | "template" | "record";
+const ORDER: Kind[] = ["incident", "correction", "review", "report", "plan", "lock", "fixtures", "interface", "inventory", "template"];
+const KIND_LABEL: Record<Kind, string> = {
+  incident: "incident", correction: "contract", review: "review", report: "report", plan: "plan", lock: "toolchain lock",
+  fixtures: "fixture catalog", interface: "interface", inventory: "inventory", template: "decision form", record: "record",
+};
+const kindOf = (p: string): Kind => {
+  if (p.includes("-incidents/")) return "incident";
   if (p.includes("-corrections/")) return "correction";
   if (p.includes("-reviews/")) return "review";
-  if (p.includes("validation-reports/")) return "canonical report";
+  if (p.includes("validation-reports/")) return "report";
+  if (p.includes("toolchain-lock")) return "lock";
+  if (p.startsWith("fixtures/")) return "fixtures";
   if (p.includes("operator-decision-interfaces/")) return "interface";
   if (p.includes("inventories/")) return "inventory";
-  if (p.includes("incidents/")) return "incident";
-  if (p.includes("plan")) return "plan";
-  if (p.includes("toolchain-lock")) return "toolchain lock";
+  if (p.includes("decisions/")) return "template";
+  if (p.startsWith("validation/")) return "plan";
   return "record";
 };
+
+interface Rec { path: string; kind: Kind; sha256: string; bytes: number; data: any }
+interface Version {
+  version: string; recs: Rec[];
+  defects: Array<{ id: string; status: string; claim: string; impact: string }>;
+  rootCause: string | null;
+  disposition: Array<[string, string]>;
+  obligations: number | null; pos: number | null; neg: number | null;
+  resultContract: Array<[string, string]>;
+  stage: { now: string | null; stop: string | null };
+  review: { verdict: string; roles: number; checks: string; blockers: number } | null;
+  report: { result: string; status: string; exit: string; diag: number } | null;
+  nonclaims: number;
+  fixtures: number;
+}
+
+const short = (s: unknown) => String(s ?? "").replace(/_/g, " ");
+
+function anatomy(version: string, recs: Rec[]): Version {
+  const inc = recs.find((r) => r.kind === "incident")?.data;
+  const cor = recs.find((r) => r.kind === "correction")?.data;
+  const rev = recs.filter((r) => r.kind === "review").map((r) => r.data).find((d) => d?.aggregate_review_result) ?? recs.find((r) => r.kind === "review")?.data;
+  const rep = recs.find((r) => r.kind === "report")?.data;
+  const defects = Array.isArray(inc?.defects)
+    ? inc.defects.map((d: any) => ({ id: String(d.defect_id ?? d.id ?? "defect"), status: String(d.status ?? d.observed_state ?? ""), claim: String(d.false_or_unproven_claim ?? d.claim ?? ""), impact: String(d.impact ?? d.description ?? "") }))
+    : [];
+  const rootCause = inc?.root_cause?.category ?? inc?.causal_hypothesis?.status ?? null;
+  const dispo = inc?.incident_disposition && typeof inc.incident_disposition === "object"
+    ? Object.entries(inc.incident_disposition).filter(([k, v]) => typeof v === "string" || k.endsWith("_required") || k.endsWith("_confirmed") || k.endsWith("_closed")).map(([k, v]) => [short(k), short(v)] as [string, string]).slice(0, 8)
+    : [];
+  const obligations = cor?.correction_obligations ? (Array.isArray(cor.correction_obligations) ? cor.correction_obligations.length : Object.keys(cor.correction_obligations).length) : cor?.correction_contract ? Object.keys(cor.correction_contract).length : null;
+  const pos = Array.isArray(cor?.required_positive_regressions) ? cor.required_positive_regressions.length : null;
+  const neg = Array.isArray(cor?.required_negative_regressions) ? cor.required_negative_regressions.length : (Array.isArray(cor?.required_contract_adversaries) ? cor.required_contract_adversaries.length : null);
+  const resultContract = cor?.result_contract && typeof cor.result_contract === "object"
+    ? Object.entries(cor.result_contract).map(([k, v]) => [short(k), short(typeof v === "object" ? JSON.stringify(v) : v)] as [string, string])
+    : [];
+  const ftm = cor?.future_transition_model ?? {};
+  const stage = { now: ftm.current_authorized_stage ?? null, stop: ftm.current_hard_stop_before ?? null };
+  const agg = rev?.aggregate_review_result;
+  const review = agg ? { verdict: String(agg.verdict ?? agg.state ?? ""), roles: Number(agg.distinct_role_count ?? agg.review_count ?? 0), checks: `${agg.passed_check_count ?? "?"}/${agg.required_check_count ?? "?"}`, blockers: Number(agg.blocker_count ?? (Array.isArray(rev?.blockers) ? rev.blockers.length : 0)) } : null;
+  const report = rep ? { result: String(rep.result ?? ""), status: String(rep.status ?? ""), exit: String(rep.exit_code ?? "?"), diag: Array.isArray(rep.diagnostics) ? rep.diagnostics.length : 0 } : null;
+  const nonclaims = [inc, cor, rev, rep].reduce((a, d) => a + (Array.isArray(d?.nonclaims) ? d.nonclaims.length : 0), 0);
+  const fixtures = recs.filter((r) => r.kind === "fixtures").reduce((a, r) => a + (Array.isArray(r.data?.fixtures) ? r.data.fixtures.length : 0), 0);
+  return { version, recs, defects, rootCause, disposition: dispo, obligations, pos, neg, resultContract, stage, review, report, nonclaims, fixtures };
+}
 
 export function Chair() {
   const state = useSurfaceState(async () => {
     const catalog = await fetchCatalog();
-    const sagaPaths = catalog
-      .map((c) => c.path)
-      .filter((p) =>
-        (p.startsWith("gate/operator-decision-interface") ||
-          p.startsWith("gate/operator-decision-interfaces") ||
-          (p.startsWith("gate/validation-reports/") && p.includes("operator-decision")) ||
-          (p.startsWith("validation/") && p.includes("operator-decision"))) &&
-        p.endsWith(".json")
-      );
-    const byVersion = new Map<string, SagaFile[]>();
-    const loaded = await Promise.all(
-      sagaPaths.map(async (p) => {
-        const s = await fetchSurfaceByPath<any>(p);
-        const v = p.match(/1\.2\.\d+/)?.[0] ?? "1.2.4";
-        const d = s.state === "observed" ? s.data : null;
-        return {
-          v,
-          f: {
-            path: p, kind: KIND_OF(p),
-            sha256: s.state === "observed" ? s.meta.sha256 : "blocked",
-            result: d?.result ?? d?.status ?? d?.activation_state ?? d?.record_kind,
-            incident: !!(d && (d.incident_validation || d.defect_reproduction)) || p.includes("liveness") || p.includes("incidents/"),
-          } as SagaFile,
-        };
-      })
-    );
-    for (const { v, f } of loaded) byVersion.set(v, [...(byVersion.get(v) ?? []), f]);
-    const versions: SagaVersion[] = [...byVersion.entries()]
-      .sort((a, b) => a[0].localeCompare(b[0], undefined, { numeric: true }))
-      .map(([version, files]) => ({ version, files: files.sort((x, y) => x.kind.localeCompare(y.kind)), incident: files.some((f) => f.incident) }));
-    const tplPath = catalog
-      .map((c) => c.path)
-      .filter((p) => /gate\/decisions\/OPERATOR_DECISION-1\.2\.\d+\.template\.json/.test(p))
-      .sort((a, b) => a.localeCompare(b, undefined, { numeric: true }))
-      .at(-1);
-    const tpl = tplPath ? await fetchSurfaceByPath<any>(tplPath) : null;
+    const paths = catalog.map((c) => c.path).filter((p) => /operator-decision|OPERATOR_DECISION-1\.2\.\d/.test(p) && p.endsWith(".json"));
+    const loaded = await Promise.all(paths.map(async (p) => {
+      const s = await fetchSurfaceByPath<any>(p);
+      const v = p.match(/1\.2\.\d+/)?.[0] ?? "?";
+      return { v, rec: { path: p, kind: kindOf(p), sha256: s.state === "observed" ? s.meta.sha256 : "blocked", bytes: s.state === "observed" ? s.meta.bytes : 0, data: s.state === "observed" ? s.data : null } as Rec };
+    }));
+    const byV = new Map<string, Rec[]>();
+    for (const { v, rec } of loaded) if (/^1\.2\.[4-9]|^1\.2\.\d\d/.test(v)) byV.set(v, [...(byV.get(v) ?? []), rec]);
+    const versions = [...byV.entries()].sort((a, b) => a[0].localeCompare(b[0], undefined, { numeric: true })).map(([v, recs]) => anatomy(v, recs));
     const odi = await fetchSurface<any>("odi");
-    return { versions, tpl, tplPath, odi };
+    return { versions, odi };
   });
+  const [sel, setSel] = useState<string | null>(null);
 
   if (state.phase === "loading") return <Station id="ST–07" name="The Chair"><div className="note">discovering the correction saga…</div></Station>;
   if (state.phase === "blocked") return <Station id="ST–07" name="The Chair"><Blocked reason={state.reason} /></Station>;
 
-  const { versions, tpl, tplPath, odi } = state.data;
-  const tplData = tpl && tpl.state === "observed" ? tpl.data : null;
+  const { versions, odi } = state.data;
   const odiData = odi.state === "observed" ? odi.data : null;
-  const stages: string[] = odiData?.stage_contract?.ordered_stage_ids ?? [];
   const itemCount = odiData?.unresolved_inventory_contract?.item_count;
-  const nulls = tplData ? collectNulls(tplData) : [];
-  const latest = versions.at(-1)?.version;
-  const totalRecords = versions.reduce((a, v) => a + v.files.length, 0);
-  const incidents = versions.filter((v) => v.incident).length;
-  const tplName = tplPath?.split("/").pop()?.replace(".template.json", "") ?? "";
+  const acceptance = String(odiData?.authority?.operator_acceptance_state ?? "unaccepted").toUpperCase();
+  const latest = versions.at(-1);
+  const cur = versions.find((v) => v.version === sel) ?? latest;
+  const totalDefects = versions.reduce((a, v) => a + v.defects.length, 0);
+  const totalRegs = versions.reduce((a, v) => a + (v.pos ?? 0) + (v.neg ?? 0), 0);
+  const totalRecs = versions.reduce((a, v) => a + v.recs.length, 0);
+  const incidents = versions.filter((v) => v.recs.some((r) => r.kind === "incident")).length;
 
   return (
     <Station id="ST–07" name="The Chair" sub="the engine that corrects itself, append-only · then the seat no tool may take">
       <div className="onepage">
         <div className="statstrip">
-          <div className="stat"><span className="sl">corrections</span><span className="sv">{versions.length}</span><span className="sd">self-found defects, append-only</span></div>
-          <div className="stat"><span className="sl">records</span><span className="sv">{totalRecords}</span><span className="sd">contract · review · implementation · seal</span></div>
-          <div className="stat"><span className="sl">incidents</span><span className="sv">{incidents}</span><span className="sd">captured, never smoothed</span></div>
-          <div className="stat"><span className="sl">acceptance</span><span className="sv sm">UNACCEPTED</span><span className="sd">{typeof itemCount === "number" ? `${itemCount} items await human disposition` : "awaiting a human"}</span></div>
+          <div className="stat"><span className="sl">corrections</span><span className="sv">{versions.length}</span><span className="sd">{totalRecs} records · {incidents} incidents filed against itself</span></div>
+          <div className="stat"><span className="sl">named defects</span><span className="sv">{totalDefects}</span><span className="sd">each with an id, a claim, an impact</span></div>
+          <div className="stat"><span className="sl">regressions required</span><span className="sv">{totalRegs}</span><span className="sd">positive and negative, before any fix counts</span></div>
+          <div className="stat"><span className="sl">acceptance</span><span className="sv sm">{acceptance}</span><span className="sd">{typeof itemCount === "number" ? `${itemCount} items await human disposition` : "awaiting a human"}</span></div>
         </div>
 
-        {/* the correction engine as a rail of versions */}
-        <div className="ctimeline">
-          {versions.map((v) => (
-            <div key={v.version} className="cnode" data-now={String(v.version === latest)} data-incident={String(v.incident)}
-              title={v.files.map((f) => `${f.kind}: ${String(f.result ?? "retained").replace(/_/g, " ")}`).join("\n")}>
-              <span className="cnv">{v.version}</span>
-              <span className="cnc">{v.files.length} records</span>
-              <span className="cnt">
-                {v.incident && <span className="cninc">incident</span>}
-                {v.version === latest && <span className="cnnow">● forging</span>}
-              </span>
+        {/* the spine: one column per version, one mark per record kind */}
+        <div className="cspine" role="list">
+          {versions.map((v) => {
+            const kinds = new Set(v.recs.map((r) => r.kind));
+            return (
+              <button key={v.version} className="cver" role="listitem" data-on={String(v.version === cur?.version)} data-now={String(v.version === latest?.version)}
+                onClick={() => setSel(v.version)} onPointerEnter={() => setSel(v.version)}>
+                <span className="cvv">{v.version}</span>
+                <span className="cvk">
+                  {ORDER.map((k) => (
+                    <i key={k} className="ck" data-k={k} data-on={String(kinds.has(k))} title={`${KIND_LABEL[k]}${kinds.has(k) ? "" : " · absent"}`} />
+                  ))}
+                </span>
+                <span className="cvs">
+                  {v.defects.length > 0 ? `${v.defects.length} defects` : kinds.has("incident") ? "incident" : "no incident"}
+                  {v.review ? ` · ${v.review.verdict}` : ""}
+                  {v.version === latest?.version ? " · forging" : ""}
+                </span>
+              </button>
+            );
+          })}
+        </div>
+
+        {/* the anatomy of the selected version */}
+        {cur && (
+          <div className="canat">
+            <div className="cpane">
+              <div className="ilabel">{cur.version} · incident{cur.rootCause ? ` · root cause` : ""}</div>
+              {cur.rootCause ? <div className="ccause">{short(cur.rootCause)}</div> : <div className="ccause dim">no incident record in this version</div>}
+              {cur.defects.length > 0 ? (
+                <FitList items={cur.defects} render={(d) => (
+                  <div key={d.id} className="cdef">
+                    <span className="cdid">{d.id}</span>
+                    <span className="cdst" data-s={d.status}>{short(d.status)}</span>
+                    <span className="cdcl">{d.claim || d.impact}</span>
+                  </div>
+                )} more={(k) => <>+ {k} more defects, each named</>} />
+              ) : cur.disposition.length > 0 ? (
+                <FitList items={cur.disposition} render={([k, v]) => (
+                  <div key={k} className="crow"><span className="crk">{k}</span><span className="crv">{v}</span></div>
+                )} more={(k) => <>+ {k} more disposition states</>} />
+              ) : <div className="note" style={{ fontSize: "0.62rem" }}>the incident of this version carries no defect list; its states are in its records</div>}
             </div>
-          ))}
-        </div>
 
-        {/* the decision chamber */}
-        <div className="chamber">
-          <div className="seat">
-            <div className="seatkick">no tool may sit here</div>
-            <svg className="seatglyph" viewBox="0 0 64 64" aria-hidden="true">
-              <g fill="none" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round">
-                <path d="M18 10 h28 a3 3 0 0 1 3 3 v20 a3 3 0 0 1 -3 3 h-28 a3 3 0 0 1 -3 -3 v-20 a3 3 0 0 1 3 -3 z" />
-                <path d="M20 36 v14 M44 36 v14 M12 50 h40" />
-                <path d="M26 50 v6 M38 50 v6" opacity="0.6" />
-              </g>
-              <circle cx="32" cy="23" r="2.2" fill="var(--accent)" />
-            </svg>
-            <div className="seatname">the operator seat</div>
-            <div className="seatline">The decision record is deliberately invalid until an authorized human completes and verifies it.</div>
-            {stages.length > 0 && (
-              <ol className="stagerail" aria-label="decision interface stages">
-                {stages.map((s, i) => (
-                  <li key={s} data-now={String(i <= 3)} data-head={String(i === 3)}>
-                    <i /><span>{s}</span>
-                  </li>
-                ))}
-              </ol>
-            )}
-          </div>
+            <div className="cpane">
+              <div className="ilabel">correction contract{cur.obligations !== null ? ` · ${cur.obligations} obligations` : ""}</div>
+              <div className="cregs">
+                <span className="creg" data-side="pos"><b>{cur.pos ?? "∅"}</b> positive regressions required</span>
+                <span className="creg" data-side="neg"><b>{cur.neg ?? "∅"}</b> negative regressions required</span>
+              </div>
+              {cur.resultContract.length > 0 ? (
+                <FitList items={cur.resultContract} render={([k, v]) => (
+                  <div key={k} className="crow"><span className="crk">{k}</span><span className="crv">{v}</span></div>
+                )} more={(k) => <>+ {k} more result states, each kept distinct</>} />
+              ) : <div className="note" style={{ fontSize: "0.62rem" }}>{cur.recs.some((r) => r.kind === "correction") ? "this contract records obligations without a result ledger" : "no correction contract in this version"}</div>}
+            </div>
 
-          {tplData && (
-            <div className="chairform">
-              <div className="ilabel">the empty form · {tplName} · {nulls.length} fields</div>
-              <div className="nullrule"><span className="nv">∅ NULL · AWAITING HUMAN</span> · every field, by design</div>
-              <div className="nullcloud">
-                {nulls.map((n) => <span key={n} className="nullchip">{n}</span>)}
+            <div className="cpane">
+              <div className="ilabel">review · report · stage</div>
+              <div className="cverdict">
+                {cur.review ? (
+                  <><span className="cvl">review</span><span className="cvv2" data-v={cur.review.verdict}>{cur.review.verdict.toUpperCase()}</span><span className="cvd">{cur.review.roles} roles · checks {cur.review.checks} · {cur.review.blockers} blockers · internal advisory, not authority</span></>
+                ) : <><span className="cvl">review</span><span className="cvv2 dim">ABSENT</span><span className="cvd">no review record in this version</span></>}
+              </div>
+              <div className="cverdict">
+                {cur.report ? (
+                  <><span className="cvl">report</span><span className="cvv2" data-v={cur.report.status}>{cur.report.status.toUpperCase()}</span><span className="cvd">exit {cur.report.exit} · {cur.report.diag} diagnostics · {short(cur.report.result)}</span></>
+                ) : <><span className="cvl">report</span><span className="cvv2 dim">ABSENT</span><span className="cvd">no contract report in this version</span></>}
+              </div>
+              <div className="cverdict">
+                <span className="cvl">stage</span>
+                <span className="cvv2">{cur.stage.now ? short(cur.stage.now).replace(/^([A-Z]\d+)/, "$1") : "—"}</span>
+                <span className="cvd">{cur.stage.stop ? `hard stop before ${short(cur.stage.stop)}` : "no future transition recorded"}{cur.nonclaims ? ` · ${cur.nonclaims} non-claims` : ""}{cur.fixtures ? ` · ${cur.fixtures} fixtures` : ""}</span>
               </div>
             </div>
-          )}
+          </div>
+        )}
+
+        {/* the seat */}
+        <div className="seatline2">
+          <svg className="seatglyph2" viewBox="0 0 64 64" aria-hidden="true">
+            <g fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M18 10 h28 a3 3 0 0 1 3 3 v20 a3 3 0 0 1 -3 3 h-28 a3 3 0 0 1 -3 -3 v-20 a3 3 0 0 1 3 -3 z" />
+              <path d="M20 36 v14 M44 36 v14 M12 50 h40" />
+            </g>
+            <circle cx="32" cy="23" r="2.4" fill="var(--accent)" />
+          </svg>
+          <span className="seatkick">no tool may sit here</span>
+          <span className="seatmeta">the decision record is invalid until an authorized human completes and verifies it · acceptance {acceptance}</span>
         </div>
       </div>
     </Station>
   );
-}
-
-function collectNulls(obj: unknown, prefix = "", out: string[] = [], depth = 0): string[] {
-  if (depth > 4 || out.length > 60) return out;
-  if (obj && typeof obj === "object" && !Array.isArray(obj)) {
-    for (const [k, v] of Object.entries(obj as Record<string, unknown>)) {
-      const p = prefix ? `${prefix}.${k}` : k;
-      if (v === null) out.push(p);
-      else if (typeof v === "object") collectNulls(v, p, out, depth + 1);
-    }
-  }
-  return out;
 }
