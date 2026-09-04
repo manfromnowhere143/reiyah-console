@@ -86,6 +86,24 @@ uses it). Repository text contains no em dash.
   in flow (no longer a separate corner control); during boot the toggle sits
   at top-left as before.
 
+## Shipped 2026-09-04 (third pass), all live
+- **Ledger = THE BYTE SKYLINE.** All 934 artifacts on one canvas line, sorted
+  by role then size, height = log bytes, role bands shaded and named where
+  wide enough; a sweeping cursor reads path, role, bytes, digest; hover/touch
+  takes it. Stacked byte bar and ranked roles list kept.
+- **Lineage = THE CUSTODY GRAPH.** One spine, a node per canonical validation,
+  and under each node its RECOVERY record (method + custody continuity; the
+  1.0.0 break drawn as a broken spine and a hollow red dot). The three
+  decision-interface contract reports sit on a lower rail as a different kind.
+- **Frontier = THE HORIZON.** 54 pointers as hollow rings standing on the
+  horizon line in their source-kind column; filled would mean evidence-eligible
+  (0); ring size measured to the screen; cursor reads title, publisher, date,
+  kind, custody, eligibility. Claims-admitted stat from the register itself.
+- **The Seeing:** cards float (no hard borders), rays are measured from the
+  iris centre to each card (dashed to the dark sector), phones stack evenly.
+- Lesson recorded: a hook after an early return blanked the page; hooks stay
+  above every return.
+
 ## Shipped 2026-09-03 (first pass)
 One-screen everywhere with `FitList`; Ledger, Lineage, Chair one-page;
 Adversaries = THE WALL; Encounter v3 at the fixture's own clock; Harbor shape =
@@ -95,8 +113,8 @@ role, ground depth, the gate fires; body-lock and single-fixed-layer iOS steps
 ## NEXT STEPS (in order)
 1. Read the user's `?diag=1` screenshot (opened from WhatsApp); confirm the
    static document fixed the off-top open, or act on the readout.
-2. Pages not yet given a "drastic" pass this round: Ledger, Lineage, Frontier,
-   The Seeing, Harbor HUD. Same bar: measured fit, real bytes, visuals over text.
+2. Every station has now had a pass. Next candidates: Harbor HUD refinement,
+   press-to-prove from any skyline/wall/horizon cursor (live mode only).
 3. Keep every change measured: run the overflow rig on all 10 stations, three
    viewports, both grounds, before committing.
 4. Candidates from the research verdict: ⌘K palette, signed proof cards, honest

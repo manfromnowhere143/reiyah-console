@@ -4,11 +4,42 @@
    lies the Dark Sector — what is defined but unmeasured, unauthorized,
    honestly unlit. Re'iyah: the seeing that knows what it does not see.
    Every number on this screen is a committed byte. */
+import { useLayoutEffect, useRef, useState } from "react";
 import type { VerifiedEvidence } from "../boot/ProofBoot";
 import { fetchCatalog, fetchSurface } from "../lib/evidence";
 import { Blocked, Station, useSurfaceState } from "../components/primitives";
 
+/* the rays are measured, not drawn by hand: from the iris centre to every
+   card, under the cards, so each ray ends exactly where its card begins. The
+   ray to the dark sector is dashed. Phones stack the cards; no rays there. */
+function useRays(rootRef: React.RefObject<HTMLDivElement | null>, deps: unknown[]) {
+  const [rays, setRays] = useState<Array<{ x1: number; y1: number; x2: number; y2: number; dark: boolean }>>([]);
+  useLayoutEffect(() => {
+    const root = rootRef.current;
+    if (!root) return;
+    const measure = () => {
+      if (window.innerWidth <= 760) { setRays([]); return; }
+      const rr = root.getBoundingClientRect();
+      const iris = root.querySelector(".miris svg")?.getBoundingClientRect();
+      if (!iris) return;
+      const cx = iris.left + iris.width / 2 - rr.left, cy = iris.top + iris.height / 2 - rr.top;
+      const out: typeof rays = [];
+      root.querySelectorAll<HTMLElement>(".mcard").forEach((c) => {
+        const b = c.getBoundingClientRect();
+        out.push({ x1: cx, y1: cy, x2: b.left + b.width / 2 - rr.left, y2: b.top + b.height / 2 - rr.top, dark: c.dataset.dark === "true" });
+      });
+      setRays(out);
+    };
+    measure();
+    const ro = new ResizeObserver(measure); ro.observe(root);
+    return () => ro.disconnect();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, deps);
+  return rays;
+}
+
 export function SystemAtlas({ ev }: { ev: VerifiedEvidence }) {
+  const rootRef = useRef<HTMLDivElement>(null);
   const state = useSurfaceState(async () => {
     const proto = await fetchSurface<any>("protocol");
     const catalog = await fetchCatalog();
@@ -21,6 +52,7 @@ export function SystemAtlas({ ev }: { ev: VerifiedEvidence }) {
     return { proto: proto.state === "observed" ? proto.data : null, diVersions };
   });
 
+  const rays = useRays(rootRef, [state.phase]);
   if (state.phase === "loading") return <Station id="ST–09" name="The Seeing"><div className="note">composing the mandala…</div></Station>;
   if (state.phase === "blocked") return <Station id="ST–09" name="The Seeing"><Blocked reason={state.reason} /></Station>;
 
@@ -35,7 +67,10 @@ export function SystemAtlas({ ev }: { ev: VerifiedEvidence }) {
 
   return (
     <Station id="ST–09" name="The Seeing" sub="re'iyah · the seeing that knows what it does not see · every number is a committed byte">
-      <div className="mandala">
+      <div className="mandala" ref={rootRef}>
+        <svg className="mrayov" aria-hidden="true">
+          {rays.map((r, i) => <line key={i} x1={r.x1} y1={r.y1} x2={r.x2} y2={r.y2} strokeDasharray={r.dark ? "3 5" : undefined} />)}
+        </svg>
         {/* N · the law of the light */}
         <div className="mcell m-n">
           <div className="mmotto">"A BLOCKED RESULT IS PREFERABLE TO A PLAUSIBLE DEFAULT."</div>
@@ -75,16 +110,6 @@ export function SystemAtlas({ ev }: { ev: VerifiedEvidence }) {
         <div className="mcell m-c">
           <div className="miris" aria-label="The Aware Iris">
             <svg viewBox="0 0 240 240" width="100%" height="100%">
-              <g className="mrays" stroke="currentColor" strokeWidth="1" opacity="0.22">
-                <line x1="120" y1="120" x2="120" y2="6" />
-                <line x1="120" y1="120" x2="16" y2="52" />
-                <line x1="120" y1="120" x2="4" y2="120" />
-                <line x1="120" y1="120" x2="16" y2="188" />
-                <line x1="120" y1="120" x2="120" y2="234" />
-                <line x1="120" y1="120" x2="224" y2="188" />
-                <line x1="120" y1="120" x2="236" y2="120" />
-                {/* no ray toward NE: the opening faces the dark sector */}
-              </g>
               <circle className="mring" cx="120" cy="120" r="74" fill="none" stroke="currentColor" strokeWidth="17" strokeLinecap="round" strokeDasharray="400.3 64.6" transform="rotate(-20 120 120)" />
               <circle cx="133" cy="109" r="20" fill="var(--accent)" />
             </svg>
