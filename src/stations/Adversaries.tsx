@@ -7,6 +7,7 @@
    exact rule it must fail against; hovering takes the cursor. */
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { fetchSurface } from "../lib/evidence";
+import { getAt, setAt } from "../lib/urlstate";
 import { Blocked, Digest, FitList, Stat, Station, useSurfaceState } from "../components/primitives";
 
 interface Fixture {
@@ -78,9 +79,10 @@ function Wall({ meta, fixtures }: { meta: { sha256: string; path: string }; fixt
   }, [cells.length, families.length]);
 
   /* ---- the interrogation cursor: one fixture at a time, hover takes over ---- */
-  const [cur, setCur] = useState(0);
-  const [hover, setHover] = useState<number | null>(null);
+  const [cur, setCur] = useState(() => { const a = getAt(); const i = a ? cells.findIndex((c) => c.fixture_id === a) : -1; return i >= 0 ? i : 0; });
+  const [hover, setHover] = useState<number | null>(() => { const a = getAt(); const i = a ? cells.findIndex((c) => c.fixture_id === a) : -1; return i >= 0 ? i : null; });
   const [hl, setHl] = useState<string | null>(null);
+  const pick = (i: number) => { setHover(i); setAt(cells[i]?.fixture_id ?? null); };
   useEffect(() => {
     if (matchMedia("(prefers-reduced-motion: reduce)").matches) return;
     if (hover !== null) return;
@@ -124,7 +126,7 @@ function Wall({ meta, fixtures }: { meta: { sha256: string; path: string }; fixt
                   data-r={isRetained(f) ? "retained" : "current"}
                   data-f={f.fixture_family}
                   data-cur={String(i === (hover ?? cur))}
-                  onPointerEnter={() => setHover(i)} />
+                  onPointerEnter={() => pick(i)} />
               </>))}
             </div>
             <div className="wallcap" aria-live="polite">

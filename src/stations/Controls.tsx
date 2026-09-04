@@ -8,6 +8,7 @@
 import { useState } from "react";
 import type { VerifiedEvidence } from "../boot/ProofBoot";
 import { fetchCatalog, fetchSurfaceByPath } from "../lib/evidence";
+import { getAt, setAt } from "../lib/urlstate";
 import { Digest, FitList, Stat, Station, useSurfaceState } from "../components/primitives";
 
 /* the toolchain lock: the newest one in the catalog, read live. It pins the
@@ -47,8 +48,9 @@ export function Controls({ ev }: { ev: VerifiedEvidence }) {
   const diag = r.diagnostics?.length ?? 0;
   const REP = ev.reportMeta ? [{ id: `report-${r.version}`, path: ev.reportMeta.path, sha256: ev.reportMeta.sha256 }] : [];
 
-  const [hover, setHover] = useState<number | null>(null);
+  const [hover, setHover] = useState<number | null>(() => { const a = getAt(); const i = a ? allC.findIndex((c) => c.control_id === a) : -1; return i >= 0 ? i : null; });
   const cur = hover !== null ? allC[hover] : deepest;
+  const pick = (i: number) => { setHover(i); setAt(allC[i]?.control_id ?? null); };
   const lock = useToolchainLock();
   const L = lock.phase === "ready" && lock.data ? lock.data : null;
   const pol = L?.d?.launcher_policy ?? {};
@@ -58,7 +60,7 @@ export function Controls({ ev }: { ev: VerifiedEvidence }) {
     <span key={`${side}-${c.control_id}`} className="tcol"
       data-state={c.state} data-deep={String(c === deepest)} data-hot={String(hover === i)}
       style={{ ["--h" as any]: height(c.observation_count).toFixed(3) }}
-      onPointerEnter={() => setHover(i)} onPointerDown={() => setHover(i)}
+      onPointerEnter={() => pick(i)} onPointerDown={() => pick(i)}
       title={`${c.control_id} · ${String(c.state).toUpperCase()} · ${c.observation_count} obs`} />
   );
 

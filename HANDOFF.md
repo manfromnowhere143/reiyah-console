@@ -178,6 +178,19 @@ Adversaries = THE WALL; Encounter v3 at the fixture's own clock; Harbor shape =
 role, ground depth, the gate fires; body-lock and single-fixed-layer iOS steps
 (now superseded by the static document).
 
+## Shipped 2026-09-04 (late): the research verdict, executed
+1. DONE: every figure explains itself. `Stat` primitive (primitives.tsx):
+   tap a headline figure for the rule in words, the committed source records
+   with digests (press to prove), and the moment it was computed here.
+   Wired into every station's stat strip with exact rules and sources.
+2. DONE: URL as state. `src/lib/urlstate.ts`: `?st=<station>&at=<reading>`
+   (control_id, fixture_id, schema path, artifact path, discovery_id,
+   estimand_id, chair version). Only a person's gesture writes `at`;
+   verified that every link reproduces the reading.
+3. Anchored captions: not done; the derivation popover covers the need.
+4. DONE: `contain: layout paint` on glass surfaces.
+5. Harbor vocabulary: open.
+
 ## RESEARCH VERDICT 2026-09-04 (evening) · what the 2026 frontier offers this instrument
 Sources: WebKit release notes for Safari 26.0 / 26.2 / 26.4 / 26.5, Interop 2026,
 Liquid-glass CSS/SVG write-ups (kube.io, LogRocket, w3c/svgwg#1142), CHI 2026

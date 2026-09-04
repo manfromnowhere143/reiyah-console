@@ -6,6 +6,7 @@
    dial to read its contract. */
 import { useLayoutEffect, useRef, useState } from "react";
 import { fetchSurface } from "../lib/evidence";
+import { getAt, setAt } from "../lib/urlstate";
 import { Blocked, Stat, Station, useSurfaceState } from "../components/primitives";
 
 const pretty = (sym: string) => sym
@@ -30,10 +31,18 @@ export function Estimands() {
   const state = useSurfaceState(() => fetchSurface<any>("protocol"));
   const bankRef = useRef<HTMLDivElement>(null);
   const [geo, setGeo] = useState({ cols: 5, s: 120 });
-  const [cur, setCur] = useState<number | null>(null);
+  const [cur, setCurRaw] = useState<number | null>(null);
+  const [seeded, setSeeded] = useState(false);
   const estimands: any[] = state.phase === "ready" && state.data.state === "observed" ? state.data.data.estimands ?? [] : [];
   const n = estimands.length;
 
+  const setCur = (i: number | null) => { setCurRaw(i); setAt(i === null ? null : estimands[i]?.estimand_id ?? null); };
+  useLayoutEffect(() => {
+    if (seeded || n === 0) return;
+    setSeeded(true);
+    const a = getAt(); const i = a ? estimands.findIndex((e) => e.estimand_id === a) : -1;
+    if (i >= 0) setCurRaw(i);
+  }, [n, seeded]);
   useLayoutEffect(() => {
     const el = bankRef.current;
     if (!el || n === 0) return;

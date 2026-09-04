@@ -6,6 +6,7 @@
    wall of what is not claimed, read from the bytes that say so. */
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { fetchSchemaIndex, fetchSurface, fetchSurfaceByPath, type SchemaRow } from "../lib/evidence";
+import { getAt, setAt } from "../lib/urlstate";
 import { Blocked, FitList, Stat, Station, useSurfaceState } from "../components/primitives";
 
 const short = (s: unknown) => String(s ?? "").replace(/_/g, " ");
@@ -34,6 +35,7 @@ export function Contract() {
   const [cs, setCs] = useState(10);
   const [cur, setCur] = useState(0);
   const [hover, setHover] = useState<number | null>(null);
+  const [seeded, setSeeded] = useState(false);
   const rows: SchemaRow[] = state.phase === "ready" ? [...state.data.rows].sort((a, b) => a.family.localeCompare(b.family) || String(a.version).localeCompare(String(b.version), undefined, { numeric: true })) : [];
 
   useLayoutEffect(() => {
@@ -53,10 +55,17 @@ export function Contract() {
     return () => ro.disconnect();
   }, [rows.length]);
   useEffect(() => {
+    if (seeded || rows.length === 0) return;
+    setSeeded(true);
+    const a = getAt(); const i = a ? rows.findIndex((r) => r.path === a) : -1;
+    if (i >= 0) { setCur(i); setHover(i); }
+  }, [rows.length, seeded]);
+  useEffect(() => {
     if (matchMedia("(prefers-reduced-motion: reduce)").matches || hover !== null || rows.length === 0) return;
     const t = setInterval(() => setCur((c) => (c + 1) % rows.length), 1000);
     return () => clearInterval(t);
   }, [hover, rows.length]);
+  const pick = (i: number) => { setHover(i); setAt(rows[i]?.path ?? null); };
 
   if (state.phase === "loading") return <Station id="ST–10" name="The Contract"><div className="note">reading the contract layer…</div></Station>;
   if (state.phase === "blocked") return <Station id="ST–10" name="The Contract"><Blocked reason={state.reason} /></Station>;
@@ -116,7 +125,7 @@ export function Contract() {
             <div className="lattice" ref={latRef} style={{ ["--cs" as any]: `${cs}px` }} onPointerLeave={() => setHover(null)}>
               {rows.map((r, i) => (
                 <i key={r.path} className="lcell" data-closed={String(r.additional_properties_closed)} data-cur={String(i === (hover ?? cur))}
-                  onPointerEnter={() => setHover(i)} onPointerDown={() => setHover(i)} title={r.path} />
+                  onPointerEnter={() => pick(i)} onPointerDown={() => pick(i)} title={r.path} />
               ))}
             </div>
             <div className="wallcap" aria-live="polite">

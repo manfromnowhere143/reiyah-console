@@ -7,6 +7,7 @@
    seat: the decision record is invalid until an authorized human completes it. */
 import { useState } from "react";
 import { fetchCatalog, fetchSurfaceByPath, fetchSurface } from "../lib/evidence";
+import { getAt, setAt } from "../lib/urlstate";
 import { Blocked, FitList, Stat, Station, useSurfaceState } from "../components/primitives";
 
 type Kind = "incident" | "correction" | "review" | "report" | "plan" | "lock" | "fixtures" | "interface" | "inventory" | "template" | "record";
@@ -89,7 +90,8 @@ export function Chair() {
     const odi = await fetchSurface<any>("odi");
     return { versions, odi };
   });
-  const [sel, setSel] = useState<string | null>(null);
+  const [sel, setSelRaw] = useState<string | null>(() => getAt());
+  const setSel = (v: string | null) => { setSelRaw(v); setAt(v); };
 
   if (state.phase === "loading") return <Station id="ST–07" name="The Chair"><div className="note">discovering the correction saga…</div></Station>;
   if (state.phase === "blocked") return <Station id="ST–07" name="The Chair"><Blocked reason={state.reason} /></Station>;
