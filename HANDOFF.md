@@ -120,6 +120,20 @@ uses it). Repository text contains no em dash.
   dial. Click now only selects; the caption reserves a fixed height. Verified:
   dial sizes identical before and after a tap.
 
+## Shipped 2026-09-04 (fifth pass): the boot contract
+- **"Blocked · could not be verified" on the phone (reported, not reproduced
+  on Chrome with a persisted SW nor on macOS Safari):** every boot failure was
+  terminal, including a fetch that merely failed or was aborted, and the
+  service worker seized live pages mid-boot (skipWaiting + claim) after each
+  deploy, which WebKit answers by aborting in-flight fetches. Now: transport
+  failures retry up to 3x with backoff and `cache: "reload"` on every fetch;
+  a digest mismatch retries once through the network then blocks hard; the
+  blocked screen states the reason and offers RETRY; the worker no longer
+  skipWaiting/claims. Verified by request interception: transient abort,
+  two 503s, tampered bytes, healthy.
+- macOS Safari `?diag=1` proved the continuous viewport tracking: the height
+  changed 888 → 808 as Safari's banner appeared and `--app-h` followed.
+
 ## Shipped 2026-09-03 (first pass)
 One-screen everywhere with `FitList`; Ledger, Lineage, Chair one-page;
 Adversaries = THE WALL; Encounter v3 at the fixture's own clock; Harbor shape =

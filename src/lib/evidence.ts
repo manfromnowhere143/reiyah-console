@@ -41,6 +41,12 @@ export type SourceMode = "live" | "sealed";
 export interface SealedInfo { sealedAt: string; head: string; branch: string }
 
 let mode: SourceMode = "live";
+/* a retry after a transport failure bypasses every cache in the path (HTTP
+   cache and the service worker's stored copies), so a partial or stale body
+   can never be re-served as if it were the network's answer */
+let bypass = false;
+export function setBypassCache(on: boolean) { bypass = on; }
+const opts = (): RequestInit | undefined => (bypass ? { cache: "reload" } : undefined);
 let sealedManifest: {
   sealedAt: string;
   identity: Summary["identity"];
@@ -59,7 +65,7 @@ export function getSealedInfo(): SealedInfo | null {
 
 async function loadSealed(): Promise<boolean> {
   try {
-    const r = await fetch("/snapshot/manifest.json");
+    const r = await fetch("/snapshot/manifest.json", opts());
     if (!r.ok) return false;
     const m = await r.json();
     if (m?.kind !== "sealed_snapshot") return false;
@@ -113,7 +119,7 @@ export function getSurfaces(): SurfaceRow[] { return lastSurfaces; }
 
 export async function fetchSummary(): Promise<Summary> {
   try {
-    const r = await fetch("/api/summary");
+    const r = await fetch("/api/summary", opts());
     if (r.ok) {
       mode = "live";
       const s: Summary = await r.json();
@@ -177,12 +183,12 @@ export async function fetchRaw(id: string): Promise<RawResult> {
   if (mode === "sealed") {
     const row = sealedManifest?.surfaces.find((s) => s.id === id);
     if (!row) throw new Error("unknown_sealed_surface");
-    const r = await fetch(`/snapshot/raw/${id}`);
+    const r = await fetch(`/snapshot/raw/${id}`, opts());
     if (!r.ok) throw new Error(`sealed_raw_http_${r.status}`);
     const bytes = await r.arrayBuffer();
     return { bytes, path: row.path, serverSha256: row.sha256 ?? "unknown", byteLength: bytes.byteLength };
   }
-  const r = await fetch(`/api/raw/${id}`);
+  const r = await fetch(`/api/raw/${id}`, opts());
   if (!r.ok) throw new Error(`raw_http_${r.status}`);
   const bytes = await r.arrayBuffer();
   return {
