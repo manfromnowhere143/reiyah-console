@@ -3,17 +3,17 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-    <meta name="theme-color" content="#f4f3ee" />
+    <meta name="theme-color" content="#050507" />
     <script>
       /* ground restore, before first paint — no flash, ever */
       (function () {
         try {
-          var g = localStorage.getItem("harbor-ground") || "light";
+          var g = localStorage.getItem("harbor-ground") || "dark";
           document.documentElement.dataset.ground = g;
           var m = document.querySelector('meta[name="theme-color"]');
           if (m) m.content = g === "dark" ? "#050507" : "#f4f3ee";
         } catch (e) {
-          document.documentElement.dataset.ground = "light";
+          document.documentElement.dataset.ground = "dark";
         }
       })();
       /* Exact app height and an unscrollable document — the iOS contract.

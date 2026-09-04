@@ -3,7 +3,9 @@
    six states, never merged, never coerced to zero or false. */
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
-import { prove, proveInclusion, type Proof, type LiveState, type InclusionProof } from "../lib/evidence";
+import { getMerkle, prove, proveInclusion, type Proof, type LiveState, type InclusionProof } from "../lib/evidence";
+import type { MerkleTree } from "../lib/merkle";
+import { Fold } from "./Fold";
 
 /* ---------- FitList: a list that is measured, not hoped ----------
    One page, one screen, no scrolling is a law here. A list that might not
@@ -101,17 +103,20 @@ export function Digest({ id, sha, path }: { id: string; sha: string; path: strin
   const [open, setOpen] = useState(false);
   const [proof, setProof] = useState<Proof | { state: "blocked"; reason: string } | null>(null);
   const [incl, setIncl] = useState<InclusionProof | null>(null);
+  const [tree, setTree] = useState<MerkleTree | null>(null);
   const short = sha.replace("sha256:", "").slice(0, 8);
 
   const run = async () => {
     setOpen(true);
     setProof(null);
     setIncl(null);
+    setTree(null);
     try {
       const pr = await prove(id);
       setProof(pr);
       if ("equal" in pr && pr.equal) {
         proveInclusion(id, pr.clientSha256).then((i) => i && setIncl(i)).catch(() => {});
+        getMerkle().then((t) => t && t.leafIndex.has(id) && setTree(t)).catch(() => {});
       }
     } catch (e) {
       setProof({ state: "blocked", reason: String((e as Error)?.message ?? e) });
@@ -124,7 +129,7 @@ export function Digest({ id, sha, path }: { id: string; sha: string; path: strin
   const p = proof as Proof;
   return (
     <>
-      <button className="digest" data-proven={proven === undefined ? undefined : String(proven)} onClick={run} title={`prove ${path}`}>
+      <button className="digest" data-proven={proven === undefined ? undefined : String(proven)} onClick={(e) => { e.stopPropagation(); run(); }} title={`prove ${path}`}>
         <span className="mark">{proven === undefined ? "◇" : proven ? "◆" : "✕"}</span>
         sha256:{short}…
       </button>
@@ -141,6 +146,7 @@ export function Digest({ id, sha, path }: { id: string; sha: string; path: strin
                 <div className="proverow"><span className="k">server</span><span className="v">{p.serverSha256}</span></div>
                 <div className="proverow"><span className="k">this browser</span><span className={`v ${p.equal ? "eq" : "neq"}`}>{p.clientSha256}</span></div>
                 <div className="proverow"><span className="k">verdict</span><span className={`v ${p.equal ? "eq" : "neq"}`}>{p.equal ? "BYTE-IDENTICAL" : "MISMATCH — do not trust this surface"}</span></div>
+                {p.equal && tree && <div className="foldwrap"><Fold tree={tree} leafId={id} verified={incl ? incl.verified : null} /></div>}
                 {p.equal && (
                   <>
                     <div className="proverow" style={{ borderTop: "1px solid var(--line)", paddingTop: "0.7rem", marginTop: "0.3rem" }}>
