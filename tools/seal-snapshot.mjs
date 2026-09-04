@@ -62,6 +62,7 @@ for (const [id, rel] of SURFACES) {
    so the sealed static deploy can render the full living state */
 const EXTRA_GLOBS = [
   "gate/operator-decision-interface-corrections",
+  "gate/operator-decision-interface-incidents",
   "gate/operator-decision-interface-reviews",
   "gate/operator-decision-interfaces",
   "gate/operator-decision-inventories",
@@ -69,9 +70,11 @@ const EXTRA_GLOBS = [
   "gate/validation-reports",
   "gate/public-distribution-receipts",
   "validation",
+  "evidence",
   "manifests/mission",
   "manifests/protocol",
   "manifests/scientific",
+  ...(() => { try { return fs.readdirSync(path.join(REPO, "fixtures")).filter((d) => /^v\d/.test(d)).map((d) => `fixtures/${d}`); } catch { return []; } })(),
 ];
 fs.mkdirSync(path.join(OUT, "p"), { recursive: true });
 const catalogEntries = [];
@@ -89,6 +92,32 @@ for (const dir of EXTRA_GLOBS) {
   }
 }
 fs.writeFileSync(path.join(OUT, "catalog.json"), JSON.stringify({ entries: catalogEntries }, null, 1));
+
+/* the contract layer: an index of every schema, digest-bound at seal time.
+   Bodies are not shipped (5.9 MB); each row carries path, bytes, sha256, $id,
+   dialect, title and family, computed from the repository bytes. */
+const schemaRows = [];
+try {
+  for (const f of fs.readdirSync(path.join(REPO, "schemas")).sort()) {
+    if (!f.endsWith(".json")) continue;
+    const rel = `schemas/${f}`;
+    const bytes = fs.readFileSync(path.join(REPO, rel));
+    let j = {};
+    try { j = JSON.parse(bytes.toString("utf8")); } catch { /* recorded as unparsed */ }
+    const m = f.match(/^(.*?)-(\d+\.\d+\.\d+)\.schema\.json$/);
+    schemaRows.push({
+      path: rel, bytes: bytes.length,
+      sha256: "sha256:" + createHash("sha256").update(bytes).digest("hex"),
+      id: j.$id ?? null, dialect: j.$schema ?? null, title: j.title ?? null,
+      family: m ? m[1] : f.replace(/\.schema\.json$/, ""), version: m ? m[2] : null,
+      additional_properties_closed: j.additionalProperties === false,
+      required_count: Array.isArray(j.required) ? j.required.length : null,
+      property_count: j.properties && typeof j.properties === "object" ? Object.keys(j.properties).length : null,
+    });
+  }
+} catch { /* no schemas directory */ }
+fs.writeFileSync(path.join(OUT, "schemas-index.json"), JSON.stringify({ kind: "schema_index", sealedFrom: "schemas/", rows: schemaRows }, null, 1));
+console.log(`[seal] ${schemaRows.length} schemas indexed`);
 
 const manifest = {
   kind: "sealed_snapshot",

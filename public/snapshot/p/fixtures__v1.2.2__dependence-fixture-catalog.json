@@ -1,0 +1,272 @@
+{
+  "schema_id": "https://schemas.reiyah.invalid/gate-a/1.2.2/dependence-and-inference-contract.schema.json#/$defs/fixtureCatalog",
+  "artifact_id": "reiyah.artifact.dependence-fixture-catalog@1.2.2",
+  "catalog_id": "reiyah.fixture-catalog.dependence-and-inference@1.2.2",
+  "version": "1.2.2",
+  "target_schema_id": "https://schemas.reiyah.invalid/gate-a/1.2.2/dependence-and-inference-contract.schema.json",
+  "base_contract_ref": {
+    "artifact_id": "reiyah.artifact.dependence-and-inference.synthetic-baseline@1.2.2",
+    "path": "fixtures/v1.2.2/dependence-known-good/synthetic-baseline.json",
+    "sha256": "sha256:1dfdcd31eb34730fc5ed83a37bfa96f75d16a7c8baa8ce486db0b38026da706e",
+    "byte_size": 14212,
+    "schema_id": "https://schemas.reiyah.invalid/gate-a/1.2.2/dependence-and-inference-contract.schema.json",
+    "version": "1.2.2"
+  },
+  "all_known_good_must_pass": true,
+  "all_known_bad_must_fail_for_declared_diagnostic": true,
+  "fixtures": [
+    {
+      "fixture_id": "reiyah.fixture.dependence-and-inference.gate-b-authority-claim@1.2.2",
+      "path": "fixtures/v1.2.2/dependence-known-bad/gate-b-authority-claim.json",
+      "fixture_class": "known_bad_dependence",
+      "fixture_schema_id": "https://schemas.reiyah.invalid/gate-a/1.2.2/dependence-and-inference-contract.schema.json#/$defs/fixtureDescriptor",
+      "target_schema_id": "https://schemas.reiyah.invalid/gate-a/1.2.2/dependence-and-inference-contract.schema.json",
+      "expected_outcome": "reject",
+      "expected_diagnostic": "GA122-AUTHORITY-NONCLAIM",
+      "sha256": "sha256:25ac163f56a81f5107b01ba10b6165e876a26d378a4037030f0c414c49822a43",
+      "byte_size": 1781
+    },
+    {
+      "fixture_id": "reiyah.fixture.dependence-and-inference.gate-a-running-supported-analysis@1.2.2",
+      "path": "fixtures/v1.2.2/dependence-known-bad/gate-a-running-supported-analysis.json",
+      "fixture_class": "known_bad_dependence",
+      "fixture_schema_id": "https://schemas.reiyah.invalid/gate-a/1.2.2/dependence-and-inference-contract.schema.json#/$defs/fixtureDescriptor",
+      "target_schema_id": "https://schemas.reiyah.invalid/gate-a/1.2.2/dependence-and-inference-contract.schema.json",
+      "expected_outcome": "reject",
+      "expected_diagnostic": "GA122-ANALYSIS-STATE",
+      "sha256": "sha256:54933dd5eabbe549864e3e7e04bfe0951e3e1f78ec28cfcfc008311a834ea802",
+      "byte_size": 2274
+    },
+    {
+      "fixture_id": "reiyah.fixture.dependence-and-inference.common-opportunity-unit-coercion@1.2.2",
+      "path": "fixtures/v1.2.2/dependence-known-bad/common-opportunity-unit-coercion.json",
+      "fixture_class": "known_bad_dependence",
+      "fixture_schema_id": "https://schemas.reiyah.invalid/gate-a/1.2.2/dependence-and-inference-contract.schema.json#/$defs/fixtureDescriptor",
+      "target_schema_id": "https://schemas.reiyah.invalid/gate-a/1.2.2/dependence-and-inference-contract.schema.json",
+      "expected_outcome": "reject",
+      "expected_diagnostic": "GA122-OPPORTUNITY-UNIT",
+      "sha256": "sha256:a3a228f4ae4b36580429d8d9e294c4fa7f6669a1498aff2e7de13b15cdae5251",
+      "byte_size": 2190
+    },
+    {
+      "fixture_id": "reiyah.fixture.dependence-and-inference.instance-only-clustering@1.2.2",
+      "path": "fixtures/v1.2.2/dependence-known-bad/instance-only-clustering.json",
+      "fixture_class": "known_bad_dependence",
+      "fixture_schema_id": "https://schemas.reiyah.invalid/gate-a/1.2.2/dependence-and-inference-contract.schema.json#/$defs/fixtureDescriptor",
+      "target_schema_id": "https://schemas.reiyah.invalid/gate-a/1.2.2/dependence-and-inference-contract.schema.json",
+      "expected_outcome": "reject",
+      "expected_diagnostic": "GA122-DEPENDENCE-TOPOLOGY",
+      "sha256": "sha256:5eb9f62b93d7d4909b8bd3e0e2354a1a7b1042351ae3504b6cf659f12f0a6e91",
+      "byte_size": 2259
+    },
+    {
+      "fixture_id": "reiyah.fixture.dependence-and-inference.contradictory-topology-parent-edge@1.2.2",
+      "path": "fixtures/v1.2.2/dependence-known-bad/contradictory-topology-parent-edge.json",
+      "fixture_class": "known_bad_dependence",
+      "fixture_schema_id": "https://schemas.reiyah.invalid/gate-a/1.2.2/dependence-and-inference-contract.schema.json#/$defs/fixtureDescriptor",
+      "target_schema_id": "https://schemas.reiyah.invalid/gate-a/1.2.2/dependence-and-inference-contract.schema.json",
+      "expected_outcome": "reject",
+      "expected_diagnostic": "GA122-TOPOLOGY-RELATION",
+      "sha256": "sha256:42c03bab99b3ce4944cec4d63f2b8e15539e2ea247b191b1bfc2c99b26f829f0",
+      "byte_size": 1787
+    },
+    {
+      "fixture_id": "reiyah.fixture.dependence-and-inference.unobserved-level-omission-disposition@1.2.2",
+      "path": "fixtures/v1.2.2/dependence-known-bad/unobserved-level-omission-disposition.json",
+      "fixture_class": "known_bad_dependence",
+      "fixture_schema_id": "https://schemas.reiyah.invalid/gate-a/1.2.2/dependence-and-inference-contract.schema.json#/$defs/fixtureDescriptor",
+      "target_schema_id": "https://schemas.reiyah.invalid/gate-a/1.2.2/dependence-and-inference-contract.schema.json",
+      "expected_outcome": "reject",
+      "expected_diagnostic": "GA122-TOPOLOGY-OMISSION",
+      "sha256": "sha256:10fbea69551a2bc27a4ccdde8a21b3c27e33f76a7cfb61eca29a0532e24d998e",
+      "byte_size": 1810
+    },
+    {
+      "fixture_id": "reiyah.fixture.dependence-and-inference.cmh-design-effect-division@1.2.2",
+      "path": "fixtures/v1.2.2/dependence-known-bad/cmh-design-effect-division.json",
+      "fixture_class": "known_bad_dependence",
+      "fixture_schema_id": "https://schemas.reiyah.invalid/gate-a/1.2.2/dependence-and-inference-contract.schema.json#/$defs/fixtureDescriptor",
+      "target_schema_id": "https://schemas.reiyah.invalid/gate-a/1.2.2/dependence-and-inference-contract.schema.json",
+      "expected_outcome": "reject",
+      "expected_diagnostic": "GA122-STATISTIC-TRANSFORM",
+      "sha256": "sha256:b2f93bed7e09441c8852f4a6ada1580eb154fc1ff6c7fd68b06c29a54e6a00ab",
+      "byte_size": 1865
+    },
+    {
+      "fixture_id": "reiyah.fixture.dependence-and-inference.silent-miss-without-silence-evidence@1.2.2",
+      "path": "fixtures/v1.2.2/dependence-known-bad/silent-miss-without-silence-evidence.json",
+      "fixture_class": "known_bad_dependence",
+      "fixture_schema_id": "https://schemas.reiyah.invalid/gate-a/1.2.2/dependence-and-inference-contract.schema.json#/$defs/fixtureDescriptor",
+      "target_schema_id": "https://schemas.reiyah.invalid/gate-a/1.2.2/dependence-and-inference-contract.schema.json",
+      "expected_outcome": "reject",
+      "expected_diagnostic": "GA122-SILENCE-LABEL",
+      "sha256": "sha256:01af9021411d61b2e13119e5f138832cb9b6f6bd9d3ed1d51f0c4fcee60ce467",
+      "byte_size": 1805
+    },
+    {
+      "fixture_id": "reiyah.fixture.dependence-and-inference.lift-only-estimand@1.2.2",
+      "path": "fixtures/v1.2.2/dependence-known-bad/lift-only-estimand.json",
+      "fixture_class": "known_bad_dependence",
+      "fixture_schema_id": "https://schemas.reiyah.invalid/gate-a/1.2.2/dependence-and-inference-contract.schema.json#/$defs/fixtureDescriptor",
+      "target_schema_id": "https://schemas.reiyah.invalid/gate-a/1.2.2/dependence-and-inference-contract.schema.json",
+      "expected_outcome": "reject",
+      "expected_diagnostic": "GA122-ESTIMAND-VECTOR",
+      "sha256": "sha256:7c2ceeeb107ee05f4b45b71b17707ebf9f932ef321294e0cf5d20323756d3e19",
+      "byte_size": 1763
+    },
+    {
+      "fixture_id": "reiyah.fixture.dependence-and-inference.raw-score-equivalence@1.2.2",
+      "path": "fixtures/v1.2.2/dependence-known-bad/raw-score-equivalence.json",
+      "fixture_class": "known_bad_dependence",
+      "fixture_schema_id": "https://schemas.reiyah.invalid/gate-a/1.2.2/dependence-and-inference-contract.schema.json#/$defs/fixtureDescriptor",
+      "target_schema_id": "https://schemas.reiyah.invalid/gate-a/1.2.2/dependence-and-inference-contract.schema.json",
+      "expected_outcome": "reject",
+      "expected_diagnostic": "GA122-OPERATING-POINT-COMPARABILITY",
+      "sha256": "sha256:d8b0a9d5fb5e352af351df02bfe7e82a323033afc59ca6289828c6fecfacb865",
+      "byte_size": 3114
+    },
+    {
+      "fixture_id": "reiyah.fixture.dependence-and-inference.shared-reference-unbound@1.2.2",
+      "path": "fixtures/v1.2.2/dependence-known-bad/shared-reference-unbound.json",
+      "fixture_class": "known_bad_dependence",
+      "fixture_schema_id": "https://schemas.reiyah.invalid/gate-a/1.2.2/dependence-and-inference-contract.schema.json#/$defs/fixtureDescriptor",
+      "target_schema_id": "https://schemas.reiyah.invalid/gate-a/1.2.2/dependence-and-inference-contract.schema.json",
+      "expected_outcome": "reject",
+      "expected_diagnostic": "GA122-REFERENCE-PROVENANCE",
+      "sha256": "sha256:e526331a575f147af0f72b083fc49fba2a2e5b0b4733d146fde308b40998f884",
+      "byte_size": 1840
+    },
+    {
+      "fixture_id": "reiyah.fixture.dependence-and-inference.shared-reference-assumed-error-free@1.2.2",
+      "path": "fixtures/v1.2.2/dependence-known-bad/shared-reference-assumed-error-free.json",
+      "fixture_class": "known_bad_dependence",
+      "fixture_schema_id": "https://schemas.reiyah.invalid/gate-a/1.2.2/dependence-and-inference-contract.schema.json#/$defs/fixtureDescriptor",
+      "target_schema_id": "https://schemas.reiyah.invalid/gate-a/1.2.2/dependence-and-inference-contract.schema.json",
+      "expected_outcome": "reject",
+      "expected_diagnostic": "GA122-REFERENCE-VALIDITY",
+      "sha256": "sha256:acfa3c19f084d8353f7378f4822b139d9612ec749d0c89fd464e7f94e5feaae0",
+      "byte_size": 2189
+    },
+    {
+      "fixture_id": "reiyah.fixture.dependence-and-inference.outcome-dependent-selected-max-t@1.2.2",
+      "path": "fixtures/v1.2.2/dependence-known-bad/outcome-dependent-selected-max-t.json",
+      "fixture_class": "known_bad_dependence",
+      "fixture_schema_id": "https://schemas.reiyah.invalid/gate-a/1.2.2/dependence-and-inference-contract.schema.json#/$defs/fixtureDescriptor",
+      "target_schema_id": "https://schemas.reiyah.invalid/gate-a/1.2.2/dependence-and-inference-contract.schema.json",
+      "expected_outcome": "reject",
+      "expected_diagnostic": "GA122-SELECTION-INFERENCE",
+      "sha256": "sha256:379608cabe1890a3e2c4d8556111bce864c05c8eaa9c4be5106607aa987c6582",
+      "byte_size": 2376
+    },
+    {
+      "fixture_id": "reiyah.fixture.dependence-and-inference.sparse-normal-interval@1.2.2",
+      "path": "fixtures/v1.2.2/dependence-known-bad/sparse-normal-interval.json",
+      "fixture_class": "known_bad_dependence",
+      "fixture_schema_id": "https://schemas.reiyah.invalid/gate-a/1.2.2/dependence-and-inference-contract.schema.json#/$defs/fixtureDescriptor",
+      "target_schema_id": "https://schemas.reiyah.invalid/gate-a/1.2.2/dependence-and-inference-contract.schema.json",
+      "expected_outcome": "reject",
+      "expected_diagnostic": "GA122-RARE-EVENT-UNCERTAINTY",
+      "sha256": "sha256:d2c0863d70ef6390378ddcf35a5cfb7d72220e6fd3aee7d732f0f99330e96817",
+      "byte_size": 1756
+    },
+    {
+      "fixture_id": "reiyah.fixture.dependence-and-inference.unknown-insufficient-coercion@1.2.2",
+      "path": "fixtures/v1.2.2/dependence-known-bad/unknown-insufficient-coercion.json",
+      "fixture_class": "known_bad_dependence",
+      "fixture_schema_id": "https://schemas.reiyah.invalid/gate-a/1.2.2/dependence-and-inference-contract.schema.json#/$defs/fixtureDescriptor",
+      "target_schema_id": "https://schemas.reiyah.invalid/gate-a/1.2.2/dependence-and-inference-contract.schema.json",
+      "expected_outcome": "reject",
+      "expected_diagnostic": "GA122-GROUP-PARTITION",
+      "sha256": "sha256:a1d8ef62c928654aa98b293422c97223d97812c1dcbda047c40dee58e2392362",
+      "byte_size": 2157
+    },
+    {
+      "fixture_id": "reiyah.fixture.dependence-and-inference.detector-pair-modality-generalization@1.2.2",
+      "path": "fixtures/v1.2.2/dependence-known-bad/detector-pair-modality-generalization.json",
+      "fixture_class": "known_bad_dependence",
+      "fixture_schema_id": "https://schemas.reiyah.invalid/gate-a/1.2.2/dependence-and-inference-contract.schema.json#/$defs/fixtureDescriptor",
+      "target_schema_id": "https://schemas.reiyah.invalid/gate-a/1.2.2/dependence-and-inference-contract.schema.json",
+      "expected_outcome": "reject",
+      "expected_diagnostic": "GA122-GENERALIZATION-SCOPE",
+      "sha256": "sha256:95eeccec043aac9667776136c9e31f90056ef3ff2ef6d2a9bfda40d8c6f4fb83",
+      "byte_size": 1855
+    },
+    {
+      "fixture_id": "reiyah.fixture.dependence-and-inference.finite-stratification-convergence@1.2.2",
+      "path": "fixtures/v1.2.2/dependence-known-bad/finite-stratification-convergence.json",
+      "fixture_class": "known_bad_dependence",
+      "fixture_schema_id": "https://schemas.reiyah.invalid/gate-a/1.2.2/dependence-and-inference-contract.schema.json#/$defs/fixtureDescriptor",
+      "target_schema_id": "https://schemas.reiyah.invalid/gate-a/1.2.2/dependence-and-inference-contract.schema.json",
+      "expected_outcome": "reject",
+      "expected_diagnostic": "GA122-CONVERGENCE-CLAIM",
+      "sha256": "sha256:7091a7f485a47c20fe5b601da3bdd3ff3020eb14a0576d43f3c8aa42dc50db8c",
+      "byte_size": 1842
+    },
+    {
+      "fixture_id": "reiyah.fixture.dependence-and-inference.object-rate-safety-substitution@1.2.2",
+      "path": "fixtures/v1.2.2/dependence-known-bad/object-rate-safety-substitution.json",
+      "fixture_class": "known_bad_dependence",
+      "fixture_schema_id": "https://schemas.reiyah.invalid/gate-a/1.2.2/dependence-and-inference-contract.schema.json#/$defs/fixtureDescriptor",
+      "target_schema_id": "https://schemas.reiyah.invalid/gate-a/1.2.2/dependence-and-inference-contract.schema.json",
+      "expected_outcome": "reject",
+      "expected_diagnostic": "GA122-UNIT-BRIDGE",
+      "sha256": "sha256:5709f0e198bbe4395eb7c2c03469422da6f04e550d25b700a5c62c57b45e7f44",
+      "byte_size": 2782
+    },
+    {
+      "fixture_id": "reiyah.artifact.dependence-and-inference.synthetic-baseline@1.2.2",
+      "path": "fixtures/v1.2.2/dependence-known-good/synthetic-baseline.json",
+      "fixture_class": "known_good_dependence",
+      "fixture_schema_id": "https://schemas.reiyah.invalid/gate-a/1.2.2/dependence-and-inference-contract.schema.json",
+      "target_schema_id": "https://schemas.reiyah.invalid/gate-a/1.2.2/dependence-and-inference-contract.schema.json",
+      "expected_outcome": "accept",
+      "expected_diagnostic": null,
+      "sha256": "sha256:1dfdcd31eb34730fc5ed83a37bfa96f75d16a7c8baa8ce486db0b38026da706e",
+      "byte_size": 14212
+    },
+    {
+      "fixture_id": "reiyah.fixture.dependence-and-inference.block-precision-selective@1.2.2",
+      "path": "fixtures/v1.2.2/dependence-known-good/block-precision-selective.json",
+      "fixture_class": "known_good_dependence",
+      "fixture_schema_id": "https://schemas.reiyah.invalid/gate-a/1.2.2/dependence-and-inference-contract.schema.json#/$defs/fixtureDescriptor",
+      "target_schema_id": "https://schemas.reiyah.invalid/gate-a/1.2.2/dependence-and-inference-contract.schema.json",
+      "expected_outcome": "accept",
+      "expected_diagnostic": null,
+      "sha256": "sha256:ce5f52ec0837a731f86bf013f0c595076a50e8b03f7807cdc6e1a224b3bcb8df",
+      "byte_size": 4838
+    },
+    {
+      "fixture_id": "reiyah.fixture.dependence-and-inference.exact-design-utility-outcome-independent@1.2.2",
+      "path": "fixtures/v1.2.2/dependence-known-good/exact-design-utility-outcome-independent.json",
+      "fixture_class": "known_good_dependence",
+      "fixture_schema_id": "https://schemas.reiyah.invalid/gate-a/1.2.2/dependence-and-inference-contract.schema.json#/$defs/fixtureDescriptor",
+      "target_schema_id": "https://schemas.reiyah.invalid/gate-a/1.2.2/dependence-and-inference-contract.schema.json",
+      "expected_outcome": "accept",
+      "expected_diagnostic": null,
+      "sha256": "sha256:b6d1640581c4618937c2678dd9642d35f07713d32a584b49b68bdf0fd43465b4",
+      "byte_size": 4266
+    },
+    {
+      "fixture_id": "reiyah.fixture.dependence-and-inference.multiway-recall-sample-split-typed-bridge@1.2.2",
+      "path": "fixtures/v1.2.2/dependence-known-good/multiway-recall-sample-split-typed-bridge.json",
+      "fixture_class": "known_good_dependence",
+      "fixture_schema_id": "https://schemas.reiyah.invalid/gate-a/1.2.2/dependence-and-inference-contract.schema.json#/$defs/fixtureDescriptor",
+      "target_schema_id": "https://schemas.reiyah.invalid/gate-a/1.2.2/dependence-and-inference-contract.schema.json",
+      "expected_outcome": "accept",
+      "expected_diagnostic": null,
+      "sha256": "sha256:3bf73f4b123b76abd23d79fbebf21da78e9b350600b660d9894f7114bd22abbe",
+      "byte_size": 6389
+    },
+    {
+      "fixture_id": "reiyah.fixture.dependence-and-inference.randomization-separate-closed-testing@1.2.2",
+      "path": "fixtures/v1.2.2/dependence-known-good/randomization-separate-closed-testing.json",
+      "fixture_class": "known_good_dependence",
+      "fixture_schema_id": "https://schemas.reiyah.invalid/gate-a/1.2.2/dependence-and-inference-contract.schema.json#/$defs/fixtureDescriptor",
+      "target_schema_id": "https://schemas.reiyah.invalid/gate-a/1.2.2/dependence-and-inference-contract.schema.json",
+      "expected_outcome": "accept",
+      "expected_diagnostic": null,
+      "sha256": "sha256:c5bcddb3364536bd119a3148d1cdc07317efee072c1d25f11e96380147d5973e",
+      "byte_size": 4771
+    }
+  ]
+}

@@ -1,0 +1,534 @@
+{
+  "schema_id": "https://schemas.reiyah.invalid/gate-a/1.2.8/operator-decision-interface-r1-continuity-contract-review.schema.json",
+  "artifact_id": "reiyah.artifact.operator-decision-interface-r1-continuity-contract-review-1.2.8",
+  "review_id": "reiyah.review.operator-decision-interface-r1-continuity-contract@1.2.8",
+  "record_kind": "operator_decision_interface_r1_continuity_contract_review",
+  "version": "1.2.8",
+  "lifecycle_status": "proposed",
+  "as_of_date": "2026-09-02",
+  "stage_id": "V128-r1-continuity-correction-review",
+  "repository_identity": {
+    "project": "Reiyah",
+    "canonical_root": "/Users/danielwahnich/workspace/reiyah",
+    "git_root": "/Users/danielwahnich/workspace/reiyah",
+    "configured_remote": "https://github.com/manfromnowhere143/reiyah.git",
+    "authoring_branch_context": "gate-a-1.2.8-r1-continuity-review",
+    "branch_is_identity": false
+  },
+  "subject_contract": {
+    "stage_id": "K128-r1-continuity-correction-contract",
+    "commit": "e72b3c425d671ab25835d54d697ff8a9c6425183",
+    "tree": "5c338b8c7448abb12f1041f33209f22eac56d4da",
+    "sole_parent": "674d29cf88156abe1f1931a1cb7e8e69936af772",
+    "parent_tree": "7d128dfe9498eeb5714f6a798602dddb1eee7a30",
+    "result": "r1_continuity_correction_contracted_not_reviewed_not_implemented",
+    "snapshot_mode": "contract",
+    "subject_bytes_source": "rehash_verified_raw_git_commit_tree_and_blobs",
+    "full_raw_closure": {
+      "file_count": 1103,
+      "tree_object_count": 73,
+      "aggregate_blob_byte_size": 19588827,
+      "descriptor_byte_size": 119511,
+      "descriptor_sha256": "sha256:a145c21129eb69e34abbc098506127e5a9b6b805da6b37d607caf1aec7f73b7e"
+    }
+  },
+  "subject_contract_artifact_bundle": {
+    "serialization_rule": "sorted_path_NUL_mode_NUL_git_blob_oid_NUL_byte_size_NUL_sha256_LF",
+    "path_count": 12,
+    "aggregate_byte_size": 301420,
+    "descriptor_byte_size": 2451,
+    "descriptor_sha256": "sha256:53517eb84b41d672db9b15500e6fcdfd7a5f94332ee049609ce46443ec332967",
+    "artifacts": [
+      {
+        "path": "docs/OPERATOR_DECISION_INTERFACE_R1_CONTINUITY_CORRECTION_1_2_8.md",
+        "git_mode": "100644",
+        "git_blob_oid": "5b67889c64ad19a8fc663eb56b3b352d5cb9fb30",
+        "byte_size": 14123,
+        "sha256": "sha256:6da653ca7e0ecda46936084fe8f6849c1e76b9698aac96e37bd9d0ea938069b1"
+      },
+      {
+        "path": "fixtures/v1.2.8/operator-decision-interface-r1-continuity-fixture-catalog.json",
+        "git_mode": "100644",
+        "git_blob_oid": "a3d3346e3f36440bdaaf37650e4a777e56dc7b86",
+        "byte_size": 20852,
+        "sha256": "sha256:8ce4d142a97c4d38bacbe2354f2ab915c1b3306126277183a39c6dade548aaa9"
+      },
+      {
+        "path": "gate/operator-decision-interface-corrections/reiyah.operator-decision-interface-r1-continuity-correction-1.2.8.json",
+        "git_mode": "100644",
+        "git_blob_oid": "21ffa4d3af713fb9ada4193b02304cef31779217",
+        "byte_size": 9454,
+        "sha256": "sha256:ec5b377f68633032c4b3807518d9e9a35fcab4252e347def0fb2e0a3494ab03d"
+      },
+      {
+        "path": "gate/operator-decision-interface-incidents/reiyah.operator-decision-interface-r1-continuity-1.2.8.json",
+        "git_mode": "100644",
+        "git_blob_oid": "0daf700c998acca160975f95a271d6b31800cc22",
+        "byte_size": 9217,
+        "sha256": "sha256:b5627e284d12b21409b65e01d7971147aa646152e90ea950c82aefc7741f7bee"
+      },
+      {
+        "path": "schemas/operator-decision-interface-r1-continuity-contract-report-1.2.8.schema.json",
+        "git_mode": "100644",
+        "git_blob_oid": "e406a4b5c7f82743329411fd519343248ebc70c9",
+        "byte_size": 23074,
+        "sha256": "sha256:c0bd15a0f1711890aa94c962d4307e2a3adb4d5d28198ecaf8cce4f94a88fee6"
+      },
+      {
+        "path": "schemas/operator-decision-interface-r1-continuity-correction-1.2.8.schema.json",
+        "git_mode": "100644",
+        "git_blob_oid": "3a121742413fe841a119a8c3bbf7553d761d4b94",
+        "byte_size": 10268,
+        "sha256": "sha256:99c9452404fbf6610f70c5d13e0d17b8f08ef479e84db32d09b4f2636e64fc59"
+      },
+      {
+        "path": "schemas/operator-decision-interface-r1-continuity-correction-plan-1.2.8.schema.json",
+        "git_mode": "100644",
+        "git_blob_oid": "1b85436bab9972441d0539da9c91e4ebe0591584",
+        "byte_size": 10157,
+        "sha256": "sha256:eb504950c848922346b9c4750882fc675c304d85cda306ccbe213517bffec802"
+      },
+      {
+        "path": "schemas/operator-decision-interface-r1-continuity-fixture-catalog-1.2.8.schema.json",
+        "git_mode": "100644",
+        "git_blob_oid": "560fc064682e326d0db5ddcc4ac1fdde8b53b4c9",
+        "byte_size": 21612,
+        "sha256": "sha256:5adb04c637dd546c01f9701494da0ab7e99f7551bd73cac02358344e16f22573"
+      },
+      {
+        "path": "schemas/operator-decision-interface-r1-continuity-incident-1.2.8.schema.json",
+        "git_mode": "100644",
+        "git_blob_oid": "f65cfa5fb4ba806fe69185458f4a82d57a02d5ec",
+        "byte_size": 9942,
+        "sha256": "sha256:063c0bd80216cfeaeadd822760eee8e79cc54c9f5f71c413c899595e2c5abd4a"
+      },
+      {
+        "path": "tools/gate_a_1_2_8_r1_continuity_contract.py",
+        "git_mode": "100755",
+        "git_blob_oid": "f314a778dcf1097be176879b1d9dc14b16581af5",
+        "byte_size": 154798,
+        "sha256": "sha256:47db67eba045bf1cb4587096d7941656067b6534b6de7f1c9959ca63bfc52274"
+      },
+      {
+        "path": "tools/gate_a_1_2_8_r1_continuity_contract.sh",
+        "git_mode": "100755",
+        "git_blob_oid": "5dda96ee07c8c29c48f179fea15848a0e1cb2ace",
+        "byte_size": 8552,
+        "sha256": "sha256:ac3147a2cbbce580f53eb6487fb593cb0c1adaa34f79361771178fa2dacedcce"
+      },
+      {
+        "path": "validation/operator-decision-interface-r1-continuity-correction-plan-1.2.8.json",
+        "git_mode": "100644",
+        "git_blob_oid": "458966811e7237b4942ebc918426dedd73b06a34",
+        "byte_size": 9371,
+        "sha256": "sha256:1ecab1521aeec34ad1824105f6304db8ea4aa13b20175410349540713129afa4"
+      }
+    ]
+  },
+  "subject_transition_projection": {
+    "serialization_rule": "sorted_path_NUL_mode_NUL_git_blob_oid_NUL_byte_size_NUL_sha256_LF",
+    "path_count": 13,
+    "aggregate_byte_size": 612589,
+    "descriptor_byte_size": 2602,
+    "descriptor_sha256": "sha256:1719532d333b8e7f07e2c05380981cfed3fb0aec2f125e73cb8d9e3b8ef1f1ad",
+    "handoff_path": "docs/SESSION_HANDOFF.md",
+    "handoff_git_blob_oid": "b19e3e37ba507fda35e0ffb27a862f328f6373c0",
+    "handoff_byte_size": 311169,
+    "handoff_sha256": "sha256:d52cb80a5d05a56fd430404ceeb297d7c664da57dc2258278cfa18d5ee8cccc7"
+  },
+  "retained_contract_report": {
+    "path": "gate/validation-reports/operator-decision-interface-r1-continuity-contract-1.2.8.json",
+    "git_mode": "100644",
+    "expected_git_blob_oid": "127d2465a3f567eb85cb8f17b76c1561254ceb24",
+    "byte_size": 12517,
+    "sha256": "sha256:5e4de2d56a86a386948f7f0c9d8c30d8252bcfb8dc881ca5307e1a6081747485",
+    "schema_path": "schemas/operator-decision-interface-r1-continuity-contract-report-1.2.8.schema.json",
+    "schema_sha256": "sha256:c0bd15a0f1711890aa94c962d4307e2a3adb4d5d28198ecaf8cce4f94a88fee6",
+    "snapshot_mode": "contract",
+    "status": "pass",
+    "result": "r1_continuity_correction_contracted_not_reviewed_not_implemented",
+    "equal_external_capture_count": 2,
+    "external_captures_byte_identical": true,
+    "one_byte_identical_representative_retained": true,
+    "semantic_subject_join_recomputed": true,
+    "execution_independently_attested": false,
+    "private_archive_payloads_rehashed_by_V128": false,
+    "retention_role": "internal_subject_integrity_operand_not_independent_or_scientific_evidence"
+  },
+  "review_contract": {
+    "review_kind": "role_separated_read_only_internal_advisory_review",
+    "required_roles": [
+      "retained_R0_and_archive_binding_reviewer",
+      "DI127_reachability_and_lifecycle_reviewer",
+      "future_route_and_reproduction_reviewer",
+      "authority_and_nonclaim_reviewer"
+    ],
+    "required_review_count": 4,
+    "required_distinct_role_count": 4,
+    "required_check_ids": [
+      "V128R-CHECK-001-seven-file-R0-capture-identity-and-single-invocation",
+      "V128R-CHECK-002-private-archive-binding-and-nonauthority",
+      "V128R-CHECK-003-retained-report-and-subject-raw-byte-joins",
+      "V128R-CHECK-004-custody-replay-and-scientific-evidence-separation",
+      "V128R-CHECK-005-DI127-route-selector-consumer-and-status-enumeration",
+      "V128R-CHECK-006-R1-not-attempted-versus-failed-lifecycle-truth",
+      "V128R-CHECK-007-retained-1-2-7-preservation-and-no-retry",
+      "V128R-CHECK-008-contract-review-go-no-go-lifecycle-closure",
+      "V128R-CHECK-009-R0-R1-P-R2-state-classifier-completeness-before-R0",
+      "V128R-CHECK-010-shared-argv-raw-state-selection-and-fail-closed-ambiguity",
+      "V128R-CHECK-011-whole-stream-identity-and-self-reference-avoidance",
+      "V128R-CHECK-012-ordered-topology-locked-bootstrap-and-process-custody-limitations",
+      "V128R-CHECK-013-forty-case-actual-before-expectation-closure",
+      "V128R-CHECK-014-historical-R0-archive-engineering-integrity-only-boundary",
+      "V128R-CHECK-015-authority-science-readiness-and-acceptance-ceiling",
+      "V128R-CHECK-016-review-independence-limitations-and-successor-revalidation"
+    ],
+    "required_check_count": 16,
+    "subject_authoring_task_path": "/root",
+    "author_identity_state": "session_task_role_only_not_external_identity",
+    "all_reviews_bind_exact_subject_and_report": true,
+    "author_and_reviewer_role_overlap_allowed": false,
+    "go_requires_all_checks_pass_and_zero_blockers": true,
+    "no_go_requires_at_least_one_typed_open_blocker": true,
+    "inability_to_complete_required_check_is_typed_blocker": true,
+    "review_validity_is_distinct_from_go": true,
+    "subject_change_requires_review_restart": true,
+    "review_can_create_operator_acceptance": false,
+    "review_can_authorize_implementation": false,
+    "review_can_create_scientific_evidence": false,
+    "independent_external_review_completed": false
+  },
+  "incident_and_contract_coverage": {
+    "incident_confirmed": true,
+    "R0_127_capture_record_state": "historical_successful_authorization_consumed",
+    "R0_127_exact_file_count": 7,
+    "R0_127_payload_byte_size": 22953,
+    "R0_127_descriptor_sha256": "sha256:742cd14cfb42baf2ae590663ac33920b55affcaeadd217fb87416508a31e13c3",
+    "R0_127_single_spawn_and_reap_recorded": true,
+    "private_archive_payloads_read_or_rehashed_by_V128": false,
+    "private_archive_is_validation_runtime_replay_scientific_or_transport_authority": false,
+    "DI127_route_pair_count": 6,
+    "DI127_readiness_route_count": 1,
+    "R1_127_invocation_state": "not_attempted_structurally_unreachable",
+    "R1_127_failed": false,
+    "DI127_R1_selector_present": false,
+    "DI127_R1_consumer_present": false,
+    "DI127_installed_report_admission_present": false,
+    "structural_reachability_diagnosis_is_scientific_causal_claim": false,
+    "root_cause_closed": false,
+    "incident_closed": false,
+    "future_implementation_regressions_executed": false,
+    "future_R0_R1_R2_reproductions_executed": false,
+    "K128_known_good_count": 5,
+    "K128_adversarial_count": 40,
+    "K128_adversarial_family_count": 10,
+    "finding_closed_count": 0
+  },
+  "reviews": [
+    {
+      "review_observation_id": "reiyah.review-observation.v128.retained-r0-archive-binding.1",
+      "reviewer_self_identifier": "codex-agent:/root/v128_schema_report_review",
+      "task_path": "/root/v128_schema_report_review",
+      "reviewer_kind": "model_assisted_internal_advisory",
+      "reviewer_identity_state": "self_asserted_internal_model_role_not_externally_verified",
+      "role": "retained_R0_and_archive_binding_reviewer",
+      "timestamp_basis": "session_date_only_not_external_time_attestation",
+      "subject_commit": "e72b3c425d671ab25835d54d697ff8a9c6425183",
+      "subject_tree": "5c338b8c7448abb12f1041f33209f22eac56d4da",
+      "subject_sole_parent": "674d29cf88156abe1f1931a1cb7e8e69936af772",
+      "retained_contract_report_sha256": "sha256:5e4de2d56a86a386948f7f0c9d8c30d8252bcfb8dc881ca5307e1a6081747485",
+      "read_basis": "rehash_verified_K128_commit_tree_blob_closure_plus_exact_retained_report_and_repository_R0_archive_records_without_private_archive_read",
+      "check_results": [
+        {
+          "check_id": "V128R-CHECK-001-seven-file-R0-capture-identity-and-single-invocation",
+          "state": "pass",
+          "summary": "The retained incident binds the exact ordered seven-file R0_127 capture, 22,953 payload bytes, equal pre/post repository identity, one spawn, one reap, exit zero, empty stderr, and consumed no-retry authority; this is a historical operator-session integrity observation only.",
+          "blocker_ids": []
+        },
+        {
+          "check_id": "V128R-CHECK-002-private-archive-binding-and-nonauthority",
+          "state": "pass",
+          "summary": "The repository binds the archive manifest identity and aggregate descriptor, while validation forbids the archive as a dependency or authority. This review intentionally did not read, import, or rehash private archive payloads.",
+          "blocker_ids": []
+        },
+        {
+          "check_id": "V128R-CHECK-003-retained-report-and-subject-raw-byte-joins",
+          "state": "pass",
+          "summary": "Raw K128 commit, tree, parent, full closure, 13-path projection, five schemas, four instances, and the exact 12,517-byte retained report join. The report binds final evaluator 47db67eb, not the preliminary handoff hash.",
+          "blocker_ids": []
+        },
+        {
+          "check_id": "V128R-CHECK-004-custody-replay-and-scientific-evidence-separation",
+          "state": "pass",
+          "summary": "Checksums establish identity, replay establishes bounded computational reproducibility, and custody preserves history; none establishes scientific validity, benchmark performance, external transport verification, readiness, or acceptance.",
+          "blocker_ids": []
+        }
+      ],
+      "blocker_ids": [],
+      "verdict": "go",
+      "repository_mutation_performed": false,
+      "network_used": false,
+      "limitations": [
+        "not_independent_external_review",
+        "self_asserted_internal_model_role_not_identity_or_time_attested",
+        "private_archive_payloads_not_read_or_rehashed",
+        "retained_report_is_internal_integrity_operand_not_independent_attestation",
+        "cryptographic_identity_is_not_scientific_truth"
+      ]
+    },
+    {
+      "review_observation_id": "reiyah.review-observation.v128.di127-reachability-lifecycle.1",
+      "reviewer_self_identifier": "codex-agent:/root/di127_worker_payload_preflight",
+      "task_path": "/root/di127_worker_payload_preflight",
+      "reviewer_kind": "model_assisted_internal_advisory",
+      "reviewer_identity_state": "self_asserted_internal_model_role_not_externally_verified",
+      "role": "DI127_reachability_and_lifecycle_reviewer",
+      "timestamp_basis": "session_date_only_not_external_time_attestation",
+      "subject_commit": "e72b3c425d671ab25835d54d697ff8a9c6425183",
+      "subject_tree": "5c338b8c7448abb12f1041f33209f22eac56d4da",
+      "subject_sole_parent": "674d29cf88156abe1f1931a1cb7e8e69936af772",
+      "retained_contract_report_sha256": "sha256:5e4de2d56a86a386948f7f0c9d8c30d8252bcfb8dc881ca5307e1a6081747485",
+      "read_basis": "independent_raw_K128_and_N127_object_rehash_plus_full_DI127_evaluator_launcher_schema_and_plan_route_trace",
+      "check_results": [
+        {
+          "check_id": "V128R-CHECK-005-DI127-route-selector-consumer-and-status-enumeration",
+          "state": "pass",
+          "summary": "The immutable DI127 launcher admits exactly six mode/render pairs. The evaluator route table has one readiness R0 route, one R0 capability consumer, and no R1 selector, function, consumer, installed-report admission, or R1 route.",
+          "blocker_ids": []
+        },
+        {
+          "check_id": "V128R-CHECK-006-R1-not-attempted-versus-failed-lifecycle-truth",
+          "state": "pass",
+          "summary": "R0_127 completed successfully and consumed its one-shot authority. R1_127 was never attempted and was structurally unreachable once report installation made status nonempty; it is not a failure, reproduction, or custody-copy event.",
+          "blocker_ids": []
+        },
+        {
+          "check_id": "V128R-CHECK-007-retained-1-2-7-preservation-and-no-retry",
+          "state": "pass",
+          "summary": "Every retained 1.2.7 blob and mode remains unchanged, DI127 is not rerun, R0_127 is not retried, its stdout is not installed, and the older DI127 worker-liveness failure remains a distinct historical incident.",
+          "blocker_ids": []
+        },
+        {
+          "check_id": "V128R-CHECK-008-contract-review-go-no-go-lifecycle-closure",
+          "state": "pass",
+          "summary": "The review contract accepts coherent GO only with all sixteen checks passing and zero blockers, accepts coherent NO-GO only with typed open blockers, restarts on subject-byte change, and cannot promote either lifecycle branch to implementation authority.",
+          "blocker_ids": []
+        }
+      ],
+      "blocker_ids": [],
+      "verdict": "go",
+      "repository_mutation_performed": false,
+      "network_used": false,
+      "limitations": [
+        "not_independent_external_review",
+        "static_source_and_retained_record_reachability_audit_only",
+        "historical_noninvocation_scope_does_not_observe_every_external_or_concurrent_act",
+        "software_reachability_diagnosis_is_not_scientific_causal_identification",
+        "no_DI127_or_readiness_route_invoked"
+      ]
+    },
+    {
+      "review_observation_id": "reiyah.review-observation.v128.future-route-reproduction.1",
+      "reviewer_self_identifier": "codex-agent:/root/v128_launcher_security_review",
+      "task_path": "/root/v128_launcher_security_review",
+      "reviewer_kind": "model_assisted_internal_advisory",
+      "reviewer_identity_state": "self_asserted_internal_model_role_not_externally_verified",
+      "role": "future_route_and_reproduction_reviewer",
+      "timestamp_basis": "session_date_only_not_external_time_attestation",
+      "subject_commit": "e72b3c425d671ab25835d54d697ff8a9c6425183",
+      "subject_tree": "5c338b8c7448abb12f1041f33209f22eac56d4da",
+      "subject_sole_parent": "674d29cf88156abe1f1931a1cb7e8e69936af772",
+      "retained_contract_report_sha256": "sha256:5e4de2d56a86a386948f7f0c9d8c30d8252bcfb8dc881ca5307e1a6081747485",
+      "read_basis": "immutable_K128_source_control_flow_route_state_output_identity_and_locked_launcher_security_audit_without_route_invocation",
+      "check_results": [
+        {
+          "check_id": "V128R-CHECK-009-R0-R1-P-R2-state-classifier-completeness-before-R0",
+          "state": "pass",
+          "summary": "K128 contracts, but does not implement, a complete I128 R0/R1/P/R2 classifier before R0_128. Exact absent-report, installed-uncommitted, and clean direct-child states are enumerated; dirty, ambiguous, cross-version, wrong-mode, merge, or extra-path states fail closed.",
+          "blocker_ids": []
+        },
+        {
+          "check_id": "V128R-CHECK-010-shared-argv-raw-state-selection-and-fail-closed-ambiguity",
+          "state": "pass",
+          "summary": "One byte-bound public argv is shared by R0_128, R1_128, and R2_128. The caller cannot select state; raw Git, index, worktree, and exact report bytes select the route before report consumption. No future route has been implemented or exercised.",
+          "blocker_ids": []
+        },
+        {
+          "check_id": "V128R-CHECK-011-whole-stream-identity-and-self-reference-avoidance",
+          "state": "pass",
+          "summary": "The future contract requires whole stdout byte equality, exit zero, and empty stderr across three distinct raw states while forbidding stage labels, self/future commit/tree/blob/digest identity, caller-delivery claims, or cross-invocation uniqueness inside the shared report.",
+          "blocker_ids": []
+        },
+        {
+          "check_id": "V128R-CHECK-012-ordered-topology-locked-bootstrap-and-process-custody-limitations",
+          "state": "pass",
+          "summary": "The ordered topology is K128 to V128 to I128 to N128 to R0_128 to installed-uncommitted R1_128 and STOP before P128. The locked launcher has bounded captured-stage custody; V128 registers stream wrappers before its first fallible process-group assertion while preserving K128's predecessor defect and host-boundary limitations for I128 revalidation.",
+          "blocker_ids": []
+        }
+      ],
+      "blocker_ids": [],
+      "verdict": "go",
+      "repository_mutation_performed": false,
+      "network_used": false,
+      "limitations": [
+        "K128_predecessor_registered_stream_wrappers_after_a_fallible_PGID_assertion",
+        "V128_review_launcher_registers_stdout_stderr_wrappers_immediately_after_Popen_and_I128_must_preserve_that_correction",
+        "stage_zero_and_host_runtime_are_explicit_unattested_trust_root",
+        "timeout_scope_is_240_second_captured_stage_window_not_total_invocation_wall_time",
+        "no_OS_memory_CPU_or_process_count_resource_limits",
+        "Git_executable_pack_parsing_and_repository_wide_SHA1_collision_resistance_remain_host_boundary",
+        "same_UID_host_kernel_runtime_interference_excluded_not_proven_absent",
+        "private_archive_not_reconsumed"
+      ]
+    },
+    {
+      "review_observation_id": "reiyah.review-observation.v128.authority-nonclaim.1",
+      "reviewer_self_identifier": "codex-agent:/root/v128_authority_science_review",
+      "task_path": "/root/v128_authority_science_review",
+      "reviewer_kind": "model_assisted_internal_advisory",
+      "reviewer_identity_state": "self_asserted_internal_model_role_not_externally_verified",
+      "role": "authority_and_nonclaim_reviewer",
+      "timestamp_basis": "session_date_only_not_external_time_attestation",
+      "subject_commit": "e72b3c425d671ab25835d54d697ff8a9c6425183",
+      "subject_tree": "5c338b8c7448abb12f1041f33209f22eac56d4da",
+      "subject_sole_parent": "674d29cf88156abe1f1931a1cb7e8e69936af772",
+      "retained_contract_report_sha256": "sha256:5e4de2d56a86a386948f7f0c9d8c30d8252bcfb8dc881ca5307e1a6081747485",
+      "read_basis": "immutable_K128_contract_report_fixture_order_authority_nonclaim_and_self_reference_audit",
+      "check_results": [
+        {
+          "check_id": "V128R-CHECK-013-forty-case-actual-before-expectation-closure",
+          "state": "pass",
+          "summary": "The retained evaluator derives five positive and forty adversarial outcomes before catalog expectations, freezes the 17,211-byte actual map, rejects all forty across ten families with exact diagnostics, and closes zero findings; common-mode implementation error remains possible.",
+          "blocker_ids": []
+        },
+        {
+          "check_id": "V128R-CHECK-014-historical-R0-archive-engineering-integrity-only-boundary",
+          "state": "pass",
+          "summary": "R0_127 capture and archive bindings are historical engineering-integrity custody only. The private bytes were not inspected or rehashed; the archive is not runtime, replay, scientific, benchmark, transport, release, or independent authority, and custody is not R1.",
+          "blocker_ids": []
+        },
+        {
+          "check_id": "V128R-CHECK-015-authority-science-readiness-and-acceptance-ceiling",
+          "state": "pass",
+          "summary": "K128's embedded V128 false is the immutable historical K128 snapshot; the current instruction separately authorizes V128 only. GO leaves I128 false, readiness not_ready, acceptance unaccepted, GA-17 and transport unevaluated, and every scientific, runtime, distribution, later-stage, and Git authority false.",
+          "blocker_ids": []
+        },
+        {
+          "check_id": "V128R-CHECK-016-review-independence-limitations-and-successor-revalidation",
+          "state": "pass",
+          "summary": "This four-role review is internal advisory, not externally independent. Subject change restarts review, the result commit is resolved only after commit, any successor revalidates raw state, and a new explicit instruction is required before I128.",
+          "blocker_ids": []
+        }
+      ],
+      "blocker_ids": [],
+      "verdict": "go",
+      "repository_mutation_performed": false,
+      "network_used": false,
+      "limitations": [
+        "not_independent_external_review",
+        "self_asserted_internal_model_role_not_identity_or_time_attested",
+        "static_read_only_review_without_route_invocation",
+        "retained_report_is_internal_integrity_operand",
+        "mutation_builder_diagnostics_and_consumers_share_one_evaluator",
+        "historical_evidence_phrase_valid_only_with_explicit_engineering_integrity_scope",
+        "aggregate_GO_does_not_create_I128_authority"
+      ]
+    }
+  ],
+  "blockers": [],
+  "aggregate_review_result": {
+    "state": "internal_advisory_go_zero_blockers",
+    "verdict": "go",
+    "result": "internal_review_go_correction_not_implemented",
+    "review_count": 4,
+    "distinct_role_count": 4,
+    "required_check_count": 16,
+    "passed_check_count": 16,
+    "blocking_check_count": 0,
+    "blocker_count": 0,
+    "all_required_roles_present_exactly_once": true,
+    "all_required_checks_present_exactly_once": true,
+    "all_reviewer_self_identifiers_unique": true,
+    "all_reviewer_task_paths_unique": true,
+    "all_reviewers_distinct_from_subject_authoring_task_path": true,
+    "all_reviews_bind_same_exact_subject_and_report": true,
+    "implementation_gate_state": "review_go_condition_satisfied",
+    "review_restart_required_on_subject_change": true,
+    "independent_external_review_completed": false,
+    "review_establishes_external_independence": false,
+    "review_confers_operator_acceptance": false,
+    "review_authorizes_implementation": false,
+    "review_creates_scientific_evidence": false,
+    "successor_revalidation_required": true
+  },
+  "authority": {
+    "subject_architecture_status": "architecture_complete",
+    "K128_subject_authority_snapshot": "K128_authorized_V128_not_authorized_as_of_K128",
+    "current_V128_instruction_state": "authorized_and_consumed_by_this_review_only",
+    "correction_contract_state": "retained_validated_not_implemented",
+    "correction_review_state": "internal_advisory_go_recorded",
+    "correction_implementation_state": "not_implemented",
+    "replacement_readiness_inputs_state": "absent",
+    "interface_readiness_state": "not_ready",
+    "operator_acceptance_state": "unaccepted",
+    "ga_17_state": "not_evaluated",
+    "transport_verification_state": "not_evaluated",
+    "independent_external_review_completed": false,
+    "human_decision_process_authorized": false,
+    "scientific_evidence_created": false,
+    "scientific_claim_authority": false,
+    "benchmark_claim_authority": false,
+    "safety_claim_authority": false,
+    "compliance_claim_authority": false,
+    "publication_acceptance_authorized": false,
+    "public_distribution_eligible": false,
+    "public_distribution_authorized": false,
+    "runtime_authorized": false,
+    "cloud_execution_authorized": false,
+    "private_data_ingestion_authorized": false,
+    "physical_control_authorized": false,
+    "gate_b_authorized": false,
+    "I128_implementation_authorized": false,
+    "N128_readiness_inputs_authorized": false,
+    "R0_128_authorized": false,
+    "R1_128_authorized": false,
+    "P128_authorized": false,
+    "R2_128_authorized": false,
+    "C128_authorized": false,
+    "Q128_authorized": false,
+    "main_ref_change_authorized": false,
+    "merge_commit_authorized": false,
+    "public_push_authorized": false,
+    "review_confers_operator_acceptance": false,
+    "review_confers_implementation_authority": false
+  },
+  "next_transition": {
+    "stage_id": "I128-r1-continuity-correction-implementation",
+    "review_gate_satisfied": true,
+    "implementation_blocked_by_review": false,
+    "authorized_by_review": false,
+    "permitted_under_existing_explicit_operator_instruction": false,
+    "requires_new_explicit_operator_instruction": true,
+    "requires_exact_review_commit_tree_parent_delta_and_record_revalidation": true,
+    "review_result_commit_binding_state": "resolve_from_post_commit_raw_git_not_self_bound",
+    "maximum_result": "r1_continuity_corrected_N128_absent_not_ready",
+    "R0_authorized_at_review_stage": false,
+    "R1_P_R2_C_Q_main_merge_and_push_authorized": false
+  },
+  "nonclaims": [
+    "review_is_internal_model_assisted_advisory_not_independent_external_review",
+    "reviewer_identities_and_times_are_not_externally_attested",
+    "retained_K128_report_is_internal_integrity_operand_not_independent_execution_attestation",
+    "private_archive_payloads_were_not_read_rehashed_or_imported",
+    "R0_127_custody_is_not_R1_127_and_R1_127_remains_not_attempted_structurally_unreachable",
+    "deterministic_replay_lineage_checksums_and_zero_findings_do_not_create_scientific_benchmark_safety_or_compliance_evidence",
+    "V128_GO_does_not_create_operator_acceptance_or_authorize_I128",
+    "I128_N128_R0_128_R1_128_are_not_created_or_exercised",
+    "readiness_remains_not_ready_and_GA_17_not_evaluated",
+    "publication_distribution_and_transport_are_not_authorized_or_verified",
+    "runtime_cloud_private_data_physical_control_and_Gate_B_are_not_authorized",
+    "P128_R2_128_C128_Q128_main_merge_and_public_push_are_not_authorized",
+    "future_review_commit_tree_or_self_digest_is_not_asserted",
+    "known_launcher_and_host_trust_limitations_remain_visible_for_successor_correction"
+  ]
+}

@@ -1,0 +1,166 @@
+{
+  "schema_id": "https://schemas.reiyah.invalid/gate-a/1.2.3/release-readiness-contract.schema.json#/$defs/fixtureCatalog",
+  "artifact_id": "reiyah.artifact.release-readiness-fixture-catalog@1.2.3",
+  "version": "1.2.3",
+  "target_schema_id": "https://schemas.reiyah.invalid/gate-a/1.2.3/release-readiness-contract.schema.json",
+  "base_contract_ref": {
+    "artifact_id": "reiyah.artifact.release-readiness.synthetic-baseline@1.2.3",
+    "path": "fixtures/v1.2.3/release-readiness-known-good/synthetic-baseline.json",
+    "sha256": "sha256:fa226dcdc141c6c7266a0744e2f2cd951f41834bec689d9dc6c92265e3690c33",
+    "byte_size": 8105
+  },
+  "fixtures": [
+    {
+      "fixture_id": "reiyah.artifact.release-readiness.synthetic-baseline@1.2.3",
+      "path": "fixtures/v1.2.3/release-readiness-known-good/synthetic-baseline.json",
+      "classification": "known_good",
+      "expected_primary_diagnostic": null,
+      "sha256": "sha256:fa226dcdc141c6c7266a0744e2f2cd951f41834bec689d9dc6c92265e3690c33",
+      "byte_size": 8105
+    },
+    {
+      "fixture_id": "reiyah.fixture.release-readiness.coordinated-ga-replay-truncation@1.2.3",
+      "path": "fixtures/v1.2.3/release-readiness-known-bad/coordinated-ga-replay-truncation.json",
+      "classification": "known_bad",
+      "expected_primary_diagnostic": "GA123-RELEASE-GA-REPLAY-INCOMPLETE",
+      "sha256": "sha256:6dd06fa8110a6ff1fab419f005a82f003254ff4d4718cad5f83f37f834609f24",
+      "byte_size": 1403
+    },
+    {
+      "fixture_id": "reiyah.fixture.release-readiness.coordinated-predecessor-substitution@1.2.3",
+      "path": "fixtures/v1.2.3/release-readiness-known-bad/coordinated-predecessor-substitution.json",
+      "classification": "known_bad",
+      "expected_primary_diagnostic": "GA123-RELEASE-PREDECESSOR-SUBSTITUTION",
+      "sha256": "sha256:8b7e2534a48a45cb4e4919cf2ce17b5e549fd126ea7f35bc49e4562c231ebc1c",
+      "byte_size": 1967
+    },
+    {
+      "fixture_id": "reiyah.fixture.release-readiness.dirty-release@1.2.3",
+      "path": "fixtures/v1.2.3/release-readiness-known-bad/dirty-release.json",
+      "classification": "known_bad",
+      "expected_primary_diagnostic": "GA123-RELEASE-DIRTY-CANDIDATE",
+      "sha256": "sha256:3d79c2c3e9f4d443ea0a179df79601da81a6bbb76301f375cdabb5bb99425fef",
+      "byte_size": 1305
+    },
+    {
+      "fixture_id": "reiyah.fixture.release-readiness.false-architecture-completion@1.2.3",
+      "path": "fixtures/v1.2.3/release-readiness-known-bad/false-architecture-completion.json",
+      "classification": "known_bad",
+      "expected_primary_diagnostic": "GA123-RELEASE-FALSE-ARCHITECTURE-COMPLETION",
+      "sha256": "sha256:cb14be6d4415d9c5be2a3d48c333958fe58fb3137363e40a244eeba6bc70d260",
+      "byte_size": 1303
+    },
+    {
+      "fixture_id": "reiyah.fixture.release-readiness.gate-b-promotion@1.2.3",
+      "path": "fixtures/v1.2.3/release-readiness-known-bad/gate-b-promotion.json",
+      "classification": "known_bad",
+      "expected_primary_diagnostic": "GA123-RELEASE-GATE-B-PROMOTION",
+      "sha256": "sha256:e2abc7c37b59ee786abd236d2090772785450ac930b3b3cc8a984935f26e7bfe",
+      "byte_size": 1198
+    },
+    {
+      "fixture_id": "reiyah.fixture.release-readiness.incomplete-ga-replay@1.2.3",
+      "path": "fixtures/v1.2.3/release-readiness-known-bad/incomplete-ga-replay.json",
+      "classification": "known_bad",
+      "expected_primary_diagnostic": "GA123-RELEASE-GA-REPLAY-INCOMPLETE",
+      "sha256": "sha256:54d895462ca529f48f6d03b3f99faddded0cf686c73e50cbc561adebd3bbdeab",
+      "byte_size": 1789
+    },
+    {
+      "fixture_id": "reiyah.fixture.release-readiness.operator-acceptance-promotion@1.2.3",
+      "path": "fixtures/v1.2.3/release-readiness-known-bad/operator-acceptance-promotion.json",
+      "classification": "known_bad",
+      "expected_primary_diagnostic": "GA123-RELEASE-OPERATOR-ACCEPTANCE-PROMOTION",
+      "sha256": "sha256:3b3c90d6bba91e025a02eace3d76fdae4623b1f44fd75c3b24d3c03230ecd6d0",
+      "byte_size": 1679
+    },
+    {
+      "fixture_id": "reiyah.fixture.release-readiness.output-self-membership@1.2.3",
+      "path": "fixtures/v1.2.3/release-readiness-known-bad/output-self-membership.json",
+      "classification": "known_bad",
+      "expected_primary_diagnostic": "GA123-RELEASE-OUTPUT-SELF-MEMBERSHIP",
+      "sha256": "sha256:ee2628795d1592237958ce39372e0ce395ef9b415e3e56b37210b92278235fe8",
+      "byte_size": 1455
+    },
+    {
+      "fixture_id": "reiyah.fixture.release-readiness.predecessor-substitution@1.2.3",
+      "path": "fixtures/v1.2.3/release-readiness-known-bad/predecessor-substitution.json",
+      "classification": "known_bad",
+      "expected_primary_diagnostic": "GA123-RELEASE-PREDECESSOR-SUBSTITUTION",
+      "sha256": "sha256:133ad5bccc714af66caaca74fb560bbc711b78099e569572d57279070cef3457",
+      "byte_size": 1451
+    },
+    {
+      "fixture_id": "reiyah.fixture.release-readiness.public-distribution-promotion@1.2.3",
+      "path": "fixtures/v1.2.3/release-readiness-known-bad/public-distribution-promotion.json",
+      "classification": "known_bad",
+      "expected_primary_diagnostic": "GA123-RELEASE-PUBLIC-DISTRIBUTION-PROMOTION",
+      "sha256": "sha256:faac890d8afe425faca43f1d4380f64c5de4786126be1e9d93c113a278a55d4e",
+      "byte_size": 1379
+    },
+    {
+      "fixture_id": "reiyah.fixture.release-readiness.retroactive-preregistration@1.2.3",
+      "path": "fixtures/v1.2.3/release-readiness-known-bad/retroactive-preregistration.json",
+      "classification": "known_bad",
+      "expected_primary_diagnostic": "GA123-RELEASE-RETROACTIVE-PREREGISTRATION",
+      "sha256": "sha256:83c7002ff440662a873a7b569ff6a14d5216f595385dfb58a8d42c45680a8dfe",
+      "byte_size": 1420
+    },
+    {
+      "fixture_id": "reiyah.fixture.release-readiness.same-worker-evaluation@1.2.3",
+      "path": "fixtures/v1.2.3/release-readiness-known-bad/same-worker-evaluation.json",
+      "classification": "known_bad",
+      "expected_primary_diagnostic": "GA123-RELEASE-WORKER-NOT-DISTINCT",
+      "sha256": "sha256:4fb226aa32ea3d91b05292110660d649819aff69b2be766ec9506a67e9631cec",
+      "byte_size": 1464
+    },
+    {
+      "fixture_id": "reiyah.fixture.release-readiness.single-worker-evaluation@1.2.3",
+      "path": "fixtures/v1.2.3/release-readiness-known-bad/single-worker-evaluation.json",
+      "classification": "known_bad",
+      "expected_primary_diagnostic": "GA123-RELEASE-EVALUATION-COUNT",
+      "sha256": "sha256:57379e37fcba2e3ce69d0af0935a668a9400f473f8dabb20e84a8a3f43b259c1",
+      "byte_size": 1986
+    },
+    {
+      "fixture_id": "reiyah.fixture.release-readiness.stale-index@1.2.3",
+      "path": "fixtures/v1.2.3/release-readiness-known-bad/stale-index.json",
+      "classification": "known_bad",
+      "expected_primary_diagnostic": "GA123-RELEASE-INDEX-STALE",
+      "sha256": "sha256:9e0d2f4fa7a5e2f8bad72bd6a5b04a7775cf74d3032df10cfb73b39ce863cc4e",
+      "byte_size": 1262
+    },
+    {
+      "fixture_id": "reiyah.fixture.release-readiness.stale-report@1.2.3",
+      "path": "fixtures/v1.2.3/release-readiness-known-bad/stale-report.json",
+      "classification": "known_bad",
+      "expected_primary_diagnostic": "GA123-RELEASE-REPORT-STALE",
+      "sha256": "sha256:7d36a71cffaa31a149acf043c2f4260071fdb0fde85f60d8385a38cb7d51ade4",
+      "byte_size": 1286
+    },
+    {
+      "fixture_id": "reiyah.fixture.release-readiness.substituted-index@1.2.3",
+      "path": "fixtures/v1.2.3/release-readiness-known-bad/substituted-index.json",
+      "classification": "known_bad",
+      "expected_primary_diagnostic": "GA123-RELEASE-INDEX-SUBSTITUTED",
+      "sha256": "sha256:3ccad99fa06c39f7c9de84485f180f1925a664ed4e15928846561268a784b353",
+      "byte_size": 1307
+    },
+    {
+      "fixture_id": "reiyah.fixture.release-readiness.substituted-report@1.2.3",
+      "path": "fixtures/v1.2.3/release-readiness-known-bad/substituted-report.json",
+      "classification": "known_bad",
+      "expected_primary_diagnostic": "GA123-RELEASE-REPORT-SUBSTITUTED",
+      "sha256": "sha256:4a5cdbd8ebcdb83438540e6bb4723ff2cde974ae4c5a96c9c38d2635ecb9754a",
+      "byte_size": 1300
+    },
+    {
+      "fixture_id": "reiyah.fixture.release-readiness.unequal-evaluations@1.2.3",
+      "path": "fixtures/v1.2.3/release-readiness-known-bad/unequal-evaluations.json",
+      "classification": "known_bad",
+      "expected_primary_diagnostic": "GA123-RELEASE-EVALUATION-MISMATCH",
+      "sha256": "sha256:3fc7b581e0ddb4717d56ddcd81337c66e84b61c9dcb86123b7772062cf77b8fd",
+      "byte_size": 1579
+    }
+  ]
+}

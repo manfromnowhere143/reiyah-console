@@ -1,0 +1,98 @@
+{
+  "schema_id": "https://schemas.reiyah.invalid/gate-a/1.2.5/operator-decision-interface-fixture-catalog.schema.json",
+  "artifact_id": "reiyah.artifact.operator-decision-interface-fixture-catalog-1.2.5",
+  "catalog_id": "reiyah.fixture-catalog.operator-decision-interface@1.2.5",
+  "record_kind": "operator_decision_interface_layered_fixture_catalog",
+  "version": "1.2.5",
+  "stage_id": "DI125-correction-implementation",
+  "frozen_catalog_binding": {
+    "path": "fixtures/v1.2.4/operator-decision-interface-fixture-catalog.json",
+    "schema_id": "https://schemas.reiyah.invalid/gate-a/1.2.4/operator-decision-interface-fixture-catalog.schema.json",
+    "artifact_id": "reiyah.artifact.operator-decision-interface-fixture-catalog-1.2.4",
+    "catalog_id": "reiyah.fixture-catalog.operator-decision-interface@1.2.4",
+    "git_mode": "100644",
+    "blob_oid": "f6197718768d66e1139983bdf1dde4f3082ae58d",
+    "byte_size": 457987,
+    "sha256": "sha256:3ad12239b250504873cd38b2c630f277ff3a00ebe2210b9c016b7651ad220a3a",
+    "content_copied_into_successor": false
+  },
+  "frozen_catalog_summary": {
+    "known_good_count": 6,
+    "risk_remove_one_count": 77,
+    "named_adversary_count": 124,
+    "total_adversary_count": 201,
+    "RGA_020_remove_one_present": true,
+    "all_expected_diagnostics_and_paths_fixed": true,
+    "payload_replayed_from_exact_frozen_bytes": true
+  },
+  "successor_schema_registry": [
+    {"path":"schemas/operator-decision-record-1.2.5.schema.json","schema_id":"https://schemas.reiyah.invalid/gate-a/1.2.5/operator-decision-record.schema.json","record_kind":"operator_gate_decision","git_mode":"100644","byte_size":149173,"sha256":"sha256:cd9167016d52d75a13454fd12eeb7901473f31edff29cdbbe75def554f1e7eeb"},
+    {"path":"schemas/human-identity-verification-record-1.2.5.schema.json","schema_id":"https://schemas.reiyah.invalid/gate-a/1.2.5/human-identity-verification-record.schema.json","record_kind":"human_identity_verification","git_mode":"100644","byte_size":39479,"sha256":"sha256:1e29107ee8dbb8a5c5a30518a251c92f310db6a6bc9243e3daabd6ae91aefea6"},
+    {"path":"schemas/human-authority-verification-record-1.2.5.schema.json","schema_id":"https://schemas.reiyah.invalid/gate-a/1.2.5/human-authority-verification-record.schema.json","record_kind":"human_authority_verification","git_mode":"100644","byte_size":45739,"sha256":"sha256:a85421a15528090642b2f466d8cd713443597018cc4986709cf7d364f7b058e3"},
+    {"path":"schemas/composite-evaluation-1.2.5.schema.json","schema_id":"https://schemas.reiyah.invalid/gate-a/1.2.5/composite-evaluation.schema.json","record_kind":"operator_decision_composite_evaluation","git_mode":"100644","byte_size":131515,"sha256":"sha256:cc2af6523bfa738762dc30c73963160628e076113411e349b43076f1928019f7"},
+    {"path":"schemas/composite-resolution-record-1.2.5.schema.json","schema_id":"https://schemas.reiyah.invalid/gate-a/1.2.5/composite-resolution-record.schema.json","record_kind":"operator_decision_composite_resolution","git_mode":"100644","byte_size":29209,"sha256":"sha256:531ac433a5f412e37610ce823936892f96921aded6ce0a4de6d45565989a2c6d"}
+  ],
+  "invalid_template_binding": {
+    "path": "gate/decisions/OPERATOR_DECISION-1.2.5.template.json",
+    "schema_id": null,
+    "artifact_id": "reiyah.artifact.operator-decision-template-1.2.5",
+    "git_mode": "100644",
+    "byte_size": 4583,
+    "sha256": "sha256:9eedad4f5d3ddf4cb1484e9474ab26093965f83807c80277f855fcd35baab3e4",
+    "record_kind": "operator_gate_decision_template",
+    "record_scope": "template_nonrecord",
+    "target_schema_id": "https://schemas.reiyah.invalid/gate-a/1.2.5/operator-decision-record.schema.json",
+    "template_format_version": "1.2.5",
+    "is_template": true,
+    "fixture_eligible": false,
+    "production_eligible": false
+  },
+  "positive_route_specification": {
+    "specification_id": "reiyah.fixture.di125.readiness.full-route.v1-2-5",
+    "classification": "known_good_route_specification",
+    "synthetic": true,
+    "record_scope": "synthetic_capability_fixture_non_evidentiary",
+    "evidence_role": "non_evidentiary_capability_test_only",
+    "production_or_history_admission_allowed": false,
+    "frozen_known_good_fixture_ids": ["reiyah.fixture.di124.decision-only.accepted.v1-2-4","reiyah.fixture.di124.decision-only.rejected.v1-2-4","reiyah.fixture.di124.decision-only.deferred.v1-2-4","reiyah.fixture.di124.full-graph.accepted.v1-2-4","reiyah.fixture.di124.full-graph.rejected.v1-2-4","reiyah.fixture.di124.full-graph.deferred.v1-2-4"],
+    "ordered_stage_ids": ["DI125-readiness-inputs","DI125-readiness-report-absent-render","DI125-readiness-report-install","DI125-readiness-report-reproduction-a","DI125-readiness-report-commit","DI125-readiness-report-reproduction-b","DI125-readiness-closeout","DI125-clean-closeout-replay","DI125-synthetic-successor-decision-D","DI125-synthetic-identity-verification-I","DI125-synthetic-authority-verification-A","DI125-synthetic-composite-evaluation-E","DI125-synthetic-composite-resolution-R"],
+    "operands": {
+      "readiness_report": {"binding_role":"readiness_report","record_scope":"synthetic_capability_fixture_non_evidentiary","path":"gate/validation-reports/operator-decision-interface-readiness-1.2.5.json","schema_id":"https://schemas.reiyah.invalid/gate-a/1.2.5/operator-decision-interface-readiness-report.schema.json","result":"readiness_evaluation_pass_pending_closeout","interface_readiness_state":"not_ready"},
+      "readiness_closeout": {"binding_role":"readiness_closeout","record_scope":"synthetic_capability_fixture_non_evidentiary","path":"gate/operator-decision-interface-closeouts/reiyah.operator-decision-interface-readiness-closeout-1.2.5.json","schema_id":"https://schemas.reiyah.invalid/gate-a/1.2.5/operator-decision-interface-readiness-closeout.schema.json","embeds_own_clean_replay_result":false},
+      "clean_closeout_replay_observation": {"binding_role":"clean_closeout_replay_observation","record_scope":"synthetic_capability_fixture_non_evidentiary","path":"gate/operator-decision-interface-observations/reiyah.operator-decision-interface-clean-closeout-replay-observation-1.2.5.json","schema_id":"https://schemas.reiyah.invalid/gate-a/1.2.5/operator-decision-interface-clean-closeout-replay-observation.schema.json","creates_commit":false,"antecedent_payload_render":"clean-closeout-replay-evidence-payload","semantic_result":"synthetic_route_reaches_ready_transition_semantics_only","real_interface_readiness_promoted":false}
+    },
+    "byte_equality_contract": {"absent_render_equals_reproduction_a":true,"absent_render_equals_reproduction_b":true,"retained_report_equals_all_three_streams":true},
+    "result_contract": {"implementation_outer_result":"corrected_implementation_not_ready","pending_report_result":"readiness_evaluation_pass_pending_closeout","closeout_result":"readiness_closeout_recorded_pending_clean_replay","synthetic_clean_replay_stage_id":"DI125-synthetic-route-complete","synthetic_clean_replay_result":"synthetic_route_reaches_ready_transition_semantics_only","real_clean_replay_result_reserved":"interface_ready_for_separate_human_process","readiness_revision":"1.2.5"}
+  },
+  "readiness_adversaries": [
+    {"adversary_id":"reiyah.adversary.di125.readiness-route-absent","case_family":"route_liveness","target_consumer":"readiness_route_consumer","mutation":"remove_implemented_readiness_route","expected_primary_diagnostic":"DI125I-READINESS-ROUTE-ABSENT","expected_path":"/readiness_route"},
+    {"adversary_id":"reiyah.adversary.di125.development-report-relabel","case_family":"report_kind","target_consumer":"readiness_report_consumer","mutation":"relabel_development_report_as_readiness","expected_primary_diagnostic":"DI125R-REPORT-KIND","expected_path":"/readiness_report/record_kind"},
+    {"adversary_id":"reiyah.adversary.di125.implementation-subject-commit-substitution","case_family":"subject_binding","target_consumer":"readiness_inputs_consumer","mutation":"substitute_valid_format_subject_commit","expected_primary_diagnostic":"DI125I-SUBJECT-BINDING","expected_path":"/subject_implementation/commit"},
+    {"adversary_id":"reiyah.adversary.di125.implementation-bundle-coordinated-substitution","case_family":"bundle_binding","target_consumer":"readiness_inputs_consumer","mutation":"coordinated_review_and_plan_bundle_substitution","expected_primary_diagnostic":"DI125I-BUNDLE-SUBSTITUTION","expected_path":"/implementation_bundle"},
+    {"adversary_id":"reiyah.adversary.di125.independence-promotion","case_family":"review_authority","target_consumer":"readiness_inputs_consumer","mutation":"promote_internal_review_to_independent","expected_primary_diagnostic":"DI125R-INDEPENDENCE-PROMOTION","expected_path":"/implementation_review/aggregate_review_result/independent_external_review_completed"},
+    {"adversary_id":"reiyah.adversary.di125.mapping-rga020-removal","case_family":"mapping_universe","target_consumer":"mapping_review_consumer","mutation":"remove_RGA_020_while_retaining_count","expected_primary_diagnostic":"DI125M-MAPPING-UNIVERSE","expected_path":"/mapping_review/ordered_item_ids"},
+    {"adversary_id":"reiyah.adversary.di125.finding-evidence-omission","case_family":"finding_closure","target_consumer":"readiness_report_consumer","mutation":"omit_required_negative_finding_evidence","expected_primary_diagnostic":"DI125F-EVIDENCE-CLOSURE","expected_path":"/finding_closure/finding_results"},
+    {"adversary_id":"reiyah.adversary.di125.future-commit-binding","case_family":"future_binding","target_consumer":"ready_plan_consumer","mutation":"bind_unobserved_future_result_commit","expected_primary_diagnostic":"DI125I-FUTURE-BINDING","expected_path":"/ready_plan/future_result_commit"},
+    {"adversary_id":"reiyah.adversary.di125.readiness-authority-promotion","case_family":"authority","target_consumer":"readiness_report_consumer","mutation":"promote_operator_acceptance","expected_primary_diagnostic":"DI125A-AUTHORITY-PROMOTION","expected_path":"/authority/operator_acceptance_state"},
+    {"adversary_id":"reiyah.adversary.di125.report-self-digest","case_family":"report_cycle","target_consumer":"readiness_report_consumer","mutation":"add_report_self_digest","expected_primary_diagnostic":"DI125I-REPORT-CYCLE","expected_path":"/readiness_report/report_sha256"},
+    {"adversary_id":"reiyah.adversary.di125.closeout-self-replay-assertion","case_family":"closeout_cycle","target_consumer":"readiness_closeout_consumer","mutation":"embed_future_clean_replay_result","expected_primary_diagnostic":"DI125I-CLOSEOUT-CYCLE","expected_path":"/readiness_closeout/clean_closeout_replay"},
+    {"adversary_id":"reiyah.adversary.di125.frozen-family-relabel","case_family":"dependent_family","target_consumer":"successor_family_consumer","mutation":"relabel_frozen_1_2_4_family_as_corrected","expected_primary_diagnostic":"DI125I-DECISION-FAMILY-INCOMPATIBLE","expected_path":"/successor_family"},
+    {"adversary_id":"reiyah.adversary.di125.inherited-count-lower-bound","case_family":"adversary_population","target_consumer":"readiness_report_consumer","mutation":"replace_exact_201_with_78","expected_primary_diagnostic":"DI125I-ADVERSARY-COUNT","expected_path":"/readiness_report/adversary_summary/required_count"},
+    {"adversary_id":"reiyah.adversary.di125.readiness-report-operand-omission","case_family":"operand_totality","target_consumer":"validate_decision_successor@1.2.5","mutation":"remove_readiness_report_operand","expected_primary_diagnostic":"DI125I-READY-OPERAND","expected_path":"/ready_implementation_binding/operands/readiness_report"},
+    {"adversary_id":"reiyah.adversary.di125.closeout-operand-omission","case_family":"operand_totality","target_consumer":"validate_decision_successor@1.2.5","mutation":"remove_readiness_closeout_operand","expected_primary_diagnostic":"DI125I-READY-OPERAND","expected_path":"/ready_implementation_binding/operands/readiness_closeout"},
+    {"adversary_id":"reiyah.adversary.di125.clean-replay-operand-omission","case_family":"operand_totality","target_consumer":"validate_decision_successor@1.2.5","mutation":"remove_clean_closeout_replay_observation_operand","expected_primary_diagnostic":"DI125I-READY-OPERAND","expected_path":"/ready_implementation_binding/operands/clean_closeout_replay_observation"},
+    {"adversary_id":"reiyah.adversary.di125.report-closeout-alias","case_family":"operand_alias","target_consumer":"validate_identity_successor@1.2.5","mutation":"alias_readiness_closeout_to_readiness_report","expected_primary_diagnostic":"DI125I-READY-OPERAND-ALIAS","expected_path":"/ready_implementation_binding/operands/readiness_closeout"},
+    {"adversary_id":"reiyah.adversary.di125.report-clean-replay-alias","case_family":"operand_alias","target_consumer":"validate_authority_successor@1.2.5","mutation":"alias_clean_replay_to_readiness_report","expected_primary_diagnostic":"DI125I-READY-OPERAND-ALIAS","expected_path":"/ready_implementation_binding/operands/clean_closeout_replay_observation"},
+    {"adversary_id":"reiyah.adversary.di125.closeout-clean-replay-alias","case_family":"operand_alias","target_consumer":"validate_composite_successor@1.2.5","mutation":"alias_clean_replay_to_readiness_closeout","expected_primary_diagnostic":"DI125I-READY-OPERAND-ALIAS","expected_path":"/ready_implementation_binding/operands/clean_closeout_replay_observation"},
+    {"adversary_id":"reiyah.adversary.di125.readiness-revision-substitution","case_family":"readiness_revision","target_consumer":"validate_resolution_successor@1.2.5","mutation":"substitute_readiness_revision","expected_primary_diagnostic":"DI125I-READINESS-REVISION","expected_path":"/ready_implementation_binding/readiness_revision"}
+  ],
+  "successor_consumer_canaries": [
+    {"canary_id":"DI125SC-001-decision-Q-digest","case_family":"successor_route_edge","target_consumer":"validate_decision_successor@1.2.5","mutation":"corrupt_clean_replay_operand_digest","expected_primary_diagnostic":"DI125D-READY-OPERAND-BINDING","expected_path":"/decision/ready_implementation_binding/operands/clean_closeout_replay_observation/sha256"},
+    {"canary_id":"DI125SC-002-identity-decision-digest","case_family":"successor_route_edge","target_consumer":"validate_identity_successor@1.2.5","mutation":"corrupt_decision_binding_digest","expected_primary_diagnostic":"DI125VI-DECISION-BINDING","expected_path":"/identity_verification/decision_binding/sha256"},
+    {"canary_id":"DI125SC-003-authority-scope","case_family":"successor_scope","target_consumer":"validate_authority_successor@1.2.5","mutation":"corrupt_authority_scope_result","expected_primary_diagnostic":"DI125VA-SCOPE-MISMATCH","expected_path":"/authority_verification/authority_determination/exact_scope_result"},
+    {"canary_id":"DI125SC-004-composite-decision-head","case_family":"successor_route_edge","target_consumer":"validate_composite_successor@1.2.5","mutation":"corrupt_composite_decision_head_digest","expected_primary_diagnostic":"DI125R-COMPOSITE-EVALUATION","expected_path":"/composite_evaluation/selected_operands/decision_head/sha256"},
+    {"canary_id":"DI125SC-005-resolution-evaluation-digest","case_family":"successor_route_edge","target_consumer":"validate_resolution_successor@1.2.5","mutation":"corrupt_resolution_evaluation_digest","expected_primary_diagnostic":"DI125R-EVALUATION-BINDING","expected_path":"/composite_resolution/composite_evaluation_binding/sha256"}
+  ],
+  "summary": {"frozen_known_good_count":6,"frozen_risk_remove_one_count":77,"frozen_named_adversary_count":124,"frozen_total_adversary_count":201,"readiness_positive_route_specification_count":1,"readiness_adversary_count":20,"combined_rejection_count":221,"successor_consumer_canary_count":5,"total_negative_probe_count":226,"frozen_payload_duplicated":false,"actual_results_derived_before_expected_result_comparison":true,"production_consumer_dispatch_required":true,"shadow_model_allowed":false,"mutation_targets_actual_bytes_or_topology":true,"production_or_history_admission_allowed":false},
+  "authority": {"interface_readiness_state":"not_ready","operator_acceptance_state":"unaccepted","ga_17_state":"not_evaluated","independent_external_review_completed":false,"human_decision_process_authorized":false,"decision_record_creation_authorized":false,"real_identity_verification_implemented":false,"real_authority_verification_implemented":false,"scientific_evidence_created":false,"scientific_claim_authority":false,"public_distribution_authorized":false,"publication_acceptance_authorized":false,"transport_verification_state":"not_evaluated","runtime_authorized":false,"cloud_execution_authorized":false,"private_data_ingestion_authorized":false,"physical_control_authorized":false,"gate_b_authorized":false}
+}

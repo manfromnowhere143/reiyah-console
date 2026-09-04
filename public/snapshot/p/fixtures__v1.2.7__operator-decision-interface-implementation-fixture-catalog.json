@@ -1,0 +1,1898 @@
+{
+  "schema_id": "https://schemas.reiyah.invalid/gate-a/1.2.7/operator-decision-interface-implementation-fixture-catalog.schema.json",
+  "artifact_id": "reiyah.artifact.operator-decision-interface-implementation-fixture-catalog-1.2.7",
+  "catalog_id": "reiyah.fixture-catalog.operator-decision-interface-liveness-implementation@1.2.7",
+  "record_kind": "operator_decision_interface_readiness_worker_liveness_implementation_fixture_catalog",
+  "version": "1.2.7",
+  "stage_id": "DI127-readiness-worker-liveness-implementation",
+  "historical_population_bindings": {
+    "inherited_DI124_and_DI125_cataloged_adversaries": {
+      "count": 201,
+      "path": "fixtures/v1.2.5/operator-decision-interface-fixture-catalog.json",
+      "byte_size": 16720,
+      "sha256": "sha256:779e2d19082e148d7e31ad2203897ccdc1c38cf80eeeff772029167ad7dbcca6"
+    },
+    "historical_DI125_readiness_adversaries": {
+      "count": 20,
+      "path": "fixtures/v1.2.5/operator-decision-interface-fixture-catalog.json",
+      "population_role": "separate_readiness_adversaries"
+    },
+    "historical_DI125_successor_canaries": {
+      "count": 5,
+      "path": "fixtures/v1.2.5/operator-decision-interface-fixture-catalog.json",
+      "population_role": "separate_successor_consumer_canaries"
+    },
+    "historical_schema_known_bads": {
+      "count": 7,
+      "population_role": "schema_boundary_suite_not_cataloged_negative_total"
+    },
+    "DI126_adversaries": {
+      "count": 72,
+      "path": "fixtures/v1.2.6/operator-decision-interface-fixture-catalog.json",
+      "byte_size": 48176,
+      "sha256": "sha256:b23914c7e99f6de8c6e1949e6ae3936eef190c492040064c4272ef75f1f7dbcb"
+    },
+    "DI127_contract_adversaries": {
+      "count": 53,
+      "path": "fixtures/v1.2.7/operator-decision-interface-readiness-worker-liveness-fixture-catalog.json",
+      "byte_size": 13459,
+      "sha256": "sha256:26c96625d606152bc26dc31223883c886fe6c2e5004afb382633f1dbca79b81a"
+    },
+    "review_gate": {
+      "review_record_path": "gate/operator-decision-interface-reviews/reiyah.operator-decision-interface-readiness-worker-liveness-contract-review-1.2.7.json",
+      "byte_size": 29630,
+      "sha256": "sha256:cba48a34798715e9d20ed583f5e7423c0df205e8b5f7dc23da811c57918b1eb0",
+      "verdict": "go",
+      "review_count": 4,
+      "passed_check_count": 16,
+      "blocker_count": 0
+    }
+  },
+  "positive_specs": [
+    {
+      "spec_id": "DI127IP-001",
+      "capability": "bootstrap_free_raw_subject_capture",
+      "scope": "synthetic_integrity_only"
+    },
+    {
+      "spec_id": "DI127IP-002",
+      "capability": "owned_finder_success_path_exact_restoration",
+      "scope": "synthetic_integrity_only"
+    },
+    {
+      "spec_id": "DI127IP-003",
+      "capability": "owned_finder_exception_path_exact_restoration",
+      "scope": "synthetic_integrity_only"
+    },
+    {
+      "spec_id": "DI127IP-004",
+      "capability": "implementation_worker_success_and_failure_framing",
+      "scope": "synthetic_integrity_only"
+    },
+    {
+      "spec_id": "DI127IP-005",
+      "capability": "quorum_probe_worker_success_and_failure_framing",
+      "scope": "synthetic_integrity_only"
+    },
+    {
+      "spec_id": "DI127IP-006",
+      "capability": "readiness_worker_success_and_failure_framing",
+      "scope": "synthetic_integrity_only"
+    },
+    {
+      "spec_id": "DI127IP-007",
+      "capability": "serial_alpha_reap_fresh_recapture_beta",
+      "scope": "synthetic_integrity_only"
+    },
+    {
+      "spec_id": "DI127IP-008",
+      "capability": "complete_comparable_payload_byte_equality",
+      "scope": "synthetic_integrity_only"
+    },
+    {
+      "spec_id": "DI127IP-009",
+      "capability": "isolated_pre_correction_trigger_and_corrected_regression",
+      "scope": "synthetic_integrity_only"
+    },
+    {
+      "spec_id": "DI127IP-010",
+      "capability": "pre_N127_probe_role_structurally_cannot_enter_real_R0_pair_at_any_repository_state",
+      "scope": "real_pre_N127_boundary_without_consumer_entry"
+    },
+    {
+      "spec_id": "DI127IP-011",
+      "capability": "closed_launcher_roles_and_synthetic_N127_R0_route_semantics",
+      "scope": "synthetic_non_evidentiary_no_real_admission"
+    }
+  ],
+  "mutation_families": [
+    {
+      "family_id": "DI127IA-FAMILY-01",
+      "name": "predecessor_review_and_report_binding",
+      "case_count": 4,
+      "case_ids": [
+        "DI127IA-01-01",
+        "DI127IA-01-02",
+        "DI127IA-01-03",
+        "DI127IA-01-04"
+      ]
+    },
+    {
+      "family_id": "DI127IA-FAMILY-02",
+      "name": "raw_git_identity_rehash_and_topology",
+      "case_count": 4,
+      "case_ids": [
+        "DI127IA-02-01",
+        "DI127IA-02-02",
+        "DI127IA-02-03",
+        "DI127IA-02-04"
+      ]
+    },
+    {
+      "family_id": "DI127IA-FAMILY-03",
+      "name": "raw_subject_resolver_purity_freshness_and_cache_exclusion",
+      "case_count": 4,
+      "case_ids": [
+        "DI127IA-03-01",
+        "DI127IA-03-02",
+        "DI127IA-03-03",
+        "DI127IA-03-04"
+      ]
+    },
+    {
+      "family_id": "DI127IA-FAMILY-04",
+      "name": "schema_finder_lease_ownership_position_and_namespace",
+      "case_count": 4,
+      "case_ids": [
+        "DI127IA-04-01",
+        "DI127IA-04-02",
+        "DI127IA-04-03",
+        "DI127IA-04-04"
+      ]
+    },
+    {
+      "family_id": "DI127IA-FAMILY-05",
+      "name": "schema_finder_success_exception_cleanup_and_DI124_guard",
+      "case_count": 4,
+      "case_ids": [
+        "DI127IA-05-01",
+        "DI127IA-05-02",
+        "DI127IA-05-03",
+        "DI127IA-05-04"
+      ]
+    },
+    {
+      "family_id": "DI127IA-FAMILY-06",
+      "name": "worker_success_channel_and_payload_framing",
+      "case_count": 4,
+      "case_ids": [
+        "DI127IA-06-01",
+        "DI127IA-06-02",
+        "DI127IA-06-03",
+        "DI127IA-06-04"
+      ]
+    },
+    {
+      "family_id": "DI127IA-FAMILY-07",
+      "name": "worker_failure_channel_status_and_typed_diagnostic_framing",
+      "case_count": 4,
+      "case_ids": [
+        "DI127IA-07-01",
+        "DI127IA-07-02",
+        "DI127IA-07-03",
+        "DI127IA-07-04"
+      ]
+    },
+    {
+      "family_id": "DI127IA-FAMILY-08",
+      "name": "evaluator_local_process_group_stream_deadline_and_reap_supervision",
+      "case_count": 4,
+      "case_ids": [
+        "DI127IA-08-01",
+        "DI127IA-08-02",
+        "DI127IA-08-03",
+        "DI127IA-08-04"
+      ]
+    },
+    {
+      "family_id": "DI127IA-FAMILY-09",
+      "name": "serial_alpha_reap_recapture_beta_order_and_budget_algebra",
+      "case_count": 4,
+      "case_ids": [
+        "DI127IA-09-01",
+        "DI127IA-09-02",
+        "DI127IA-09-03",
+        "DI127IA-09-04"
+      ]
+    },
+    {
+      "family_id": "DI127IA-FAMILY-10",
+      "name": "complete_payload_equality_and_PID_time_exclusion",
+      "case_count": 4,
+      "case_ids": [
+        "DI127IA-10-01",
+        "DI127IA-10-02",
+        "DI127IA-10-03",
+        "DI127IA-10-04"
+      ]
+    },
+    {
+      "family_id": "DI127IA-FAMILY-11",
+      "name": "historical_population_separation_and_zero_finding_closure",
+      "case_count": 4,
+      "case_ids": [
+        "DI127IA-11-01",
+        "DI127IA-11-02",
+        "DI127IA-11-03",
+        "DI127IA-11-04"
+      ]
+    },
+    {
+      "family_id": "DI127IA-FAMILY-12",
+      "name": "actual_freeze_before_expectation_admission",
+      "case_count": 4,
+      "case_ids": [
+        "DI127IA-12-01",
+        "DI127IA-12-02",
+        "DI127IA-12-03",
+        "DI127IA-12-04"
+      ]
+    },
+    {
+      "family_id": "DI127IA-FAMILY-13",
+      "name": "self_excluding_lock_absent_install_and_reproduction_lifecycle",
+      "case_count": 4,
+      "case_ids": [
+        "DI127IA-13-01",
+        "DI127IA-13-02",
+        "DI127IA-13-03",
+        "DI127IA-13-04"
+      ]
+    },
+    {
+      "family_id": "DI127IA-FAMILY-14",
+      "name": "N127_three_record_topology_N126_nonadmission_and_one_R0_stop",
+      "case_count": 4,
+      "case_ids": [
+        "DI127IA-14-01",
+        "DI127IA-14-02",
+        "DI127IA-14-03",
+        "DI127IA-14-04"
+      ]
+    },
+    {
+      "family_id": "DI127IA-FAMILY-15",
+      "name": "implementation_report_semantic_consumer_and_graph_isolation",
+      "case_count": 4,
+      "case_ids": [
+        "DI127IA-15-01",
+        "DI127IA-15-02",
+        "DI127IA-15-03",
+        "DI127IA-15-04"
+      ]
+    },
+    {
+      "family_id": "DI127IA-FAMILY-16",
+      "name": "authority_and_future_stage_promotion",
+      "case_count": 31,
+      "case_ids": [
+        "DI127IA-16-01",
+        "DI127IA-16-02",
+        "DI127IA-16-03",
+        "DI127IA-16-04",
+        "DI127IA-16-05",
+        "DI127IA-16-06",
+        "DI127IA-16-07",
+        "DI127IA-16-08",
+        "DI127IA-16-09",
+        "DI127IA-16-10",
+        "DI127IA-16-11",
+        "DI127IA-16-12",
+        "DI127IA-16-13",
+        "DI127IA-16-14",
+        "DI127IA-16-15",
+        "DI127IA-16-16",
+        "DI127IA-16-17",
+        "DI127IA-16-18",
+        "DI127IA-16-19",
+        "DI127IA-16-20",
+        "DI127IA-16-21",
+        "DI127IA-16-22",
+        "DI127IA-16-23",
+        "DI127IA-16-24",
+        "DI127IA-16-25",
+        "DI127IA-16-26",
+        "DI127IA-16-27",
+        "DI127IA-16-28",
+        "DI127IA-16-29",
+        "DI127IA-16-30",
+        "DI127IA-16-31"
+      ]
+    }
+  ],
+  "adversary_execution_specs": [
+    {
+      "case_id": "DI127IA-01-01",
+      "family_id": "DI127IA-FAMILY-01",
+      "mutation_id": "subject_review_commit_substitution",
+      "target_boundary": "predecessor_review_checkpoint",
+      "input_mutation": {
+        "operation": "single_or_coordinated_in_memory_operand_substitution",
+        "description": "subject_review_commit_substitution"
+      }
+    },
+    {
+      "case_id": "DI127IA-01-02",
+      "family_id": "DI127IA-FAMILY-01",
+      "mutation_id": "subject_review_tree_substitution",
+      "target_boundary": "predecessor_review_checkpoint",
+      "input_mutation": {
+        "operation": "single_or_coordinated_in_memory_operand_substitution",
+        "description": "subject_review_tree_substitution"
+      }
+    },
+    {
+      "case_id": "DI127IA-01-03",
+      "family_id": "DI127IA-FAMILY-01",
+      "mutation_id": "subject_review_parent_substitution",
+      "target_boundary": "predecessor_review_checkpoint",
+      "input_mutation": {
+        "operation": "single_or_coordinated_in_memory_operand_substitution",
+        "description": "subject_review_parent_substitution"
+      }
+    },
+    {
+      "case_id": "DI127IA-01-04",
+      "family_id": "DI127IA-FAMILY-01",
+      "mutation_id": "immutable_review_report_digest_substitution",
+      "target_boundary": "review_report_observation",
+      "input_mutation": {
+        "operation": "single_or_coordinated_in_memory_operand_substitution",
+        "description": "immutable_review_report_digest_substitution"
+      }
+    },
+    {
+      "case_id": "DI127IA-02-01",
+      "family_id": "DI127IA-FAMILY-02",
+      "mutation_id": "commit_object_rehash_mismatch",
+      "target_boundary": "raw_subject_capture",
+      "input_mutation": {
+        "operation": "single_or_coordinated_in_memory_operand_substitution",
+        "description": "commit_object_rehash_mismatch"
+      }
+    },
+    {
+      "case_id": "DI127IA-02-02",
+      "family_id": "DI127IA-FAMILY-02",
+      "mutation_id": "tree_object_rehash_mismatch",
+      "target_boundary": "raw_subject_capture",
+      "input_mutation": {
+        "operation": "single_or_coordinated_in_memory_operand_substitution",
+        "description": "tree_object_rehash_mismatch"
+      }
+    },
+    {
+      "case_id": "DI127IA-02-03",
+      "family_id": "DI127IA-FAMILY-02",
+      "mutation_id": "blob_object_rehash_mismatch",
+      "target_boundary": "raw_subject_capture",
+      "input_mutation": {
+        "operation": "single_or_coordinated_in_memory_operand_substitution",
+        "description": "blob_object_rehash_mismatch"
+      }
+    },
+    {
+      "case_id": "DI127IA-02-04",
+      "family_id": "DI127IA-FAMILY-02",
+      "mutation_id": "raw_index_checksum_or_stage_substitution",
+      "target_boundary": "raw_subject_capture",
+      "input_mutation": {
+        "operation": "single_or_coordinated_in_memory_operand_substitution",
+        "description": "raw_index_checksum_or_stage_substitution"
+      }
+    },
+    {
+      "case_id": "DI127IA-03-01",
+      "family_id": "DI127IA-FAMILY-03",
+      "mutation_id": "raw_capture_attempts_schema_bootstrap",
+      "target_boundary": "capture_raw_subject_127",
+      "input_mutation": {
+        "operation": "single_or_coordinated_in_memory_operand_substitution",
+        "description": "raw_capture_attempts_schema_bootstrap"
+      }
+    },
+    {
+      "case_id": "DI127IA-03-02",
+      "family_id": "DI127IA-FAMILY-03",
+      "mutation_id": "raw_capture_creates_admission_or_dispatch",
+      "target_boundary": "capture_raw_subject_127",
+      "input_mutation": {
+        "operation": "single_or_coordinated_in_memory_operand_substitution",
+        "description": "raw_capture_creates_admission_or_dispatch"
+      }
+    },
+    {
+      "case_id": "DI127IA-03-03",
+      "family_id": "DI127IA-FAMILY-03",
+      "mutation_id": "raw_capture_reuses_cached_resolver_identity",
+      "target_boundary": "capture_raw_subject_127",
+      "input_mutation": {
+        "operation": "single_or_coordinated_in_memory_operand_substitution",
+        "description": "raw_capture_reuses_cached_resolver_identity"
+      }
+    },
+    {
+      "case_id": "DI127IA-03-04",
+      "family_id": "DI127IA-FAMILY-03",
+      "mutation_id": "full_and_quorum_resolvers_use_distinct_raw_implementations",
+      "target_boundary": "capture_raw_subject_127",
+      "input_mutation": {
+        "operation": "single_or_coordinated_in_memory_operand_substitution",
+        "description": "full_and_quorum_resolvers_use_distinct_raw_implementations"
+      }
+    },
+    {
+      "case_id": "DI127IA-04-01",
+      "family_id": "DI127IA-FAMILY-04",
+      "mutation_id": "owned_finder_missing_after_install",
+      "target_boundary": "schema_finder_lease",
+      "input_mutation": {
+        "operation": "single_or_coordinated_in_memory_operand_substitution",
+        "description": "owned_finder_missing_after_install"
+      }
+    },
+    {
+      "case_id": "DI127IA-04-02",
+      "family_id": "DI127IA-FAMILY-04",
+      "mutation_id": "owned_finder_displaced_from_exact_index",
+      "target_boundary": "schema_finder_lease",
+      "input_mutation": {
+        "operation": "single_or_coordinated_in_memory_operand_substitution",
+        "description": "owned_finder_displaced_from_exact_index"
+      }
+    },
+    {
+      "case_id": "DI127IA-04-03",
+      "family_id": "DI127IA-FAMILY-04",
+      "mutation_id": "owned_finder_duplicated_by_object_identity",
+      "target_boundary": "schema_finder_lease",
+      "input_mutation": {
+        "operation": "single_or_coordinated_in_memory_operand_substitution",
+        "description": "owned_finder_duplicated_by_object_identity"
+      }
+    },
+    {
+      "case_id": "DI127IA-04-04",
+      "family_id": "DI127IA-FAMILY-04",
+      "mutation_id": "owned_finder_replaced_by_foreign_finder",
+      "target_boundary": "schema_finder_lease",
+      "input_mutation": {
+        "operation": "single_or_coordinated_in_memory_operand_substitution",
+        "description": "owned_finder_replaced_by_foreign_finder"
+      }
+    },
+    {
+      "case_id": "DI127IA-05-01",
+      "family_id": "DI127IA-FAMILY-05",
+      "mutation_id": "success_path_leaves_owned_finder_resident",
+      "target_boundary": "schema_finder_release",
+      "input_mutation": {
+        "operation": "single_or_coordinated_in_memory_operand_substitution",
+        "description": "success_path_leaves_owned_finder_resident"
+      }
+    },
+    {
+      "case_id": "DI127IA-05-02",
+      "family_id": "DI127IA-FAMILY-05",
+      "mutation_id": "exception_path_leaves_owned_finder_resident",
+      "target_boundary": "schema_finder_release",
+      "input_mutation": {
+        "operation": "single_or_coordinated_in_memory_operand_substitution",
+        "description": "exception_path_leaves_owned_finder_resident"
+      }
+    },
+    {
+      "case_id": "DI127IA-05-03",
+      "family_id": "DI127IA-FAMILY-05",
+      "mutation_id": "wrong_namespace_or_baseline_tail_after_release",
+      "target_boundary": "schema_finder_release",
+      "input_mutation": {
+        "operation": "single_or_coordinated_in_memory_operand_substitution",
+        "description": "wrong_namespace_or_baseline_tail_after_release"
+      }
+    },
+    {
+      "case_id": "DI127IA-05-04",
+      "family_id": "DI127IA-FAMILY-05",
+      "mutation_id": "DI124_guard_weakened_or_double_release_accepted",
+      "target_boundary": "schema_finder_release",
+      "input_mutation": {
+        "operation": "single_or_coordinated_in_memory_operand_substitution",
+        "description": "DI124_guard_weakened_or_double_release_accepted"
+      }
+    },
+    {
+      "case_id": "DI127IA-06-01",
+      "family_id": "DI127IA-FAMILY-06",
+      "mutation_id": "success_outcome_has_nonzero_exit",
+      "target_boundary": "worker_outcome_success",
+      "input_mutation": {
+        "operation": "single_or_coordinated_in_memory_operand_substitution",
+        "description": "success_outcome_has_nonzero_exit"
+      }
+    },
+    {
+      "case_id": "DI127IA-06-02",
+      "family_id": "DI127IA-FAMILY-06",
+      "mutation_id": "success_outcome_has_nonempty_stderr",
+      "target_boundary": "worker_outcome_success",
+      "input_mutation": {
+        "operation": "single_or_coordinated_in_memory_operand_substitution",
+        "description": "success_outcome_has_nonempty_stderr"
+      }
+    },
+    {
+      "case_id": "DI127IA-06-03",
+      "family_id": "DI127IA-FAMILY-06",
+      "mutation_id": "success_outcome_has_missing_or_partial_payload",
+      "target_boundary": "worker_outcome_success",
+      "input_mutation": {
+        "operation": "single_or_coordinated_in_memory_operand_substitution",
+        "description": "success_outcome_has_missing_or_partial_payload"
+      }
+    },
+    {
+      "case_id": "DI127IA-06-04",
+      "family_id": "DI127IA-FAMILY-06",
+      "mutation_id": "success_outcome_carries_failure_diagnostic",
+      "target_boundary": "worker_outcome_success",
+      "input_mutation": {
+        "operation": "single_or_coordinated_in_memory_operand_substitution",
+        "description": "success_outcome_carries_failure_diagnostic"
+      }
+    },
+    {
+      "case_id": "DI127IA-07-01",
+      "family_id": "DI127IA-FAMILY-07",
+      "mutation_id": "failure_outcome_uses_zero_exit",
+      "target_boundary": "worker_outcome_failure",
+      "input_mutation": {
+        "operation": "single_or_coordinated_in_memory_operand_substitution",
+        "description": "failure_outcome_uses_zero_exit"
+      }
+    },
+    {
+      "case_id": "DI127IA-07-02",
+      "family_id": "DI127IA-FAMILY-07",
+      "mutation_id": "failure_outcome_has_nonempty_stdout",
+      "target_boundary": "worker_outcome_failure",
+      "input_mutation": {
+        "operation": "single_or_coordinated_in_memory_operand_substitution",
+        "description": "failure_outcome_has_nonempty_stdout"
+      }
+    },
+    {
+      "case_id": "DI127IA-07-03",
+      "family_id": "DI127IA-FAMILY-07",
+      "mutation_id": "failure_stderr_record_noncanonical_or_oversize",
+      "target_boundary": "worker_outcome_failure",
+      "input_mutation": {
+        "operation": "single_or_coordinated_in_memory_operand_substitution",
+        "description": "failure_stderr_record_noncanonical_or_oversize"
+      }
+    },
+    {
+      "case_id": "DI127IA-07-04",
+      "family_id": "DI127IA-FAMILY-07",
+      "mutation_id": "nonzero_outcome_enters_success_payload_parser",
+      "target_boundary": "worker_parent_consumer",
+      "input_mutation": {
+        "operation": "single_or_coordinated_in_memory_operand_substitution",
+        "description": "nonzero_outcome_enters_success_payload_parser"
+      }
+    },
+    {
+      "case_id": "DI127IA-08-01",
+      "family_id": "DI127IA-FAMILY-08",
+      "mutation_id": "worker_not_started_in_dedicated_process_group",
+      "target_boundary": "worker_supervisor",
+      "input_mutation": {
+        "operation": "single_or_coordinated_in_memory_operand_substitution",
+        "description": "worker_not_started_in_dedicated_process_group"
+      }
+    },
+    {
+      "case_id": "DI127IA-08-02",
+      "family_id": "DI127IA-FAMILY-08",
+      "mutation_id": "simultaneous_stdout_drain_or_limit_removed",
+      "target_boundary": "worker_supervisor",
+      "input_mutation": {
+        "operation": "single_or_coordinated_in_memory_operand_substitution",
+        "description": "simultaneous_stdout_drain_or_limit_removed"
+      }
+    },
+    {
+      "case_id": "DI127IA-08-03",
+      "family_id": "DI127IA-FAMILY-08",
+      "mutation_id": "simultaneous_stderr_drain_or_limit_removed",
+      "target_boundary": "worker_supervisor",
+      "input_mutation": {
+        "operation": "single_or_coordinated_in_memory_operand_substitution",
+        "description": "simultaneous_stderr_drain_or_limit_removed"
+      }
+    },
+    {
+      "case_id": "DI127IA-08-04",
+      "family_id": "DI127IA-FAMILY-08",
+      "mutation_id": "360_second_path_uses_300_second_core_helper_or_skips_kill_reap",
+      "target_boundary": "worker_supervisor",
+      "input_mutation": {
+        "operation": "single_or_coordinated_in_memory_operand_substitution",
+        "description": "360_second_path_uses_300_second_core_helper_or_skips_kill_reap"
+      }
+    },
+    {
+      "case_id": "DI127IA-09-01",
+      "family_id": "DI127IA-FAMILY-09",
+      "mutation_id": "beta_starts_before_alpha_stream_close_and_reap",
+      "target_boundary": "serial_worker_schedule",
+      "input_mutation": {
+        "operation": "single_or_coordinated_in_memory_operand_substitution",
+        "description": "beta_starts_before_alpha_stream_close_and_reap"
+      }
+    },
+    {
+      "case_id": "DI127IA-09-02",
+      "family_id": "DI127IA-FAMILY-09",
+      "mutation_id": "between_workers_fresh_raw_recapture_omitted",
+      "target_boundary": "serial_worker_schedule",
+      "input_mutation": {
+        "operation": "single_or_coordinated_in_memory_operand_substitution",
+        "description": "between_workers_fresh_raw_recapture_omitted"
+      }
+    },
+    {
+      "case_id": "DI127IA-09-03",
+      "family_id": "DI127IA-FAMILY-09",
+      "mutation_id": "pair_deadline_not_strictly_above_two_workers_plus_margin",
+      "target_boundary": "serial_worker_schedule",
+      "input_mutation": {
+        "operation": "single_or_coordinated_in_memory_operand_substitution",
+        "description": "pair_deadline_not_strictly_above_two_workers_plus_margin"
+      }
+    },
+    {
+      "case_id": "DI127IA-09-04",
+      "family_id": "DI127IA-FAMILY-09",
+      "mutation_id": "launcher_deadline_not_strictly_above_pair_plus_cleanup_margin",
+      "target_boundary": "serial_worker_schedule",
+      "input_mutation": {
+        "operation": "single_or_coordinated_in_memory_operand_substitution",
+        "description": "launcher_deadline_not_strictly_above_pair_plus_cleanup_margin"
+      }
+    },
+    {
+      "case_id": "DI127IA-10-01",
+      "family_id": "DI127IA-FAMILY-10",
+      "mutation_id": "PID_included_in_comparable_payload",
+      "target_boundary": "worker_payload_comparator",
+      "input_mutation": {
+        "operation": "single_or_coordinated_in_memory_operand_substitution",
+        "description": "PID_included_in_comparable_payload"
+      }
+    },
+    {
+      "case_id": "DI127IA-10-02",
+      "family_id": "DI127IA-FAMILY-10",
+      "mutation_id": "wall_or_process_time_included_in_comparable_payload",
+      "target_boundary": "worker_payload_comparator",
+      "input_mutation": {
+        "operation": "single_or_coordinated_in_memory_operand_substitution",
+        "description": "wall_or_process_time_included_in_comparable_payload"
+      }
+    },
+    {
+      "case_id": "DI127IA-10-03",
+      "family_id": "DI127IA-FAMILY-10",
+      "mutation_id": "alpha_beta_payload_mismatch_ignored",
+      "target_boundary": "worker_payload_comparator",
+      "input_mutation": {
+        "operation": "single_or_coordinated_in_memory_operand_substitution",
+        "description": "alpha_beta_payload_mismatch_ignored"
+      }
+    },
+    {
+      "case_id": "DI127IA-10-04",
+      "family_id": "DI127IA-FAMILY-10",
+      "mutation_id": "subset_or_digest_only_comparison_substitutes_for_complete_bytes",
+      "target_boundary": "worker_payload_comparator",
+      "input_mutation": {
+        "operation": "single_or_coordinated_in_memory_operand_substitution",
+        "description": "subset_or_digest_only_comparison_substitutes_for_complete_bytes"
+      }
+    },
+    {
+      "case_id": "DI127IA-11-01",
+      "family_id": "DI127IA-FAMILY-11",
+      "mutation_id": "201_20_5_populations_collapsed_or_truncated",
+      "target_boundary": "population_consumer",
+      "input_mutation": {
+        "operation": "single_or_coordinated_in_memory_operand_substitution",
+        "description": "201_20_5_populations_collapsed_or_truncated"
+      }
+    },
+    {
+      "case_id": "DI127IA-11-02",
+      "family_id": "DI127IA-FAMILY-11",
+      "mutation_id": "schema_known_bad_7_laundered_into_DI126_72",
+      "target_boundary": "population_consumer",
+      "input_mutation": {
+        "operation": "single_or_coordinated_in_memory_operand_substitution",
+        "description": "schema_known_bad_7_laundered_into_DI126_72"
+      }
+    },
+    {
+      "case_id": "DI127IA-11-03",
+      "family_id": "DI127IA-FAMILY-11",
+      "mutation_id": "DI127_contract_population_53_omitted_or_relabelled",
+      "target_boundary": "population_consumer",
+      "input_mutation": {
+        "operation": "single_or_coordinated_in_memory_operand_substitution",
+        "description": "DI127_contract_population_53_omitted_or_relabelled"
+      }
+    },
+    {
+      "case_id": "DI127IA-11-04",
+      "family_id": "DI127IA-FAMILY-11",
+      "mutation_id": "finding_closed_count_promoted_above_zero",
+      "target_boundary": "finding_consumer",
+      "input_mutation": {
+        "operation": "single_or_coordinated_in_memory_operand_substitution",
+        "description": "finding_closed_count_promoted_above_zero"
+      }
+    },
+    {
+      "case_id": "DI127IA-12-01",
+      "family_id": "DI127IA-FAMILY-12",
+      "mutation_id": "expectations_loaded_before_mutation_execution",
+      "target_boundary": "adversary_runner",
+      "input_mutation": {
+        "operation": "single_or_coordinated_in_memory_operand_substitution",
+        "description": "expectations_loaded_before_mutation_execution"
+      }
+    },
+    {
+      "case_id": "DI127IA-12-02",
+      "family_id": "DI127IA-FAMILY-12",
+      "mutation_id": "actual_outcome_bytes_changed_after_canonical_freeze",
+      "target_boundary": "adversary_runner",
+      "input_mutation": {
+        "operation": "single_or_coordinated_in_memory_operand_substitution",
+        "description": "actual_outcome_bytes_changed_after_canonical_freeze"
+      }
+    },
+    {
+      "case_id": "DI127IA-12-03",
+      "family_id": "DI127IA-FAMILY-12",
+      "mutation_id": "expected_code_or_path_drives_production_diagnostic",
+      "target_boundary": "adversary_runner",
+      "input_mutation": {
+        "operation": "single_or_coordinated_in_memory_operand_substitution",
+        "description": "expected_code_or_path_drives_production_diagnostic"
+      }
+    },
+    {
+      "case_id": "DI127IA-12-04",
+      "family_id": "DI127IA-FAMILY-12",
+      "mutation_id": "actual_and_expected_graphs_share_mutable_container",
+      "target_boundary": "adversary_runner",
+      "input_mutation": {
+        "operation": "single_or_coordinated_in_memory_operand_substitution",
+        "description": "actual_and_expected_graphs_share_mutable_container"
+      }
+    },
+    {
+      "case_id": "DI127IA-13-01",
+      "family_id": "DI127IA-FAMILY-13",
+      "mutation_id": "initial_lock_render_accepts_existing_lock_path",
+      "target_boundary": "toolchain_lock_renderer",
+      "input_mutation": {
+        "operation": "single_or_coordinated_in_memory_operand_substitution",
+        "description": "initial_lock_render_accepts_existing_lock_path"
+      }
+    },
+    {
+      "case_id": "DI127IA-13-02",
+      "family_id": "DI127IA-FAMILY-13",
+      "mutation_id": "toolchain_lock_records_own_digest_or_blob",
+      "target_boundary": "toolchain_lock_renderer",
+      "input_mutation": {
+        "operation": "single_or_coordinated_in_memory_operand_substitution",
+        "description": "toolchain_lock_records_own_digest_or_blob"
+      }
+    },
+    {
+      "case_id": "DI127IA-13-03",
+      "family_id": "DI127IA-FAMILY-13",
+      "mutation_id": "installed_lock_rerender_differs_from_absent_self_bytes",
+      "target_boundary": "toolchain_lock_renderer",
+      "input_mutation": {
+        "operation": "single_or_coordinated_in_memory_operand_substitution",
+        "description": "installed_lock_rerender_differs_from_absent_self_bytes"
+      }
+    },
+    {
+      "case_id": "DI127IA-13-04",
+      "family_id": "DI127IA-FAMILY-13",
+      "mutation_id": "toolchain_lock_predicts_future_commit_tree_or_report_digest",
+      "target_boundary": "toolchain_lock_renderer",
+      "input_mutation": {
+        "operation": "single_or_coordinated_in_memory_operand_substitution",
+        "description": "toolchain_lock_predicts_future_commit_tree_or_report_digest"
+      }
+    },
+    {
+      "case_id": "DI127IA-14-01",
+      "family_id": "DI127IA-FAMILY-14",
+      "mutation_id": "N126_reused_as_current_readiness_admission",
+      "target_boundary": "future_topology_consumer",
+      "input_mutation": {
+        "operation": "single_or_coordinated_in_memory_operand_substitution",
+        "description": "N126_reused_as_current_readiness_admission"
+      }
+    },
+    {
+      "case_id": "DI127IA-14-02",
+      "family_id": "DI127IA-FAMILY-14",
+      "mutation_id": "N127_changes_existing_path_or_uses_wrong_parent",
+      "target_boundary": "future_topology_consumer",
+      "input_mutation": {
+        "operation": "single_or_coordinated_in_memory_operand_substitution",
+        "description": "N127_changes_existing_path_or_uses_wrong_parent"
+      }
+    },
+    {
+      "case_id": "DI127IA-14-03",
+      "family_id": "DI127IA-FAMILY-14",
+      "mutation_id": "N127_adds_fourth_wrong_or_executable_record",
+      "target_boundary": "future_topology_consumer",
+      "input_mutation": {
+        "operation": "single_or_coordinated_in_memory_operand_substitution",
+        "description": "N127_adds_fourth_wrong_or_executable_record"
+      }
+    },
+    {
+      "case_id": "DI127IA-14-04",
+      "family_id": "DI127IA-FAMILY-14",
+      "mutation_id": "pre_N127_probe_role_attempts_public_R0_pair_entry",
+      "target_boundary": "readiness_invocation_role_consumer",
+      "input_mutation": {
+        "operation": "coordinated_invocation_role_raw_N127_stage_and_pair_intent_substitution",
+        "description": "pre_N127_probe_only_role_with_raw_N127_present_stage_attempts_real_R0_pair_entry"
+      }
+    },
+    {
+      "case_id": "DI127IA-15-01",
+      "family_id": "DI127IA-FAMILY-15",
+      "mutation_id": "schema_valid_candidate_projection_forgery",
+      "target_boundary": "implementation_report_consumer",
+      "input_mutation": {
+        "operation": "single_or_coordinated_in_memory_operand_substitution",
+        "description": "schema_valid_candidate_projection_forgery"
+      }
+    },
+    {
+      "case_id": "DI127IA-15-02",
+      "family_id": "DI127IA-FAMILY-15",
+      "mutation_id": "schema_valid_coherent_worker_payload_binding_forgery",
+      "target_boundary": "implementation_report_consumer",
+      "input_mutation": {
+        "operation": "single_or_coordinated_in_memory_operand_substitution",
+        "description": "schema_valid_coherent_worker_payload_binding_forgery"
+      }
+    },
+    {
+      "case_id": "DI127IA-15-03",
+      "family_id": "DI127IA-FAMILY-15",
+      "mutation_id": "expected_and_observed_report_graphs_share_nested_container",
+      "target_boundary": "implementation_report_consumer",
+      "input_mutation": {
+        "operation": "single_or_coordinated_in_memory_operand_substitution",
+        "description": "expected_and_observed_report_graphs_share_nested_container"
+      }
+    },
+    {
+      "case_id": "DI127IA-15-04",
+      "family_id": "DI127IA-FAMILY-15",
+      "mutation_id": "schema_valid_premature_implementation_identity_forgery",
+      "target_boundary": "implementation_report_consumer",
+      "input_mutation": {
+        "operation": "single_or_coordinated_in_memory_operand_substitution",
+        "description": "schema_valid_premature_implementation_identity_forgery"
+      }
+    },
+    {
+      "case_id": "DI127IA-16-01",
+      "family_id": "DI127IA-FAMILY-16",
+      "mutation_id": "promote_subject_architecture_status",
+      "target_boundary": "authority_consumer",
+      "input_mutation": {
+        "operation": "single_or_coordinated_in_memory_operand_substitution",
+        "description": "promote_subject_architecture_status"
+      }
+    },
+    {
+      "case_id": "DI127IA-16-02",
+      "family_id": "DI127IA-FAMILY-16",
+      "mutation_id": "promote_correction_contract_state",
+      "target_boundary": "authority_consumer",
+      "input_mutation": {
+        "operation": "single_or_coordinated_in_memory_operand_substitution",
+        "description": "promote_correction_contract_state"
+      }
+    },
+    {
+      "case_id": "DI127IA-16-03",
+      "family_id": "DI127IA-FAMILY-16",
+      "mutation_id": "promote_correction_review_state",
+      "target_boundary": "authority_consumer",
+      "input_mutation": {
+        "operation": "single_or_coordinated_in_memory_operand_substitution",
+        "description": "promote_correction_review_state"
+      }
+    },
+    {
+      "case_id": "DI127IA-16-04",
+      "family_id": "DI127IA-FAMILY-16",
+      "mutation_id": "promote_correction_implementation_state",
+      "target_boundary": "authority_consumer",
+      "input_mutation": {
+        "operation": "single_or_coordinated_in_memory_operand_substitution",
+        "description": "promote_correction_implementation_state"
+      }
+    },
+    {
+      "case_id": "DI127IA-16-05",
+      "family_id": "DI127IA-FAMILY-16",
+      "mutation_id": "promote_incident_record_lifecycle_status",
+      "target_boundary": "authority_consumer",
+      "input_mutation": {
+        "operation": "single_or_coordinated_in_memory_operand_substitution",
+        "description": "promote_incident_record_lifecycle_status"
+      }
+    },
+    {
+      "case_id": "DI127IA-16-06",
+      "family_id": "DI127IA-FAMILY-16",
+      "mutation_id": "promote_incident_resolution_state",
+      "target_boundary": "authority_consumer",
+      "input_mutation": {
+        "operation": "single_or_coordinated_in_memory_operand_substitution",
+        "description": "promote_incident_resolution_state"
+      }
+    },
+    {
+      "case_id": "DI127IA-16-07",
+      "family_id": "DI127IA-FAMILY-16",
+      "mutation_id": "promote_replacement_readiness_inputs_state",
+      "target_boundary": "authority_consumer",
+      "input_mutation": {
+        "operation": "single_or_coordinated_in_memory_operand_substitution",
+        "description": "promote_replacement_readiness_inputs_state"
+      }
+    },
+    {
+      "case_id": "DI127IA-16-08",
+      "family_id": "DI127IA-FAMILY-16",
+      "mutation_id": "promote_interface_readiness_state",
+      "target_boundary": "authority_consumer",
+      "input_mutation": {
+        "operation": "single_or_coordinated_in_memory_operand_substitution",
+        "description": "promote_interface_readiness_state"
+      }
+    },
+    {
+      "case_id": "DI127IA-16-09",
+      "family_id": "DI127IA-FAMILY-16",
+      "mutation_id": "promote_operator_acceptance_state",
+      "target_boundary": "authority_consumer",
+      "input_mutation": {
+        "operation": "single_or_coordinated_in_memory_operand_substitution",
+        "description": "promote_operator_acceptance_state"
+      }
+    },
+    {
+      "case_id": "DI127IA-16-10",
+      "family_id": "DI127IA-FAMILY-16",
+      "mutation_id": "promote_ga_17_state",
+      "target_boundary": "authority_consumer",
+      "input_mutation": {
+        "operation": "single_or_coordinated_in_memory_operand_substitution",
+        "description": "promote_ga_17_state"
+      }
+    },
+    {
+      "case_id": "DI127IA-16-11",
+      "family_id": "DI127IA-FAMILY-16",
+      "mutation_id": "promote_transport_verification_state",
+      "target_boundary": "authority_consumer",
+      "input_mutation": {
+        "operation": "single_or_coordinated_in_memory_operand_substitution",
+        "description": "promote_transport_verification_state"
+      }
+    },
+    {
+      "case_id": "DI127IA-16-12",
+      "family_id": "DI127IA-FAMILY-16",
+      "mutation_id": "promote_independent_external_review_completed",
+      "target_boundary": "authority_consumer",
+      "input_mutation": {
+        "operation": "single_or_coordinated_in_memory_operand_substitution",
+        "description": "promote_independent_external_review_completed"
+      }
+    },
+    {
+      "case_id": "DI127IA-16-13",
+      "family_id": "DI127IA-FAMILY-16",
+      "mutation_id": "promote_human_decision_process_authorized",
+      "target_boundary": "authority_consumer",
+      "input_mutation": {
+        "operation": "single_or_coordinated_in_memory_operand_substitution",
+        "description": "promote_human_decision_process_authorized"
+      }
+    },
+    {
+      "case_id": "DI127IA-16-14",
+      "family_id": "DI127IA-FAMILY-16",
+      "mutation_id": "promote_scientific_evidence_created",
+      "target_boundary": "authority_consumer",
+      "input_mutation": {
+        "operation": "single_or_coordinated_in_memory_operand_substitution",
+        "description": "promote_scientific_evidence_created"
+      }
+    },
+    {
+      "case_id": "DI127IA-16-15",
+      "family_id": "DI127IA-FAMILY-16",
+      "mutation_id": "promote_scientific_claim_authority",
+      "target_boundary": "authority_consumer",
+      "input_mutation": {
+        "operation": "single_or_coordinated_in_memory_operand_substitution",
+        "description": "promote_scientific_claim_authority"
+      }
+    },
+    {
+      "case_id": "DI127IA-16-16",
+      "family_id": "DI127IA-FAMILY-16",
+      "mutation_id": "promote_publication_acceptance_authorized",
+      "target_boundary": "authority_consumer",
+      "input_mutation": {
+        "operation": "single_or_coordinated_in_memory_operand_substitution",
+        "description": "promote_publication_acceptance_authorized"
+      }
+    },
+    {
+      "case_id": "DI127IA-16-17",
+      "family_id": "DI127IA-FAMILY-16",
+      "mutation_id": "promote_public_distribution_eligible",
+      "target_boundary": "authority_consumer",
+      "input_mutation": {
+        "operation": "single_or_coordinated_in_memory_operand_substitution",
+        "description": "promote_public_distribution_eligible"
+      }
+    },
+    {
+      "case_id": "DI127IA-16-18",
+      "family_id": "DI127IA-FAMILY-16",
+      "mutation_id": "promote_public_distribution_authorized",
+      "target_boundary": "authority_consumer",
+      "input_mutation": {
+        "operation": "single_or_coordinated_in_memory_operand_substitution",
+        "description": "promote_public_distribution_authorized"
+      }
+    },
+    {
+      "case_id": "DI127IA-16-19",
+      "family_id": "DI127IA-FAMILY-16",
+      "mutation_id": "promote_runtime_authorized",
+      "target_boundary": "authority_consumer",
+      "input_mutation": {
+        "operation": "single_or_coordinated_in_memory_operand_substitution",
+        "description": "promote_runtime_authorized"
+      }
+    },
+    {
+      "case_id": "DI127IA-16-20",
+      "family_id": "DI127IA-FAMILY-16",
+      "mutation_id": "promote_cloud_execution_authorized",
+      "target_boundary": "authority_consumer",
+      "input_mutation": {
+        "operation": "single_or_coordinated_in_memory_operand_substitution",
+        "description": "promote_cloud_execution_authorized"
+      }
+    },
+    {
+      "case_id": "DI127IA-16-21",
+      "family_id": "DI127IA-FAMILY-16",
+      "mutation_id": "promote_private_data_ingestion_authorized",
+      "target_boundary": "authority_consumer",
+      "input_mutation": {
+        "operation": "single_or_coordinated_in_memory_operand_substitution",
+        "description": "promote_private_data_ingestion_authorized"
+      }
+    },
+    {
+      "case_id": "DI127IA-16-22",
+      "family_id": "DI127IA-FAMILY-16",
+      "mutation_id": "promote_physical_control_authorized",
+      "target_boundary": "authority_consumer",
+      "input_mutation": {
+        "operation": "single_or_coordinated_in_memory_operand_substitution",
+        "description": "promote_physical_control_authorized"
+      }
+    },
+    {
+      "case_id": "DI127IA-16-23",
+      "family_id": "DI127IA-FAMILY-16",
+      "mutation_id": "promote_gate_b_authorized",
+      "target_boundary": "authority_consumer",
+      "input_mutation": {
+        "operation": "single_or_coordinated_in_memory_operand_substitution",
+        "description": "promote_gate_b_authorized"
+      }
+    },
+    {
+      "case_id": "DI127IA-16-24",
+      "family_id": "DI127IA-FAMILY-16",
+      "mutation_id": "promote_R1_authorized",
+      "target_boundary": "authority_consumer",
+      "input_mutation": {
+        "operation": "single_or_coordinated_in_memory_operand_substitution",
+        "description": "promote_R1_authorized"
+      }
+    },
+    {
+      "case_id": "DI127IA-16-25",
+      "family_id": "DI127IA-FAMILY-16",
+      "mutation_id": "promote_P_authorized",
+      "target_boundary": "authority_consumer",
+      "input_mutation": {
+        "operation": "single_or_coordinated_in_memory_operand_substitution",
+        "description": "promote_P_authorized"
+      }
+    },
+    {
+      "case_id": "DI127IA-16-26",
+      "family_id": "DI127IA-FAMILY-16",
+      "mutation_id": "promote_R2_authorized",
+      "target_boundary": "authority_consumer",
+      "input_mutation": {
+        "operation": "single_or_coordinated_in_memory_operand_substitution",
+        "description": "promote_R2_authorized"
+      }
+    },
+    {
+      "case_id": "DI127IA-16-27",
+      "family_id": "DI127IA-FAMILY-16",
+      "mutation_id": "promote_C_authorized",
+      "target_boundary": "authority_consumer",
+      "input_mutation": {
+        "operation": "single_or_coordinated_in_memory_operand_substitution",
+        "description": "promote_C_authorized"
+      }
+    },
+    {
+      "case_id": "DI127IA-16-28",
+      "family_id": "DI127IA-FAMILY-16",
+      "mutation_id": "promote_Q_authorized",
+      "target_boundary": "authority_consumer",
+      "input_mutation": {
+        "operation": "single_or_coordinated_in_memory_operand_substitution",
+        "description": "promote_Q_authorized"
+      }
+    },
+    {
+      "case_id": "DI127IA-16-29",
+      "family_id": "DI127IA-FAMILY-16",
+      "mutation_id": "promote_main_ref_change_authorized",
+      "target_boundary": "authority_consumer",
+      "input_mutation": {
+        "operation": "single_or_coordinated_in_memory_operand_substitution",
+        "description": "promote_main_ref_change_authorized"
+      }
+    },
+    {
+      "case_id": "DI127IA-16-30",
+      "family_id": "DI127IA-FAMILY-16",
+      "mutation_id": "promote_merge_commit_authorized",
+      "target_boundary": "authority_consumer",
+      "input_mutation": {
+        "operation": "single_or_coordinated_in_memory_operand_substitution",
+        "description": "promote_merge_commit_authorized"
+      }
+    },
+    {
+      "case_id": "DI127IA-16-31",
+      "family_id": "DI127IA-FAMILY-16",
+      "mutation_id": "promote_public_push_authorized",
+      "target_boundary": "authority_consumer",
+      "input_mutation": {
+        "operation": "single_or_coordinated_in_memory_operand_substitution",
+        "description": "promote_public_push_authorized"
+      }
+    }
+  ],
+  "expected_rejections": [
+    {
+      "case_id": "DI127IA-01-01",
+      "expected_disposition": "rejected",
+      "expected_exit_class": "contract_failure",
+      "expected_code": "DI127I-REVIEW-BINDING",
+      "expected_path": "/predecessor_review_checkpoint/commit"
+    },
+    {
+      "case_id": "DI127IA-01-02",
+      "expected_disposition": "rejected",
+      "expected_exit_class": "contract_failure",
+      "expected_code": "DI127I-REVIEW-BINDING",
+      "expected_path": "/predecessor_review_checkpoint/tree"
+    },
+    {
+      "case_id": "DI127IA-01-03",
+      "expected_disposition": "rejected",
+      "expected_exit_class": "contract_failure",
+      "expected_code": "DI127I-REVIEW-BINDING",
+      "expected_path": "/predecessor_review_checkpoint/sole_parent"
+    },
+    {
+      "case_id": "DI127IA-01-04",
+      "expected_disposition": "rejected",
+      "expected_exit_class": "contract_failure",
+      "expected_code": "DI127I-REVIEW-REPORT-BINDING",
+      "expected_path": "/predecessor_review_checkpoint/immutable_review_report_observation/sha256"
+    },
+    {
+      "case_id": "DI127IA-02-01",
+      "expected_disposition": "rejected",
+      "expected_exit_class": "contract_failure",
+      "expected_code": "DI127I-RAW-OBJECT",
+      "expected_path": "/raw_git/commit"
+    },
+    {
+      "case_id": "DI127IA-02-02",
+      "expected_disposition": "rejected",
+      "expected_exit_class": "contract_failure",
+      "expected_code": "DI127I-RAW-OBJECT",
+      "expected_path": "/raw_git/tree"
+    },
+    {
+      "case_id": "DI127IA-02-03",
+      "expected_disposition": "rejected",
+      "expected_exit_class": "contract_failure",
+      "expected_code": "DI127I-RAW-OBJECT",
+      "expected_path": "/raw_git/blob"
+    },
+    {
+      "case_id": "DI127IA-02-04",
+      "expected_disposition": "rejected",
+      "expected_exit_class": "contract_failure",
+      "expected_code": "DI127I-RAW-INDEX",
+      "expected_path": "/raw_git/index"
+    },
+    {
+      "case_id": "DI127IA-03-01",
+      "expected_disposition": "rejected",
+      "expected_exit_class": "contract_failure",
+      "expected_code": "DI127I-RAW-RESOLVER-PURITY",
+      "expected_path": "/raw_subject_resolver/forbidden/schema_bootstrap"
+    },
+    {
+      "case_id": "DI127IA-03-02",
+      "expected_disposition": "rejected",
+      "expected_exit_class": "contract_failure",
+      "expected_code": "DI127I-RAW-RESOLVER-PURITY",
+      "expected_path": "/raw_subject_resolver/forbidden/admission_dispatch"
+    },
+    {
+      "case_id": "DI127IA-03-03",
+      "expected_disposition": "rejected",
+      "expected_exit_class": "contract_failure",
+      "expected_code": "DI127I-RAW-RESOLVER-FRESHNESS",
+      "expected_path": "/raw_subject_resolver/fresh_resolver"
+    },
+    {
+      "case_id": "DI127IA-03-04",
+      "expected_disposition": "rejected",
+      "expected_exit_class": "contract_failure",
+      "expected_code": "DI127I-RAW-RESOLVER-JOIN",
+      "expected_path": "/raw_subject_resolver/shared_function"
+    },
+    {
+      "case_id": "DI127IA-04-01",
+      "expected_disposition": "rejected",
+      "expected_exit_class": "contract_failure",
+      "expected_code": "DI127I-FINDER-LEASE",
+      "expected_path": "/schema_finder_lease/owned_finder"
+    },
+    {
+      "case_id": "DI127IA-04-02",
+      "expected_disposition": "rejected",
+      "expected_exit_class": "contract_failure",
+      "expected_code": "DI127I-FINDER-POSITION",
+      "expected_path": "/schema_finder_lease/insertion_index"
+    },
+    {
+      "case_id": "DI127IA-04-03",
+      "expected_disposition": "rejected",
+      "expected_exit_class": "contract_failure",
+      "expected_code": "DI127I-FINDER-DUPLICATE",
+      "expected_path": "/schema_finder_lease/object_identity"
+    },
+    {
+      "case_id": "DI127IA-04-04",
+      "expected_disposition": "rejected",
+      "expected_exit_class": "contract_failure",
+      "expected_code": "DI127I-FINDER-FOREIGN",
+      "expected_path": "/schema_finder_lease/object_identity"
+    },
+    {
+      "case_id": "DI127IA-05-01",
+      "expected_disposition": "rejected",
+      "expected_exit_class": "contract_failure",
+      "expected_code": "DI127I-FINDER-RESTORE",
+      "expected_path": "/schema_finder_lease/success_restore"
+    },
+    {
+      "case_id": "DI127IA-05-02",
+      "expected_disposition": "rejected",
+      "expected_exit_class": "contract_failure",
+      "expected_code": "DI127I-FINDER-RESTORE",
+      "expected_path": "/schema_finder_lease/exception_restore"
+    },
+    {
+      "case_id": "DI127IA-05-03",
+      "expected_disposition": "rejected",
+      "expected_exit_class": "contract_failure",
+      "expected_code": "DI127I-FINDER-NAMESPACE",
+      "expected_path": "/schema_finder_lease/namespace_tail"
+    },
+    {
+      "case_id": "DI127IA-05-04",
+      "expected_disposition": "rejected",
+      "expected_exit_class": "contract_failure",
+      "expected_code": "DI127I-DI124-GUARD",
+      "expected_path": "/schema_finder_lease/DI124_guard"
+    },
+    {
+      "case_id": "DI127IA-06-01",
+      "expected_disposition": "rejected",
+      "expected_exit_class": "contract_failure",
+      "expected_code": "DI127I-WORKER-SUCCESS-FRAME",
+      "expected_path": "/worker_outcome/exit_status"
+    },
+    {
+      "case_id": "DI127IA-06-02",
+      "expected_disposition": "rejected",
+      "expected_exit_class": "contract_failure",
+      "expected_code": "DI127I-WORKER-SUCCESS-FRAME",
+      "expected_path": "/worker_outcome/stderr"
+    },
+    {
+      "case_id": "DI127IA-06-03",
+      "expected_disposition": "rejected",
+      "expected_exit_class": "contract_failure",
+      "expected_code": "DI127I-WORKER-PAYLOAD",
+      "expected_path": "/worker_outcome/complete_payload"
+    },
+    {
+      "case_id": "DI127IA-06-04",
+      "expected_disposition": "rejected",
+      "expected_exit_class": "contract_failure",
+      "expected_code": "DI127I-WORKER-SUCCESS-FRAME",
+      "expected_path": "/worker_outcome/diagnostic"
+    },
+    {
+      "case_id": "DI127IA-07-01",
+      "expected_disposition": "rejected",
+      "expected_exit_class": "contract_failure",
+      "expected_code": "DI127I-WORKER-FAILURE-FRAME",
+      "expected_path": "/worker_outcome/exit_status"
+    },
+    {
+      "case_id": "DI127IA-07-02",
+      "expected_disposition": "rejected",
+      "expected_exit_class": "contract_failure",
+      "expected_code": "DI127I-WORKER-FAILURE-FRAME",
+      "expected_path": "/worker_outcome/stdout"
+    },
+    {
+      "case_id": "DI127IA-07-03",
+      "expected_disposition": "rejected",
+      "expected_exit_class": "contract_failure",
+      "expected_code": "DI127I-WORKER-FAILURE-FRAME",
+      "expected_path": "/worker_outcome/stderr"
+    },
+    {
+      "case_id": "DI127IA-07-04",
+      "expected_disposition": "rejected",
+      "expected_exit_class": "contract_failure",
+      "expected_code": "DI127I-WORKER-STATUS-SEPARATION",
+      "expected_path": "/worker_outcome/outcome_state"
+    },
+    {
+      "case_id": "DI127IA-08-01",
+      "expected_disposition": "rejected",
+      "expected_exit_class": "contract_failure",
+      "expected_code": "DI127I-WORKER-PROCESS-GROUP",
+      "expected_path": "/worker_supervisor/process_group"
+    },
+    {
+      "case_id": "DI127IA-08-02",
+      "expected_disposition": "rejected",
+      "expected_exit_class": "contract_failure",
+      "expected_code": "DI127I-WORKER-STREAM",
+      "expected_path": "/worker_supervisor/stdout"
+    },
+    {
+      "case_id": "DI127IA-08-03",
+      "expected_disposition": "rejected",
+      "expected_exit_class": "contract_failure",
+      "expected_code": "DI127I-WORKER-STREAM",
+      "expected_path": "/worker_supervisor/stderr"
+    },
+    {
+      "case_id": "DI127IA-08-04",
+      "expected_disposition": "rejected",
+      "expected_exit_class": "contract_failure",
+      "expected_code": "DI127I-WORKER-SUPERVISOR",
+      "expected_path": "/worker_supervisor/implementation"
+    },
+    {
+      "case_id": "DI127IA-09-01",
+      "expected_disposition": "rejected",
+      "expected_exit_class": "contract_failure",
+      "expected_code": "DI127I-WORKER-ORDER",
+      "expected_path": "/serial_schedule/alpha_reap"
+    },
+    {
+      "case_id": "DI127IA-09-02",
+      "expected_disposition": "rejected",
+      "expected_exit_class": "contract_failure",
+      "expected_code": "DI127I-WORKER-RECAPTURE",
+      "expected_path": "/serial_schedule/between_workers_capture"
+    },
+    {
+      "case_id": "DI127IA-09-03",
+      "expected_disposition": "rejected",
+      "expected_exit_class": "contract_failure",
+      "expected_code": "DI127I-DEADLINE-ALGEBRA",
+      "expected_path": "/serial_schedule/pair_timeout_seconds"
+    },
+    {
+      "case_id": "DI127IA-09-04",
+      "expected_disposition": "rejected",
+      "expected_exit_class": "contract_failure",
+      "expected_code": "DI127I-DEADLINE-ALGEBRA",
+      "expected_path": "/serial_schedule/launcher_timeout_seconds"
+    },
+    {
+      "case_id": "DI127IA-10-01",
+      "expected_disposition": "rejected",
+      "expected_exit_class": "contract_failure",
+      "expected_code": "DI127I-PAYLOAD-COMPARABILITY",
+      "expected_path": "/worker_payload/PID"
+    },
+    {
+      "case_id": "DI127IA-10-02",
+      "expected_disposition": "rejected",
+      "expected_exit_class": "contract_failure",
+      "expected_code": "DI127I-PAYLOAD-COMPARABILITY",
+      "expected_path": "/worker_payload/timing"
+    },
+    {
+      "case_id": "DI127IA-10-03",
+      "expected_disposition": "rejected",
+      "expected_exit_class": "contract_failure",
+      "expected_code": "DI127I-PAYLOAD-EQUALITY",
+      "expected_path": "/worker_payload/equality"
+    },
+    {
+      "case_id": "DI127IA-10-04",
+      "expected_disposition": "rejected",
+      "expected_exit_class": "contract_failure",
+      "expected_code": "DI127I-PAYLOAD-COMPLETE",
+      "expected_path": "/worker_payload/complete_bytes"
+    },
+    {
+      "case_id": "DI127IA-11-01",
+      "expected_disposition": "rejected",
+      "expected_exit_class": "contract_failure",
+      "expected_code": "DI127I-POPULATION",
+      "expected_path": "/population_summary/historical_catalogs"
+    },
+    {
+      "case_id": "DI127IA-11-02",
+      "expected_disposition": "rejected",
+      "expected_exit_class": "contract_failure",
+      "expected_code": "DI127I-POPULATION",
+      "expected_path": "/population_summary/schema_and_DI126"
+    },
+    {
+      "case_id": "DI127IA-11-03",
+      "expected_disposition": "rejected",
+      "expected_exit_class": "contract_failure",
+      "expected_code": "DI127I-POPULATION",
+      "expected_path": "/population_summary/DI127_contract_adversaries"
+    },
+    {
+      "case_id": "DI127IA-11-04",
+      "expected_disposition": "rejected",
+      "expected_exit_class": "contract_failure",
+      "expected_code": "DI127I-FINDING-CLOSURE",
+      "expected_path": "/population_summary/finding_closed_count"
+    },
+    {
+      "case_id": "DI127IA-12-01",
+      "expected_disposition": "rejected",
+      "expected_exit_class": "contract_failure",
+      "expected_code": "DI127I-ACTUAL-FIRST",
+      "expected_path": "/adversary_evaluation/order"
+    },
+    {
+      "case_id": "DI127IA-12-02",
+      "expected_disposition": "rejected",
+      "expected_exit_class": "contract_failure",
+      "expected_code": "DI127I-ACTUAL-FREEZE",
+      "expected_path": "/adversary_evaluation/actuals"
+    },
+    {
+      "case_id": "DI127IA-12-03",
+      "expected_disposition": "rejected",
+      "expected_exit_class": "contract_failure",
+      "expected_code": "DI127I-EXPECTATION-ORACLE",
+      "expected_path": "/adversary_evaluation/expectations"
+    },
+    {
+      "case_id": "DI127IA-12-04",
+      "expected_disposition": "rejected",
+      "expected_exit_class": "contract_failure",
+      "expected_code": "DI127I-GRAPH-ALIAS",
+      "expected_path": "/adversary_evaluation/graph_isolation"
+    },
+    {
+      "case_id": "DI127IA-13-01",
+      "expected_disposition": "rejected",
+      "expected_exit_class": "contract_failure",
+      "expected_code": "DI127I-LOCK-LIFECYCLE",
+      "expected_path": "/toolchain_lock/initial_absence"
+    },
+    {
+      "case_id": "DI127IA-13-02",
+      "expected_disposition": "rejected",
+      "expected_exit_class": "contract_failure",
+      "expected_code": "DI127I-LOCK-SELF-REFERENCE",
+      "expected_path": "/toolchain_lock/self_digest_recorded"
+    },
+    {
+      "case_id": "DI127IA-13-03",
+      "expected_disposition": "rejected",
+      "expected_exit_class": "contract_failure",
+      "expected_code": "DI127I-LOCK-REPRODUCTION",
+      "expected_path": "/toolchain_lock/reproduction"
+    },
+    {
+      "case_id": "DI127IA-13-04",
+      "expected_disposition": "rejected",
+      "expected_exit_class": "contract_failure",
+      "expected_code": "DI127I-LOCK-FUTURE-IDENTITY",
+      "expected_path": "/toolchain_lock/future_identity"
+    },
+    {
+      "case_id": "DI127IA-14-01",
+      "expected_disposition": "rejected",
+      "expected_exit_class": "contract_failure",
+      "expected_code": "DI127I-N126-NONADMISSION",
+      "expected_path": "/future_topology/N126"
+    },
+    {
+      "case_id": "DI127IA-14-02",
+      "expected_disposition": "rejected",
+      "expected_exit_class": "contract_failure",
+      "expected_code": "DI127I-N127-TOPOLOGY",
+      "expected_path": "/future_topology/N127"
+    },
+    {
+      "case_id": "DI127IA-14-03",
+      "expected_disposition": "rejected",
+      "expected_exit_class": "contract_failure",
+      "expected_code": "DI127I-N127-DELTA",
+      "expected_path": "/future_topology/N127/added_paths"
+    },
+    {
+      "case_id": "DI127IA-14-04",
+      "expected_disposition": "rejected",
+      "expected_exit_class": "contract_failure",
+      "expected_code": "DI127I-R0-STOP",
+      "expected_path": "/future_topology/R0"
+    },
+    {
+      "case_id": "DI127IA-15-01",
+      "expected_disposition": "rejected",
+      "expected_exit_class": "contract_failure",
+      "expected_code": "DI127I-REPORT-PROJECTION",
+      "expected_path": "/candidate_projection"
+    },
+    {
+      "case_id": "DI127IA-15-02",
+      "expected_disposition": "rejected",
+      "expected_exit_class": "contract_failure",
+      "expected_code": "DI127I-REPORT-PAYLOAD-BINDING",
+      "expected_path": "/serial_worker_schedule_evidence/comparable_payload"
+    },
+    {
+      "case_id": "DI127IA-15-03",
+      "expected_disposition": "rejected",
+      "expected_exit_class": "contract_failure",
+      "expected_code": "DI127I-REPORT-GRAPH-ALIAS",
+      "expected_path": "/report_consumer/graph_isolation"
+    },
+    {
+      "case_id": "DI127IA-15-04",
+      "expected_disposition": "rejected",
+      "expected_exit_class": "contract_failure",
+      "expected_code": "DI127I-REPORT-SELF-REFERENCE",
+      "expected_path": "/report_consumer/forbidden_identity"
+    },
+    {
+      "case_id": "DI127IA-16-01",
+      "expected_disposition": "rejected",
+      "expected_exit_class": "contract_failure",
+      "expected_code": "DI127I-AUTHORITY",
+      "expected_path": "/authority/subject_architecture_status"
+    },
+    {
+      "case_id": "DI127IA-16-02",
+      "expected_disposition": "rejected",
+      "expected_exit_class": "contract_failure",
+      "expected_code": "DI127I-AUTHORITY",
+      "expected_path": "/authority/correction_contract_state"
+    },
+    {
+      "case_id": "DI127IA-16-03",
+      "expected_disposition": "rejected",
+      "expected_exit_class": "contract_failure",
+      "expected_code": "DI127I-AUTHORITY",
+      "expected_path": "/authority/correction_review_state"
+    },
+    {
+      "case_id": "DI127IA-16-04",
+      "expected_disposition": "rejected",
+      "expected_exit_class": "contract_failure",
+      "expected_code": "DI127I-AUTHORITY",
+      "expected_path": "/authority/correction_implementation_state"
+    },
+    {
+      "case_id": "DI127IA-16-05",
+      "expected_disposition": "rejected",
+      "expected_exit_class": "contract_failure",
+      "expected_code": "DI127I-AUTHORITY",
+      "expected_path": "/authority/incident_record_lifecycle_status"
+    },
+    {
+      "case_id": "DI127IA-16-06",
+      "expected_disposition": "rejected",
+      "expected_exit_class": "contract_failure",
+      "expected_code": "DI127I-AUTHORITY",
+      "expected_path": "/authority/incident_resolution_state"
+    },
+    {
+      "case_id": "DI127IA-16-07",
+      "expected_disposition": "rejected",
+      "expected_exit_class": "contract_failure",
+      "expected_code": "DI127I-AUTHORITY",
+      "expected_path": "/authority/replacement_readiness_inputs_state"
+    },
+    {
+      "case_id": "DI127IA-16-08",
+      "expected_disposition": "rejected",
+      "expected_exit_class": "contract_failure",
+      "expected_code": "DI127I-AUTHORITY",
+      "expected_path": "/authority/interface_readiness_state"
+    },
+    {
+      "case_id": "DI127IA-16-09",
+      "expected_disposition": "rejected",
+      "expected_exit_class": "contract_failure",
+      "expected_code": "DI127I-AUTHORITY",
+      "expected_path": "/authority/operator_acceptance_state"
+    },
+    {
+      "case_id": "DI127IA-16-10",
+      "expected_disposition": "rejected",
+      "expected_exit_class": "contract_failure",
+      "expected_code": "DI127I-AUTHORITY",
+      "expected_path": "/authority/ga_17_state"
+    },
+    {
+      "case_id": "DI127IA-16-11",
+      "expected_disposition": "rejected",
+      "expected_exit_class": "contract_failure",
+      "expected_code": "DI127I-AUTHORITY",
+      "expected_path": "/authority/transport_verification_state"
+    },
+    {
+      "case_id": "DI127IA-16-12",
+      "expected_disposition": "rejected",
+      "expected_exit_class": "contract_failure",
+      "expected_code": "DI127I-AUTHORITY",
+      "expected_path": "/authority/independent_external_review_completed"
+    },
+    {
+      "case_id": "DI127IA-16-13",
+      "expected_disposition": "rejected",
+      "expected_exit_class": "contract_failure",
+      "expected_code": "DI127I-AUTHORITY",
+      "expected_path": "/authority/human_decision_process_authorized"
+    },
+    {
+      "case_id": "DI127IA-16-14",
+      "expected_disposition": "rejected",
+      "expected_exit_class": "contract_failure",
+      "expected_code": "DI127I-AUTHORITY",
+      "expected_path": "/authority/scientific_evidence_created"
+    },
+    {
+      "case_id": "DI127IA-16-15",
+      "expected_disposition": "rejected",
+      "expected_exit_class": "contract_failure",
+      "expected_code": "DI127I-AUTHORITY",
+      "expected_path": "/authority/scientific_claim_authority"
+    },
+    {
+      "case_id": "DI127IA-16-16",
+      "expected_disposition": "rejected",
+      "expected_exit_class": "contract_failure",
+      "expected_code": "DI127I-AUTHORITY",
+      "expected_path": "/authority/publication_acceptance_authorized"
+    },
+    {
+      "case_id": "DI127IA-16-17",
+      "expected_disposition": "rejected",
+      "expected_exit_class": "contract_failure",
+      "expected_code": "DI127I-AUTHORITY",
+      "expected_path": "/authority/public_distribution_eligible"
+    },
+    {
+      "case_id": "DI127IA-16-18",
+      "expected_disposition": "rejected",
+      "expected_exit_class": "contract_failure",
+      "expected_code": "DI127I-AUTHORITY",
+      "expected_path": "/authority/public_distribution_authorized"
+    },
+    {
+      "case_id": "DI127IA-16-19",
+      "expected_disposition": "rejected",
+      "expected_exit_class": "contract_failure",
+      "expected_code": "DI127I-AUTHORITY",
+      "expected_path": "/authority/runtime_authorized"
+    },
+    {
+      "case_id": "DI127IA-16-20",
+      "expected_disposition": "rejected",
+      "expected_exit_class": "contract_failure",
+      "expected_code": "DI127I-AUTHORITY",
+      "expected_path": "/authority/cloud_execution_authorized"
+    },
+    {
+      "case_id": "DI127IA-16-21",
+      "expected_disposition": "rejected",
+      "expected_exit_class": "contract_failure",
+      "expected_code": "DI127I-AUTHORITY",
+      "expected_path": "/authority/private_data_ingestion_authorized"
+    },
+    {
+      "case_id": "DI127IA-16-22",
+      "expected_disposition": "rejected",
+      "expected_exit_class": "contract_failure",
+      "expected_code": "DI127I-AUTHORITY",
+      "expected_path": "/authority/physical_control_authorized"
+    },
+    {
+      "case_id": "DI127IA-16-23",
+      "expected_disposition": "rejected",
+      "expected_exit_class": "contract_failure",
+      "expected_code": "DI127I-AUTHORITY",
+      "expected_path": "/authority/gate_b_authorized"
+    },
+    {
+      "case_id": "DI127IA-16-24",
+      "expected_disposition": "rejected",
+      "expected_exit_class": "contract_failure",
+      "expected_code": "DI127I-AUTHORITY",
+      "expected_path": "/authority/R1_authorized"
+    },
+    {
+      "case_id": "DI127IA-16-25",
+      "expected_disposition": "rejected",
+      "expected_exit_class": "contract_failure",
+      "expected_code": "DI127I-AUTHORITY",
+      "expected_path": "/authority/P_authorized"
+    },
+    {
+      "case_id": "DI127IA-16-26",
+      "expected_disposition": "rejected",
+      "expected_exit_class": "contract_failure",
+      "expected_code": "DI127I-AUTHORITY",
+      "expected_path": "/authority/R2_authorized"
+    },
+    {
+      "case_id": "DI127IA-16-27",
+      "expected_disposition": "rejected",
+      "expected_exit_class": "contract_failure",
+      "expected_code": "DI127I-AUTHORITY",
+      "expected_path": "/authority/C_authorized"
+    },
+    {
+      "case_id": "DI127IA-16-28",
+      "expected_disposition": "rejected",
+      "expected_exit_class": "contract_failure",
+      "expected_code": "DI127I-AUTHORITY",
+      "expected_path": "/authority/Q_authorized"
+    },
+    {
+      "case_id": "DI127IA-16-29",
+      "expected_disposition": "rejected",
+      "expected_exit_class": "contract_failure",
+      "expected_code": "DI127I-AUTHORITY",
+      "expected_path": "/authority/main_ref_change_authorized"
+    },
+    {
+      "case_id": "DI127IA-16-30",
+      "expected_disposition": "rejected",
+      "expected_exit_class": "contract_failure",
+      "expected_code": "DI127I-AUTHORITY",
+      "expected_path": "/authority/merge_commit_authorized"
+    },
+    {
+      "case_id": "DI127IA-16-31",
+      "expected_disposition": "rejected",
+      "expected_exit_class": "contract_failure",
+      "expected_code": "DI127I-AUTHORITY",
+      "expected_path": "/authority/public_push_authorized"
+    }
+  ],
+  "evaluation_order_contract": {
+    "required_order": [
+      "load_and_validate_catalog_identity_and_execution_specs_without_exposing_expected_rejections",
+      "derive_all_actual_outcomes_through_named_production_boundaries",
+      "canonical_freeze_complete_actual_outcome_map",
+      "record_actuals_byte_size_and_sha256",
+      "rerun_from_fresh_deep_copy_and_require_identical_actuals",
+      "only_then_admit_expected_rejections_subgraph",
+      "compare_case_identity_disposition_code_and_path"
+    ],
+    "actuals_derived_and_canonically_frozen_before_catalog_expectations_loaded": true,
+    "expected_values_may_drive_mutation_execution_or_diagnostic": false,
+    "actual_and_expectation_graphs_may_alias": false,
+    "complete_actual_map_required": true
+  },
+  "summary": {
+    "positive_spec_count": 11,
+    "mutation_family_count": 16,
+    "DI127_implementation_adversary_count": 91,
+    "expected_rejection_count": 91,
+    "finding_closed_count": 0,
+    "all_case_ids_unique": true,
+    "historical_populations_remain_separate": true
+  },
+  "authority": {
+    "record_scope": "deterministic_synthetic_and_integrity_counterexamples",
+    "creates_scientific_evidence": false,
+    "creates_benchmark_result": false,
+    "creates_readiness": false,
+    "creates_operator_acceptance": false,
+    "authorizes_runtime": false,
+    "authorizes_gate_b": false,
+    "authorizes_R1_P_R2_C_Q_main_merge_or_push": false
+  }
+}
