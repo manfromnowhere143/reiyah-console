@@ -5,8 +5,10 @@
    - hashed /assets/: cache-first (immutable by name).
    - /api: network-first with cached fallback carrying its stored digests;
      nothing is ever fabricated (offline+uncached => explicit blocked body).
-   - activate: old caches purged; skipWaiting + clients.claim so the new
-     worker rules immediately. The __BUILD__ stamp changes every build. */
+   - activate: old caches purged. The new worker does NOT skipWaiting or
+     claim: seizing a page mid-boot aborts its in-flight fetches on WebKit,
+     and navigations are network-first anyway, so the next load is fresh
+     without a takeover. The __BUILD__ stamp changes every build. */
 const BUILD = "__BUILD__";
 const SHELL = `harbor-shell-${BUILD}`;
 const ASSETS = "harbor-assets-v1"; // hashed filenames: safe forever
@@ -14,14 +16,13 @@ const EVIDENCE = "harbor-evidence-v1";
 const KEEP = new Set([SHELL, ASSETS, EVIDENCE]);
 
 self.addEventListener("install", (e) => {
-  e.waitUntil(caches.open(SHELL).then((c) => c.addAll(["/"])).then(() => self.skipWaiting()));
+  e.waitUntil(caches.open(SHELL).then((c) => c.addAll(["/"])));
 });
 
 self.addEventListener("activate", (e) => {
   e.waitUntil(
     caches.keys()
       .then((keys) => Promise.all(keys.filter((k) => !KEEP.has(k)).map((k) => caches.delete(k))))
-      .then(() => self.clients.claim())
   );
 });
 

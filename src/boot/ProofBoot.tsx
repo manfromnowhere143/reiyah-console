@@ -4,7 +4,7 @@
    On any mismatch it renders a blocked state. No demo mode exists. */
 import { useEffect, useRef, useState } from "react";
 import {
-  fetchRaw, fetchSummary, fetchSurface, sha256Hex, type Summary,
+  fetchRaw, fetchSummary, fetchSurface, setBypassCache, sha256Hex, type Summary,
 } from "../lib/evidence";
 import { Mark } from "../components/primitives";
 
@@ -53,6 +53,8 @@ const PHASES = ["establishing identity", "recomputing index digest", "confirming
 export function ProofBoot({ onReady }: { onReady: (ev: VerifiedEvidence) => void }) {
   const [phase, setPhase] = useState(0);               // 0..4 checks passed
   const [blocked, setBlocked] = useState<string | null>(null);
+  const [attempt, setAttempt] = useState(1);
+  const [retrying, setRetrying] = useState<string | null>(null);
   const [complete, setComplete] = useState(false);
   const [leaving, setLeaving] = useState(false);
   const done = useRef(false);
@@ -116,16 +118,33 @@ export function ProofBoot({ onReady }: { onReady: (ev: VerifiedEvidence) => void
         setComplete(true);
         setTimeout(() => { if (alive) depart(); }, 900);
       } catch (e) {
-        if (alive) setBlocked(String((e as Error)?.message ?? e));
+        if (!alive) return;
+        const reason = String((e as Error)?.message ?? e);
+        /* A transport failure (a fetch that failed, was aborted, or answered
+           with a status) is not a verification failure. It is retried, up to
+           three times, with backoff and every cache bypassed. A digest that
+           truly mismatches is retried once through the network, then blocks
+           for good. Nothing renders in the meantime; nothing is assumed. */
+        const transport = /fetch|network|load failed|http_|no_evidence_source|aborted|timeout/i.test(reason);
+        const budget = transport ? 3 : 1;
+        if (attempt <= budget) {
+          setBypassCache(true);
+          setRetrying(`${transport ? "transport failed" : "digest mismatch"} · retrying ${attempt}/${budget} · ${reason}`);
+          setTimeout(() => { if (alive) { setPhase(0); setAttempt((n) => n + 1); } }, 500 * attempt);
+          return;
+        }
+        setRetrying(null);
+        setBlocked(reason);
       }
     })();
     return () => { alive = false; };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [attempt]);
+  const retry = () => { setBlocked(null); setRetrying(null); setPhase(0); setBypassCache(true); setAttempt(1); };
 
   const p = Math.min(phase, 4) / 4;                    // 0..1, determinate
   const RING = 2 * Math.PI * 104;                      // progress-ring circumference
-  const status = complete ? "verified · entering harbor" : PHASES[Math.min(phase, 3)];
+  const status = complete ? "verified · entering harbor" : retrying ?? PHASES[Math.min(phase, 3)];
 
   if (blocked) {
     return (
@@ -137,8 +156,12 @@ export function ProofBoot({ onReady }: { onReady: (ev: VerifiedEvidence) => void
           </div>
           <div className="blocked">
             <h2>Blocked</h2>
-            <p>The instrument could not verify its evidence, so it will not render. A blocked result is preferable to a plausible default.</p>
+            <p>The instrument could not verify its evidence after several attempts, so it will not render. A blocked result is preferable to a plausible default.</p>
             <p style={{ fontFamily: "var(--mono)", fontSize: "0.66rem" }}>{blocked}</p>
+            <p style={{ fontFamily: "var(--mono)", fontSize: "0.62rem", color: "var(--ink-faint)" }}>
+              {/^index_digest_mismatch/.test(blocked) ? "the bytes fetched do not match the committed digest: this is a hard block" : "the sealed snapshot could not be reached or its transfer was interrupted"}
+            </p>
+            <button className="close" onClick={retry} style={{ marginTop: "0.4rem" }}>RETRY · bypass every cache</button>
           </div>
         </div>
       </div>
