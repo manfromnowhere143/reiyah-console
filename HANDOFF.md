@@ -178,6 +178,35 @@ Adversaries = THE WALL; Encounter v3 at the fixture's own clock; Harbor shape =
 role, ground depth, the gate fires; body-lock and single-fixed-layer iOS steps
 (now superseded by the static document).
 
+## RESEARCH VERDICT 2026-09-04 (evening) · what the 2026 frontier offers this instrument
+Sources: WebKit release notes for Safari 26.0 / 26.2 / 26.4 / 26.5, Interop 2026,
+Liquid-glass CSS/SVG write-ups (kube.io, LogRocket, w3c/svgwg#1142), CHI 2026
+SuperProvenanceWidgets, ChartGPU / WebGPU charting threads, Tesla/Rivian
+visualization coverage (Aug 2026).
+Applies, ranked:
+1. **Every figure explains itself (provenance widgets).** CHI 2026 provenance
+   work + our digest-bound records: a `Derived` primitive that gives any stat a
+   popover with the source records (path, sha256), the rule in words
+   ("count of index rows where role = known_bad_fixture"), and press-to-prove.
+   Anchor Positioning (Safari 26, Interop 2026) places it on the figure itself.
+   Unusual, honest, and exactly this instrument's thesis.
+2. **URL as state.** Cursor / selection deep links (`?st=controls&at=GA122…`,
+   `?st=chair&v=1.2.9`) so a reading can be shared exactly. Cheap; people are
+   watching.
+3. **Anchored captions.** The wall / lattice / skyline / horizon captions
+   anchored to the cursor cell with `position-anchor` (fallback: the caption
+   row we have). Threaded on the compositor in Safari 26.4+.
+4. **Glass performance.** `contain: strict` on every glass surface; SVG
+   displacement in backdrop-filter remains Chromium-only, keep the ladder.
+5. **Harbor vocabulary.** Tesla moved FSD viz to Unreal, Rivian stays
+   cel-shaded: the language is neutral objects that turn coloured only when
+   they need attention. Our sensed world already follows that; next: richer
+   object silhouettes by role, still 2D.
+Does NOT apply: WebGPU (payoff starts past ~100K points; we draw 934),
+scroll-driven animations (the instrument does not scroll), sonification (no).
+Colour law (user): pass/live/verified is a cool steel blue (`--ok`), red only
+for genuine alarm/rejection/incident; never green beside red beside black.
+
 ## MISSION PLAN 2026-09-04 · exposure audit — EXECUTED the same day
 Status of the ranked plan (all live in production):
 0. DONE: resealed at engine 1.2.9 (74fbacc, clean); sealer catalogs incidents,

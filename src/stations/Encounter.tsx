@@ -144,7 +144,7 @@ export function Encounter() {
       const dark = document.documentElement.dataset.ground === "dark";
       const INK = dark ? "255,255,255" : "16,18,21";
       const RED = dark ? "227,25,55" : "214,23,50";
-      const OK = dark ? "143,208,176" : "23,114,76";
+      const OK = dark ? "126,166,255" : "47,102,214";
       const VOID = dark ? "5,5,7" : "244,243,238";
       const s = now / 1000;
       const mobile = w < 560;

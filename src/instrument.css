@@ -21,7 +21,7 @@
   --line-soft: rgba(16, 18, 21, 0.08);
   --accent: #d61732;
   --accent-soft: rgba(214, 23, 50, 0.12);
-  --ok: #17724c;
+  --ok: #2f66d6; /* pass, live, verified: a cool steel blue, never a flag green */
   --warn: #8f6312;
   --glass: rgba(255, 255, 255, 0.55);
   --glass-rim: rgba(16, 18, 21, 0.15);
@@ -60,7 +60,7 @@
   --line-soft: rgba(255, 255, 255, 0.08);
   --accent: #e31937;
   --accent-soft: rgba(227, 25, 55, 0.16);
-  --ok: #8fd0b0;
+  --ok: #7ea6ff;
   --warn: #d9b36a;
   --glass: rgba(255, 255, 255, 0.05);
   --glass-rim: rgba(255, 255, 255, 0.17);
@@ -334,7 +334,7 @@ button:focus-visible, a:focus-visible { outline: 2px solid var(--ink-soft); outl
   background: color-mix(in srgb, currentColor 9%, var(--veil));
 }
 .pill .ind { width: 6px; height: 6px; border-radius: 50%; background: currentColor; }
-.pill[data-state="live"] { color: var(--ok); border-color: rgba(143, 208, 176, 0.35); }
+.pill[data-state="live"] { color: var(--ok); }
 .pill[data-state="stale"] { color: var(--warn); border-color: rgba(217, 179, 106, 0.35); }
 .pill[data-state="offline"] { color: var(--ink-faint); }
 .pill[data-state="sealed"] { color: var(--ink-soft); border-color: var(--glass-rim); }
@@ -1423,7 +1423,6 @@ button:focus-visible, a:focus-visible { outline: 2px solid var(--ink-soft); outl
 .cver .ck { width: 100%; max-width: 14px; height: 6px; border-radius: 2px; background: var(--ink); opacity: 0.85; }
 .cver .ck[data-on="false"] { background: transparent; box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--ink) 25%, transparent); opacity: 0.6; }
 .cver .ck[data-k="incident"][data-on="true"] { background: var(--accent); }
-.cver .ck[data-k="review"][data-on="true"], .cver .ck[data-k="report"][data-on="true"] { background: var(--ok); }
 .cver .cvs { font-family: var(--mono); font-size: 0.5rem; letter-spacing: 0.06em; color: var(--ink-faint); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .cver[data-now="true"] .cvs { color: var(--ok); }
 .canat { flex: 1; min-height: 0; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 0.6rem; }
