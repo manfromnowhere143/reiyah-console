@@ -128,6 +128,7 @@ const GATEB_FILES = [
   "evidence/claim-status-register-2026-08-29.json",
   "evidence/measurement/result_l.txt", "evidence/measurement/result_m.txt", "evidence/measurement/result_n.txt",
   "evidence/measurement/result_o.txt", "evidence/measurement/result_p.txt", "evidence/measurement/result_q.txt",
+  "evidence/measurement/result_i.txt", "evidence/measurement/result_j.txt",
   "evidence/measurement/joint-performance-nuscenes-val.excerpt.json",
   "evidence/measurement/worst-group-records.jsonl",
   "docs/gate_b_robustness_figure.svg",

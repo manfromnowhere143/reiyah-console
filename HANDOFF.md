@@ -178,6 +178,21 @@ Adversaries = THE WALL; Encounter v3 at the fixture's own clock; Harbor shape =
 role, ground depth, the gate fires; body-lock and single-fixed-layer iOS steps
 (now superseded by the static document).
 
+## Shipped 2026-09-05 (later): ST-12 THE WORST GROUP — the field
+- The per-object records are NOT committed (2-record excerpt; the 235 MB
+  file is git-ignored), so an object-level field is impossible today without
+  fabrication. Built instead from the lane's typed worst-group records
+  (`worst-group-records.jsonl`, three evaluations): the class × range field
+  of discs (size = objects, depth = coincident-miss ratio, the worst eligible
+  group ringed red), the by-class row, the motion-state row whose extremum is
+  honestly MISSING (one group's membership non-observed), and Result I's
+  finest strata (class × range × visibility) with simultaneous 95% intervals.
+  Cursor/tap reads ratio, objects, effective n, interval width, disposition,
+  membership and the six coverage counts. URL state `at=<group_id>`.
+- Lane file list gains result_i / result_j (sealer + server).
+- If the professor's lane ever commits a compact per-object table, the
+  object-level field becomes possible; ask, never fabricate.
+
 ## Shipped 2026-09-05: ST-11 THE MEASUREMENT — the Gate B lane exposed
 Discovery: the engine's real science lives on branch `gate-b-measurement` in
 the worktree `~/workspace/reiyah-gate-b` (45 commits, the professor's session
