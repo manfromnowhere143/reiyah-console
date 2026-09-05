@@ -119,6 +119,43 @@ try {
 fs.writeFileSync(path.join(OUT, "schemas-index.json"), JSON.stringify({ kind: "schema_index", sealedFrom: "schemas/", rows: schemaRows }, null, 1));
 console.log(`[seal] ${schemaRows.length} schemas indexed`);
 
+/* ---- the Gate B measurement lane: a second source, sealed separately ----
+   It lives in its own worktree on its own branch. It is sealed into
+   snapshot/gateb with its own identity and its own digests, and never mixed
+   with the Gate A packet. Absent worktree = absent lane, recorded as such. */
+const GATEB = process.env.GATEB_ROOT ?? "/Users/danielwahnich/workspace/reiyah-gate-b";
+const GATEB_FILES = [
+  "evidence/claim-status-register-2026-08-29.json",
+  "evidence/measurement/result_l.txt", "evidence/measurement/result_m.txt", "evidence/measurement/result_n.txt",
+  "evidence/measurement/result_o.txt", "evidence/measurement/result_p.txt", "evidence/measurement/result_q.txt",
+  "evidence/measurement/joint-performance-nuscenes-val.excerpt.json",
+  "evidence/measurement/worst-group-records.jsonl",
+  "docs/gate_b_robustness_figure.svg",
+  "docs/GATE_B_MEASUREMENT_CONTRACT.md", "docs/GATE_B_FINDINGS_SYNTHESIS.md",
+];
+fs.mkdirSync(path.join(OUT, "gateb", "raw"), { recursive: true });
+let gateb = { present: false, reason: "gate-b worktree not present at seal time" };
+try {
+  const gopt = { cwd: GATEB, encoding: "utf8" };
+  const head = execFileSync("git", ["rev-parse", "HEAD"], gopt).trim();
+  const branch = execFileSync("git", ["branch", "--show-current"], gopt).trim();
+  const clean = execFileSync("git", ["status", "--porcelain=v1"], gopt).trim() === "";
+  const commits = Number(execFileSync("git", ["rev-list", "--count", "HEAD"], gopt).trim());
+  const files = [];
+  for (const rel of GATEB_FILES) {
+    try {
+      const bytes = fs.readFileSync(path.join(GATEB, rel));
+      const id = rel.replaceAll("/", "__");
+      fs.writeFileSync(path.join(OUT, "gateb", "raw", id), bytes);
+      files.push({ id, path: rel, bytes: bytes.length, sha256: "sha256:" + createHash("sha256").update(bytes).digest("hex") });
+    } catch { files.push({ id: rel.replaceAll("/", "__"), path: rel, state: "absent" }); }
+  }
+  gateb = { present: true, identity: { state: "observed", head, branch, worktree_clean: clean, commit_count: commits, root: GATEB }, sealedAt: new Date().toISOString(), files,
+    lane_nonclaims: { operator_accepted: false, scientific_support_claimed: false, externally_audited: false, lifecycle: "proposed", model_executed_by_this_lane: false } };
+  console.log(`[seal] gate-b lane ${branch} ${head.slice(0, 12)} clean=${clean} · ${files.filter((f) => !f.state).length} files`);
+} catch (e) { console.log(`[seal] gate-b lane absent: ${String(e && e.message || e).slice(0, 80)}`); }
+fs.writeFileSync(path.join(OUT, "gateb", "manifest.json"), JSON.stringify(gateb, null, 1));
+
 const manifest = {
   kind: "sealed_snapshot",
   sealedAt: new Date().toISOString(),

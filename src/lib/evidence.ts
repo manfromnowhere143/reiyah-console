@@ -226,6 +226,16 @@ export interface RawResult {
 const rawMemo = new Map<string, Promise<RawResult>>();
 const pathMemo = new Map<string, Promise<SurfaceState<unknown>>>();
 export async function fetchRaw(id: string): Promise<RawResult> {
+  if (id.startsWith("gateb/")) {
+    /* the Gate B lane: a second source with its own digests, never mixed */
+    const fid = id.slice("gateb/".length);
+    const r = await fetch(mode === "sealed" ? `/snapshot/gateb/raw/${fid}` : `/api/gateb/raw/${fid}`, opts());
+    if (!r.ok) throw new Error(`gateb_raw_http_${r.status}`);
+    const bytes = await r.arrayBuffer();
+    const m = await fetch(mode === "sealed" ? "/snapshot/gateb/manifest.json" : "/api/gateb/manifest", opts()).then((x) => x.json()).catch(() => null);
+    const row = m?.files?.find((f: any) => f.id === fid);
+    return { bytes, path: row?.path ?? fid, serverSha256: row?.sha256 ?? "unknown", byteLength: bytes.byteLength };
+  }
   if (mode === "sealed") {
     const row = sealedManifest?.surfaces.find((s) => s.id === id);
     if (!row) throw new Error("unknown_sealed_surface");

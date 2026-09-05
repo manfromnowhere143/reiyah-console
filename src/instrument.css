@@ -1633,3 +1633,73 @@ button:focus-visible, a:focus-visible { outline: 2px solid var(--ink-soft); outl
 .rbreak em[data-v="true"] { color: var(--ok); }
 @media (max-width: 760px) { .rbreak em:nth-child(n+3) { display: none; } .tstep { font-size: 0.46rem; } .bname { font-size: 0.46rem; } .timerail > .cvd { display: none; } .timerail { gap: 0.25rem; padding: 0.25rem 0; } .tsteps { gap: 0.2rem 0.5rem; } }
 @media (max-width: 760px) and (max-height: 800px) { .rbreak { display: none; } }
+
+
+/* ============================================================
+   THE MEASUREMENT — ST-11 the Gate B lane
+   ============================================================ */
+.mgrid { flex: 1; min-height: 0; display: grid; grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr) minmax(0, 1fr); gap: 0.6rem; }
+.mpanel { display: flex; flex-direction: column; min-height: 0; overflow: hidden; }
+.mpanel > .ilabel { flex: none; }
+.mcol { display: flex; flex-direction: column; gap: 0.6rem; min-height: 0; }
+.mcol .mpanel { flex: 1; }
+.mbox { flex: 1; min-height: 0; position: relative; overflow: hidden; }
+.mchart { position: absolute; inset: 0; display: block; }
+.mchart .mind { stroke: var(--accent); stroke-width: 1; stroke-dasharray: 4 3; }
+.mchart .mlab { font-family: var(--mono); font-size: 9px; fill: var(--ink-faint); }
+.mchart .mval { font-family: var(--mono); font-size: 10px; fill: var(--ink); font-weight: 600; }
+.mchart .mci { stroke: var(--ok); stroke-width: 1.5; stroke-linecap: round; }
+.mchart .mdot { fill: var(--ok); }
+.mchart .mline { fill: none; stroke: var(--ok); stroke-width: 1.5; stroke-linejoin: round; }
+.mchart .mband { fill: color-mix(in srgb, var(--ok) 18%, transparent); }
+.mchart .mser.s1 .mline, .mchart .mser.s1 .mci { stroke: color-mix(in srgb, var(--ok) 55%, var(--ink)); }
+.mchart .mser.s1 .mdot { fill: color-mix(in srgb, var(--ok) 55%, var(--ink)); }
+.mchart .mser.s1 .mband { fill: color-mix(in srgb, var(--ink) 10%, transparent); }
+.mchart .mpt.inad .mci, .mchart .mpt.inad .mdot { stroke: var(--accent); fill: var(--accent); opacity: 0.7; }
+.mchart .mpt.inad .mci { stroke-dasharray: 0.8 0.8; }
+.msrc { flex: none; display: flex; justify-content: space-between; align-items: center; gap: 0.6rem; margin-top: 0.3rem; font-family: var(--mono); font-size: 0.5rem; color: var(--ink-ghost); }
+.msrc span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; min-width: 0; }
+.mcells { flex: 1; min-height: 0; display: grid; grid-template-columns: 1fr 1fr; grid-auto-rows: minmax(0, 1fr); gap: 0.35rem; }
+.mcell2 { border-radius: 8px; padding: 0.3rem 0.5rem; display: flex; flex-direction: column; justify-content: center; gap: 0.05rem; min-width: 0; min-height: 0; overflow: hidden;
+  background: color-mix(in srgb, var(--ok) calc(var(--m, 0) * 55%), color-mix(in srgb, var(--ink) 5%, transparent)); box-shadow: inset 0 1px 0 color-mix(in srgb, var(--sheen) 35%, transparent); }
+.mcell2 b { font-family: var(--mono); font-size: 0.82rem; font-weight: 600; color: var(--ink); }
+.mcell2 span { font-family: var(--mono); font-size: 0.48rem; color: var(--ink-soft); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.mcell2 i { font-style: normal; font-family: var(--mono); font-size: 0.44rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-faint); }
+.mcell2[data-kind="same"] { box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--ink) 25%, transparent); }
+.mclaim { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; gap: 0.5rem; align-items: baseline; padding: 0.26rem 0; border-bottom: 1px solid var(--line-soft); }
+.mclaim .mcs { font-family: var(--mono); font-size: 0.46rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--ink-faint); white-space: nowrap; }
+.mclaim[data-s="measured"] .mcs { color: var(--ok); }
+.mclaim[data-s="withdrawn_as_stated"] .mcs { color: var(--accent); }
+.mclaim[data-s="inconclusive"] .mcs, .mclaim[data-s="unknown"] .mcs, .mclaim[data-s="not_established"] .mcs { color: var(--ink-ghost); }
+.mclaim .mcn { font-family: var(--mono); font-size: 0.56rem; color: var(--ink); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.mclaim .mcu { font-family: var(--mono); font-size: 0.46rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-ghost); }
+.mclaim[data-use="permitted"] .mcu { color: var(--ok); }
+.mopp { flex: none; display: flex; flex-direction: column; gap: 0.15rem; margin-top: 0.5rem; padding-top: 0.4rem; border-top: 1px solid var(--line-soft); }
+.mopp .cvl { font-family: var(--mono); font-size: 0.48rem; letter-spacing: 0.14em; text-transform: uppercase; color: var(--ink-faint); }
+.mopp .moppr { font-family: var(--mono); font-size: 0.52rem; color: var(--ink-soft); }
+.mopp .moppk { font-family: var(--mono); font-size: 0.52rem; color: var(--ink); }
+.mnon { flex: none; font-family: var(--mono); font-size: 0.5rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink-ghost); line-height: 1.5; }
+@media (max-width: 760px) {
+  .mgrid { grid-template-columns: 1fr; grid-template-rows: minmax(0, 1.1fr) minmax(0, 1.2fr) minmax(0, 1fr); gap: 0.4rem; }
+  .mcol { gap: 0.4rem; }
+  .mcells { grid-template-columns: 1fr 1fr 1fr; grid-auto-rows: 2.4rem; gap: 0.25rem; align-content: start; }
+  .mcell2 { padding: 0.2rem 0.4rem; }
+  .mcell2 b { font-size: 0.68rem; }
+  .mcell2 span { display: block; font-size: 0.42rem; }
+  .mcell2 i { display: none; }
+  .mgrid { grid-template-rows: minmax(6.5rem, 1fr) auto minmax(3.6rem, 0.7fr); }
+  .mcol .mpanel:first-child .mbox { height: 5.2rem; flex: none; }
+  .mcol .mpanel { flex: none; }
+  .mopp { display: none; }
+  .mnon { font-size: 0.42rem; }
+  .msrc { display: none; }
+}
+@media (max-width: 760px) { .mchart .mlab { font-size: 8px; } .mchart .mval { font-size: 9px; } }
+@media (max-width: 760px) and (max-height: 800px) {
+  .mnon { display: none; }
+  .mgrid { gap: 0.3rem; grid-template-rows: minmax(5.5rem, 1fr) auto minmax(3rem, 0.6fr); }
+  .mcol .mpanel:first-child .mbox { height: 4.2rem; }
+  .mcells { grid-auto-rows: 1.9rem; }
+  .mcell2 span { display: none; }
+  .mpanel { padding: 0.45rem 0.6rem; }
+}

@@ -1,0 +1,93 @@
+{
+ "present": true,
+ "identity": {
+  "state": "observed",
+  "head": "460e6a0868f0d0b6d937c65917d23be155fffa74",
+  "branch": "gate-b-measurement",
+  "worktree_clean": true,
+  "commit_count": 45,
+  "root": "/Users/danielwahnich/workspace/reiyah-gate-b"
+ },
+ "sealedAt": "2026-09-05T18:37:33.274Z",
+ "files": [
+  {
+   "id": "evidence__claim-status-register-2026-08-29.json",
+   "path": "evidence/claim-status-register-2026-08-29.json",
+   "bytes": 20543,
+   "sha256": "sha256:478d5935207575080121d94b3464455797625453af585a08bb749032f8341607"
+  },
+  {
+   "id": "evidence__measurement__result_l.txt",
+   "path": "evidence/measurement/result_l.txt",
+   "bytes": 3698,
+   "sha256": "sha256:d1e123df5be493a17b605a6527c3fad6ba347f947aee84ab21c3007d2fd8a726"
+  },
+  {
+   "id": "evidence__measurement__result_m.txt",
+   "path": "evidence/measurement/result_m.txt",
+   "bytes": 5976,
+   "sha256": "sha256:046a8a4ef9dbca8df92bb4693fc78ae817fdab8f2383890d265af6c14964fa74"
+  },
+  {
+   "id": "evidence__measurement__result_n.txt",
+   "path": "evidence/measurement/result_n.txt",
+   "bytes": 4968,
+   "sha256": "sha256:f672311eab85e1d4d1c56b67036481bb4a5c9ef11ca26c073c1517aece8dd652"
+  },
+  {
+   "id": "evidence__measurement__result_o.txt",
+   "path": "evidence/measurement/result_o.txt",
+   "bytes": 5781,
+   "sha256": "sha256:6556344115847bc076fa1b544b2b5bc21c4678d8685f9a6582d647c8eb426ff9"
+  },
+  {
+   "id": "evidence__measurement__result_p.txt",
+   "path": "evidence/measurement/result_p.txt",
+   "bytes": 4946,
+   "sha256": "sha256:7ceb39d079a5a5fff4709fe6585f768dca4dcfd3a80ba67c44b05d48248f556a"
+  },
+  {
+   "id": "evidence__measurement__result_q.txt",
+   "path": "evidence/measurement/result_q.txt",
+   "bytes": 5855,
+   "sha256": "sha256:d364e847ede5111c320c086d9c81a870a847dee2e38416b3a9576d6e669d1497"
+  },
+  {
+   "id": "evidence__measurement__joint-performance-nuscenes-val.excerpt.json",
+   "path": "evidence/measurement/joint-performance-nuscenes-val.excerpt.json",
+   "bytes": 12785,
+   "sha256": "sha256:0bcc7d98480ab931196aaa32716e750bd0d3525382db3bea8523fbc5256f58db"
+  },
+  {
+   "id": "evidence__measurement__worst-group-records.jsonl",
+   "path": "evidence/measurement/worst-group-records.jsonl",
+   "bytes": 36216,
+   "sha256": "sha256:e5761e586aa951ddb701763fc0693ecc0a7ef93a986289134a89615f671ca850"
+  },
+  {
+   "id": "docs__gate_b_robustness_figure.svg",
+   "path": "docs/gate_b_robustness_figure.svg",
+   "bytes": 5291,
+   "sha256": "sha256:448a9e9404546c056b6bb43359f141aafd350b56dcfb383d44131057422070a2"
+  },
+  {
+   "id": "docs__GATE_B_MEASUREMENT_CONTRACT.md",
+   "path": "docs/GATE_B_MEASUREMENT_CONTRACT.md",
+   "bytes": 12606,
+   "sha256": "sha256:d1e52477863541bfaf01a44d80105f92b2e3a8ceb2fad44bca16010e2650b0ab"
+  },
+  {
+   "id": "docs__GATE_B_FINDINGS_SYNTHESIS.md",
+   "path": "docs/GATE_B_FINDINGS_SYNTHESIS.md",
+   "bytes": 8094,
+   "sha256": "sha256:b30137124db5e83c6713c8b54ad6b642edd23f2a76a0726461c0c9644a20f68f"
+  }
+ ],
+ "lane_nonclaims": {
+  "operator_accepted": false,
+  "scientific_support_claimed": false,
+  "externally_audited": false,
+  "lifecycle": "proposed",
+  "model_executed_by_this_lane": false
+ }
+}
