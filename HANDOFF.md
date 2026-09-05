@@ -188,6 +188,16 @@ state changes on small elements (hover, cursor). Never: a full-panel overlay
 that blends or animates; animating box-shadow, background-position, filter,
 or SVG attributes; view-transition names on dock tabs or station content.
 
+## Shipped 2026-09-05 (night): ST-12 redrawn as THE ROAD
+The class × range field is now a first-person road on canvas: range bands are
+depth zones ahead of the vehicle (near at the bottom), classes are columns,
+each group a disc sized by objects and deepened by ratio, the worst eligible
+group ringed red with a soft pulse, sitting directly ahead of the reticle.
+Non-observed membership = dashed hollow. Readings inside large discs; small
+far discs read only under the cursor (no collisions). The finest strata are
+a dot-and-interval chart in measured pixels with the independence line.
+Perspective: y = horizon + groundH · p^1.55, bands from p 0.93 to 0.35.
+
 ## Shipped 2026-09-05 (later): ST-12 THE WORST GROUP — the field
 - The per-object records are NOT committed (2-record excerpt; the 235 MB
   file is git-ignored), so an object-level field is impossible today without
