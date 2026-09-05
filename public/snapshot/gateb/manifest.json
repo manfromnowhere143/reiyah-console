@@ -2,13 +2,13 @@
  "present": true,
  "identity": {
   "state": "observed",
-  "head": "460e6a0868f0d0b6d937c65917d23be155fffa74",
+  "head": "d1a6d5e9681d8f3d4b0112b42c76407e51e316f6",
   "branch": "gate-b-measurement",
   "worktree_clean": true,
-  "commit_count": 45,
+  "commit_count": 47,
   "root": "/Users/danielwahnich/workspace/reiyah-gate-b"
  },
- "sealedAt": "2026-09-05T18:58:27.809Z",
+ "sealedAt": "2026-09-05T19:06:45.495Z",
  "files": [
   {
    "id": "evidence__claim-status-register-2026-08-29.json",
