@@ -27,6 +27,7 @@ export const STATIONS: StationDef[] = [
   { id: "chair", num: "ST–07", name: "The Chair", desc: "the correction engine · the seat", row: 2, col: 1, red: true },
   { id: "frontier", num: "ST–08", name: "Frontier", desc: "pointers, honestly ineligible", row: 2, col: 2 },
   { id: "contract", num: "ST–10", name: "The Contract", desc: "schemas, coverage, what is not claimed", row: 2, col: 3 },
+  { id: "measurement", num: "ST–11", name: "The Measurement", desc: "gate b · camera and lidar fail together", row: 3, col: 0 },
 ];
 
 export function stationById(id: string | null): StationDef {

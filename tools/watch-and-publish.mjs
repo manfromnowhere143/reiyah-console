@@ -28,8 +28,23 @@ const STATE = path.join(CONSOLE_DIR, ".live-state.json");
 const log = (m) => console.log(`[live ${new Date().toISOString()}] ${m}`);
 const git = (args) => execFileSync("git", ["-C", REPO, ...args], { encoding: "utf8" }).trim();
 
-function head() { try { return git(["rev-parse", "HEAD"]); } catch { return null; } }
-function clean() { try { return git(["status", "--porcelain=v1"]) === ""; } catch { return false; } }
+const GATEB = process.env.GATEB_ROOT ?? `${process.env.HOME}/workspace/reiyah-gate-b`;
+/* the published state is the pair of heads: the Gate A worktree and the Gate B lane */
+function head() {
+  try {
+    const a = git(["rev-parse", "HEAD"]);
+    let b = "absent";
+    try { b = execFileSync("git", ["-C", GATEB, "rev-parse", "HEAD"], { encoding: "utf8" }).trim(); } catch { /* lane absent */ }
+    return `${a}+${b.slice(0, 12)}`;
+  } catch { return null; }
+}
+function clean() {
+  try {
+    if (git(["status", "--porcelain=v1"]) !== "") return false;
+    try { if (execFileSync("git", ["-C", GATEB, "status", "--porcelain=v1"], { encoding: "utf8" }).trim() !== "") return false; } catch { /* lane absent */ }
+    return true;
+  } catch { return false; }
+}
 /* the console itself must be committed too: a publish must never carry a
    half-edited instrument to production */
 function consoleClean() {

@@ -178,6 +178,35 @@ Adversaries = THE WALL; Encounter v3 at the fixture's own clock; Harbor shape =
 role, ground depth, the gate fires; body-lock and single-fixed-layer iOS steps
 (now superseded by the static document).
 
+## Shipped 2026-09-05: ST-11 THE MEASUREMENT — the Gate B lane exposed
+Discovery: the engine's real science lives on branch `gate-b-measurement` in
+the worktree `~/workspace/reiyah-gate-b` (45 commits, the professor's session
+pushes it public). Nothing watched it and no station showed it.
+- Sealer: a SECOND SOURCE, `snapshot/gateb/` with its own manifest (branch,
+  head, clean, commit count, lane non-claims) and 12 files with digests
+  (claim-status register, Results L/M/N/O/P/Q transcripts, joint-performance
+  excerpt, worst-group records, synthesis figure, contract, synthesis).
+  Live: `/api/gateb/manifest` + `/api/gateb/raw/<id>`. Never blended with
+  the Gate A packet. `GATEB_ROOT` env overrides the worktree path.
+- Publisher: the published state is the PAIR of heads (Gate A worktree +
+  Gate B lane); a dirty lane holds the publish.
+- `src/lib/gateb.ts`: strict transcript parsers (convergence table on the
+  common support, threshold sweep pair tables, E-values, 2x2 modality grid,
+  Result P opposite-directions summary, claim-status register JSON). A
+  transcript not in its known shape yields a blocked panel, never a number.
+- Station: stat strip (terminal conditional c with CI, thresholds excluding
+  1.0, E-value, claims register counts, lane PROPOSED); the convergence chart
+  (L0..L5 with intervals, the independence line, L6 mediator error drawn as
+  inadmissible); the sweep (both lidar pairs with bands); the modality grid
+  (six pairs, cross vs same); the claims register verbatim (withdrawn stays
+  withdrawn, permitted/forbidden use); Result P line; a non-claims strip.
+  Charts draw in measured pixels (never stretched). Every figure's
+  derivation names the transcript; press-to-prove works on lane bytes.
+- Rig: `measurement` station added (36 views per ground).
+LAW: the lane is rendered with its own states and non-claims verbatim:
+proposed, not externally audited, association after declared conditioning,
+never causation; the instrument never upgrades a lane claim.
+
 ## Shipped 2026-09-04 (night): THE FOLD (Nolan move A) + obsidian default
 - `src/components/Fold.tsx`, mounted in press-to-prove: the sealed surfaces
   fold pair by pair into one root, live, every node a real WebCrypto hash

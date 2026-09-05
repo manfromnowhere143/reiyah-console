@@ -200,6 +200,31 @@ const server = http.createServer((req, res) => {
         surfaces,
       });
     }
+    if (p === "/api/gateb/manifest" || p.startsWith("/api/gateb/raw/")) {
+      const GATEB = process.env.GATEB_ROOT ?? "/Users/danielwahnich/workspace/reiyah-gate-b";
+      const FILES = [
+        "evidence/claim-status-register-2026-08-29.json",
+        "evidence/measurement/result_l.txt", "evidence/measurement/result_m.txt", "evidence/measurement/result_n.txt",
+        "evidence/measurement/result_o.txt", "evidence/measurement/result_p.txt", "evidence/measurement/result_q.txt",
+        "evidence/measurement/joint-performance-nuscenes-val.excerpt.json",
+        "evidence/measurement/worst-group-records.jsonl",
+        "docs/gate_b_robustness_figure.svg",
+        "docs/GATE_B_MEASUREMENT_CONTRACT.md", "docs/GATE_B_FINDINGS_SYNTHESIS.md",
+      ];
+      const g = (args) => execFileSync("git", ["-C", GATEB, ...args], { encoding: "utf8" }).trim();
+      if (p === "/api/gateb/manifest") {
+        try {
+          const files = FILES.map((rel) => { try { const bytes = fs.readFileSync(path.join(GATEB, rel)); return { id: rel.replaceAll("/", "__"), path: rel, bytes: bytes.length, sha256: "sha256:" + createHash("sha256").update(bytes).digest("hex") }; } catch { return { id: rel.replaceAll("/", "__"), path: rel, state: "absent" }; } });
+          return json(res, 200, { present: true, identity: { state: "observed", head: g(["rev-parse", "HEAD"]), branch: g(["branch", "--show-current"]), worktree_clean: g(["status", "--porcelain=v1"]) === "", commit_count: Number(g(["rev-list", "--count", "HEAD"])), root: GATEB }, sealedAt: new Date().toISOString(), files,
+            lane_nonclaims: { operator_accepted: false, scientific_support_claimed: false, externally_audited: false, lifecycle: "proposed", model_executed_by_this_lane: false } });
+        } catch (e) { return json(res, 200, { present: false, reason: String(e && e.message || e).slice(0, 120) }); }
+      }
+      const id = decodeURIComponent(p.slice("/api/gateb/raw/".length));
+      const rel = FILES.find((f) => f.replaceAll("/", "__") === id);
+      if (!rel) return json(res, 404, { state: "blocked", reason: "unknown_gateb_surface" });
+      try { const bytes = fs.readFileSync(path.join(GATEB, rel)); res.writeHead(200, { "Content-Type": "application/octet-stream", "X-Source-Path": rel, "X-Source-Sha256": "sha256:" + createHash("sha256").update(bytes).digest("hex") }); return res.end(bytes); }
+      catch { return json(res, 404, { state: "blocked", reason: "gateb_file_absent" }); }
+    }
     if (p === "/api/schemas") {
       const rows = [];
       try {
