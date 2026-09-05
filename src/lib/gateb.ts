@@ -103,6 +103,49 @@ export function parseOpposite(text: string): Opposite[] {
   return out;
 }
 
+/* ---------- the worst-group records (typed JSON lines) ---------- */
+export interface Ev { state: string; value?: number; reason?: string }
+export interface Group {
+  group_id: string; performance: Ev; sample_count: Ev; effective_sample_size: Ev; interval_width: Ev;
+  information_disposition: string; membership_state: string;
+  coverage_counts: Record<string, number>;
+}
+export interface WorstGroupEval {
+  evaluation_id: string; direction: string; disposition: string;
+  worst_group_ids: string[]; worst_value: Ev; group_universe: string[];
+  eligible_group_ids: string[]; insufficient_group_ids: string[]; unknown_group_ids: string[];
+  groups: Group[];
+}
+export function parseWorstGroups(text: string): WorstGroupEval[] {
+  const out: WorstGroupEval[] = [];
+  for (const line of text.split("\n")) {
+    if (!line.trim()) continue;
+    const r = JSON.parse(line);
+    const wg = r.worst_group_evaluation ?? {};
+    out.push({
+      evaluation_id: String(r.evaluation_id ?? ""), direction: String(wg.direction ?? ""), disposition: String(wg.disposition ?? ""),
+      worst_group_ids: wg.worst_group_ids ?? [], worst_value: wg.worst_value ?? { state: "missing" }, group_universe: wg.group_universe ?? [],
+      eligible_group_ids: wg.eligible_group_ids ?? [], insufficient_group_ids: wg.insufficient_group_ids ?? [], unknown_group_ids: wg.unknown_group_ids ?? [],
+      groups: (wg.group_results ?? []) as Group[],
+    });
+  }
+  return out;
+}
+
+/* Result I: the finest strata (class x range x visibility) with simultaneous intervals */
+export interface Stratum { cls: string; range: string; vis: string; n: number; lift: number; lo: number; hi: number; section: string }
+export function parseStrata(text: string): Stratum[] {
+  const out: Stratum[] = [];
+  let section = "top";
+  for (const line of text.split("\n")) {
+    if (/least dependent eligible strata/.test(line)) section = "least";
+    else if (/observed-insufficient strata/.test(line)) section = "insufficient";
+    const m = /^\s{2}([a-z_]+)\s+(\d+-\d+)\s+(v\d+-\d+)\s+([\d,]+)\s+([\d.]+)\s+\[(-?[\d.]+), (-?[\d.]+)\]\s*$/.exec(line);
+    if (m && section !== "insufficient") out.push({ cls: m[1], range: m[2], vis: m[3], n: Number(m[4].replace(/,/g, "")), lift: Number(m[5]), lo: Number(m[6]), hi: Number(m[7]), section });
+  }
+  return out;
+}
+
 export interface Claim { claim_id: string; status: string; current_scientific_use: string; estimand: string; lineage?: { first_stated_in?: string; superseded_by?: string | null } }
 export function parseRegister(text: string): { claims: Claim[]; policy: Record<string, unknown> } {
   const j = JSON.parse(text);

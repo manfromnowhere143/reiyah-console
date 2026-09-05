@@ -8,7 +8,7 @@
   "commit_count": 45,
   "root": "/Users/danielwahnich/workspace/reiyah-gate-b"
  },
- "sealedAt": "2026-09-05T18:37:33.274Z",
+ "sealedAt": "2026-09-05T18:58:27.809Z",
  "files": [
   {
    "id": "evidence__claim-status-register-2026-08-29.json",
@@ -51,6 +51,18 @@
    "path": "evidence/measurement/result_q.txt",
    "bytes": 5855,
    "sha256": "sha256:d364e847ede5111c320c086d9c81a870a847dee2e38416b3a9576d6e669d1497"
+  },
+  {
+   "id": "evidence__measurement__result_i.txt",
+   "path": "evidence/measurement/result_i.txt",
+   "bytes": 3958,
+   "sha256": "sha256:6ca9f297a7de0df81806fba3e6d190e3b98d1a7728950158be7d408eb2914e26"
+  },
+  {
+   "id": "evidence__measurement__result_j.txt",
+   "path": "evidence/measurement/result_j.txt",
+   "bytes": 3305,
+   "sha256": "sha256:49ddb35f6fd2ebf7534966b211f97491fbce14b6a81549857199fe8bee7c90c7"
   },
   {
    "id": "evidence__measurement__joint-performance-nuscenes-val.excerpt.json",
