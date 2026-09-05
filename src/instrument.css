@@ -1167,7 +1167,7 @@ button:focus-visible, a:focus-visible { outline: 2px solid var(--ink-soft); outl
   border-radius: 3px 3px 1px 1px;
   background: color-mix(in srgb, var(--ok) calc(30% + var(--h, 0.5) * 70%), color-mix(in srgb, var(--ink) 10%, transparent));
   box-shadow: inset 0 1px 0 color-mix(in srgb, var(--sheen) 35%, transparent);
-  transition: filter 0.15s var(--ease), opacity 0.2s var(--ease);
+  transition: opacity 0.2s var(--ease);
 }
 .spectrum[data-side="b"] .tcol { border-radius: 1px 1px 3px 3px; }
 .tcol[data-state="fail"] { background: var(--accent); }
@@ -1179,7 +1179,7 @@ button:focus-visible, a:focus-visible { outline: 2px solid var(--ink-soft); outl
   @keyframes deepPulse { 0%, 100% { opacity: 0.35; } 50% { opacity: 1; } }
 }
 .twin:has(.tcol[data-hot="true"]) .tcol:not([data-hot="true"]) { opacity: 0.45; }
-.tcol[data-hot="true"] { filter: brightness(1.12); }
+.tcol[data-hot="true"] { opacity: 1; }
 .seam { flex: none; display: flex; align-items: center; gap: 0.7rem; position: relative; }
 .seamline { flex: 1; height: 1px; background: color-mix(in srgb, var(--ink) 35%, transparent); position: relative; overflow: hidden; }
 .twin[data-equal="true"] .seamline::after {

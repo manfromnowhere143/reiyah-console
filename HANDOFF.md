@@ -178,6 +178,16 @@ Adversaries = THE WALL; Encounter v3 at the fixture's own clock; Harbor shape =
 role, ground depth, the gate fires; body-lock and single-fixed-layer iOS steps
 (now superseded by the static document).
 
+## PAINT LAW (audited 2026-09-05, enforce on every change)
+Audit command: list every @keyframes and its properties, every `infinite`
+animation, every transition on a paint property. Current state: 20 keyframes,
+all opacity/transform only; 12 perpetual animations, all compositor-only; no
+mix-blend-mode anywhere; no filter transitions; the grain is static and
+unblended. Transitions on background/box-shadow/color remain only for
+state changes on small elements (hover, cursor). Never: a full-panel overlay
+that blends or animates; animating box-shadow, background-position, filter,
+or SVG attributes; view-transition names on dock tabs or station content.
+
 ## Shipped 2026-09-05 (later): ST-12 THE WORST GROUP — the field
 - The per-object records are NOT committed (2-record excerpt; the 235 MB
   file is git-ignored), so an object-level field is impossible today without
