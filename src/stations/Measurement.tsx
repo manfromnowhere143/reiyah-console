@@ -139,7 +139,7 @@ export function Measurement() {
 
         <div className="mgrid">
           <div className="ipanel mpanel">
-            <div className="ilabel">the convergence · conditional coefficient as confounders are added · Result L{conv?.mediator ? " · L6 is the mediator error, performed deliberately and marked inadmissible" : ""}</div>
+            <div className="ilabel">the convergence · conditional coefficient as confounders are added · Result L{conv?.mediator ? " · L6: the mediator error, deliberate, inadmissible" : ""}</div>
             <div className="mbox" ref={cbox.ref}>{convSvg ?? <div className="note">Result L transcript not present or not in its known shape</div>}</div>
             {conv && <div className="msrc"><span>{conv.file.path}</span><Digest id={src(conv.file).id} sha={src(conv.file).sha256} path={src(conv.file).path} /></div>}
           </div>
