@@ -125,8 +125,9 @@ export function warmSealedSurfaces() {
     for (const row of sealedManifest!.surfaces) { try { await fetchRaw(row.id); } catch { /* the station will report it */ } }
     try {
       const cat = await fetchCatalog();
-      for (const c of cat) if (/operator-decision|OPERATOR_DECISION/.test(c.path) && c.path.endsWith(".json")) { try { await fetchSurfaceByPath(c.path); } catch { /* reported by the station */ } }
+      for (const c of cat) if (c.path.endsWith(".json")) { try { await fetchSurfaceByPath(c.path); } catch { /* reported by the station */ } }
     } catch { /* reported by the station */ }
+    try { await fetchSchemaIndex(); } catch { /* reported by the station */ }
   });
 }
 

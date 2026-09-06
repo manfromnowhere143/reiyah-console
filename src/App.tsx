@@ -8,6 +8,7 @@ import { flushSync } from "react-dom";
 import { ProofBoot, verifyEvidenceOnce, type VerifiedEvidence } from "./boot/ProofBoot";
 import { STATIONS } from "./lib/camera";
 import { getSealedInfo, subscribeEvents, warmSealedSurfaces } from "./lib/evidence";
+import { warmLane } from "./lib/gateb";
 import { Mark, TruthPill } from "./components/primitives";
 import { GroundToggle } from "./components/GroundToggle";
 import { Palette } from "./components/Palette";
@@ -94,7 +95,7 @@ function Stage({ ev, onEvidence }: { ev: VerifiedEvidence; onEvidence: (e: Verif
   /* after boot, in idle time, warm every station's bytes. Sealed bytes are
      content-addressed and immutable within a snapshot, so this is honest
      caching: a station then renders at once, with no loading flash. */
-  useEffect(() => { warmSealedSurfaces(); }, []);
+  useEffect(() => { warmSealedSurfaces(); warmLane(); }, []);
 
   useEffect(() => {
     const off = subscribeEvents((kind, at) => {

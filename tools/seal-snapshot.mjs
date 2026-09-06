@@ -98,9 +98,13 @@ fs.writeFileSync(path.join(OUT, "catalog.json"), JSON.stringify({ entries: catal
    dialect, title and family, computed from the repository bytes. */
 const schemaRows = [];
 try {
-  for (const f of fs.readdirSync(path.join(REPO, "schemas")).sort()) {
-    if (!f.endsWith(".json")) continue;
-    const rel = `schemas/${f}`;
+  /* every schema file, at the top and in the versioned subdirectories
+     (schemas/v1.1, schemas/v1.2 hold the application schemas the fixtures
+     attack); a subdirectory's name is the version of the files inside it */
+  const walk = (dir) => fs.readdirSync(path.join(REPO, dir), { withFileTypes: true }).sort((x, y) => x.name.localeCompare(y.name)).flatMap((e) => e.isDirectory() ? walk(`${dir}/${e.name}`) : e.name.endsWith(".json") ? [`${dir}/${e.name}`] : []);
+  for (const rel of walk("schemas")) {
+    const f = rel.split("/").pop();
+    const sub = rel.split("/").length > 2 ? rel.split("/")[1] : null;
     const bytes = fs.readFileSync(path.join(REPO, rel));
     let j = {};
     try { j = JSON.parse(bytes.toString("utf8")); } catch { /* recorded as unparsed */ }
@@ -109,7 +113,7 @@ try {
       path: rel, bytes: bytes.length,
       sha256: "sha256:" + createHash("sha256").update(bytes).digest("hex"),
       id: j.$id ?? null, dialect: j.$schema ?? null, title: j.title ?? null,
-      family: m ? m[1] : f.replace(/\.schema\.json$/, ""), version: m ? m[2] : null,
+      family: m ? m[1] : f.replace(/\.schema\.json$/, ""), version: m ? m[2] : sub ? sub.replace(/^v/, "") : null,
       additional_properties_closed: j.additionalProperties === false,
       required_count: Array.isArray(j.required) ? j.required.length : null,
       property_count: j.properties && typeof j.properties === "object" ? Object.keys(j.properties).length : null,

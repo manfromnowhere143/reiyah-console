@@ -188,6 +188,33 @@ state changes on small elements (hover, cursor). Never: a full-panel overlay
 that blends or animates; animating box-shadow, background-position, filter,
 or SVG attributes; view-transition names on dock tabs or station content.
 
+## Shipped 2026-09-07: instant stations, THE HORIZON, THE VAULT, a schema gap closed
+- INSTANT STATIONS. `useSurfaceState` keeps every station's assembled data
+  for the session (keyed by the loader's source + deps) and mounts ready in
+  the same frame on return, while the loader re-runs underneath (stale-while-
+  revalidate on content-addressed bytes). `warmSealedSurfaces` now warms
+  every catalog JSON and the schema index; `warmLane()` (gateb.ts) warms
+  every lane file after boot in idle time. The `.note` reading text stays
+  invisible for 220 ms (opacity only), so a fast load never flashes it.
+- ST-08 FRONTIER = THE HORIZON: canvas in the shared night world; every
+  discovery pointer a hollow steel-blue ring standing on the horizon in the
+  column of its source kind, reflected on the wet road; the cursor and
+  hover as before; kind labels on the road; "the sealed field ends here".
+- ST-10 THE CONTRACT = THE VAULT: every schema one segment of a ring
+  (filled = closed, hollow = open), families contiguous; the fixtures thrown
+  at each family as ticks stacked outward (red known-bad, ink known-good)
+  with the count; hover by angle; centre carries the counts.
+- SCHEMA GAP CLOSED: the sealer and the live server indexed only the top of
+  schemas/; the application schemas the fixtures attack live in schemas/v1.1
+  and v1.2 (14 files). Both now walk subdirectories (version from the dir
+  name); 219 -> 233 schemas. The Contract joins fixtures to schemas by $id.
+- LANE MOVING FAST: since Result V the lane added W (ARC replication), X
+  (monitor transfer), Y (HellaSwag), Z/AA/AB (sensor monitors), AC/X2 (LLM
+  intervals), a register SUCCESSOR evidence/claim-status-register-2026-09-06
+  .json (0.2.0, schema 1.4, human-channel and LLM claims registered). The
+  instrument still reads the 2026-08-29 register: NEXT is to read the latest
+  register by date, show lineage, and expose W..AC on THE LAW.
+
 ## Shipped 2026-09-06 (late night): the exposure audit, and THE LAW
 - Audit method: list every committed lane transcript and every engine 1.2.x
   record, compare with the file paths the stations read (`grep` for

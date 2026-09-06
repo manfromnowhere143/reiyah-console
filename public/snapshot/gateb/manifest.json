@@ -2,13 +2,13 @@
  "present": true,
  "identity": {
   "state": "observed",
-  "head": "945caa9217e9e08b9e37d3b4c3e6042fb4c8d3e4",
+  "head": "ccc53bbb443bc7053043d09254333d60ea371bf9",
   "branch": "gate-b-measurement",
-  "worktree_clean": true,
-  "commit_count": 59,
+  "worktree_clean": false,
+  "commit_count": 70,
   "root": "/Users/danielwahnich/workspace/reiyah-gate-b"
  },
- "sealedAt": "2026-09-06T10:54:33.704Z",
+ "sealedAt": "2026-09-06T12:14:35.471Z",
  "files": [
   {
    "id": "evidence__claim-status-register-2026-08-29.json",
@@ -109,8 +109,8 @@
   {
    "id": "human-channel__H5_CROSS_AGENT_JOINT.md",
    "path": "human-channel/H5_CROSS_AGENT_JOINT.md",
-   "bytes": 4838,
-   "sha256": "sha256:a833998de9582a43588265c589a23d78b3a8f2e6f048af8b9350ba7fdc8a12f3"
+   "bytes": 4837,
+   "sha256": "sha256:f019b5adb53e51500875607c50f5dedfc04262e4bda13e68d7531792ae8a927a"
   },
   {
    "id": "human-channel__evidence__h6_total_both_miss.txt",
@@ -121,8 +121,8 @@
   {
    "id": "human-channel__H6_TOTAL_BOTH_MISS.md",
    "path": "human-channel/H6_TOTAL_BOTH_MISS.md",
-   "bytes": 5054,
-   "sha256": "sha256:966e91893d5a489b64b73079a82f984f9fd0e058ba9a5c439f2f3cdb21358a60"
+   "bytes": 5339,
+   "sha256": "sha256:4b43886d030daf78685ce9bd7bd221329e7371d69626441f4cb8c145ef4e09cc"
   },
   {
    "id": "llm-generalization__evidence__result_t.txt",
@@ -145,8 +145,8 @@
   {
    "id": "llm-generalization__RESULT_V_DEPLOYED_MONITOR.md",
    "path": "llm-generalization/RESULT_V_DEPLOYED_MONITOR.md",
-   "bytes": 3994,
-   "sha256": "sha256:d737e8b66b4bda9f846decb73e756cd4c1267d0e8598a816208720aef00b77ce"
+   "bytes": 4230,
+   "sha256": "sha256:7c58b9ee2c576c1c2e7f2753722a6c42e09698574d27a319e74e6bc7f5b55b1a"
   },
   {
    "id": "llm-generalization__RESULT_T_LLM_INDEPENDENCE.md",
@@ -163,14 +163,14 @@
   {
    "id": "llm-generalization__README.md",
    "path": "llm-generalization/README.md",
-   "bytes": 2755,
-   "sha256": "sha256:dd89538f80ca47b70348e02937755ce02c3ebe1ae6a962bab1a6c5b8592dea29"
+   "bytes": 4512,
+   "sha256": "sha256:36f494108f85b0c33c47333ea962697c5a9eb7f50d6a242aa9d8968118977823"
   },
   {
    "id": "human-channel__README.md",
    "path": "human-channel/README.md",
-   "bytes": 3918,
-   "sha256": "sha256:219c698fe2402e7d4c25df4c05272b052e8c954adbe5f2a6442b3853192618a7"
+   "bytes": 4306,
+   "sha256": "sha256:d1b4e638aa434b1d167fc89d73d51219fbe1a4dfdcf8ce637d51a058c0163c96"
   },
   {
    "id": "evidence__measurement__joint-performance-nuscenes-val.excerpt.json",
@@ -199,8 +199,8 @@
   {
    "id": "docs__GATE_B_FINDINGS_SYNTHESIS.md",
    "path": "docs/GATE_B_FINDINGS_SYNTHESIS.md",
-   "bytes": 8094,
-   "sha256": "sha256:b30137124db5e83c6713c8b54ad6b642edd23f2a76a0726461c0c9644a20f68f"
+   "bytes": 8085,
+   "sha256": "sha256:03663cef1fcfef5b6fa49b7c464b32e3b1d277d2e36fc5959b187fb72044eb46"
   }
  ],
  "lane_nonclaims": {

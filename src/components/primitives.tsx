@@ -328,13 +328,20 @@ export function Blocked({ reason }: { reason: string }) {
   );
 }
 
+/* every station's assembled data is kept for the session, keyed by the
+   loader's own source and its deps: a station returns to its data in the
+   same frame it mounts, and the loader still re-runs underneath so a newer
+   seal or a live event replaces it. The bytes beneath are content-addressed,
+   so this is honest caching, never a stale claim. */
+const surfaceCache = new Map<string, unknown>();
 export function useSurfaceState<T>(loader: () => Promise<T>, deps: unknown[] = []) {
-  const [state, setState] = useState<{ phase: "loading" } | { phase: "ready"; data: T } | { phase: "blocked"; reason: string }>({ phase: "loading" });
+  const key = loader.toString() + "|" + JSON.stringify(deps);
+  const [state, setState] = useState<{ phase: "loading" } | { phase: "ready"; data: T } | { phase: "blocked"; reason: string }>(() => surfaceCache.has(key) ? { phase: "ready", data: surfaceCache.get(key) as T } : { phase: "loading" });
   useEffect(() => {
     let alive = true;
-    setState({ phase: "loading" });
+    if (!surfaceCache.has(key)) setState({ phase: "loading" });
     loader()
-      .then((data) => alive && setState({ phase: "ready", data }))
+      .then((data) => { surfaceCache.set(key, data); if (alive) setState({ phase: "ready", data }); })
       .catch((e) => alive && setState({ phase: "blocked", reason: String((e as Error)?.message ?? e) }));
     return () => { alive = false; };
     // eslint-disable-next-line react-hooks/exhaustive-deps

@@ -309,3 +309,15 @@ export function parseV(text: string): ResultV | null {
   if (!hd || !nv || !mo || !un || !ua || !unv || !umo || bands.length < 3) return null;
   return { train: Number(hd[1]), test: Number(hd[2]), baseError: Number(hd[3]), naive: { auc: Number(nv[1]), brier: Number(nv[2]), ece: Number(nv[3]) }, monitor: { auc: Number(mo[1]), brier: Number(mo[2]), ece: Number(mo[3]) }, unanimousN: Number(un[1]), unanimousOf: Number(un[2]), unanimousActual: Number(ua[1]), unanimousNaive: Number(unv[1]), unanimousMonitor: Number(umo[1]), bands, nonclaims: nonclaims(text) };
 }
+
+/* after boot, in idle time, every lane byte a station may read is fetched
+   once, so the lane stations render in the frame they mount */
+export function warmLane() {
+  const idle = (cb: () => void) => ((window as any).requestIdleCallback ? (window as any).requestIdleCallback(cb, { timeout: 5000 }) : setTimeout(cb, 1200));
+  idle(async () => {
+    try {
+      const lane = await fetchLane();
+      for (const f of lane.files ?? []) { try { await fetchLaneText(f.path); } catch { /* the station will report it */ } }
+    } catch { /* the station will report it */ }
+  });
+}

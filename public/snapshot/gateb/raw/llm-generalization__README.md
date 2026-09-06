@@ -10,9 +10,13 @@ majority vote, and multi-model cross-checking, all of which assume the models er
 Public v1 Open LLM Leaderboard per-question results (`open-llm-leaderboard-old` on Hugging Face),
 MMLU 5-shot, per-question correctness, joined across models by a hash of the example. Same method as
 the sensor work: public per-item predictions and the Definition 32 coefficient. No LLM inference.
+Result V fits and calibrates a logistic-regression monitor on those outputs, the only model fitting
+in this thread, and reports it on a held-out split.
 
 Reproduce: `bdda-venv/bin/python llm-generalization/tools/result_t_llm_independence.py` (downloads
-the per-question parquet files from Hugging Face).
+the per-question parquet files from Hugging Face). Result X reads a second jury whose 2024-format
+files carry no gold answer; gold is recovered at join time from a 2023-format model on the same
+question and checked against every row's own correctness flag.
 
 ## Result
 
@@ -33,6 +37,22 @@ the per-question parquet files from Hugging Face).
   ECE 0.015 vs 0.045). On held-out unanimous items the naive ensemble assigns 0% risk while the true
   wrong rate is 9.5%; the monitor assigns 11.6%, catching the coupled-failure blind spot. Its
   features are channel-agnostic, so the same form applies to two sensors or a human and a machine.
+- [`RESULT_W_SECOND_BENCHMARK.md`](RESULT_W_SECOND_BENCHMARK.md) - the red-team. The whole law
+  replicates on ARC-Challenge, a different domain: marginal c 1.76 (same 1.87 > cross 1.73),
+  conditional 1.05, a six-model jury with the effective diversity of 1.6, and unanimous-yet-wrong
+  37% (against 10% on MMLU). On harder material the coupling sharpens. The findings are not an MMLU
+  artifact.
+- [`RESULT_X_MONITOR_TRANSFER.md`](RESULT_X_MONITOR_TRANSFER.md) - the transfer test, both halves.
+  Fitted once on jury A and never refitted, the monitor reads seven models from seven unseen
+  families at AUC 0.853 against an in-domain ceiling of 0.856 (ECE 0.032 vs 0.015): channel
+  transfer holds. Read on ARC-Challenge it falls to or below the naive baseline and its calibration
+  breaks: task transfer does not hold. The instrument is portable across channels and must be
+  calibrated on the task it reads.
+- [`RESULT_Y_THIRD_BENCHMARK.md`](RESULT_Y_THIRD_BENCHMARK.md) - a third benchmark, HellaSwag.
+  Every direction of the law reappears (marginal c 2.32, same 2.43 > cross 2.30, a seven-model jury
+  with the effective diversity of 1.28, unanimity on 79% of questions and wrong on 34% of those), and
+  the residual beyond shared difficulty is nearly zero (conditional c 1.03). The marginal law is
+  robust across three benchmarks; the lineage mechanism is benchmark-dependent and stated so.
 
 ## Discipline
 

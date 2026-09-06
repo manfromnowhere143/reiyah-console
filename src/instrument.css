@@ -422,7 +422,10 @@ button:focus-visible, a:focus-visible { outline: 2px solid var(--ink-soft); outl
 .sub { font-size: 0.7rem; color: var(--ink-faint); margin-top: 0.25rem; line-height: 1.4; }
 .grid2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(13rem, 1fr)); gap: 0.7rem; }
 .grid3 { display: grid; grid-template-columns: repeat(auto-fit, minmax(9.5rem, 1fr)); gap: 0.6rem; }
-.note { font-size: 0.74rem; color: var(--ink-faint); max-width: 40rem; }
+/* a reading note earns its place only if the bytes take longer than a
+   glance to arrive: it stays invisible for the first 220 ms (opacity only) */
+.note { font-size: 0.74rem; color: var(--ink-faint); max-width: 40rem; opacity: 0; animation: noteIn 0.01s linear 220ms forwards; }
+@keyframes noteIn { to { opacity: 1; } }
 .note b { color: var(--ink-soft); font-weight: 600; }
 
 /* bars */
@@ -1933,3 +1936,9 @@ button:focus-visible, a:focus-visible { outline: 2px solid var(--ink-soft); outl
 .monitor .monnaive circle { fill: none; stroke: var(--accent); stroke-width: 1.5; }
 .monitor .monnaive .mlab { fill: var(--accent); }
 @media (max-width: 760px) { .lawrow { display: none; } }
+
+.frhero { flex: 1; }
+.frhero .mbox { min-height: 9rem; }
+.vaulthero { flex: 1; }
+.vaulthero .mbox { min-height: 10rem; }
+@media (max-width: 760px) { .vaulthero .mbox { min-height: 14rem; } }
