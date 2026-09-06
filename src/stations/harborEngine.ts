@@ -33,7 +33,7 @@ type Ctx = CanvasRenderingContext2D | OffscreenCanvasRenderingContext2D;
 type MakeCanvas = (w: number, h: number) => AnyCanvas;
 
 const TAU = Math.PI * 2;
-const KINDS = ["OBS", "BEL", "DEC", "INT", "OUT", "EVD"];
+const KINDS = ["OBS", "BEL", "DEC", "INT", "OUT", "EVD"]; void KINDS;
 /* the shape is the role: every sensed object is drawn as what it is */
 type Shape = "diamond" | "square" | "circle" | "hex";
 const shapeOf = (role: string): Shape =>
@@ -181,15 +181,11 @@ export function createHarborEngine(
        open toward what it cannot see, the pupil turned toward the gap ---- */
     const scan = reduced ? 0.5 : (Math.sin(t * 1.1) * 0.5 + 0.5);
     const rr = 11 + scan * 5;
-    if (dark) mctx.globalCompositeOperation = "lighter";
-    glow(cx, horizon, 30 * (surge ? 1.4 : 1), RED, 0.12 * (surge ? 1.4 : 1));
-    mctx.globalCompositeOperation = "source-over";
-    mctx.strokeStyle = `rgba(${INK},0.95)`; mctx.lineWidth = Math.max(2.2, rr * 0.22); mctx.lineCap = "round";
+    if (surge && dark) { mctx.globalCompositeOperation = "lighter"; glow(cx, horizon, 34, OK, 0.12); mctx.globalCompositeOperation = "source-over"; }
+    mctx.strokeStyle = `rgba(${INK},0.9)`; mctx.lineWidth = Math.max(1.6, rr * 0.16); mctx.lineCap = "round";
     mctx.beginPath(); mctx.arc(cx, horizon, rr, -20 * Math.PI / 180, -70 * Math.PI / 180 + TAU); mctx.stroke();
     mctx.fillStyle = `rgba(${RED},0.98)`;
     mctx.beginPath(); mctx.arc(cx + rr * 0.18, horizon - rr * 0.15, rr * 0.3, 0, TAU); mctx.fill();
-    mctx.font = monoSmall; mctx.textAlign = "center"; mctx.fillStyle = `rgba(${INK},${TA})`;
-    mctx.fillText("REIYAH SEES", cx, horizon - rr - 10);
 
     /* ---- objects (the real artifacts) approaching through the kinds ---- */
     for (let i = 0; i < 6; i++) kindGlow[i] = Math.max(0, kindGlow[i] - rdt * 2.2);
@@ -243,15 +239,15 @@ export function createHarborEngine(
       if (pk.t > KIND_T[1] - 0.08 && pk.t < KIND_T[2]) {
         const doubt = 1 - smoothLocal(KIND_T[1], KIND_T[2], pk.t);
         if (dark) mctx.globalCompositeOperation = "lighter";
-        glow(pr.x, pr.y, s + 10 + 10 * doubt, INK, 0.05 + 0.06 * doubt);
+        glow(pr.x, pr.y, s + 8 + 8 * doubt, INK, (0.03 + 0.04 * doubt) * Math.max(0.3, pr.f));
         mctx.globalCompositeOperation = "source-over";
       }
 
       /* the object: a sensed diamond. Bright core, additive halo on obsidian. */
       const rgb = pk.bad ? RED : (pk.t > KIND_T[4] ? OK : INK);
-      if (dark) {
+      if (dark && pr.f > 0.14) {
         mctx.globalCompositeOperation = "lighter";
-        glow(pr.x, pr.y, s * 2.6, rgb, 0.16 + pr.f * 0.14);
+        glow(pr.x, pr.y, s * 2.2, rgb, (0.04 + pr.f * 0.16) * pr.f);
         mctx.globalCompositeOperation = "source-over";
       }
       /* the wet road returns each object's light beneath it */
@@ -285,10 +281,6 @@ export function createHarborEngine(
           mctx.moveTo(bx - sx * cor, by); mctx.lineTo(bx, by); mctx.lineTo(bx, by - sy * cor);
           mctx.stroke();
         }
-        let ki = 0; for (let k = 0; k < 6; k++) if (pk.t >= KIND_T[k]) ki = k;
-        mctx.fillStyle = `rgba(${pk.bad ? RED : INK},${(0.45 + pr.f * 0.4).toFixed(2)})`;
-        mctx.font = monoSmall; mctx.textAlign = "left";
-        mctx.fillText(pk.bad ? "REJECT" : KINDS[ki], pr.x - bs, pr.y - bs - 3);
       }
 
       pk.px = pr.x; pk.py = pr.y; pk.seen = true;
@@ -310,48 +302,15 @@ export function createHarborEngine(
     mctx.setLineDash([5, 5]);
     mctx.beginPath(); mctx.moveTo(cx - ghw, gy); mctx.lineTo(cx + ghw, gy); mctx.stroke();
     mctx.setLineDash([]);
-    mctx.fillStyle = `rgba(${INK},${TA})`; mctx.font = monoSmall; mctx.textAlign = "left";
-    mctx.fillText("GATE · FAILS CLOSED", Math.min(cx + ghw + 8, w - edge - 150), gy - 4);
-    mctx.fillStyle = `rgba(${RED},0.85)`;
-    mctx.fillText(`REJECTED BY DESIGN · ${badTotal}`, Math.min(cx + ghw + 8, w - edge - 150), gy + 8);
-    if (now - lastRejectAt < 2600) {
-      mctx.fillStyle = `rgba(${RED},${(0.85 * (1 - (now - lastRejectAt) / 2600)).toFixed(2)})`;
-      mctx.fillText(lastRejectRule, Math.min(cx + ghw + 8, w - edge - 150), gy + 20);
+    if (!compact && now - lastRejectAt < 2200) {
+      mctx.fillStyle = `rgba(${RED},${(0.85 * (1 - (now - lastRejectAt) / 2200)).toFixed(2)})`; mctx.font = monoSmall; mctx.textAlign = "left";
+      mctx.fillText(`rejected · ${lastRejectRule}`, Math.min(cx + ghw + 8, w - edge - 170), gy - 5);
     }
+    void badTotal;
 
-    /* ---- the six kinds as a sensing readout down the left edge ---- */
-    if (!compact) {
-      mctx.textAlign = "left"; mctx.font = monoSmall;
-      for (let k = 0; k < 6; k++) {
-        const ky = horizon + 16 + k * 15;
-        const gk = kindGlow[k];
-        mctx.fillStyle = `rgba(${gk > 0.2 ? RED : INK},${(0.4 + gk * 0.55).toFixed(2)})`;
-        mctx.beginPath(); mctx.arc(edge, ky, 2 + gk * 1.6, 0, TAU); mctx.fill();
-        mctx.fillStyle = `rgba(${INK},${(0.5 + gk * 0.45).toFixed(2)})`;
-        mctx.fillText(KINDS[k], edge + 8, ky + 3);
-      }
-      mctx.fillStyle = `rgba(${INK},${TA})`;
-      mctx.fillText("SIX KINDS · NEVER MERGED", edge, horizon + 16 + 6 * 15 + 4);
-    }
-
-    /* ---- sealed ledger (objects that passed into evidence) ---- */
-    mctx.textAlign = "right"; mctx.font = monoSmall;
-    mctx.fillStyle = `rgba(${OK},${TA})`;
-    mctx.fillText(`SEALED · ${artifacts.length}`, w - edge, horizon + 18);
-    mctx.fillStyle = `rgba(${INK},${TA})`;
-    mctx.fillText(`IN FLIGHT · ${packets.filter((p) => p.fall === 0).length}`, w - edge, horizon + 32);
-    if (!compact) { mctx.fillStyle = `rgba(${INK},${dark ? 0.7 : 0.6})`; mctx.fillText("◇ FIXTURE  ▢ SCHEMA  ○ HISTORY  ⬡ VALIDATOR", w - edge, horizon + 46); }
-
-    /* ---- ticker: the nearest object's identity, as a HUD line under the title
-       (kept clear of the receipt chip and authority wall at the bottom) ---- */
-    if (leading) {
-      mctx.font = monoSmall; mctx.textAlign = "left";
-      mctx.fillStyle = `rgba(${INK},${TA})`;
-      const name = leading.a.artifact.path.split("/").pop() ?? "";
-      const label = `SENSING · ${name} · ${leading.a.artifact.sha256.slice(0, 16)}…`;
-      const maxc = Math.max(16, Math.floor((w - edge * 2) / 5.4));
-      mctx.fillText(label.length > maxc ? label.slice(0, maxc - 1) + "…" : label, edge, 24);
-    }
+    /* the scene carries no standing text: the instruments below carry the
+       numbers, and hover identifies a record; kinds still light their zone */
+    void kindGlow; void leading;
 
     /* ---- hover: identify the exact record ---- */
     if (hovered) {

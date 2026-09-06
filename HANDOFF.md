@@ -188,6 +188,26 @@ state changes on small elements (hover, cursor). Never: a full-panel overlay
 that blends or animates; animating box-shadow, background-position, filter,
 or SVG attributes; view-transition names on dock tabs or station content.
 
+## Shipped 2026-09-07 (late): HARBOR v3.1, exposure discipline and restraint
+- User on the phone: the vanishing point burned into a white blob with a
+  warm, dirty halo; too much text for a first screen. Causes: additive
+  glows of every far object stacking at the horizon, a red halo under the
+  iris, bloom 0.9 with a 0.16 threshold, and HUD text everywhere.
+- GL post (harborGL/worker): bright-pass threshold 0.16 -> 0.34 (only real
+  highlights bloom), bloom 0.9 -> 0.32 (dark) / 0.16 (paper), dispersion
+  0.0009 -> 0.00035, grain 0.045 -> 0.022, and a FILMIC SHOULDER in the
+  composite: highlights roll off from 0.82 with 1 - exp(-3x), so nothing
+  clips to a blob. Law: no light may saturate; the eye reads the roll-off.
+- Engine: object glow only past depth 0.14 and scaled by depth squared
+  (the horizon never stacks), belief halo dimmer, iris ring thinner with no
+  standing halo (the surge glow is steel blue and brief), NO standing text:
+  no "REIYAH SEES", no ticker, no six-kinds readout, no sealed/in-flight
+  ledger, no legend, no kind labels on brackets, no gate labels; only the
+  momentary red "rejected · <rule>" on desktop and the hover tip remain.
+  The instruments carry the numbers.
+- Gauges: one line each, faint ink subs, numbers 1.3rem; the source gauge
+  says head, clean/dirty and verified-live or the seal time.
+
 ## Shipped 2026-09-07 (night): HARBOR v3, the night drive with a dashboard
 - RESEARCH/DESIGN (in one line each): the first screen must show the whole
   story at a glance and stay honest to the byte; the instrument already had

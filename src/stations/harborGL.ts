@@ -109,9 +109,9 @@ void main(){
   vec3 base = vec3(r, g, b);
   vec3 bloom = texture(uBloom, uv).rgb;
   vec3 col = base + bloom * uBloomI;
-  // soft-clip only the highlights, keep the body linear
-  vec3 over = max(vec3(0.0), col - 1.0);
-  col = min(col, 1.0) + over / (1.0 + over);
+  // filmic shoulder: nothing burns to a blob; highlights roll off from 0.82
+  vec3 over = max(vec3(0.0), col - 0.82);
+  col = min(col, 0.82) + 0.18 * (1.0 - exp(-over * 3.0));
   // radial vignette
   float d2 = dot(c, c);
   float vig = smoothstep(0.62, 0.12, d2);
@@ -221,7 +221,7 @@ export function createHarborGL(gl: GL): HarborGL | null {
         gl.viewport(0, 0, bloomA!.w, bloomA!.h);
         gl.uniform1i(gl.getUniformLocation(progBright!, "uTex"), 0);
         gl.uniform3fv(gl.getUniformLocation(progBright!, "uGround"), ground);
-        gl.uniform1f(gl.getUniformLocation(progBright!, "uThreshold"), 0.16);
+        gl.uniform1f(gl.getUniformLocation(progBright!, "uThreshold"), 0.34);
         gl.bindTexture(gl.TEXTURE_2D, base!.tex);
         drawTri();
 
