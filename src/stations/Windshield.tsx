@@ -7,7 +7,8 @@
    Every figure is parsed from a retained transcript by a strict pattern and
    carries its digest; the lane's non-claims are rendered verbatim: descriptive,
    proposed, not causal, not a safety determination, not driver-clustered. */
-import { useLayoutEffect, useRef, useState } from "react";
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
+import { MONO, drawCabin, drawWorld, tones, useGround } from "../lib/roadScene";
 import { fetchLane, fetchLaneText, parseConvergence, parseH1, parseH2, parseH3, parseH4, parseH5, parseRegister, type LaneFile } from "../lib/gateb";
 import { Blocked, Digest, Stat, Station, useSurfaceState } from "../components/primitives";
 
@@ -30,6 +31,97 @@ function useBox(key: unknown) {
     m(); const ro = new ResizeObserver(m); ro.observe(el); return () => ro.disconnect();
   }, [key]);
   return { ref, ...sz };
+}
+
+/* ---- the windshield scene: the independence line is the horizon ----
+   A coefficient above 1 rises into the sky as a column of light, reflected
+   on the wet road; one below 1 sits on the far road just under the horizon.
+   Drawn once per size, data and ground; reduced motion changes nothing
+   because nothing moves. Every mark is a parsed transcript figure. */
+interface Mark { c: number; lo?: number; hi?: number; label: string; short: string; sub: string; hold?: boolean }
+function WindshieldScene({ w, h, marks, header }: { w: number; h: number; marks: Array<Mark | null>; header: string }) {
+  const ref = useRef<HTMLCanvasElement>(null);
+  const dark = useGround();
+  const [ready, setReady] = useState(false);
+  useEffect(() => {
+    const cv = ref.current; if (!cv || w === 0 || h === 0) return;
+    const ctx = cv.getContext("2d"); if (!ctx) return;
+    let alive = true;
+    document.fonts.ready.then(() => {
+      if (!alive) return;
+      const dpr = Math.min(2, window.devicePixelRatio || 1);
+      cv.width = w * dpr; cv.height = h * dpr; ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ctx.clearRect(0, 0, w, h);
+      const { INK, OK, RED } = tones(dark);
+      const mobile = w < 560;
+      const dash = mobile ? 22 : 40, pillarW = mobile ? w * 0.05 : w * 0.075;
+      const top = mobile ? 22 : 30, bottom = h - dash - (mobile ? 4 : 8);
+      const ymin = 0.55, ymax = 1.75;
+      const y = (v: number) => bottom - (bottom - top) * ((Math.min(ymax, Math.max(ymin, v)) - ymin) / (ymax - ymin));
+      const horizon = Math.round(y(1)) + 0.5;
+      drawWorld(ctx, { w, h, dark, horizon, headlight: true, dashes: 7 });
+      /* the independence line, on the horizon */
+      ctx.save(); ctx.setLineDash([4, 3]); ctx.strokeStyle = `rgba(${RED},0.85)`; ctx.lineWidth = 1;
+      ctx.beginPath(); ctx.moveTo(pillarW, horizon); ctx.lineTo(w - pillarW, horizon); ctx.stroke(); ctx.restore();
+      const xs = [w * 0.24, w * 0.5, w * 0.76];
+      const column = (x: number, yTop: number) => {
+        const hgt = horizon - yTop; if (hgt <= 0) return;
+        /* the beam: narrow at its head, wider at its foot, brightest at the foot */
+        const g = ctx.createLinearGradient(0, yTop, 0, horizon);
+        g.addColorStop(0, `rgba(${OK},0.02)`); g.addColorStop(1, `rgba(${OK},0.30)`);
+        ctx.fillStyle = g; ctx.beginPath(); ctx.moveTo(x - 3, yTop); ctx.lineTo(x + 3, yTop); ctx.lineTo(x + 13, horizon); ctx.lineTo(x - 13, horizon); ctx.closePath(); ctx.fill();
+        const core = ctx.createLinearGradient(0, yTop, 0, horizon);
+        core.addColorStop(0, `rgba(${OK},0.5)`); core.addColorStop(1, `rgba(${OK},1)`);
+        ctx.fillStyle = core; ctx.fillRect(x - 1.1, yTop, 2.2, hgt);
+        /* its reflection on the wet road */
+        const rh = Math.min(hgt * 0.55, h - horizon - dash);
+        const r = ctx.createLinearGradient(0, horizon, 0, horizon + rh);
+        r.addColorStop(0, `rgba(${OK},0.40)`); r.addColorStop(1, `rgba(${OK},0)`);
+        ctx.fillStyle = r; ctx.beginPath(); ctx.moveTo(x - 11, horizon); ctx.lineTo(x + 11, horizon); ctx.lineTo(x + 4, horizon + rh); ctx.lineTo(x - 4, horizon + rh); ctx.closePath(); ctx.fill();
+      };
+      const head = (x: number, yy: number, r: number) => {
+        const halo = ctx.createRadialGradient(x, yy, r, x, yy, r * 4);
+        halo.addColorStop(0, `rgba(${OK},0.35)`); halo.addColorStop(1, `rgba(${OK},0)`);
+        ctx.fillStyle = halo; ctx.beginPath(); ctx.arc(x, yy, r * 4, 0, Math.PI * 2); ctx.fill();
+        ctx.fillStyle = `rgba(${OK},1)`; ctx.beginPath(); ctx.arc(x, yy, r, 0, Math.PI * 2); ctx.fill();
+        ctx.fillStyle = `rgba(255,255,255,${dark ? 0.85 : 0.6})`; ctx.beginPath(); ctx.arc(x, yy, r * 0.4, 0, Math.PI * 2); ctx.fill();
+      };
+      const big = mobile ? 15 : 19, r0 = mobile ? 4.5 : 6;
+      ctx.textAlign = "center"; ctx.textBaseline = "alphabetic";
+      marks.forEach((m, i) => {
+        if (!m) return;
+        const x = xs[i], yc = y(m.c);
+        if (m.c >= 1) column(x, yc); else { ctx.save(); ctx.setLineDash([2, 3]); ctx.strokeStyle = `rgba(${OK},0.7)`; ctx.beginPath(); ctx.moveTo(x, horizon); ctx.lineTo(x, yc); ctx.stroke(); ctx.restore(); }
+        if (m.lo !== undefined && m.hi !== undefined) {
+          ctx.strokeStyle = `rgba(${INK},0.7)`; ctx.lineWidth = 1;
+          ctx.beginPath(); ctx.moveTo(x - 7, y(m.lo)); ctx.lineTo(x + 7, y(m.lo)); ctx.moveTo(x - 7, y(m.hi)); ctx.lineTo(x + 7, y(m.hi)); ctx.moveTo(x, y(m.lo)); ctx.lineTo(x, y(m.hi)); ctx.stroke();
+        }
+        head(x, yc, r0);
+        ctx.fillStyle = `rgba(${INK},1)`; ctx.font = `600 ${big}px ${MONO}`;
+        const ty = (m.hi !== undefined ? y(m.hi) : Math.min(yc, horizon)) - r0 - 8;
+        ctx.fillText(m.c.toFixed(i === 1 ? 2 : i === 2 ? 2 : 3), x, ty);
+      });
+      /* the arc between the two same-kind columns */
+      const a = marks[0], b = marks[1];
+      if (a && b) { ctx.save(); ctx.setLineDash([2, 4]); ctx.strokeStyle = `rgba(${OK},0.55)`; ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(xs[0], y(a.c)); ctx.quadraticCurveTo((xs[0] + xs[1]) / 2, Math.min(y(a.c), y(b.c)) - 26, xs[1], y(b.c)); ctx.stroke(); ctx.restore(); }
+      drawCabin(ctx, w, h, dark, pillarW, dash);
+      /* HUD text: the header on the glass, the captions on the dashboard */
+      ctx.font = `${mobile ? 8 : 9}px ${MONO}`; ctx.textAlign = "center";
+      ctx.fillStyle = `rgba(${INK},${dark ? 0.8 : 0.7})`;
+      if (!mobile) ctx.fillText(header, w / 2, 14);
+      if (!mobile) { ctx.textAlign = "left"; ctx.fillStyle = `rgba(${RED},0.9)`; ctx.fillText("independence · the horizon", pillarW + 8, horizon + 13); }
+      ctx.textAlign = "center";
+      marks.forEach((m, i) => {
+        if (!m) return;
+        const x = xs[i];
+        ctx.fillStyle = `rgba(${INK},${dark ? 0.92 : 0.85})`; ctx.font = `${mobile ? 8 : 9}px ${MONO}`;
+        ctx.fillText(mobile ? m.short : m.label, x, h - (mobile ? 7 : 18));
+        if (!mobile) { ctx.fillStyle = `rgba(${INK},${dark ? 0.6 : 0.5})`; ctx.fillText(m.sub, x, h - 6); }
+      });
+      setReady(true);
+    });
+    return () => { alive = false; };
+  }, [w, h, marks, header, dark]);
+  return <canvas ref={ref} className="wscene" data-ready={String(ready)} style={{ width: w, height: h }} aria-label="Three coefficients above the same independence line drawn as the horizon of a night road: automation, human, and the two together" />;
 }
 
 export function Windshield() {
@@ -70,65 +162,15 @@ export function Windshield() {
   const h4cog = h4?.grouped.find((g) => g.name.startsWith("cognitive"));
   const h5 = d.h5;
 
-  /* ---- the windshield: two gauges above one independence line ---- */
-  const wind = wbox.w > 0 && (autoT || h3all) ? (() => {
-    const W = wbox.w, H = wbox.h, top = 30, bottom = H - 34;
-    const ymin = 0.9, ymax = 1.75;
-    const y = (v: number) => bottom - (bottom - top) * ((Math.min(ymax, Math.max(ymin, v)) - ymin) / (ymax - ymin));
-    const mobile = W < 560;
-    const cx = W / 2, xa = W * 0.2, xh = W * 0.5, xj = W * 0.8;
-    const glass = `M ${W * 0.04} ${bottom + 10} L ${W * 0.16} ${top - 18} L ${W * 0.84} ${top - 18} L ${W * 0.96} ${bottom + 10} Z`;
-    return (
-      <svg width={W} height={H} viewBox={`0 0 ${W} ${H}`} className="mchart wind" aria-label="Three coefficients above the same independence line: automation, human, and human with automation">
-        <path d={glass} className="wglass" />
-        <line x1={(xa + xh) / 2} x2={(xa + xh) / 2} y1={top - 18} y2={bottom + 10} className="wsplit" />
-        <line x1={(xh + xj) / 2} x2={(xh + xj) / 2} y1={top - 18} y2={bottom + 10} className="wsplit" />
-        <line x1={W * 0.08} x2={W * 0.92} y1={y(1)} y2={y(1)} className="mind" />
-        {!mobile && <text x={W * 0.08} y={y(1) - 5} className="mlab" textAnchor="start">independence 1.0</text>}
-        {autoT && (
-          <g className="mser s0">
-            <line x1={xa} x2={xa} y1={y(autoT.lo)} y2={y(autoT.hi)} className="mci" />
-            <line x1={xa} x2={xa} y1={y(1)} y2={y(autoT.c)} className="wstem" />
-            <circle cx={xa} cy={y(autoT.c)} r={mobile ? 6 : 8} className="mdot" />
-            <text x={xa} y={y(autoT.hi) - 10} className="wbig" textAnchor="middle">{fmt(autoT.c)}</text>
-            <text x={xa} y={bottom + 16} className="mlab" textAnchor="middle">{mobile ? "AUTOMATION" : "AUTOMATION · camera × lidar"}</text>
-            {!mobile && <text x={xa} y={bottom + 28} className="mlab dim" textAnchor="middle">nuScenes val · 95% CI</text>}
-          </g>
-        )}
-        {h3all && (
-          <g className="mser s0">
-            <line x1={xh} x2={xh} y1={y(1)} y2={y(h3all.c)} className="wstem" />
-            <circle cx={xh} cy={y(h3all.c)} r={mobile ? 6 : 8} className="mdot" />
-            <text x={xh} y={y(h3all.c) - 14} className="wbig" textAnchor="middle">{fmt(h3all.c, 2)}</text>
-            <text x={xh} y={bottom + 16} className="mlab" textAnchor="middle">{mobile ? "HUMAN" : "HUMAN · looking × acting"}</text>
-            {!mobile && <text x={xh} y={bottom + 28} className="mlab dim" textAnchor="middle">100-Car · no interval</text>}
-          </g>
-        )}
-        {autoT && h3all && <path d={`M ${xa} ${y(autoT.c)} Q ${(xa + xh) / 2} ${Math.min(y(autoT.c), y(h3all.c)) - 28} ${xh} ${y(h3all.c)}`} className="warc" />}
-        {/* the third pillar: human × automation on the same object. Measured
-            by H5 on BDD-A when the transcript is present; otherwise drawn as
-            the explicit unknown it is, never as a guess */}
-        {h5 ? (
-          <g className="mser s0 wjoint">
-            <line x1={xj} x2={xj} y1={y(1)} y2={y(h5.c)} className="wstem" />
-            <circle cx={xj} cy={y(h5.c)} r={mobile ? 6 : 8} className="mdot" />
-            <text x={xj} y={y(1) - 14} className="wbig" textAnchor="middle">{fmt(h5.c, 2)}</text>
-            <text x={xj} y={bottom + 16} className="mlab" textAnchor="middle">{mobile ? "HUMAN × AUTO" : "HUMAN × AUTOMATION"}</text>
-            {!mobile && <text x={xj} y={bottom + 28} className="mlab dim" textAnchor="middle">BDD-A · no interval</text>}
-          </g>
-        ) : (
-          <g className="wunk">
-            <line x1={xj} x2={xj} y1={y(1)} y2={top + 6} className="wunkstem" />
-            <circle cx={xj} cy={top + 14} r={mobile ? 6 : 8} className="wunkdot" />
-            <text x={xj} y={top + 14} className="wunkmark" textAnchor="middle" dominantBaseline="central">∅</text>
-            <text x={xj} y={bottom + 16} className="mlab" textAnchor="middle">{mobile ? "HUMAN × AUTO" : "HUMAN × AUTOMATION"}</text>
-            <text x={xj} y={bottom + 28} className="mlab dim" textAnchor="middle">not yet measured</text>
-          </g>
-        )}
-        {!mobile && <text x={cx} y={top - 4} className="mlab" textAnchor="middle">{h5 ? "same-kind redundancy fails together · different-kind roughly holds" : "the same signature on both sides · the meeting point still unmeasured"}</text>}
-      </svg>
-    );
-  })() : null;
+  /* ---- the windshield: the marks, then the scene ---- */
+  const marks: Array<Mark | null> = [
+    autoT ? { c: autoT.c, lo: autoT.lo, hi: autoT.hi, label: "AUTOMATION · camera × lidar", short: "AUTOMATION", sub: "nuScenes val · 95% CI" } : null,
+    h3all ? { c: h3all.c, label: "HUMAN · looking × acting", short: "HUMAN", sub: "100-Car · no interval" } : null,
+    h5 ? { c: h5.c, label: "HUMAN × AUTOMATION", short: "HUMAN × AUTO", sub: "BDD-A · no interval", hold: true } : null,
+  ];
+  const wind = wbox.w > 0 && (autoT || h3all)
+    ? <WindshieldScene w={wbox.w} h={wbox.h} marks={marks} header={h5 ? "same-kind redundancy fails together · different-kind roughly holds" : "the same signature on both sides · the meeting point still unmeasured"} />
+    : null;
 
   /* ---- takeover by task: a dot-and-bar chart in pixels ---- */
   const take = h4 && tbox.w > 0 ? (() => {

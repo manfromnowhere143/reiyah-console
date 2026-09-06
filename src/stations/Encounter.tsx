@@ -11,6 +11,7 @@
    watch drivers. */
 import { useEffect, useRef, useState } from "react";
 import { fetchSurface } from "../lib/evidence";
+import { drawCabin, drawWorld } from "../lib/roadScene";
 
 const TAU = Math.PI * 2;
 const clamp01 = (x: number) => Math.max(0, Math.min(1, x));
@@ -157,49 +158,17 @@ export function Encounter() {
       ctx.translate(sway, bob);
       const horizon = h * 0.42;
       const cx = w / 2;
-      const roadW = w * 0.44;
-      /* the horizon wash: light gathers where the road vanishes */
-      const sky = ctx.createLinearGradient(0, horizon - h * 0.28, 0, horizon);
-      sky.addColorStop(0, `rgba(${INK},0)`); sky.addColorStop(1, `rgba(${INK},${dark ? 0.06 : 0.045})`);
-      ctx.fillStyle = sky; ctx.fillRect(-10, horizon - h * 0.28, w + 20, h * 0.28);
-      const gnd = ctx.createLinearGradient(0, horizon, 0, h);
-      gnd.addColorStop(0, `rgba(${INK},${dark ? 0.05 : 0.04})`); gnd.addColorStop(0.5, `rgba(${INK},0)`);
-      ctx.fillStyle = gnd; ctx.fillRect(-10, horizon, w + 20, h - horizon);
-      /* the ground grid, flowing toward the cabin: depth you can feel */
-      const phase0 = reduced ? 0 : (s * 0.32) % 1;
-      for (let i = 0; i < 12; i++) {
-        const f = ((i + phase0) % 12) / 12;
-        const y = horizon + (h - horizon) * f * f;
-        ctx.strokeStyle = `rgba(${INK},${(0.03 + f * 0.09).toFixed(3)})`;
-        ctx.lineWidth = 1;
-        ctx.beginPath(); ctx.moveTo(-10, y); ctx.lineTo(w + 10, y); ctx.stroke();
-      }
-      ctx.strokeStyle = `rgba(${INK},0.07)`;
-      for (let k = -4; k <= 4; k++) {
-        if (k === 0) continue;
-        ctx.beginPath(); ctx.moveTo(cx + k * 6, horizon); ctx.lineTo(cx + k * w * 0.34, h + 20); ctx.stroke();
-      }
-      ctx.strokeStyle = `rgba(${INK},0.34)`;
-      ctx.lineWidth = 1.3;
-      ctx.beginPath();
-      ctx.moveTo(cx - 24, horizon); ctx.lineTo(cx - roadW, h + 20);
-      ctx.moveTo(cx + 24, horizon); ctx.lineTo(cx + roadW, h + 20);
-      ctx.moveTo(-10, horizon); ctx.lineTo(w + 10, horizon);
-      ctx.stroke();
-      const phase = reduced ? 0 : (s * 0.32) % 1;
-      for (let i = 0; i < 7; i++) {
-        const f = ((i + phase) % 7) / 7;
-        const y = horizon + (h - horizon) * f * f;
-        ctx.strokeStyle = `rgba(${INK},${(0.16 + f * 0.4).toFixed(2)})`;
-        ctx.lineWidth = 1 + f * 2.8;
-        ctx.beginPath(); ctx.moveTo(cx, y); ctx.lineTo(cx, y + (h - horizon) * 0.045 * (0.3 + f)); ctx.stroke();
-      }
+      /* the shared world: sky, wet road, edge lines, dashes flowing toward the cabin */
+      drawWorld(ctx, { w, h, dark, horizon, phase: reduced ? 0 : (s * 0.32) % 1, headlight: true });
 
       /* ---- the object: holds station (relative speed observed 0) ---- */
       const objY = horizon + (h - horizon) * 0.34;
       const r = mobile ? 9 : 11;
       const seen = smooth(-0.2, 0.15, t);               // detected at t=0
       ctx.restore();
+
+      /* the cabin never sways: the camera sits in it */
+      drawCabin(ctx, w, h, dark, w * (mobile ? 0.06 : 0.075), 0);
 
       /* ---- two sightlines: the human (dashed) and the automation (solid) ---- */
       const coneOn = smooth(-0.4, 0.4, t);

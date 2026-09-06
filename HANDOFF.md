@@ -188,6 +188,40 @@ state changes on small elements (hover, cursor). Never: a full-panel overlay
 that blends or animates; animating box-shadow, background-position, filter,
 or SVG attributes; view-transition names on dock tabs or station content.
 
+## Shipped 2026-09-06 (evening): the cinematic layer, and the build-to-seal pin
+- `src/lib/roadScene.ts`: ONE shared night-road renderer (sky glow, wet
+  asphalt, edge lines, perspective dashes, headlight wedge) plus the cabin
+  (A-pillars, dashboard, glass sheen) and `useGround()` (MutationObserver on
+  data-ground). Obsidian = night, paper = day, same geometry. Nothing in it
+  is data; it is the frame the data stands in.
+- ST-13 THE WINDSHIELD hero is now a still canvas (`WindshieldScene`): the
+  independence line IS the horizon (red dashed); coefficients above 1 rise
+  as columns of steel-blue light with reflections on the wet road; 0.97 sits
+  just under the horizon on the far road; CI bracket on the automation
+  column; HUD captions on the dashboard; header on the glass. Drawn once per
+  size/data/ground after document.fonts.ready; revealed by opacity only.
+- ST-03 THE ENCOUNTER uses the same world (road flows via phase) and gets the
+  cabin, drawn unswayed after the object (the camera sits in the cabin).
+- ST-09 THE SEEING rewritten as a living field: every one of the 934 index
+  artifacts is a point on one of four elliptical rings (governance; schemas
+  and tools; fixtures with known-good in ink and known-bad in red; custody).
+  The rings BREAK in the dark sector (the iris opening, -70..-20 deg): no
+  bytes stand there. A conic gaze sweeps once per 36 s and brightens what it
+  crosses; its readout says "finds nothing here" inside the sector. Hover
+  reads path, role, digest; press opens the readout row with a Digest chip
+  when the bytes are in the seal. 30 fps cap; reduced motion = static, no
+  sweep. Labels are HTML (`.shud`, corner-placed on desktop, 2-col grid on
+  phones); rays are measured to the labels and drawn in canvas.
+- BUILD-TO-SEAL PIN (root cause of the "Same Hazard blocked" report): the
+  bundle is immutable but /snapshot is cached 5 min browser / 1 h edge, so a
+  new station met an old lane manifest and blocked honestly. Now every
+  sealed fetch carries `?b=<build id>[-<sealedAt>]` (`snap()` in
+  evidence.ts; gateb.ts uses it). `__BUILD_ID__` is the sha256 of src/,
+  index.html and package-lock (vite.config.ts), so local and Vercel builds of
+  one commit are byte-identical again and the prod==local check holds.
+- Lesson: "vercel deploy" builds REMOTELY; the local dist is not what is
+  served. Any nondeterminism in the build breaks the prod==local check.
+
 ## Shipped 2026-09-06 (latest): ST-14 THE SAME HAZARD, first light from committed bytes
 - The lane committed H5 (f3963ee): the cross-agent joint on BDD-A, 13,904
   detectable objects, c = 0.972, no interval, descriptive. Not committed:

@@ -10,7 +10,10 @@
    bundle is immutable and hashed, the snapshot is cached for minutes in the
    browser and an hour at the edge, so without this a new station could meet
    an old manifest and block on bytes that exist. The query pins the pair. */
-export const snap = (path: string) => `${path}${path.includes("?") ? "&" : "?"}b=${__BUILD_ID__}`;
+export const snap = (path: string) => {
+  const seal = sealedManifest?.sealedAt ? "-" + Date.parse(sealedManifest.sealedAt).toString(36) : "";
+  return `${path}${path.includes("?") ? "&" : "?"}b=${__BUILD_ID__}${seal}`;
+};
 
 export type SurfaceState<T = unknown> =
   | { state: "loading" }
