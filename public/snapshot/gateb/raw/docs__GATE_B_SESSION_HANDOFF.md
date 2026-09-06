@@ -157,7 +157,8 @@ lineage mechanism is benchmark-dependent while the marginal law is not (Y, 2026-
 quantity carries a question-resampled interval (AC): the same-family excess beyond difficulty is
 0.058 [0.050, 0.066] on MMLU and includes zero on the other two, so Result T's lineage statement is
 narrowed to MMLU. A label-free margin normalization does not repair the monitor's task transfer and
-costs its channel transfer (X2).
+costs its channel transfer (X2); fitting on two benchmarks does not transfer to a third and on
+HellaSwag the transferred monitor is worse than chance (AE): fit per task, read across channels.
 No LLM inference: this reads public per-question outputs and joins by example hash. Files
 `llm-generalization/RESULT_T..W_*.md`.
 
@@ -189,8 +190,16 @@ realness at AUC 0.79 against 0.68 for its score alone, and six cross-channel con
 0.003, inside the fold spread. Two estimands, no support. File
 [`RESULT_AA_DISAGREEMENT_MONITOR.md`](RESULT_AA_DISAGREEMENT_MONITOR.md). Replicated on a second
 camera, a second lidar and a second operating point with the same verdict
-([`RESULT_AB_SENSOR_MONITOR_REPLICATION.md`](RESULT_AB_SENSOR_MONITOR_REPLICATION.md)). The
-non-linear test the register required is Result AD.
+([`RESULT_AB_SENSOR_MONITOR_REPLICATION.md`](RESULT_AB_SENSOR_MONITOR_REPLICATION.md)). **The
+non-linear test (AD):** with a boosted model the object-level context increment is 0.022 to 0.026
+AUC outside the fold spread on three of four configurations and inside it on one; the scene-level
+null stands. The conjecture is restated: readable at the object level with a non-linear monitor,
+not at the scene level ([`RESULT_AD_NONLINEAR_SENSOR_MONITOR.md`](RESULT_AD_NONLINEAR_SENSOR_MONITOR.md)).
+In the jury quantity, four sensors give 2.10 [2.08, 2.13] independent channels
+([`RESULT_AF_SENSOR_JURY.md`](RESULT_AF_SENSOR_JURY.md)). Fitted once on the primary pair, the
+object-level monitor transfers to a changed camera (loss 0.005 AUC) and not to a changed lidar
+(0.072, calibration broken) or operating point (0.041): the same transfer law as the LLM monitor
+([`RESULT_AG_SENSOR_MONITOR_TRANSFER.md`](RESULT_AG_SENSOR_MONITOR_TRANSFER.md)).
 
 ## 5. The law, and the headline coefficients
 
@@ -291,9 +300,11 @@ with an engaged human; the LLM monitor is validated on two benchmarks and one ju
    real frontier.
 3. Retain the BDD-A terms once the portal is reachable; DCPT and 100-Car custody is retained and
    verified (section 14), the leaderboard archive states no licence.
-4. Optional hardening still open: the non-linear sensor monitors on all four configurations (AD,
-   running at this closeout; its first configuration showed the per-object context increment
-   emerges with a boosted model). Done: X, X2, Y, Z, AA, AB, AC.
+4. Done this session: X, X2, Y, Z, AA, AB, AC, AD, AE, AF, AG, H7, the Gate B check, the red team
+   for the newer threads. Open and
+   scoped: a monitor on real driving channel outputs beyond the public benchmark; the H5 cross-agent
+   coefficient with a clustered band (H6 has one); a second dataset for the shared-training-data
+   threat.
 
 Continue only the smallest unresolved step. Engineering pressure raises the burden of proof; it
 never raises confidence by itself.
@@ -309,9 +320,21 @@ never raises confidence by itself.
 | Object-level human miss on real data at scale | no audited public dataset identifies it; a pilot needs human-subjects review | outside current authority |
 | A scientific, safety, or comparative claim | eligible retained evidence and an authorized external decision | outside this lane |
 
+## 12a. The Gate B check
+
+`python3 tools/measure/gate_b_check.py` is the lane's discipline as one fail-closed command. It
+verifies every retained transcript against the SHA-256 recorded in
+`validation/gate-b-replay-manifest.json`, replays the transcripts of the classes named by
+`--replay` and requires byte identity, runs the register and reconciliation check, verifies the
+custody digests, and enforces the style rules (no em dash, document headers, resolving links). It
+writes a machine-readable report with `--json`. Without `--replay` every transcript is reported as
+`not_replayed_here`, a distinct state never counted as replicated; rows of class
+`argv_unrecorded_historical` are digest-checked and never replayed. Run it before every closeout
+and retain its report under `evidence/`.
+
 ## 13. Required closeout
 
-State, separately and from exact records: worktree, branch, commit, and cleanliness; which schemas
+Run the Gate B check (section 12a) and retain its report. State, separately and from exact records: worktree, branch, commit, and cleanliness; which schemas
 and contracts are `proposed` against released; how many records validate and against which validator
 (the port, the spec reimplementation, or the shipped module); every claim withdrawn since the last
 handoff and that `check_claim_reconciliation.py` passes; every reproduction that a corrected prose
@@ -360,6 +383,22 @@ was deleted and no check was weakened.
    request is drafted in [`EXTERNAL_REVIEW_REQUEST_2026-09-06.md`](EXTERNAL_REVIEW_REQUEST_2026-09-06.md).
 12. **H7 added**, bands on every human-channel headline; the eyes x hands cell is narrowed to
    1.46 [1.04, 1.90] (register `0.2.6`), and the DCPT delay survives participant clustering.
+13. **Results AD, AE, AF added** (register `0.2.7`). AD: with a boosted model the object-level
+   context increment is measurable on three of four configurations; the scene-level null stands.
+   AE: multi-benchmark calibration does not transfer, and on HellaSwag the transferred monitor is
+   worse than chance. AF: the four-sensor jury has 2.10 [2.08, 2.13] effective independent
+   channels; a bootstrap defect in its first draft is recorded and corrected. Four background jobs
+   were stopped externally at 15:25 and rerun serially; nothing was lost.
+14. **Full replay retained.** `gate_b_check.py --replay local_deterministic,network_cached` on the
+   tree at `35add31`: 19 of 19 replayable transcripts byte-identical (T, U, V, W, X, X2, Y, AC, AE;
+   H1 to H4, H7; Z, AA, AB, AD, AF), 17 historical sensor-spine rows digest-checked and never
+   replayed, 2 BDD-A inference transcripts not replayed here. Report
+   `evidence/gate-b-check-2026-09-06-replay-mode.json`.
+15. **Red team for the newer threads** consolidated in
+   [`THREATS_HUMAN_AND_LLM_THREADS.md`](THREATS_HUMAN_AND_LLM_THREADS.md), sixteen threats marked
+   answered, stated, or open, linked from the review request.
+16. **Result AG added** (register `0.2.8`): the sensor monitor's transfer across pairs follows the
+   score semantics of the changed channel, the same law as the LLM monitor.
 2. **The statement that no model is executed in the analysis lane was false.** H5 and H6 execute
    pretrained torchvision detectors on BDD-A frames; Result V fits a logistic-regression monitor.
    Section 1 and the thread READMEs now say exactly what runs.

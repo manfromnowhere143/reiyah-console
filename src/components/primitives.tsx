@@ -334,6 +334,13 @@ export function Blocked({ reason }: { reason: string }) {
    seal or a live event replaces it. The bytes beneath are content-addressed,
    so this is honest caching, never a stale claim. */
 const surfaceCache = new Map<string, unknown>();
+/* run a station's loader before the station mounts (during boot), so the
+   first screen renders with its numbers already in hand */
+export async function primeSurface<T>(loader: () => Promise<T>, deps: unknown[] = []): Promise<void> {
+  const key = loader.toString() + "|" + JSON.stringify(deps);
+  if (surfaceCache.has(key)) return;
+  try { surfaceCache.set(key, await loader()); } catch { /* the station will report it */ }
+}
 export function useSurfaceState<T>(loader: () => Promise<T>, deps: unknown[] = []) {
   const key = loader.toString() + "|" + JSON.stringify(deps);
   const [state, setState] = useState<{ phase: "loading" } | { phase: "ready"; data: T } | { phase: "blocked"; reason: string }>(() => surfaceCache.has(key) ? { phase: "ready", data: surfaceCache.get(key) as T } : { phase: "loading" });

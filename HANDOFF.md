@@ -188,6 +188,22 @@ state changes on small elements (hover, cursor). Never: a full-panel overlay
 that blends or animates; animating box-shadow, background-position, filter,
 or SVG attributes; view-transition names on dock tabs or station content.
 
+## Shipped 2026-09-08: THE CARD LAW, faces before the reveal, the first screen primed
+- User on the phone: every opened card except the receipt was unreadable,
+  the content beneath bled through. Cause: `.derive` (the derivation popover)
+  had no background of its own and wore `.glass` (5% white + backdrop blur).
+  THE CARD LAW (instrument.css): anything that floats over content is an
+  opaque surface with its own elevation: `.derive`, `.provecard`, `.palette`
+  now use the solid panel colour (#101318 on obsidian), a 1 px rim and a
+  deep soft shadow, no backdrop filter. Glass stays chrome on the ground.
+- First-load flash: the stage revealed before the web fonts arrived (Google
+  Fonts, display=swap) and before the Harbor's numbers loaded, so text
+  swapped faces and the gauges popped from ∅ to values. ProofBoot now waits
+  (capped 1.4 s) for the four faces via document.fonts.load and primes the
+  Harbor loader (`loadHarborInstruments`, exported from Harbor.tsx; the
+  station keys it on the pulse) via `primeSurface` (primitives) before it
+  departs; the dashboard reveals by opacity once its data is in hand.
+
 ## Shipped 2026-09-07 (latest): HARBOR v3.2, the exact operation, explained on the road
 - User: "no text" meant less text; the scene must explain the exact
   operation, a real presentation of the backend, not a show. So the scene

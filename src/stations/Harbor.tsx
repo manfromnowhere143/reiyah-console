@@ -13,6 +13,26 @@ import { Digest, useSurfaceState } from "../components/primitives";
 import { fetchSurface } from "../lib/evidence";
 import { createHarborEngine, type ArtifactRow, type HarborEngine, type HarborEnv } from "./harborEngine";
 
+/* the instruments' data: every number from committed bytes; primed during boot
+   so the first screen mounts with its numbers in hand, and re-read on every
+   re-verification (the station keys this loader on the pulse) */
+export async function loadHarborInstruments() {
+  const lane = await fetchLane();
+  const [cat] = await Promise.all([fetchCatalog().catch(() => [])]);
+  const diVersions = [...new Set(cat.map((c) => c.path).filter((p) => p.includes("operator-decision-interface")).map((p) => p.match(/1\.2\.\d+/)?.[0]).filter(Boolean) as string[])].sort((a, b) => a.localeCompare(b, undefined, { numeric: true }));
+  if (!lane.present) return { lane, diVersions, reg: null, auto: null, h3: null, h6: null, ac: null, v: null };
+  const [R, L, H3, H6, AC, V] = await Promise.all([await registerPath(), "evidence/measurement/result_l.txt", "human-channel/evidence/h3_observation_response_joint.txt", "human-channel/evidence/h6_total_both_miss.txt", "llm-generalization/evidence/result_ac.txt", "llm-generalization/evidence/result_v.txt"].map((q) => fetchLaneText(q).catch(() => null)));
+  return {
+    lane, diVersions,
+    reg: R ? { ...parseRegister(R.text), file: R.file } : null,
+    auto: L ? { ...parseConvergence(L.text), file: L.file } : null,
+    h3: H3 ? { ...parseH3(H3.text), file: H3.file } : null,
+    h6: H6 ? (() => { const v = parseH6(H6.text); return v ? { ...v, file: H6.file } : null; })() : null,
+    ac: AC ? (() => { const v = parseAC(AC.text); return v ? { ...v, file: AC.file } : null; })() : null,
+    v: V ? (() => { const v = parseV(V.text); return v ? { ...v, file: V.file } : null; })() : null,
+  };
+}
+
 export function Harbor({ ev, go, pulse }: { ev: VerifiedEvidence; go: (id: string) => void; pulse?: number }) {
   const wrapRef = useRef<HTMLDivElement>(null);
   const workerRef = useRef<Worker | null>(null);
@@ -178,22 +198,7 @@ export function Harbor({ ev, go, pulse }: { ev: VerifiedEvidence; go: (id: strin
 
   /* the instruments: every number from committed bytes, warmed after boot,
      re-read on every re-verification (pulse) */
-  const inst = useSurfaceState(async () => {
-    const lane = await fetchLane();
-    const [cat] = await Promise.all([fetchCatalog().catch(() => [])]);
-    const diVersions = [...new Set(cat.map((c) => c.path).filter((p) => p.includes("operator-decision-interface")).map((p) => p.match(/1\.2\.\d+/)?.[0]).filter(Boolean) as string[])].sort((a, b) => a.localeCompare(b, undefined, { numeric: true }));
-    if (!lane.present) return { lane, diVersions, reg: null, auto: null, h3: null, h6: null, ac: null, v: null };
-    const [R, L, H3, H6, AC, V] = await Promise.all([await registerPath(), "evidence/measurement/result_l.txt", "human-channel/evidence/h3_observation_response_joint.txt", "human-channel/evidence/h6_total_both_miss.txt", "llm-generalization/evidence/result_ac.txt", "llm-generalization/evidence/result_v.txt"].map((q) => fetchLaneText(q).catch(() => null)));
-    return {
-      lane, diVersions,
-      reg: R ? { ...parseRegister(R.text), file: R.file } : null,
-      auto: L ? { ...parseConvergence(L.text), file: L.file } : null,
-      h3: H3 ? { ...parseH3(H3.text), file: H3.file } : null,
-      h6: H6 ? (() => { const v = parseH6(H6.text); return v ? { ...v, file: H6.file } : null; })() : null,
-      ac: AC ? (() => { const v = parseAC(AC.text); return v ? { ...v, file: AC.file } : null; })() : null,
-      v: V ? (() => { const v = parseV(V.text); return v ? { ...v, file: V.file } : null; })() : null,
-    };
-  }, [pulse]);
+  const inst = useSurfaceState(loadHarborInstruments, [pulse]);
   const I = inst.phase === "ready" ? inst.data : null;
   const sealed = getSealedInfo();
   const src = (f: { id: string; path: string; sha256?: string }) => ({ id: `gateb/${f.id}`, path: `gate-b · ${f.path}`, sha256: f.sha256 ?? "" });
@@ -227,7 +232,7 @@ export function Harbor({ ev, go, pulse }: { ev: VerifiedEvidence; go: (id: strin
   return (
     <div className="harbor">
       <div className="fieldwrap" ref={wrapRef}>{/* the canvas is created imperatively by the effect above */}</div>
-      <div className="dash" aria-label="The dashboard: six instruments, every number a committed byte">
+      <div className="dash" data-ready={String(!!I)} aria-label="The dashboard: six instruments, every number a committed byte">
           <button className="gauge" onClick={() => go("ledger")}>
             <span className="gk">the field</span>
             <span className="gv">{artifacts.length.toLocaleString()}<em> sealed</em></span>

@@ -2,6 +2,8 @@
    The instrument fetches the evidence index, recomputes its SHA-256 in this
    browser with WebCrypto, and resolves it against the committed sidecar.
    On any mismatch it renders a blocked state. No demo mode exists. */
+import { primeSurface } from "../components/primitives";
+import { loadHarborInstruments } from "../stations/Harbor";
 import { useEffect, useRef, useState } from "react";
 import {
   fetchRaw, fetchSummary, fetchSurface, setBypassCache, sha256Hex, type Summary,
@@ -70,13 +72,22 @@ export function ProofBoot({ onReady }: { onReady: (ev: VerifiedEvidence) => void
     return () => clearTimeout(t);
   }, []);
 
+  /* the stage is revealed only with the faces in hand and the first screen's
+     numbers primed, so nothing swaps or pops after the reveal; both are
+     capped so a slow network can never hold the instrument hostage */
   const depart = () => {
     if (done.current || !result.current) return;
     done.current = true;
-    const reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
-    if (reduced) { onReady(result.current); return; }
-    setLeaving(true);
-    setTimeout(() => onReady(result.current!), 680);
+    const cap = (p: Promise<unknown>, ms: number) => Promise.race([p.catch(() => undefined), new Promise((r) => setTimeout(r, ms))]);
+    const faces = typeof document !== "undefined" && "fonts" in document
+      ? Promise.all(['600 1rem "Big Shoulders"', '1rem "Instrument Sans"', '1rem "B612 Mono"', '700 1rem "B612 Mono"'].map((f) => document.fonts.load(f)))
+      : Promise.resolve();
+    Promise.all([cap(faces, 1400), cap(primeSurface(loadHarborInstruments, [0]), 900)]).then(() => {
+      const reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
+      if (reduced) { onReady(result.current!); return; }
+      setLeaving(true);
+      setTimeout(() => onReady(result.current!), 680);
+    });
   };
 
   useEffect(() => {
