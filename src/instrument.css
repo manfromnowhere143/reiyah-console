@@ -1819,3 +1819,5 @@ button:focus-visible, a:focus-visible { outline: 2px solid var(--ink-soft); outl
   .wsgrid { grid-template-rows: minmax(7rem, 0.9fr) auto minmax(0, 0.9fr); gap: 0.3rem; }
   .wsgrid > .wspanel:first-child { min-height: 7rem; }
 }
+
+.wind .wunkmark { font-family: "B612 Mono", Menlo, monospace; font-size: 10px; fill: var(--ink-3); }

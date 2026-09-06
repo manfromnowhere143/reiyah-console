@@ -89,7 +89,7 @@ export function Windshield() {
             <circle cx={xa} cy={y(autoT.c)} r={mobile ? 6 : 8} className="mdot" />
             <text x={xa} y={y(autoT.hi) - 10} className="wbig" textAnchor="middle">{fmt(autoT.c)}</text>
             <text x={xa} y={bottom + 16} className="mlab" textAnchor="middle">{mobile ? "AUTOMATION" : "AUTOMATION · camera × lidar"}</text>
-            {!mobile && <text x={xa} y={bottom + 28} className="mlab dim" textAnchor="middle">nuScenes val · 95% interval</text>}
+            {!mobile && <text x={xa} y={bottom + 28} className="mlab dim" textAnchor="middle">nuScenes val · 95% CI</text>}
           </g>
         )}
         {h3all && (
@@ -98,7 +98,7 @@ export function Windshield() {
             <circle cx={xh} cy={y(h3all.c)} r={mobile ? 6 : 8} className="mdot" />
             <text x={xh} y={y(h3all.c) - 14} className="wbig" textAnchor="middle">{fmt(h3all.c, 2)}</text>
             <text x={xh} y={bottom + 16} className="mlab" textAnchor="middle">{mobile ? "HUMAN" : "HUMAN · looking × acting"}</text>
-            {!mobile && <text x={xh} y={bottom + 28} className="mlab dim" textAnchor="middle">100-Car naturalistic · no interval</text>}
+            {!mobile && <text x={xh} y={bottom + 28} className="mlab dim" textAnchor="middle">100-Car · no interval</text>}
           </g>
         )}
         {autoT && h3all && <path d={`M ${xa} ${y(autoT.c)} Q ${(xa + xh) / 2} ${Math.min(y(autoT.c), y(h3all.c)) - 28} ${xh} ${y(h3all.c)}`} className="warc" />}
@@ -107,11 +107,11 @@ export function Windshield() {
         <g className="wunk">
           <line x1={xj} x2={xj} y1={y(1)} y2={top + 6} className="wunkstem" />
           <circle cx={xj} cy={top + 14} r={mobile ? 6 : 8} className="wunkdot" />
-          <text x={xj} y={top + 4} className="wbig unk" textAnchor="middle">∅</text>
+          <text x={xj} y={top + 14} className="wunkmark" textAnchor="middle" dominantBaseline="central">∅</text>
           <text x={xj} y={bottom + 16} className="mlab" textAnchor="middle">{mobile ? "HUMAN × AUTO" : "HUMAN × AUTOMATION"}</text>
-          <text x={xj} y={bottom + 28} className="mlab dim" textAnchor="middle">{mobile ? "not yet measured" : "the same hazard · not yet measured"}</text>
+          <text x={xj} y={bottom + 28} className="mlab dim" textAnchor="middle">not yet measured</text>
         </g>
-        <text x={cx} y={top - 4} className="mlab" textAnchor="middle">{mobile ? "the same signature · the meeting point unmeasured" : "the same signature on both sides · the meeting point still unmeasured"}</text>
+        {!mobile && <text x={cx} y={top - 4} className="mlab" textAnchor="middle">the same signature on both sides · the meeting point still unmeasured</text>}
       </svg>
     );
   })() : null;
