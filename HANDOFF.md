@@ -188,6 +188,58 @@ state changes on small elements (hover, cursor). Never: a full-panel overlay
 that blends or animates; animating box-shadow, background-position, filter,
 or SVG attributes; view-transition names on dock tabs or station content.
 
+## PLAN · ST-14 THE SAME HAZARD (cross-agent joint) · RESEARCH ONLY, not started
+The one measurement still open is HARBOR's target: the human and the
+automation failing on the SAME hazard. The lane is waiting on BDD-Attention
+(BDD-A, Berkeley; braking-event clips from BDD100K with driver attention maps
+from in-lab eye tracking, delivered as per-frame Gaussian heatmaps; no object
+boxes in the dataset, so the automation channel is a detector the lane runs
+and validates to its published mAP). Rights: the BDD download terms grant use,
+copy, modify, distribute for research and not-for-profit purposes with the
+copyright notice retained and Xia 2018 / Yu 2020 cited; the GitHub repo is
+BSD-3. That permits a small number of exhibit frames on the instrument IF the
+lane commits them with a rights observation, exactly as it does for every
+other source. Never pull dataset pixels into the console repo ourselves.
+
+What the instrument needs the lane to commit (ask, never fabricate):
+1. `human-channel/evidence/j1_same_hazard.txt` — the transcript: per-clip
+   universe, the attention-density rule (declared threshold), the detector and
+   its validated mAP gate, P(human not attended), P(detector missed),
+   P(both), expected, c with an instance-clustered interval, by class and by
+   range if available, and NON-CLAIMS.
+2. `human-channel/evidence/j1_objects.jsonl` — a compact per-object table
+   (clip, frame, object id, class, box normalized 0..1, attention density,
+   attended flag, detector score, detected flag, both_missed). Object-level
+   truth makes the object-level field possible for the first time.
+3. `human-channel/exhibits/` — 6 to 12 exhibit frames (JPEG, downscaled),
+   each with its attention map (PNG) and the object list, plus a rights
+   observation record (source, license text, notice, citation) per exhibit.
+
+The page (one screen, both grounds, three viewports):
+- HERO · THE SAME HAZARD: an exhibit frame with the attention map drawn as a
+  luminous field over it (canvas, measured pixels), the detector's boxes drawn
+  as brackets, and the objects both channels missed ringed red: the joint
+  silent miss, visible on a real hazard. A scrubbable exhibit strip (6-12
+  frames), each exhibit's clip/frame/object ids and digests. Press to prove
+  on every exhibit byte. Reduced motion: static.
+- THE THIRD PILLAR on the windshield: automation × automation (1.151), human
+  × human (1.46), human × automation (j1, with interval) above one
+  independence line. ST-13 gains the third mark; ST-14 repeats it large.
+- THE OBJECT FIELD: every object in j1_objects as a point in a normalized
+  frame plane (x, y of box centre), attended vs not on one axis, detected vs
+  not on the other; both-missed lit; density by class; cursor reads the row.
+- The provenance rail: source (BDD-A, license, citation), detector gate
+  (published mAP vs reproduced), attention rule, matching rule, clustering
+  unit, all from the transcript; non-claims verbatim.
+Technique: canvas 2D for the hero (heatmap as an ImageData composite from the
+committed PNG, boxes and rings drawn on top), SVG in measured pixels for the
+pillar and the field, FitList for tables, URL state per exhibit and object,
+derivation on every figure, digests on every byte. No WebGPU (thousands of
+points at most). Colour law: attention = warm white-to-steel-blue field,
+detection = ink brackets, joint miss = red ring only.
+Verdict: this is the page that turns the instrument from "we measured both
+sides" into "we measured the meeting point". Build it the day j1 lands.
+
 ## Shipped 2026-09-06: ST-13 THE WINDSHIELD — the human channel, both sides
 The lane added `human-channel/` (H1..H4: 100-Car NDS CC0, DCPT CC BY 4.0;
 transcripts under human-channel/evidence, tools, README). The station reads
