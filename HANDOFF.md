@@ -188,6 +188,23 @@ state changes on small elements (hover, cursor). Never: a full-panel overlay
 that blends or animates; animating box-shadow, background-position, filter,
 or SVG attributes; view-transition names on dock tabs or station content.
 
+## Shipped 2026-09-07 (latest): HARBOR v3.2, the exact operation, explained on the road
+- User: "no text" meant less text; the scene must explain the exact
+  operation, a real presentation of the backend, not a show. So the scene
+  carries precise labels at the exact points where each step happens and
+  nothing else: the six kind zones as faint lines across the road with
+  their names at the road's right edge (a zone lights as a record crosses
+  it; a name is drawn only where it has 12 px of room), the GATE named at
+  the left end of its dashed line with the rejected rule id flashing
+  beneath for 2.4 s, the record being sensed by path and digest at the
+  bottom left, the count in flight at the top right, the shape legend
+  (fixture, schema, history, validator) at the bottom right on desktop.
+- The chain fits the visible road: zone positions, the gate and the seal
+  are scaled by `span` so OBS..EVD all lie between the horizon and the
+  dashboard; a record seals as it reaches the cabin (THE FIELD instrument).
+- Damped pointer parallax on the world (16 px x, 6 px y), the cabin and
+  HUD never move; off on phones and under reduced motion.
+
 ## Shipped 2026-09-07 (late): HARBOR v3.1, exposure discipline and restraint
 - User on the phone: the vanishing point burned into a white blob with a
   warm, dirty halo; too much text for a first screen. Causes: additive

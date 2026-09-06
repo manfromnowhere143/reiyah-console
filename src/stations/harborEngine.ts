@@ -33,7 +33,7 @@ type Ctx = CanvasRenderingContext2D | OffscreenCanvasRenderingContext2D;
 type MakeCanvas = (w: number, h: number) => AnyCanvas;
 
 const TAU = Math.PI * 2;
-const KINDS = ["OBS", "BEL", "DEC", "INT", "OUT", "EVD"]; void KINDS;
+const KINDS = ["OBS", "BEL", "DEC", "INT", "OUT", "EVD"];
 /* the shape is the role: every sensed object is drawn as what it is */
 type Shape = "diamond" | "square" | "circle" | "hex";
 const shapeOf = (role: string): Shape =>
@@ -89,6 +89,7 @@ export function createHarborEngine(
   let spawnIdx = 0, sealed = 0, spawnAcc = 0, raf0 = 0;
   let timeScale = 1;
   const packets: Packet[] = [];
+  const par = { x: 0, y: 0 };
   const kindGlow = [0, 0, 0, 0, 0, 0];
   const mouse = { x: -1, y: -1, over: false };
   let lastRejectAt = 0, lastRejectRule = "";
@@ -149,6 +150,16 @@ export function createHarborEngine(
     const cx = w / 2;
     const edge = w * (w < 560 ? 0.06 : 0.075) + 12;   // clear of the A-pillars
     const compact = w < 560;
+    const dashH = env.dash ?? 0;
+    /* the chain fits the visible road: every zone, the gate and the seal lie
+       between the horizon and the dashboard; a record seals as it reaches the
+       cabin, which is where THE FIELD instrument sits */
+    const span = Math.sqrt(Math.max(0.35, (h - dashH - horizon) / (h - horizon)));
+    const zoneP = (k: number) => KIND_T[k] * span, gateP = GATE_T * span;
+    /* damped pointer parallax: the world shifts a little, the cabin never */
+    const wantX = mouse.over && !compact && !reduced ? (mouse.x / w - 0.5) * 16 : 0;
+    const wantY = mouse.over && !compact && !reduced ? (mouse.y / h - 0.5) * 6 : 0;
+    par.x += (wantX - par.x) * Math.min(1, rdt * 3); par.y += (wantY - par.y) * Math.min(1, rdt * 3);
     const groundH = h - horizon;
     const yAt = (p: number) => horizon + groundH * (p * p);
     const fAt = (y: number) => (y - horizon) / groundH;               // 0 at horizon, 1 at ego
@@ -165,6 +176,7 @@ export function createHarborEngine(
 
     /* ============ CRISP LAYER ============ */
     mctx.clearRect(0, 0, w, h);
+    mctx.save(); tctx.save(); mctx.translate(par.x, par.y); tctx.translate(par.x, par.y);
 
     const glow = (gx: number, gy: number, gr: number, rgb: string, a: number) => {
       const g = mctx.createRadialGradient(gx, gy, 0, gx, gy, gr);
@@ -187,6 +199,26 @@ export function createHarborEngine(
     mctx.fillStyle = `rgba(${RED},0.98)`;
     mctx.beginPath(); mctx.arc(cx + rr * 0.18, horizon - rr * 0.15, rr * 0.3, 0, TAU); mctx.fill();
 
+    /* ---- the six kinds as zones across the road: each record crosses them in
+       order, observation to evidence, and a zone lights as one passes ---- */
+    const hudA = dark ? 0.62 : 0.55;
+    mctx.font = monoSmall; mctx.textAlign = "left";
+    let lastLabelY = -99;
+    for (let k = 0; k < 6; k++) {
+      const zy = yAt(zoneP(k)), zf = fAt(zy), zhw = halfAt(zf) * 0.82, gk = kindGlow[k];
+      mctx.strokeStyle = `rgba(${INK},${(0.05 + zf * 0.06 + gk * 0.3).toFixed(3)})`; mctx.lineWidth = 1;
+      mctx.beginPath(); mctx.moveTo(cx - zhw, zy); mctx.lineTo(cx + zhw, zy); mctx.stroke();
+      /* a zone name only where it has room; the line still marks the zone */
+      if (zy - lastLabelY >= 12) {
+        mctx.fillStyle = `rgba(${gk > 0.2 ? OK : INK},${(hudA * 0.8 + gk * 0.3).toFixed(2)})`;
+        mctx.fillText(KINDS[k], Math.min(cx + zhw + 8, w - edge - 30), zy + 3);
+        lastLabelY = zy;
+      }
+    }
+    /* the count in flight: the engine's own state, exact */
+    mctx.textAlign = "right"; mctx.fillStyle = `rgba(${INK},${hudA})`;
+    mctx.fillText(`in flight · ${packets.filter((p) => p.fall === 0).length}`, w - edge, horizon - 8);
+
     /* ---- objects (the real artifacts) approaching through the kinds ---- */
     for (let i = 0; i < 6; i++) kindGlow[i] = Math.max(0, kindGlow[i] - rdt * 2.2);
     spawnAcc += dt * 1.1;
@@ -198,9 +230,9 @@ export function createHarborEngine(
     for (let i = packets.length - 1; i >= 0; i--) {
       const pk = packets[i];
 
-      if (pk.fall > 0 || (pk.bad && pk.t >= GATE_T)) {
+      if (pk.fall > 0 || (pk.bad && pk.t >= gateP)) {
         if (pk.fall === 0) {
-          const at = project(GATE_T, pk.lane);
+          const at = project(gateP, pk.lane);
           pk.px = at.x; pk.py = at.y;
           pk.vx = (pk.lane < 0 ? -1 : 1) * (60 + Math.random() * 60);
           pk.vy = 26;
@@ -220,13 +252,13 @@ export function createHarborEngine(
       }
 
       pk.t += dt * pk.speed;
-      if (pk.t >= 1) { sealed++; packets.splice(i, 1); continue; }
+      if (pk.t >= span) { sealed++; packets.splice(i, 1); continue; }
 
       const pr = project(pk.t, pk.lane);
       const s = (2.4 + pr.f * pr.f * 20) * (0.65 + pk.mass * 0.7);
 
       /* light the kind zone this object is crossing */
-      for (let k = 0; k < 6; k++) if (Math.abs(pk.t - KIND_T[k]) < 0.03) kindGlow[k] = 1;
+      for (let k = 0; k < 6; k++) if (Math.abs(pk.t - zoneP(k)) < 0.03) kindGlow[k] = 1;
 
       /* the motion streak (speed) on the trail layer */
       if (pk.seen && pr.f > 0.04) {
@@ -236,15 +268,15 @@ export function createHarborEngine(
       }
 
       /* belief halo (doubt) around objects in the belief zone */
-      if (pk.t > KIND_T[1] - 0.08 && pk.t < KIND_T[2]) {
-        const doubt = 1 - smoothLocal(KIND_T[1], KIND_T[2], pk.t);
+      if (pk.t > zoneP(1) - 0.08 && pk.t < zoneP(2)) {
+        const doubt = 1 - smoothLocal(zoneP(1), zoneP(2), pk.t);
         if (dark) mctx.globalCompositeOperation = "lighter";
         glow(pr.x, pr.y, s + 8 + 8 * doubt, INK, (0.03 + 0.04 * doubt) * Math.max(0.3, pr.f));
         mctx.globalCompositeOperation = "source-over";
       }
 
       /* the object: a sensed diamond. Bright core, additive halo on obsidian. */
-      const rgb = pk.bad ? RED : (pk.t > KIND_T[4] ? OK : INK);
+      const rgb = pk.bad ? RED : (pk.t > zoneP(4) ? OK : INK);
       if (dark && pr.f > 0.14) {
         mctx.globalCompositeOperation = "lighter";
         glow(pr.x, pr.y, s * 2.2, rgb, (0.04 + pr.f * 0.16) * pr.f);
@@ -294,7 +326,7 @@ export function createHarborEngine(
     }
 
     /* ---- the gate across the road: fails closed ---- */
-    const gy = yAt(GATE_T), gf = fAt(gy), ghw = halfAt(gf) * 0.82;
+    const gy = yAt(gateP), gf = fAt(gy), ghw = halfAt(gf) * 0.82;
     const fire = Math.max(0, 1 - (now - lastRejectAt) / 700);
     if (fire > 0 && dark) { mctx.globalCompositeOperation = "lighter"; glow(cx, gy, ghw * 0.6, RED, 0.12 * fire); mctx.globalCompositeOperation = "source-over"; }
     mctx.strokeStyle = fire > 0 ? `rgba(${RED},${(0.35 + 0.6 * fire).toFixed(2)})` : `rgba(${INK},${dark ? 0.5 : 0.4})`;
@@ -302,15 +334,29 @@ export function createHarborEngine(
     mctx.setLineDash([5, 5]);
     mctx.beginPath(); mctx.moveTo(cx - ghw, gy); mctx.lineTo(cx + ghw, gy); mctx.stroke();
     mctx.setLineDash([]);
-    if (!compact && now - lastRejectAt < 2200) {
-      mctx.fillStyle = `rgba(${RED},${(0.85 * (1 - (now - lastRejectAt) / 2200)).toFixed(2)})`; mctx.font = monoSmall; mctx.textAlign = "left";
-      mctx.fillText(`rejected · ${lastRejectRule}`, Math.min(cx + ghw + 8, w - edge - 170), gy - 5);
+    mctx.font = monoSmall; mctx.textAlign = "right";
+    const gx = Math.max(cx - ghw - 8, edge + (compact ? 60 : 150));
+    mctx.fillStyle = `rgba(${INK},${hudA})`; mctx.fillText(compact ? "GATE" : "GATE · fails closed", gx, gy - 5);
+    if (now - lastRejectAt < 2400) {
+      const fa = 1 - (now - lastRejectAt) / 2400;
+      mctx.fillStyle = `rgba(${RED},${(0.9 * fa).toFixed(2)})`;
+      const rule = compact ? lastRejectRule.slice(0, 18) : lastRejectRule;
+      mctx.fillText(`rejected · ${rule}`, gx, gy + 9);
     }
     void badTotal;
+    mctx.restore(); tctx.restore();
 
-    /* the scene carries no standing text: the instruments below carry the
-       numbers, and hover identifies a record; kinds still light their zone */
-    void kindGlow; void leading;
+    /* the record being sensed, by name and digest: exact identity, one line;
+       and the shapes, which are the roles */
+    const baseY = h - (env.dash ?? 0) - 10;
+    if (leading) {
+      mctx.font = monoSmall; mctx.textAlign = "left"; mctx.fillStyle = `rgba(${INK},${hudA})`;
+      const name = leading.a.artifact.path.split("/").pop() ?? "";
+      const label = compact ? `sensing · ${name}` : `sensing · ${leading.a.artifact.path} · ${leading.a.artifact.sha256.slice(0, 18)}…`;
+      const maxc = Math.max(16, Math.floor((w - edge * 2 - (compact ? 0 : 260)) / 5.4));
+      mctx.fillText(label.length > maxc ? label.slice(0, maxc - 1) + "…" : label, edge, baseY);
+    }
+    if (!compact) { mctx.textAlign = "right"; mctx.fillStyle = `rgba(${INK},${hudA * 0.85})`; mctx.fillText("◇ fixture   ▢ schema   ○ history   ⬡ validator", w - edge, baseY); }
 
     /* ---- hover: identify the exact record ---- */
     if (hovered) {
