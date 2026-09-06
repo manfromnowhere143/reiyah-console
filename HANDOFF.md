@@ -188,6 +188,46 @@ state changes on small elements (hover, cursor). Never: a full-panel overlay
 that blends or animates; animating box-shadow, background-position, filter,
 or SVG attributes; view-transition names on dock tabs or station content.
 
+## DESIGN DECISIONS · ST-14 THE SAME HAZARD · final, 2026-09-06 (build only when j1 lands)
+1. One frame, one sentence. The page opens on a single exhibit frame filling
+   the stage, the road as the viewer would see it. No stat strip above it.
+   The figures come after the image, never before.
+2. Three states of light, nothing else. Attention = a soft luminous field
+   (white on obsidian, steel blue on paper), detection = thin ink brackets,
+   the joint miss = one red ring. No legend; the three are self-evident. Red
+   is spent on the joint miss alone.
+3. Time is the instrument. A single scrubber under the frame runs the clip;
+   the attention field breathes with the observers' gaze, brackets appear
+   when the detector fires, the red ring appears only in the frames where
+   both channels are absent on the same object. The scrubber's marks are the
+   both-missed frames. Space plays and pauses.
+4. The number arrives last. After the exhibit, the third pillar: three
+   coefficients above one independence line, the cross-agent one with its
+   interval. It is the payoff, not the headline.
+5. Nothing on screen without its bytes. Every exhibit carries clip, frame,
+   object ids and digests; press to prove; the attention PNG and the frame
+   JPEG are lane-committed with a rights record; the rule that scored each
+   object is in the derivation popover of every figure.
+6. Uncertainty is drawn, never hidden. The interval on the cross-agent c is
+   part of the mark; objects with attention density near the declared
+   threshold are drawn with a dashed ring, and "unmeasured" objects (outside
+   the detector's classes, off-frame, occluded per the transcript) are hollow.
+7. The cut list. No video autoplay of all exhibits; no heatmap colour ramps
+   (rainbow forbidden); no 3D; no WebGPU; no sound; no synthetic frames; no
+   per-object popups covering the road; no counts inside the hero.
+8. Phones first. The hero is the full width, the scrubber sits at the thumb,
+   the pillar and the object field follow in one screen each, measured at
+   430x745 and 390x660. The paper ground keeps the field visible: steel blue
+   field at low alpha, brackets in ink.
+9. Performance law. Heatmap composited once per frame from the committed PNG
+   with globalCompositeOperation, brackets and rings drawn on top, one rAF,
+   idle when not scrubbing; canvas only, compositor-only CSS elsewhere; the
+   exhibit set warmed after boot like every other sealed byte.
+10. Honesty law. The page states, in the lane's words, what "attended" and
+   "detected" mean, that the observers watched in a lab, that the detector
+   ran on published frames, and that this is association on one dataset,
+   proposed, not externally audited.
+
 ## PLAN · ST-14 THE SAME HAZARD (cross-agent joint) · RESEARCH ONLY, not started
 The one measurement still open is HARBOR's target: the human and the
 automation failing on the SAME hazard. The lane is waiting on BDD-Attention
