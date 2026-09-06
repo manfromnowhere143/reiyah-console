@@ -2,13 +2,13 @@
  "present": true,
  "identity": {
   "state": "observed",
-  "head": "efc5d15fd01dcead7b6b667cac8e8c2b83a827dc",
+  "head": "f3963ee4c8c3097a51259c7f1a4f219c4d5bc035",
   "branch": "gate-b-measurement",
-  "worktree_clean": true,
-  "commit_count": 53,
+  "worktree_clean": false,
+  "commit_count": 54,
   "root": "/Users/danielwahnich/workspace/reiyah-gate-b"
  },
- "sealedAt": "2026-09-06T07:23:55.396Z",
+ "sealedAt": "2026-09-06T09:53:20.753Z",
  "files": [
   {
    "id": "evidence__claim-status-register-2026-08-29.json",
@@ -95,10 +95,22 @@
    "sha256": "sha256:ce828a87ae455a5ad54fd94f755b5e936bad735f3325976f2c410c1cfac663d8"
   },
   {
+   "id": "human-channel__evidence__h5_cross_agent_joint.txt",
+   "path": "human-channel/evidence/h5_cross_agent_joint.txt",
+   "bytes": 1457,
+   "sha256": "sha256:c4209d9949bfce45f768f68fed192667f463d65714f9a86edd7b69578409abbb"
+  },
+  {
+   "id": "human-channel__H5_CROSS_AGENT_JOINT.md",
+   "path": "human-channel/H5_CROSS_AGENT_JOINT.md",
+   "bytes": 4838,
+   "sha256": "sha256:a833998de9582a43588265c589a23d78b3a8f2e6f048af8b9350ba7fdc8a12f3"
+  },
+  {
    "id": "human-channel__README.md",
    "path": "human-channel/README.md",
-   "bytes": 2969,
-   "sha256": "sha256:ad971c652f41a4f011dce9ea27df23a042aeaa3acadf04f563ee67447937836f"
+   "bytes": 3451,
+   "sha256": "sha256:f02a59e77fb6168c9af2ef36ef73bc9cb3b2e4684c803448f7166a4e7521f1c9"
   },
   {
    "id": "evidence__measurement__joint-performance-nuscenes-val.excerpt.json",

@@ -1,4 +1,10 @@
-# Request to the Gate B lane: the cross-agent joint (j1), in a form the instrument can render
+# Request to the Gate B lane: the cross-agent joint, in a form the instrument can render
+
+Status 2026-09-06: H5 (f3963ee) delivered item 1 in substance (transcript with the rule, the
+2x2 counts, c = 0.972, non-claims). Still owed: an instance-clustered interval, item 2 (the
+per-object table), item 3 (exhibits with rights records; the lane's .gitignore excludes
+human-channel/bdda, so exhibits need their own committed directory), item 4 (a register entry).
+ST-14 renders H5 as three 2x2 squares and keeps the exhibit hero as an explicit wait.
 
 The instrument renders committed bytes only. To draw THE SAME HAZARD it needs the lane to
 commit, on `gate-b-measurement`, exactly these artifacts. Nothing here asks for a claim, only

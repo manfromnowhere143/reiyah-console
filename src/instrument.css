@@ -1821,3 +1821,27 @@ button:focus-visible, a:focus-visible { outline: 2px solid var(--ink-soft); outl
 }
 
 .wind .wunkmark { font-family: "B612 Mono", Menlo, monospace; font-size: 11px; fill: var(--ink-2); }
+
+/* ST-14 · THE SAME HAZARD */
+.shzgrid { flex: 1; min-height: 0; display: grid; grid-template-columns: minmax(0, 1.7fr) minmax(15rem, 1fr); gap: 0.6rem; }
+.shzbounds .wsrows { flex: 1; min-height: 0; overflow: hidden; }
+.shzb { display: flex; flex-direction: column; gap: 0.15rem; padding: 0.35rem 0; border-bottom: 1px solid var(--line-soft); }
+.shzb .shzt { font-family: var(--mono); font-size: 0.62rem; color: var(--ink); font-weight: 600; line-height: 1.35; }
+.shzb .shzr { font-family: var(--mono); font-size: 0.55rem; color: var(--ink-faint); line-height: 1.4; }
+.shzdig { flex: none; padding-top: 0.4rem; }
+.wsregs { display: flex; gap: 0.35rem; flex-wrap: wrap; justify-content: flex-end; }
+.sqs .sqframe { fill: none; stroke: color-mix(in srgb, var(--ink) 22%, transparent); stroke-width: 1; }
+.sqs .sqband { fill: color-mix(in srgb, var(--ink) 5%, transparent); }
+.sqs .sqboth { fill: color-mix(in srgb, var(--accent) 80%, transparent); }
+.sqs .sqexp { fill: none; stroke: color-mix(in srgb, var(--ink) 75%, transparent); stroke-width: 1.2; stroke-dasharray: 3 3; }
+.sqs .sq.hold .sqexp { stroke: var(--ok); stroke-width: 1.8; stroke-dasharray: none; }
+.sqs .sqc { font-family: var(--mono); font-size: 20px; font-weight: 600; fill: var(--ink); }
+.sqs .sq.hold .sqc { fill: var(--ok); }
+.sqs .mlab.dim { fill: var(--ink-ghost); }
+.wind .wjoint .mdot { fill: var(--ok); stroke: var(--ok); }
+@media (max-width: 760px) {
+  .shzgrid { grid-template-columns: 1fr; grid-template-rows: minmax(0, 1.1fr) minmax(0, 1fr); }
+  .shzb .shzr { display: none; }
+  .shzwait .wsregv { display: none; }
+  .sqs .sqc { font-size: 16px; }
+}

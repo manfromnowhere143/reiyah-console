@@ -195,3 +195,41 @@ export function parseRegister(text: string): { claims: Claim[]; policy: Record<s
   const j = JSON.parse(text);
   return { claims: (j.claims ?? []) as Claim[], policy: j.reconciliation_policy ?? {} };
 }
+
+/* ---------- H5: the cross-agent joint on BDD-A (human attention x automation detection) ---------- */
+export interface H5 { clips: number; frames: number; objects: number; tau: number; median: number; pAuto: number; pHum: number; pBoth: number; expected: number; c: number; counts: [number, number, number, number]; corr: number; nonclaims: string }
+export function parseH5(text: string): H5 | null {
+  const num = (x: string) => Number(x.replace(/,/g, ""));
+  const u = /BDD-A validation, ([\d,]+) clips, ([\d,]+) frames, ([\d,]+) driving objects/.exec(text);
+  const r = /automation miss = score < ([\d.]+); human miss = gaze attention < median \(([\d.]+)\)/.exec(text);
+  const pa = /P\(automation miss\)\s*: ([\d.]+)%/.exec(text);
+  const ph = /P\(human miss\)\s*: ([\d.]+)%/.exec(text);
+  const pb = /P\(both miss\)\s*: ([\d.]+)%/.exec(text);
+  const ex = /expected if independent\s*: ([\d.]+)%/.exec(text);
+  const cc = /cross-agent coefficient c\s*: ([\d.]+)/.exec(text);
+  const k = /2x2 counts \[both,autoOnly,humOnly,neither\]: ([\d,]+), ([\d,]+), ([\d,]+), ([\d,]+)/.exec(text);
+  const co = /Pearson corr\(automation score, human attention\): (-?[\d.]+)/.exec(text);
+  if (!u || !r || !pa || !ph || !pb || !ex || !cc || !k || !co) return null;
+  return { clips: num(u[1]), frames: num(u[2]), objects: num(u[3]), tau: Number(r[1]), median: Number(r[2]), pAuto: Number(pa[1]), pHum: Number(ph[1]), pBoth: Number(pb[1]), expected: Number(ex[1]), c: Number(cc[1]), counts: [num(k[1]), num(k[2]), num(k[3]), num(k[4])], corr: Number(co[1]), nonclaims: nonclaims(text) };
+}
+/* the bounds section of the H5 narrative, item by item, in the lane's words */
+export function parseH5Bounds(md: string): Array<{ title: string; rest: string }> {
+  const i = md.indexOf("## The bounds"); if (i < 0) return [];
+  const j = md.indexOf("\n## ", i + 5);
+  const sec = md.slice(i, j < 0 ? undefined : j);
+  return sec.split(/\n(?=\d+\. )/).slice(1).map((it) => {
+    const t = it.replace(/\s+/g, " ").replace(/`/g, "").trim();
+    const m = /^\d+\. \*\*(.+?)\*\*\s*(.*)$/.exec(t);
+    return m ? { title: m[1], rest: m[2].replace(/\*\*/g, "").replace(/^,\s*/, "") } : { title: t.replace(/^\d+\. /, ""), rest: "" };
+  });
+}
+/* one row of Result P's per-threshold table for one sensor pair */
+export interface PairRow { thr: number; pA: number; pB: number; c: number; lo: number; hi: number; pBoth: number }
+export function parsePairRow(text: string, pair: "megvii" | "pointpillars", thr: string): PairRow | null {
+  const start = text.indexOf(pair === "megvii" ? "PAIR 1" : "PAIR 2"); if (start < 0) return null;
+  const end = pair === "megvii" ? text.indexOf("PAIR 2") : -1;
+  const sec = text.slice(start, end < 0 ? undefined : end);
+  const re = new RegExp(`^\\s*${thr.replace(".", "\\.")} \\|\\s+([\\d.]+)\\s+([\\d.]+) \\|\\s+([\\d.]+) \\[([\\d.]+),([\\d.]+)\\] \\|\\s+([\\d.]+) \\[`, "m");
+  const m = re.exec(sec); if (!m) return null;
+  return { thr: Number(thr), pA: Number(m[1]), pB: Number(m[2]), c: Number(m[3]), lo: Number(m[4]), hi: Number(m[5]), pBoth: Number(m[6]) };
+}

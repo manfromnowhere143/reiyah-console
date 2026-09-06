@@ -188,6 +188,33 @@ state changes on small elements (hover, cursor). Never: a full-panel overlay
 that blends or animates; animating box-shadow, background-position, filter,
 or SVG attributes; view-transition names on dock tabs or station content.
 
+## Shipped 2026-09-06 (latest): ST-14 THE SAME HAZARD, first light from committed bytes
+- The lane committed H5 (f3963ee): the cross-agent joint on BDD-A, 13,904
+  detectable objects, c = 0.972, no interval, descriptive. Not committed:
+  exhibits, rights records, a per-object table, a register entry. H6 (total
+  both-miss on reference objects) exists in the lane tree uncommitted and is
+  NOT rendered.
+- ST-14 `src/stations/SameHazard.tsx`: three 2x2 squares in measured pixels,
+  one per redundancy pairing (automation from Result P megvii row at score
+  0.30, marginal; human from H3 all events; cross-agent from H5). The red
+  cell is the both-miss share (width P(A miss), height P(both)/P(A miss)),
+  the outline is what independence predicts (P(A) by P(B)); same-kind
+  overflows, the cross-agent one fits and its outline turns steel blue
+  (`.sq.hold`). Stats: c, both-miss vs independence with the 2x2 counts and
+  the correlation, and the register's state for joint-silent-miss (unknown,
+  use forbidden) beside the number: neither upgraded. The bounds panel is
+  parsed from the H5 narrative's "The bounds" section (`parseH5Bounds`,
+  strict, fails closed). "THE FRAME · waiting" row states that the exhibit
+  hero waits on committed bytes; nothing stands in for it.
+- Windshield: the third pillar is now the measured 0.97 mark on the line
+  when H5 parses, the unknown pillar otherwise. H5 non-claims live on ST-14
+  (adding them to ST-13 squeezed the H4 chart).
+- Parsers `parseH5`, `parseH5Bounds`, `parsePairRow` in `src/lib/gateb.ts`.
+  Lane file lists (sealer + server) gain the H5 transcript and narrative.
+  Camera cell row 3 col 3; rig station "samehazard".
+- Still owed by the lane for the designed hero: exhibits with rights records,
+  the per-object table, an interval, a register entry (docs/LANE_REQUEST_J1.md).
+
 ## Shipped 2026-09-06 (later): the third pillar as an explicit unknown; Result S under the register
 - The Windshield draws HUMAN × AUTOMATION as a hollow dashed pillar, "not yet
   measured": the meeting point is a state, shown, never a guess.

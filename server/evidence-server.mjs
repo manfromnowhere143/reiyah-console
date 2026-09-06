@@ -209,6 +209,7 @@ const server = http.createServer((req, res) => {
   "evidence/measurement/result_i.txt", "evidence/measurement/result_j.txt", "evidence/measurement/result_s.txt",
   "human-channel/evidence/h1_driver_observation.txt", "human-channel/evidence/h2_glance_at_conflict.txt",
   "human-channel/evidence/h3_observation_response_joint.txt", "human-channel/evidence/h4_dcpt_takeover.txt",
+  "human-channel/evidence/h5_cross_agent_joint.txt", "human-channel/H5_CROSS_AGENT_JOINT.md",
   "human-channel/README.md",
         "evidence/measurement/joint-performance-nuscenes-val.excerpt.json",
         "evidence/measurement/worst-group-records.jsonl",

@@ -30,6 +30,7 @@ export const STATIONS: StationDef[] = [
   { id: "measurement", num: "ST–11", name: "The Measurement", desc: "gate b · camera and lidar fail together", row: 3, col: 0 },
   { id: "worstgroup", num: "ST–12", name: "The Worst Group", desc: "gate b · where redundancy is weakest", row: 3, col: 1 },
   { id: "windshield", num: "ST–13", name: "The Windshield", desc: "both sides · the human channel", row: 3, col: 2 },
+  { id: "samehazard", num: "ST–14", name: "The Same Hazard", desc: "gate b · human and automation on one object", row: 3, col: 3 },
 ];
 
 export function stationById(id: string | null): StationDef {

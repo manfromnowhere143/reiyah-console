@@ -25,6 +25,7 @@ import { Contract } from "./stations/Contract";
 import { Measurement } from "./stations/Measurement";
 import { WorstGroup } from "./stations/WorstGroup";
 import { Windshield } from "./stations/Windshield";
+import { SameHazard } from "./stations/SameHazard";
 
 export default function App() {
   const [evidence, setEvidence] = useState<VerifiedEvidence | null>(null);
@@ -129,6 +130,7 @@ function Stage({ ev, onEvidence }: { ev: VerifiedEvidence; onEvidence: (e: Verif
       case "measurement": return <Measurement />;
       case "worstgroup": return <WorstGroup />;
       case "windshield": return <Windshield />;
+      case "samehazard": return <SameHazard />;
       default: return null;
     }
   };

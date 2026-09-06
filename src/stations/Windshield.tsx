@@ -8,13 +8,14 @@
    carries its digest; the lane's non-claims are rendered verbatim: descriptive,
    proposed, not causal, not a safety determination, not driver-clustered. */
 import { useLayoutEffect, useRef, useState } from "react";
-import { fetchLane, fetchLaneText, parseConvergence, parseH1, parseH2, parseH3, parseH4, parseRegister, type LaneFile } from "../lib/gateb";
+import { fetchLane, fetchLaneText, parseConvergence, parseH1, parseH2, parseH3, parseH4, parseH5, parseRegister, type LaneFile } from "../lib/gateb";
 import { Blocked, Digest, Stat, Station, useSurfaceState } from "../components/primitives";
 
 const F = {
   L: "evidence/measurement/result_l.txt",
   H1: "human-channel/evidence/h1_driver_observation.txt", H2: "human-channel/evidence/h2_glance_at_conflict.txt",
   H3: "human-channel/evidence/h3_observation_response_joint.txt", H4: "human-channel/evidence/h4_dcpt_takeover.txt",
+  H5: "human-channel/evidence/h5_cross_agent_joint.txt",
   S: "evidence/measurement/result_s.txt", R: "evidence/claim-status-register-2026-08-29.json",
 };
 const src = (f: LaneFile) => ({ id: `gateb/${f.id}`, path: `gate-b · ${f.path}`, sha256: f.sha256 ?? "" });
@@ -35,7 +36,7 @@ export function Windshield() {
   const state = useSurfaceState(async () => {
     const lane = await fetchLane();
     if (!lane.present) return { lane, d: null };
-    const [L, H1, H2, H3, H4, S, R] = await Promise.all([F.L, F.H1, F.H2, F.H3, F.H4, F.S, F.R].map((p) => fetchLaneText(p).catch(() => null)));
+    const [L, H1, H2, H3, H4, H5, S, R] = await Promise.all([F.L, F.H1, F.H2, F.H3, F.H4, F.H5, F.S, F.R].map((p) => fetchLaneText(p).catch(() => null)));
     return {
       lane,
       d: {
@@ -44,6 +45,7 @@ export function Windshield() {
         h2: H2 ? { ...parseH2(H2.text), file: H2.file } : null,
         h3: H3 ? { ...parseH3(H3.text), file: H3.file } : null,
         h4: H4 ? { ...parseH4(H4.text), file: H4.file } : null,
+        h5: H5 ? (() => { const v = parseH5(H5.text); return v ? { ...v, file: H5.file } : null; })() : null,
         s: S ? { present: true, file: S.file, headline: /understated by a factor of\s*\n?\s*sqrt\(([\d.]+)\) = ([\d.]+)/.exec(S.text) } : null,
         reg: R ? { ...parseRegister(R.text), file: R.file } : null,
       },
@@ -66,6 +68,7 @@ export function Windshield() {
   const h4base = h4?.grouped.find((g) => g.name.startsWith("no task"));
   const h4vm = h4?.grouped.find((g) => g.name.startsWith("visual-manual"));
   const h4cog = h4?.grouped.find((g) => g.name.startsWith("cognitive"));
+  const h5 = d.h5;
 
   /* ---- the windshield: two gauges above one independence line ---- */
   const wind = wbox.w > 0 && (autoT || h3all) ? (() => {
@@ -76,7 +79,7 @@ export function Windshield() {
     const cx = W / 2, xa = W * 0.2, xh = W * 0.5, xj = W * 0.8;
     const glass = `M ${W * 0.04} ${bottom + 10} L ${W * 0.16} ${top - 18} L ${W * 0.84} ${top - 18} L ${W * 0.96} ${bottom + 10} Z`;
     return (
-      <svg width={W} height={H} viewBox={`0 0 ${W} ${H}`} className="mchart wind" aria-label="Two coefficients above the same independence line: automation and human">
+      <svg width={W} height={H} viewBox={`0 0 ${W} ${H}`} className="mchart wind" aria-label="Three coefficients above the same independence line: automation, human, and human with automation">
         <path d={glass} className="wglass" />
         <line x1={(xa + xh) / 2} x2={(xa + xh) / 2} y1={top - 18} y2={bottom + 10} className="wsplit" />
         <line x1={(xh + xj) / 2} x2={(xh + xj) / 2} y1={top - 18} y2={bottom + 10} className="wsplit" />
@@ -102,16 +105,27 @@ export function Windshield() {
           </g>
         )}
         {autoT && h3all && <path d={`M ${xa} ${y(autoT.c)} Q ${(xa + xh) / 2} ${Math.min(y(autoT.c), y(h3all.c)) - 28} ${xh} ${y(h3all.c)}`} className="warc" />}
-        {/* the third pillar: human × automation on the same hazard. Not yet
-            measured: drawn as the explicit unknown it is, never as a guess */}
-        <g className="wunk">
-          <line x1={xj} x2={xj} y1={y(1)} y2={top + 6} className="wunkstem" />
-          <circle cx={xj} cy={top + 14} r={mobile ? 6 : 8} className="wunkdot" />
-          <text x={xj} y={top + 14} className="wunkmark" textAnchor="middle" dominantBaseline="central">∅</text>
-          <text x={xj} y={bottom + 16} className="mlab" textAnchor="middle">{mobile ? "HUMAN × AUTO" : "HUMAN × AUTOMATION"}</text>
-          <text x={xj} y={bottom + 28} className="mlab dim" textAnchor="middle">not yet measured</text>
-        </g>
-        {!mobile && <text x={cx} y={top - 4} className="mlab" textAnchor="middle">the same signature on both sides · the meeting point still unmeasured</text>}
+        {/* the third pillar: human × automation on the same object. Measured
+            by H5 on BDD-A when the transcript is present; otherwise drawn as
+            the explicit unknown it is, never as a guess */}
+        {h5 ? (
+          <g className="mser s0 wjoint">
+            <line x1={xj} x2={xj} y1={y(1)} y2={y(h5.c)} className="wstem" />
+            <circle cx={xj} cy={y(h5.c)} r={mobile ? 6 : 8} className="mdot" />
+            <text x={xj} y={y(1) - 14} className="wbig" textAnchor="middle">{fmt(h5.c, 2)}</text>
+            <text x={xj} y={bottom + 16} className="mlab" textAnchor="middle">{mobile ? "HUMAN × AUTO" : "HUMAN × AUTOMATION"}</text>
+            {!mobile && <text x={xj} y={bottom + 28} className="mlab dim" textAnchor="middle">BDD-A · no interval</text>}
+          </g>
+        ) : (
+          <g className="wunk">
+            <line x1={xj} x2={xj} y1={y(1)} y2={top + 6} className="wunkstem" />
+            <circle cx={xj} cy={top + 14} r={mobile ? 6 : 8} className="wunkdot" />
+            <text x={xj} y={top + 14} className="wunkmark" textAnchor="middle" dominantBaseline="central">∅</text>
+            <text x={xj} y={bottom + 16} className="mlab" textAnchor="middle">{mobile ? "HUMAN × AUTO" : "HUMAN × AUTOMATION"}</text>
+            <text x={xj} y={bottom + 28} className="mlab dim" textAnchor="middle">not yet measured</text>
+          </g>
+        )}
+        {!mobile && <text x={cx} y={top - 4} className="mlab" textAnchor="middle">{h5 ? "same-kind redundancy fails together · different-kind roughly holds" : "the same signature on both sides · the meeting point still unmeasured"}</text>}
       </svg>
     );
   })() : null;
@@ -164,7 +178,7 @@ export function Windshield() {
 
         <div className="wsgrid">
           <div className="ipanel wspanel">
-            <div className="ilabel">the windshield · two coefficients above one independence line · automation left, human right</div>
+            <div className="ilabel">{h5 ? "the windshield · three coefficients above one independence line · automation, human, and the two together" : "the windshield · two coefficients above one independence line · automation left, human right"}</div>
             <div className="mbox" ref={wbox.ref}>{wind ?? <div className="note">transcripts not present or not in their known shape</div>}</div>
           </div>
           <div className="wsside">
