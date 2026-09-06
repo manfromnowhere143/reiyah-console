@@ -103,6 +103,7 @@ export function Ev({ label, ev, unit }: { label: string; ev: EvLike | undefined;
 export function Digest({ id, sha, path }: { id: string; sha: string; path: string }) {
   const [open, setOpen] = useState(false);
   const token = useRef(newLayerToken());
+  const btn = useRef<HTMLButtonElement>(null);
   useEffect(() => onLayerClaim((t) => { if (t !== token.current) setOpen(false); }), []);
   const [proof, setProof] = useState<Proof | { state: "blocked"; reason: string } | null>(null);
   const [incl, setIncl] = useState<InclusionProof | null>(null);
@@ -110,7 +111,9 @@ export function Digest({ id, sha, path }: { id: string; sha: string; path: strin
   const short = sha.replace("sha256:", "").slice(0, 8);
 
   const run = async () => {
-    claimLayer(token.current);
+    /* a receipt opened from inside a derivation keeps its parent: the claim
+       would unmount the chip that opened it */
+    if (!btn.current?.closest(".derive")) claimLayer(token.current);
     setOpen(true);
     setProof(null);
     setIncl(null);
@@ -133,7 +136,7 @@ export function Digest({ id, sha, path }: { id: string; sha: string; path: strin
   const p = proof as Proof;
   return (
     <>
-      <button className="digest" data-proven={proven === undefined ? undefined : String(proven)} onClick={(e) => { e.stopPropagation(); run(); }} title={`prove ${path}`}>
+      <button ref={btn} className="digest" data-proven={proven === undefined ? undefined : String(proven)} onClick={(e) => { e.stopPropagation(); run(); }} title={`prove ${path}`}>
         <span className="mark">{proven === undefined ? "◇" : proven ? "◆" : "✕"}</span>
         sha256:{short}…
       </button>

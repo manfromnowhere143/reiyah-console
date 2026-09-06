@@ -29,7 +29,7 @@ export function Palette({ ev, go }: { ev: VerifiedEvidence; go: (id: string) => 
   const [open, setOpen] = useState(false);
   const token = useRef(newLayerToken());
   useEffect(() => onLayerClaim((t) => { if (t !== token.current) setOpen(false); }), []);
-  const openPalette = () => { claimLayer(token.current); openPalette(); };
+  const openPalette = () => { claimLayer(token.current); setOpen(true); };
   const [q, setQ] = useState("");
   const [sel, setSel] = useState(0);
   const [extra, setExtra] = useState<Item[]>([]);
@@ -37,7 +37,7 @@ export function Palette({ ev, go }: { ev: VerifiedEvidence; go: (id: string) => 
 
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
-      if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === "k") { e.preventDefault(); setOpen((o) => !o); }
+      if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === "k") { e.preventDefault(); setOpen((o) => { if (!o) claimLayer(token.current); return !o; }); }
       if (e.key === "Escape" && open) { e.preventDefault(); e.stopPropagation(); setOpen(false); }
     };
     window.addEventListener("keydown", onKey, true);
