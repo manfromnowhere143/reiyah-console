@@ -125,7 +125,7 @@ export function Law() {
     const W = jbox.w, H = jbox.h, mobile = W < 560;
     const n = t.models.length, gap = mobile ? 6 : 10, pad = 8;
     const bw = (W - pad * 2 - gap * (n - 1)) / n;
-    const barTop = 24, barBottom = H - 40;
+    const barTop = 24, barBottom = H - 50;
     const eff = t.effective;
     return (
       <svg width={W} height={H} viewBox={`0 0 ${W} ${H}`} className="mchart jury" aria-label="Seven models' error rates, and the effective number of independent models">
@@ -143,7 +143,8 @@ export function Law() {
           );
         })}
         <text x={pad} y={14} className="mlab" textAnchor="start">wrong, per model · {t.questions.toLocaleString("en-US")} questions</text>
-        <text x={W / 2} y={H - 8} className="mval" textAnchor="middle">{n} models · effective independent {fmt(eff, 1)} · all wrong together {fmt(t.allWrong, 1)}% vs {fmt(t.allWrongIndep, 2)}% independent</text>
+        <text x={W / 2} y={H - 20} className="mval" textAnchor="middle">effective independent models {fmt(eff, 1)} of {n}</text>
+        <text x={W / 2} y={H - 7} className="mlab dim" textAnchor="middle">all wrong together {fmt(t.allWrong, 1)}% · if independent {fmt(t.allWrongIndep, 2)}% · {t.inflation}×</text>
       </svg>
     );
   })() : null;
@@ -160,7 +161,7 @@ export function Law() {
         <text x={x(50)} y={H - 6} className="mlab dim" textAnchor="middle">predicted risk</text>
         <text x={8} y={y(50)} className="mlab dim" textAnchor="start" transform={`rotate(-90 8 ${y(50)})`}>actual</text>
         {v.bands.map((b) => <g key={b.band} className="mser s0"><circle cx={x(b.predicted)} cy={y(b.actual)} r={4} className="mdot" /></g>)}
-        <g className="monnaive"><circle cx={x(v.unanimousNaive)} cy={y(v.unanimousActual)} r={5} /><text x={x(v.unanimousNaive) + 9} y={y(v.unanimousActual) + 3} className="mlab" textAnchor="start">naive · says {v.unanimousNaive.toFixed(0)}%, wrong {v.unanimousActual.toFixed(1)}%</text></g>
+        <g className="monnaive"><circle cx={x(v.unanimousNaive)} cy={y(v.unanimousActual)} r={5} /><text x={left + 6} y={y(v.unanimousActual) - 10} className="mlab" textAnchor="start">naive says {v.unanimousNaive.toFixed(0)}% on unanimity · wrong {v.unanimousActual.toFixed(1)}%</text></g>
         <g className="mser s0"><circle cx={x(v.unanimousMonitor)} cy={y(v.unanimousActual)} r={4} className="mdot" /></g>
       </svg>
     );
