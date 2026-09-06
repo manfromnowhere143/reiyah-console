@@ -87,7 +87,7 @@ includes zero on the other two benchmarks, so it is a MMLU finding, not a genera
 
 | domain | same-kind pairing | cross-kind pairing |
 |---|---|---|
-| sensors | two lidars, c = 1.29; four sensors = 2.10 [2.08, 2.13] independent | camera x lidar, c = 1.10 to 1.15; human x machine, c ~ 1 |
+| sensors | two lidars, c = 1.29; four sensors = 2.10 [2.08, 2.13] independent | camera x lidar, c = 1.10 to 1.15; human x machine, c = 0.96 [0.93, 0.99] and 0.98 [0.96, 1.00] |
 | the human | eyes x hands, c = 1.46 [1.04, 1.90], event-resampled | (n/a) |
 | LLM juries | same family, c = 1.52 (MMLU), 1.87 (ARC), 2.43 (HellaSwag) | cross family, c = 1.29 (MMLU), 1.73 (ARC), 2.30 (HellaSwag) |
 
@@ -104,7 +104,13 @@ independence is undersized wherever `c > 1`. The evidence-budget percentages onc
 are withdrawn as stated and remain withdrawn: the corollary concerns a three-subsystem vote over miss
 and ghost mistakes on safety-critic errors, and the measured two-channel detection-miss `c` does not
 yet meet its five stated conditions. Reiyah reports `c` with its absolute-risk vector and no
-evidence-budget percentage. The human-machine layer, at `c` about 1, adds essentially no correction.
+evidence-budget percentage. The corollary's other mistake type, the ghost, has now been measured
+once: the camera and the lidar report phantom objects at the same place and instant six times more
+often than a same-road, same-sensor, different-instant null predicts, 6.2 [4.6, 10.3], an upper
+bound where the annotation itself is incomplete ([AH](RESULT_AH_GHOST_COINCIDENCE.md)); at least
+half of those coincident phantoms are momentary, not persistent structure or annotation gaps
+([AH2](RESULT_AH2_GHOST_PERSISTENCE.md)). The
+human-machine layer, at `c` about 1, adds essentially no correction.
 Two coupled sensors provide the joint-failure protection of about one and a half independent
 channels, and a seven-model jury the diversity of 3.6; both are illustrative effective-count
 readings, not evidence budgets.

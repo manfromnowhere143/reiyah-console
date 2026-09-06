@@ -166,7 +166,10 @@ No LLM inference: this reads public per-question outputs and joins by example ha
 error rate shrinks as `1/sqrt(c)`, so a campaign sized under independence is undersized wherever
 `c > 1`. The evidence-budget percentages and counts Result S derived are withdrawn as stated: the
 register's five conditions (estimand document section 6.4) are unmet, and the reconciliation check
-caught the figures on 2026-09-06. The direction survives as conditional; no percentage is claimed.
+caught the figures on 2026-09-06. The direction survives as conditional; no percentage is claimed. Ghost-ghost coincidence, the
+corollary's other mistake type, is measured for the first time (AH, 2026-09-06): 6.2 [4.6, 10.3]
+against a same-road, different-instant null, an upper bound under reference error; condition
+three is measured, not identified, and the figures stay withdrawn.
 The human-machine layer at `c` about 1 adds essentially no correction. File
 [`RESULT_S_CORRECTED_SAFETY_CALCULUS.md`](RESULT_S_CORRECTED_SAFETY_CALCULUS.md), correction first.
 
@@ -205,7 +208,7 @@ object-level monitor transfers to a changed camera (loss 0.005 AUC) and not to a
 
 | domain | same-kind pairing | cross-kind pairing |
 |---|---|---|
-| sensors | two lidars, c = 1.29 | camera x lidar, c = 1.10 to 1.15; human x machine, c ~ 0.98 |
+| sensors | two lidars, c = 1.29; four sensors = 2.10 [2.08, 2.13] independent (AF) | camera x lidar, c = 1.10 to 1.15; human x machine, c = 0.96 [0.93, 0.99] (H5b) and 0.98 [0.96, 1.00] (H6) |
 | the human | eyes x hands, c = 1.46 [1.04, 1.90], event-resampled (H7) | (the human x machine cell above) |
 | LLM juries | same family c = 1.52 (MMLU), 1.87 (ARC), 2.43 (HellaSwag) | cross family c = 1.29 (MMLU), 1.73 (ARC), 2.30 (HellaSwag) |
 
@@ -314,7 +317,7 @@ never raises confidence by itself.
 | Blocked | Blocker | Lane |
 |---|---|---|
 | Registering the `1.3.0` contract so the shipped module runs these checks | the frozen expectation lives inside a released Gate A module and is compared by exact equality; changing it would edit a released byte | Gate A successor |
-| Any evidence-budget figure, percentage, count, or multiplier | five conditions in `ESTIMAND_RSS_DEFINITION_32.md` section 6.4, none yet met | Gate B, open |
+| Any evidence-budget figure, percentage, count, or multiplier | five conditions in `ESTIMAND_RSS_DEFINITION_32.md` section 6.4; condition three (ghost-ghost) measured but not identified (AH), the other four unmet | Gate B, open |
 | Bounding `c` on a measured stratum by reference-error rate | no blinded reannotation performed | Gate B, needs authorization |
 | Any use of the word `silent` | no audited monitor adapter | contract design done, adapter absent |
 | Object-level human miss on real data at scale | no audited public dataset identifies it; a pilot needs human-subjects review | outside current authority |
@@ -399,6 +402,18 @@ was deleted and no check was weakened.
    answered, stated, or open, linked from the review request.
 16. **Result AG added** (register `0.2.8`): the sensor monitor's transfer across pairs follows the
    score semantics of the changed channel, the same law as the LLM monitor.
+17. **Result AH added** (register `0.2.9`): the first ghost coefficient. Camera and lidar phantoms
+   coincide 11.7 times above a rotation null and 6.2 [4.6, 10.3] times above a within-scene
+   time-shift null; the rotation null is shown weak by a sanity row and the class table points at
+   annotation gaps, both stated. Evidence-cost condition three is measured, not identified.
+18. **Result AH2 added** (register `0.2.10`): 54 percent [46, 64] of coincident ghosts do not recur
+   half a second later, against 61 to 77 percent recurrence for real objects; unannotated objects
+   cannot account for the coincidence, and the persistent minority is bounded.
+19. **H5b added** (register `0.2.11`): the cross-agent coefficient re-measured with the clip id
+   recorded, 0.962 [0.927, 0.993]; H5's exact arguments were never recorded and its sample
+   differs, stated. A second detector pass on the accelerator path was byte-identical.
+20. **Result AH3 added** (register `0.2.12`): the ghost coefficient against the time-shift null is
+   4.6 to 9.8 on a second camera, a second lidar and a second operating point, no band reaching 1.
 2. **The statement that no model is executed in the analysis lane was false.** H5 and H6 execute
    pretrained torchvision detectors on BDD-A frames; Result V fits a logistic-regression monitor.
    Section 1 and the thread READMEs now say exactly what runs.

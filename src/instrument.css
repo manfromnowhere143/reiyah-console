@@ -2024,3 +2024,9 @@ html[data-ground="dark"] .derive, html[data-ground="dark"] .provecard, html[data
 
 @media (max-width: 760px) { .wsreg.replayrow { display: grid; } }
 .overlay { z-index: 120; }
+
+@media (max-width: 760px) {
+  .wsreg.replayrow { grid-template-columns: 1fr; grid-template-areas: "k" "v"; gap: 0.2rem; }
+  .replayrow .wsregv { gap: 0.2rem 0.7rem; }
+  .replay { white-space: normal; }
+}

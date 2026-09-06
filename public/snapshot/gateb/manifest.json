@@ -2,13 +2,13 @@
  "present": true,
  "identity": {
   "state": "observed",
-  "head": "c7ae09746827b35cf542e92cd26868a6e117baf6",
+  "head": "ca022bc4236eac87a02f98d650527b7bc884cc67",
   "branch": "gate-b-measurement",
   "worktree_clean": true,
-  "commit_count": 79,
+  "commit_count": 84,
   "root": "/Users/danielwahnich/workspace/reiyah-gate-b"
  },
- "sealedAt": "2026-09-06T13:55:54.094Z",
+ "sealedAt": "2026-09-06T16:36:37.641Z",
  "files": [
   {
    "id": "evidence__claim-status-register-2026-08-29.json",
@@ -109,8 +109,8 @@
   {
    "id": "human-channel__H5_CROSS_AGENT_JOINT.md",
    "path": "human-channel/H5_CROSS_AGENT_JOINT.md",
-   "bytes": 4837,
-   "sha256": "sha256:f019b5adb53e51500875607c50f5dedfc04262e4bda13e68d7531792ae8a927a"
+   "bytes": 4916,
+   "sha256": "sha256:62d92bcfe3e5d305941badee521ad972229781ed1cbae5ad5463e55a95d8fe4e"
   },
   {
    "id": "human-channel__evidence__h6_total_both_miss.txt",
@@ -169,8 +169,8 @@
   {
    "id": "human-channel__README.md",
    "path": "human-channel/README.md",
-   "bytes": 4701,
-   "sha256": "sha256:949a969c0e6f74344f10e15ba666040f8dd98eb8c4dee5343a2500674ac0b8a2"
+   "bytes": 4950,
+   "sha256": "sha256:847efbcd5d47b0b8bb6979f0c4983253c741c59c752499419ac83400e30a9869"
   },
   {
    "id": "evidence__measurement__joint-performance-nuscenes-val.excerpt.json",
@@ -205,8 +205,8 @@
   {
    "id": "evidence__claim-status-register-2026-09-06.json",
    "path": "evidence/claim-status-register-2026-09-06.json",
-   "bytes": 58458,
-   "sha256": "sha256:11aa4b2cc6126d86e3a635eb24353038e8ab4194e8f63e2f5cc7d7e185cfe0c6"
+   "bytes": 62299,
+   "sha256": "sha256:05d4ac6bef382c74a7d550fa4baef67e4ceee8b7593deea960aaa3ec7d6937a0"
   },
   {
    "id": "evidence__measurement__audit_result_a.txt",
@@ -293,6 +293,24 @@
    "sha256": "sha256:6861abfeb88c7148a31f94982a680131ef0c9c5a4eff8e53b2d076a14261d6ac"
   },
   {
+   "id": "evidence__measurement__result_ah.txt",
+   "path": "evidence/measurement/result_ah.txt",
+   "bytes": 3830,
+   "sha256": "sha256:049fd2f4a1b778d5af49f0578bbce18e3e52369467316a2efe4e6d0118e6e44d"
+  },
+  {
+   "id": "evidence__measurement__result_ah2.txt",
+   "path": "evidence/measurement/result_ah2.txt",
+   "bytes": 1549,
+   "sha256": "sha256:b87ca21b01df3dfd79867c77e92fc95c81b80841c2afc64f2a4ecee76350a3ae"
+  },
+  {
+   "id": "evidence__measurement__result_ah3.txt",
+   "path": "evidence/measurement/result_ah3.txt",
+   "bytes": 12850,
+   "sha256": "sha256:9fc7d0ec90a1fb4aa966cb55212c7d995e4ab0e806a4a595b5337a0aff09f776"
+  },
+  {
    "id": "evidence__measurement__result_b.txt",
    "path": "evidence/measurement/result_b.txt",
    "bytes": 2895,
@@ -371,6 +389,12 @@
    "sha256": "sha256:d73bd545be64c7b698d014388aa37cbb58ac96c60ec100a1d061c96ca31f12dd"
   },
   {
+   "id": "human-channel__evidence__h5b_cross_agent_interval.txt",
+   "path": "human-channel/evidence/h5b_cross_agent_interval.txt",
+   "bytes": 1642,
+   "sha256": "sha256:a778a4060458b774ebc6f147511f66a625eb9907b30f8697d74bfc1682f9de65"
+  },
+  {
    "id": "human-channel__evidence__h7_intervals.txt",
    "path": "human-channel/evidence/h7_intervals.txt",
    "bytes": 2387,
@@ -437,6 +461,12 @@
    "sha256": "sha256:242bc45ae0da95cf1eb4fb8508f225895c7a5570062ec303722961a6d9ceb8e7"
   },
   {
+   "id": "human-channel__H5B_CROSS_AGENT_INTERVAL.md",
+   "path": "human-channel/H5B_CROSS_AGENT_INTERVAL.md",
+   "bytes": 2875,
+   "sha256": "sha256:5678c2eee851aad8dfc04fceb7dfea43f33a497206bdb51481c46496f15a958c"
+  },
+  {
    "id": "human-channel__H7_INTERVALS.md",
    "path": "human-channel/H7_INTERVALS.md",
    "bytes": 2959,
@@ -481,14 +511,14 @@
   {
    "id": "docs__GATE_B_SESSION_HANDOFF.md",
    "path": "docs/GATE_B_SESSION_HANDOFF.md",
-   "bytes": 32397,
-   "sha256": "sha256:b431ed10d81fd2eaec17a18f59f5a2359378e2cbee438734f18e4fd09c48e3a5"
+   "bytes": 33982,
+   "sha256": "sha256:08163088ed53aaf47933801626383c1694288f14f3ea79fddc2ca4319e07d1c6"
   },
   {
    "id": "docs__GENERAL_SYNTHESIS.md",
    "path": "docs/GENERAL_SYNTHESIS.md",
-   "bytes": 11293,
-   "sha256": "sha256:95ce938571daaa4f6120c73f741a4b8537b59ab94d9c11939bdf99ade4280254"
+   "bytes": 11827,
+   "sha256": "sha256:5fd7c5b08140e789402bc13478f6531ea9fefdcd1fd397ae1877b06f03b9dba1"
   },
   {
    "id": "docs__RESULT_AA_DISAGREEMENT_MONITOR.md",
@@ -519,6 +549,24 @@
    "path": "docs/RESULT_AG_SENSOR_MONITOR_TRANSFER.md",
    "bytes": 3595,
    "sha256": "sha256:60b58f9de6898d591ece150a37cbcdda32bda021b1f14677828181ccf63e2315"
+  },
+  {
+   "id": "docs__RESULT_AH2_GHOST_PERSISTENCE.md",
+   "path": "docs/RESULT_AH2_GHOST_PERSISTENCE.md",
+   "bytes": 3062,
+   "sha256": "sha256:46233b726c49aec4c8182cafb611b8cbb17e78bb7d982322bfa9af3e87a54b47"
+  },
+  {
+   "id": "docs__RESULT_AH3_GHOST_REPLICATION.md",
+   "path": "docs/RESULT_AH3_GHOST_REPLICATION.md",
+   "bytes": 2642,
+   "sha256": "sha256:c3dd1942381badfc695371f82ed6a60dcb58ea7d8ee4d20fd8df388521029f22"
+  },
+  {
+   "id": "docs__RESULT_AH_GHOST_COINCIDENCE.md",
+   "path": "docs/RESULT_AH_GHOST_COINCIDENCE.md",
+   "bytes": 5581,
+   "sha256": "sha256:b43ffcecd02ce59f1529d9a43818e05754e44d7f1ddf796b23ac7fdd578baeec"
   },
   {
    "id": "docs__RESULT_I_WORST_GROUP_DEPENDENCE.md",
