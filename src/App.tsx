@@ -12,6 +12,7 @@ import { warmLane } from "./lib/gateb";
 import { Mark, TruthPill } from "./components/primitives";
 import { GroundToggle } from "./components/GroundToggle";
 import { Palette } from "./components/Palette";
+import { ReceiptHost } from "./components/primitives";
 import { Harbor } from "./stations/Harbor";
 import { Ledger } from "./stations/Ledger";
 import { Lineage } from "./stations/Lineage";
@@ -175,6 +176,7 @@ function Stage({ ev, onEvidence }: { ev: VerifiedEvidence; onEvidence: (e: Verif
           )}
           <TruthPill lastEventAt={lastEventAt} connected={connected} sealed={sealed} violated={violated} />
           <Palette ev={ev} go={go} />
+          <ReceiptHost />
           {active !== "harbor" ? (
             <button className="hudbtn" onClick={() => go("harbor")}>⌂<span className="brandfull"> HARBOR · ESC</span></button>
           ) : (

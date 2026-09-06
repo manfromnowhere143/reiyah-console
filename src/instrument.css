@@ -2021,3 +2021,6 @@ html[data-ground="dark"] .derive, html[data-ground="dark"] .provecard, html[data
 .replay { display: inline-flex; align-items: center; gap: 0.35rem; white-space: nowrap; }
 .replay b { color: var(--ink); font-weight: 600; } .replay[data-ok="true"] b { color: var(--ok); }
 @media (max-width: 760px) { .wallgrid { grid-template-columns: 1fr; grid-template-rows: minmax(0, 1.9fr) minmax(0, 1fr); } .replayrow .wsregv.dim { display: none; } .replayrow { padding: 0.3rem 0.6rem; } .replay { font-size: 0.5rem; } }
+
+@media (max-width: 760px) { .wsreg.replayrow { display: grid; } }
+.overlay { z-index: 120; }

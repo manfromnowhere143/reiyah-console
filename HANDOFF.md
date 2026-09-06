@@ -188,6 +188,18 @@ state changes on small elements (hover, cursor). Never: a full-panel overlay
 that blends or animates; animating box-shadow, background-position, filter,
 or SVG attributes; view-transition names on dock tabs or station content.
 
+## Shipped 2026-09-08 (night, later): THE RECEIPT HOST
+- User: a receipt opened from a derivation sat under it. Root cause: the
+  receipt overlay was rendered by the chip inside the derivation, so the
+  card could not close without unmounting the receipt. Now `ReceiptHost`
+  (primitives.tsx, mounted once in the Stage next to the Palette) owns the
+  one overlay: a chip calls `openReceipt({id, sha, path})`, the host claims
+  the layer (the derivation closes), runs the proof, shows the overlay at
+  z 120 above everything, and broadcasts the verdict so every chip naming
+  that record shows ◆ or ✕. Escape, scrim and CLOSE close it.
+- The replay row on the Adversaries phone view was hidden by the generic
+  short-phone rule for `.wsreg`; `.wsreg.replayrow` is shown.
+
 ## Shipped 2026-09-08 (night): ADVERSARIES v2, the wall, the rules, the replay
 - Research: 569 fixtures (511 known-bad, 58 known-good) in 5 families, 253
   declared rules; the old bar list showed ~12 rules of 253. The sealed

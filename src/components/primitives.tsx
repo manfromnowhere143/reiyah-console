@@ -100,99 +100,108 @@ export function Ev({ label, ev, unit }: { label: string; ev: EvLike | undefined;
 }
 
 /* ---------- Digest chip: press to prove ---------- */
+/* the receipt is a single host at the app root: a chip asks for a receipt,
+   the host claims the layer (so the card that held the chip closes), runs
+   the proof, and shows one overlay above everything. Results flow back to
+   every chip that names the same record. */
+interface ReceiptReq { id: string; sha: string; path: string }
+const receiptBus = new EventTarget();
+export function openReceipt(r: ReceiptReq): void { receiptBus.dispatchEvent(new CustomEvent("open", { detail: r })); }
+const proven = new Map<string, boolean>();
+
 export function Digest({ id, sha, path }: { id: string; sha: string; path: string }) {
-  const [open, setOpen] = useState(false);
+  const [, force] = useState(0);
+  useEffect(() => { const h = () => force((n) => n + 1); receiptBus.addEventListener("result", h); return () => receiptBus.removeEventListener("result", h); }, []);
+  const short = sha.replace("sha256:", "").slice(0, 8);
+  const pv = proven.get(id);
+  return (
+    <button className="digest" data-proven={pv === undefined ? undefined : String(pv)} onClick={(e) => { e.stopPropagation(); openReceipt({ id, sha, path }); }} title={`prove ${path}`}>
+      <span className="mark">{pv === undefined ? "◇" : pv ? "◆" : "✕"}</span>
+      sha256:{short}…
+    </button>
+  );
+}
+
+export function ReceiptHost() {
+  const [req, setReq] = useState<ReceiptReq | null>(null);
   const token = useRef(newLayerToken());
-  const btn = useRef<HTMLButtonElement>(null);
-  useEffect(() => onLayerClaim((t) => { if (t !== token.current) setOpen(false); }), []);
   const [proof, setProof] = useState<Proof | { state: "blocked"; reason: string } | null>(null);
   const [incl, setIncl] = useState<InclusionProof | null>(null);
   const [tree, setTree] = useState<MerkleTree | null>(null);
-  const short = sha.replace("sha256:", "").slice(0, 8);
-
-  const run = async () => {
-    /* a receipt opened from inside a derivation keeps its parent: the claim
-       would unmount the chip that opened it */
-    if (!btn.current?.closest(".derive")) claimLayer(token.current);
-    setOpen(true);
-    setProof(null);
-    setIncl(null);
-    setTree(null);
-    try {
-      const pr = await prove(id);
-      setProof(pr);
-      if ("equal" in pr && pr.equal) {
-        proveInclusion(id, pr.clientSha256).then((i) => i && setIncl(i)).catch(() => {});
-        getMerkle().then((t) => t && t.leafIndex.has(id) && setTree(t)).catch(() => {});
-      }
-    } catch (e) {
-      setProof({ state: "blocked", reason: String((e as Error)?.message ?? e) });
-    }
-  };
-
-  const proven = proof && "equal" in proof ? proof.equal : undefined;
+  useEffect(() => onLayerClaim((t) => { if (t !== token.current) setReq(null); }), []);
+  useEffect(() => {
+    const onOpen = (e: Event) => {
+      const r = (e as CustomEvent<ReceiptReq>).detail;
+      claimLayer(token.current);
+      setReq(r); setProof(null); setIncl(null); setTree(null);
+      (async () => {
+        try {
+          const pr = await prove(r.id);
+          setProof(pr);
+          if ("equal" in pr) { proven.set(r.id, pr.equal); receiptBus.dispatchEvent(new CustomEvent("result", { detail: r.id })); }
+          if ("equal" in pr && pr.equal) {
+            proveInclusion(r.id, pr.clientSha256).then((i) => i && setIncl(i)).catch(() => {});
+            getMerkle().then((t) => t && t.leafIndex.has(r.id) && setTree(t)).catch(() => {});
+          }
+        } catch (err) { setProof({ state: "blocked", reason: String((err as Error)?.message ?? err) }); }
+      })();
+    };
+    const onKey = (e: KeyboardEvent) => { if (e.key === "Escape") setReq(null); };
+    receiptBus.addEventListener("open", onOpen); window.addEventListener("keydown", onKey);
+    return () => { receiptBus.removeEventListener("open", onOpen); window.removeEventListener("keydown", onKey); };
+  }, []);
+  if (!req) return null;
+  const { id, sha, path } = req;
   const done = !!(proof && "equal" in proof);
   const blocked = !!(proof && "reason" in proof);
   const p = proof as Proof;
-  return (
-    <>
-      <button ref={btn} className="digest" data-proven={proven === undefined ? undefined : String(proven)} onClick={(e) => { e.stopPropagation(); run(); }} title={`prove ${path}`}>
-        <span className="mark">{proven === undefined ? "◇" : proven ? "◆" : "✕"}</span>
-        sha256:{short}…
-      </button>
-      {open && createPortal(
-        <div className="overlay" onClick={() => setOpen(false)}>
-          {/* Opens at final size with every field present, then the values
-              compute in place — no resize, one clean entrance. */}
-          <div className="provecard glass" onClick={(e) => e.stopPropagation()} role="dialog" aria-label="Press to prove">
-            <h3>Press to Prove</h3>
-            {done ? (
+  return createPortal(
+    <div className="overlay" onClick={() => setReq(null)}>
+      {/* Opens at final size with every field present, then the values
+          compute in place: no resize, one clean entrance. */}
+      <div className="provecard glass" onClick={(e) => e.stopPropagation()} role="dialog" aria-label="Press to prove">
+        <h3>Press to Prove</h3>
+        {done ? (
+          <>
+            <div className="proverow"><span className="k">source</span><span className="v">{p.path}</span></div>
+            <div className="proverow"><span className="k">bytes</span><span className="v">{p.byteLength.toLocaleString()}</span></div>
+            <div className="proverow"><span className="k">server</span><span className="v">{p.serverSha256}</span></div>
+            <div className="proverow"><span className="k">this browser</span><span className={`v ${p.equal ? "eq" : "neq"}`}>{p.clientSha256}</span></div>
+            <div className="proverow"><span className="k">verdict</span><span className={`v ${p.equal ? "eq" : "neq"}`}>{p.equal ? "BYTE-IDENTICAL" : "MISMATCH — do not trust this surface"}</span></div>
+            {p.equal && tree && <div className="foldwrap"><Fold tree={tree} leafId={id} verified={incl ? incl.verified : null} /></div>}
+            {p.equal && (
               <>
-                <div className="proverow"><span className="k">source</span><span className="v">{p.path}</span></div>
-                <div className="proverow"><span className="k">bytes</span><span className="v">{p.byteLength.toLocaleString()}</span></div>
-                <div className="proverow"><span className="k">server</span><span className="v">{p.serverSha256}</span></div>
-                <div className="proverow"><span className="k">this browser</span><span className={`v ${p.equal ? "eq" : "neq"}`}>{p.clientSha256}</span></div>
-                <div className="proverow"><span className="k">verdict</span><span className={`v ${p.equal ? "eq" : "neq"}`}>{p.equal ? "BYTE-IDENTICAL" : "MISMATCH — do not trust this surface"}</span></div>
-                {p.equal && tree && <div className="foldwrap"><Fold tree={tree} leafId={id} verified={incl ? incl.verified : null} /></div>}
-                {p.equal && (
-                  <>
-                    <div className="proverow" style={{ borderTop: "1px solid var(--line)", paddingTop: "0.7rem", marginTop: "0.3rem" }}>
-                      <span className="k">seal root</span>
-                      <span className="v">{incl ? `sha256:${incl.rootHex.slice(0, 40)}…` : "folding the sealed set…"}</span>
-                    </div>
-                    <div className="proverow">
-                      <span className="k">inclusion</span>
-                      <span className={`v ${incl ? (incl.verified ? "eq" : "neq") : "compute"}`}>
-                        {incl
-                          ? incl.verified
-                            ? `PROVEN · this record folds into the root over ${incl.leafCount} surfaces in ${incl.steps} hops`
-                            : "NOT INCLUDED — this record is not part of the sealed root"
-                          : "computing the audit path…"}
-                      </span>
-                    </div>
-                  </>
-                )}
-              </>
-            ) : blocked ? (
-              <>
-                <div className="proverow"><span className="k">source</span><span className="v">{path}</span></div>
-                <div className="proverow"><span className="k">blocked</span><span className="v neq">{(proof as { reason: string }).reason}</span></div>
-              </>
-            ) : (
-              <>
-                <div className="proverow"><span className="k">source</span><span className="v">{path}</span></div>
-                <div className="proverow"><span className="k">bytes</span><span className="v compute">measuring…</span></div>
-                <div className="proverow"><span className="k">server</span><span className="v">{sha}</span></div>
-                <div className="proverow"><span className="k">this browser</span><span className="v compute">recomputing SHA-256 in this browser…</span></div>
-                <div className="proverow"><span className="k">verdict</span><span className="v compute">…</span></div>
+                <div className="proverow" style={{ borderTop: "1px solid var(--line)", paddingTop: "0.7rem", marginTop: "0.3rem" }}>
+                  <span className="k">seal root</span>
+                  <span className="v">{incl ? `sha256:${incl.rootHex.slice(0, 40)}…` : "folding the sealed set…"}</span>
+                </div>
+                <div className="proverow">
+                  <span className="k">inclusion</span>
+                  <span className={`v ${incl ? (incl.verified ? "eq" : "neq") : "compute"}`}>
+                    {incl ? incl.verified ? `PROVEN · this record folds into the root over ${incl.leafCount} surfaces in ${incl.steps} hops` : "NOT INCLUDED — this record is not part of the sealed root" : "computing the audit path…"}
+                  </span>
+                </div>
               </>
             )}
-            <button className="close" onClick={() => setOpen(false)}>CLOSE</button>
-          </div>
-        </div>,
-        document.body
-      )}
-    </>
+          </>
+        ) : blocked ? (
+          <>
+            <div className="proverow"><span className="k">source</span><span className="v">{path}</span></div>
+            <div className="proverow"><span className="k">blocked</span><span className="v neq">{(proof as { reason: string }).reason}</span></div>
+          </>
+        ) : (
+          <>
+            <div className="proverow"><span className="k">source</span><span className="v">{path}</span></div>
+            <div className="proverow"><span className="k">bytes</span><span className="v compute">measuring…</span></div>
+            <div className="proverow"><span className="k">server</span><span className="v">{sha}</span></div>
+            <div className="proverow"><span className="k">this browser</span><span className="v compute">recomputing SHA-256 in this browser…</span></div>
+            <div className="proverow"><span className="k">verdict</span><span className="v compute">…</span></div>
+          </>
+        )}
+        <button className="close" onClick={() => setReq(null)}>CLOSE</button>
+      </div>
+    </div>,
+    document.body
   );
 }
 
