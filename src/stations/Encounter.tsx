@@ -273,6 +273,9 @@ export function Encounter() {
         const off = align === "left" ? 6 : align === "right" ? -6 : 0;
         /* a ground plate under the text: the scene never fights the words */
         const wid = Math.max(...lines.map(([txt]) => ctx.measureText(txt).width));
+        /* the tag stays inside the frame whatever the phone's width */
+        if (align === "left") tx = Math.min(tx, w - 10 - wid - off);
+        if (align === "right") tx = Math.max(tx, 10 + wid - off);
         const px0 = align === "left" ? tx + off - 4 : align === "right" ? tx + off - wid - 4 : tx - wid / 2 - 4;
         ctx.fillStyle = `rgba(${VOID},0.78)`;
         ctx.beginPath(); ctx.roundRect(px0, ty - fs + 1, wid + 8, lines.length * lh + 4, 3); ctx.fill();
