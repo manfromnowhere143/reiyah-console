@@ -5,6 +5,7 @@
    there; selecting a record goes to the station that shows it and, where the
    bytes are present, opens press-to-prove on its digest. */
 import { useEffect, useMemo, useRef, useState } from "react";
+import { claimLayer, newLayerToken, onLayerClaim } from "../lib/layers";
 import { createPortal } from "react-dom";
 import type { VerifiedEvidence } from "../boot/ProofBoot";
 import { STATIONS } from "../lib/camera";
@@ -26,6 +27,9 @@ function score(q: string, text: string): number {
 
 export function Palette({ ev, go }: { ev: VerifiedEvidence; go: (id: string) => void }) {
   const [open, setOpen] = useState(false);
+  const token = useRef(newLayerToken());
+  useEffect(() => onLayerClaim((t) => { if (t !== token.current) setOpen(false); }), []);
+  const openPalette = () => { claimLayer(token.current); openPalette(); };
   const [q, setQ] = useState("");
   const [sel, setSel] = useState(0);
   const [extra, setExtra] = useState<Item[]>([]);
@@ -96,7 +100,7 @@ export function Palette({ ev, go }: { ev: VerifiedEvidence; go: (id: string) => 
 
   return (
     <>
-      <button className="hudbtn palbtn" onClick={() => setOpen(true)} aria-label="Open the palette" title="⌘K">⌘K</button>
+      <button className="hudbtn palbtn" onClick={() => openPalette()} aria-label="Open the palette" title="⌘K">⌘K</button>
       {open && createPortal(
         <div className="overlay palover" onClick={() => setOpen(false)}>
           <div className="palette glass" role="dialog" aria-label="Palette" onClick={(e) => e.stopPropagation()}>

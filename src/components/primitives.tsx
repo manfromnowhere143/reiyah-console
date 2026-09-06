@@ -3,6 +3,7 @@
    six states, never merged, never coerced to zero or false. */
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
+import { claimLayer, newLayerToken, onLayerClaim } from "../lib/layers";
 import { getMerkle, prove, proveInclusion, type Proof, type LiveState, type InclusionProof } from "../lib/evidence";
 import type { MerkleTree } from "../lib/merkle";
 import { Fold } from "./Fold";
@@ -101,12 +102,15 @@ export function Ev({ label, ev, unit }: { label: string; ev: EvLike | undefined;
 /* ---------- Digest chip: press to prove ---------- */
 export function Digest({ id, sha, path }: { id: string; sha: string; path: string }) {
   const [open, setOpen] = useState(false);
+  const token = useRef(newLayerToken());
+  useEffect(() => onLayerClaim((t) => { if (t !== token.current) setOpen(false); }), []);
   const [proof, setProof] = useState<Proof | { state: "blocked"; reason: string } | null>(null);
   const [incl, setIncl] = useState<InclusionProof | null>(null);
   const [tree, setTree] = useState<MerkleTree | null>(null);
   const short = sha.replace("sha256:", "").slice(0, 8);
 
   const run = async () => {
+    claimLayer(token.current);
     setOpen(true);
     setProof(null);
     setIncl(null);
@@ -261,6 +265,8 @@ export function Stat({ label, value, sub, rule, from, wide, small, children }: {
   rule?: string; from?: Source[]; wide?: boolean; small?: boolean; children?: React.ReactNode;
 }) {
   const [open, setOpen] = useState(false);
+  const token = useRef(newLayerToken());
+  useEffect(() => onLayerClaim((t) => { if (t !== token.current) setOpen(false); }), []);
   const [box, setBox] = useState<{ left: number; top: number; width: number } | null>(null);
   const ref = useRef<HTMLDivElement>(null);
   const at = useRef<string>("");
@@ -276,6 +282,7 @@ export function Stat({ label, value, sub, rule, from, wide, small, children }: {
       }
       at.current = new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit", second: "2-digit" });
     }
+    if (!open) claimLayer(token.current);
     setOpen(!open);
   };
   useEffect(() => {

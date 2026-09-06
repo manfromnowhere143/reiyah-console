@@ -188,6 +188,13 @@ state changes on small elements (hover, cursor). Never: a full-panel overlay
 that blends or animates; animating box-shadow, background-position, filter,
 or SVG attributes; view-transition names on dock tabs or station content.
 
+## Shipped 2026-09-08 (later): ONE CARD AT A TIME
+- `src/lib/layers.ts`: a tiny layer bus. Every floating surface (Stat's
+  derivation, Digest's receipt, the Palette) takes a token, claims the layer
+  when it opens, and closes when any other token claims it. Escape and
+  outside-press behaviour unchanged. Nested case: pressing a digest chip
+  inside a derivation opens the receipt and closes the derivation.
+
 ## Shipped 2026-09-08: THE CARD LAW, faces before the reveal, the first screen primed
 - User on the phone: every opened card except the receipt was unreadable,
   the content beneath bled through. Cause: `.derive` (the derivation popover)
