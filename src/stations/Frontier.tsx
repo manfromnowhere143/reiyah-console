@@ -8,7 +8,8 @@
    pixels, redrawn only when the cursor or the size or the ground changes. */
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { fetchCatalog, fetchSurface, fetchSurfaceByPath } from "../lib/evidence";
-import { MONO, drawCabin, drawWorld, tones, useGround } from "../lib/roadScene";
+import { MONO, drawCabin, drawWorld, tones } from "../lib/roadScene";
+import { useGround } from "../lib/ground";
 import { getAt, setAt } from "../lib/urlstate";
 import { Blocked, Digest, Stat, Station, useSurfaceState } from "../components/primitives";
 

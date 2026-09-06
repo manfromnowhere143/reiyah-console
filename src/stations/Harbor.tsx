@@ -6,12 +6,14 @@
    each mount owns fresh, transferable elements (transferControlToOffscreen may
    run only once per element, and React StrictMode double-invokes effects). */
 import { useEffect, useRef } from "react";
+import { claimShort, fetchLane, fetchLaneText, parseAC, parseConvergence, parseH3, parseH6, parseRegister, parseV, registerPath } from "../lib/gateb";
+import { fetchCatalog, getSealedInfo } from "../lib/evidence";
 import type { VerifiedEvidence } from "../boot/ProofBoot";
-import { Digest } from "../components/primitives";
+import { Digest, useSurfaceState } from "../components/primitives";
 import { fetchSurface } from "../lib/evidence";
 import { createHarborEngine, type ArtifactRow, type HarborEngine, type HarborEnv } from "./harborEngine";
 
-export function Harbor({ ev, pulse }: { ev: VerifiedEvidence; go: (id: string) => void; pulse?: number }) {
+export function Harbor({ ev, go, pulse }: { ev: VerifiedEvidence; go: (id: string) => void; pulse?: number }) {
   const wrapRef = useRef<HTMLDivElement>(null);
   const workerRef = useRef<Worker | null>(null);
   const engineRef = useRef<HarborEngine | null>(null);
@@ -63,6 +65,7 @@ export function Harbor({ ev, pulse }: { ev: VerifiedEvidence; go: (id: string) =
       dpr: Math.min(2, window.devicePixelRatio || 1),
       dark: document.documentElement.dataset.ground === "dark",
       reduced: reducedMq.matches,
+      dash: cv.clientWidth < 760 ? Math.round(cv.clientHeight * 0.1) : Math.round(cv.clientHeight * 0.26),
     });
     const rectMouse = (cv: HTMLCanvasElement, e: PointerEvent) => {
       const r = cv.getBoundingClientRect();
@@ -173,6 +176,44 @@ export function Harbor({ ev, pulse }: { ev: VerifiedEvidence; go: (id: string) =
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [artifacts]);
 
+  /* the instruments: every number from committed bytes, warmed after boot,
+     re-read on every re-verification (pulse) */
+  const inst = useSurfaceState(async () => {
+    const lane = await fetchLane();
+    const [cat] = await Promise.all([fetchCatalog().catch(() => [])]);
+    const diVersions = [...new Set(cat.map((c) => c.path).filter((p) => p.includes("operator-decision-interface")).map((p) => p.match(/1\.2\.\d+/)?.[0]).filter(Boolean) as string[])].sort((a, b) => a.localeCompare(b, undefined, { numeric: true }));
+    if (!lane.present) return { lane, diVersions, reg: null, auto: null, h3: null, h6: null, ac: null, v: null };
+    const [R, L, H3, H6, AC, V] = await Promise.all([await registerPath(), "evidence/measurement/result_l.txt", "human-channel/evidence/h3_observation_response_joint.txt", "human-channel/evidence/h6_total_both_miss.txt", "llm-generalization/evidence/result_ac.txt", "llm-generalization/evidence/result_v.txt"].map((q) => fetchLaneText(q).catch(() => null)));
+    return {
+      lane, diVersions,
+      reg: R ? { ...parseRegister(R.text), file: R.file } : null,
+      auto: L ? { ...parseConvergence(L.text), file: L.file } : null,
+      h3: H3 ? { ...parseH3(H3.text), file: H3.file } : null,
+      h6: H6 ? (() => { const v = parseH6(H6.text); return v ? { ...v, file: H6.file } : null; })() : null,
+      ac: AC ? (() => { const v = parseAC(AC.text); return v ? { ...v, file: AC.file } : null; })() : null,
+      v: V ? (() => { const v = parseV(V.text); return v ? { ...v, file: V.file } : null; })() : null,
+    };
+  }, [pulse]);
+  const I = inst.phase === "ready" ? inst.data : null;
+  const sealed = getSealedInfo();
+  const src = (f: { id: string; path: string; sha256?: string }) => ({ id: `gateb/${f.id}`, path: `gate-b · ${f.path}`, sha256: f.sha256 ?? "" });
+  const autoT = I?.auto && I.auto.rows.length ? I.auto.rows[I.auto.rows.length - 1] : null;
+  const h3all = I?.h3?.groups.find((g) => g.name === "all events") ?? null;
+  const mmlu = I?.ac?.benches.find((b) => b.name === "mmlu")?.q.get("marginal c, mean") ?? null;
+  const marks: Array<{ c: number; cross: boolean; name: string }> = [
+    ...(autoT ? [{ c: autoT.c, cross: false, name: "camera × lidar" }] : []),
+    ...(h3all ? [{ c: h3all.c, cross: false, name: "eyes × hands" }] : []),
+    ...(mmlu ? [{ c: mmlu.point, cross: false, name: "LLM jury" }] : []),
+    ...(I?.h6 ? [{ c: I.h6.c, cross: true, name: "human × machine" }] : []),
+  ];
+  const status = (re: RegExp) => I?.reg?.claims.filter((c) => re.test(c.status)).length ?? 0;
+  const regCounts: Array<[string, number, string]> = I?.reg ? [
+    ["measured", status(/^measured$/), "ok"], ["derived", status(/^derived$/), "ok"], ["narrowed", status(/^narrowed$/), "ink"],
+    ["inconclusive", status(/^inconclusive$/), "faint"], ["unknown", status(/^(unknown|not_established)$/), "faint"], ["withdrawn", status(/withdrawn/), "red"],
+  ] : [];
+  const regTotal = I?.reg?.claims.length ?? 0;
+  const engineHead = ev.summary?.identity?.state === "observed" ? ev.summary.identity : null;
+
   const authRows: Array<[string, string]> = [
     ["runtime_authorized", String(auth.runtime_authorized ?? "unknown").toUpperCase()],
     ["scientific_claim_authority", String(auth.scientific_claim_authority ?? "unknown").toUpperCase()],
@@ -184,21 +225,46 @@ export function Harbor({ ev, pulse }: { ev: VerifiedEvidence; go: (id: string) =
 
   return (
     <div className="harbor">
-      <div className="fieldwrap" ref={wrapRef}>
-        {/* the two canvases are created imperatively by the effect above */}
-        <div className="harbortitle">
-          THE LIVING ENGINE · {artifacts.length.toLocaleString()} ARTIFACTS · {Number(proj.total_bytes ?? 0).toLocaleString()} BYTES · {badTotal} REJECTED BY DESIGN
-        </div>
-        <div className="fieldhud">
-          <div className="fh">
-            <Digest id="index" sha={ev.indexSha256} path="gate/GATE_A_EVIDENCE_INDEX.json" />
-          </div>
-          <div className="fh authwall glass" style={{ maxWidth: "34rem" }}>
-            {authRows.map(([k, v]) => (
-              <div key={k} className="authrow"><span>{k}</span><span className="st">{v}</span></div>
-            ))}
-          </div>
-        </div>
+      <div className="fieldwrap" ref={wrapRef}>{/* the canvas is created imperatively by the effect above */}</div>
+      <div className="dash" aria-label="The dashboard: six instruments, every number a committed byte">
+          <button className="gauge" onClick={() => go("ledger")}>
+            <span className="gk">the field</span>
+            <span className="gv">{artifacts.length.toLocaleString()}<em> sealed</em></span>
+            <span className="gs"><b className="red">{badTotal}</b> rejected by design · {Number(proj.total_bytes ?? 0).toLocaleString()} bytes</span>
+            <span className="gd" onClick={(e) => e.stopPropagation()}><Digest id="index" sha={ev.indexSha256} path="gate/GATE_A_EVIDENCE_INDEX.json" /></span>
+          </button>
+          <button className="gauge" onClick={() => go("chair")}>
+            <span className="gk">it corrects itself</span>
+            <span className="gv">{I ? I.diVersions.length : "∅"}<em> releases</em></span>
+            <span className="gs">{I && I.diVersions.length ? `${I.diVersions[0]} → ${I.diVersions.at(-1)} · incident → contract → review → seal` : "operator decision records not present"}</span>
+            <span className="gs dim">acceptance {String(auth.operator_acceptance_state ?? "unknown").toUpperCase()} · runtime {String(auth.runtime_authorized ?? "unknown").toUpperCase()} · gate B {String(auth.gate_b_authorized ?? "unknown").toUpperCase()}</span>
+          </button>
+          <button className="gauge glaw" onClick={() => go("law")}>
+            <span className="gk">the law · one estimand</span>
+            <svg viewBox="0 0 200 34" className="glawline" aria-label="Same-kind pairings above one, human and machine at one">
+              <line x1={((1 - 0.9) / 1.6) * 200} x2={((1 - 0.9) / 1.6) * 200} y1="4" y2="30" className="mind" />
+              {marks.map((m) => { const x = ((Math.min(2.5, m.c) - 0.9) / 1.6) * 200; return <g key={m.name} className={m.cross ? "cross" : "same"}><line x1={((1 - 0.9) / 1.6) * 200} x2={x} y1="17" y2="17" /><circle cx={x} cy="17" r="4" /></g>; })}
+              <text x="0" y="31" textAnchor="start">1.0</text><text x="200" y="31" textAnchor="end">2.5</text>
+            </svg>
+            <span className="gs">{marks.length ? marks.map((m) => `${m.name} ${m.c.toFixed(2)}`).join(" · ") : "lane transcripts not present"}</span>
+          </button>
+          <button className="gauge" onClick={() => go("law")}>
+            <span className="gk">the register</span>
+            <span className="gv">{regTotal || "∅"}<em> claims</em></span>
+            <span className="regbar" aria-hidden="true">{regCounts.map(([k, n, tone]) => n > 0 && <i key={k} className={`rs ${tone}`} style={{ flex: n }} title={`${k} ${n}`} />)}</span>
+            <span className="gs">{I?.reg ? regCounts.filter(([, n]) => n > 0).map(([k, n]) => `${n} ${k}`).join(" · ") : "register not present"}</span>
+          </button>
+          <button className="gauge" onClick={() => go("monitor")}>
+            <span className="gk">the monitor</span>
+            <span className="gv">{I?.v ? I.v.monitor.auc.toFixed(3) : "∅"}<em> AUC</em></span>
+            <span className="gs">{I?.v ? `vs naive ${I.v.naive.auc.toFixed(3)} · joint failure read from outputs alone · ${I.reg?.claims.find((c) => /llm-monitor-in-domain/.test(c.claim_id))?.status ?? "∅"}` : "Result V not present"}</span>
+          </button>
+          <button className="gauge" onClick={() => go("lineage")}>
+            <span className="gk">the source</span>
+            <span className="gv small">{engineHead ? engineHead.head.slice(0, 7) : sealed?.head.slice(0, 7) ?? "∅"}<em> engine</em>{I?.lane.identity ? <em> · lane {I.lane.identity.head.slice(0, 7)}</em> : null}</span>
+            <span className="gs">{engineHead ? `${engineHead.branch} · ${engineHead.worktree_clean ? "clean" : "dirty"}` : sealed ? `${sealed.branch} · sealed ${new Date(sealed.sealedAt).toLocaleString("en-GB", { hour12: false })}` : "identity blocked"}{I?.lane.identity ? ` · lane ${I.lane.identity.branch} · ${I.lane.identity.worktree_clean ? "clean" : "dirty"}` : ""}</span>
+            <span className="gs dim">{authRows.slice(3).map(([k, v]) => `${k.replace(/_/g, " ")} ${v}`).join(" · ")}</span>
+          </button>
       </div>
     </div>
   );

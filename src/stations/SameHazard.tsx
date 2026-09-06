@@ -14,7 +14,8 @@
 import { useLayoutEffect, useRef, useState } from "react";
 import { useEffect } from "react";
 import { fetchLane, fetchLaneText, parseH3, parseH5, parseH5Bounds, parseH6, parsePairRow, parseRegister, type LaneFile, registerPath } from "../lib/gateb";
-import { MONO, tones, useGround } from "../lib/roadScene";
+import { MONO, tones } from "../lib/roadScene";
+import { useGround } from "../lib/ground";
 import { Blocked, Digest, Stat, Station, useSurfaceState } from "../components/primitives";
 
 const F = {

@@ -8,7 +8,8 @@
    carries its digest; the lane's non-claims are rendered verbatim: descriptive,
    proposed, not causal, not a safety determination, not driver-clustered. */
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
-import { MONO, drawCabin, drawWorld, tones, useGround } from "../lib/roadScene";
+import { MONO, drawCabin, drawWorld, tones } from "../lib/roadScene";
+import { useGround } from "../lib/ground";
 import { fetchLane, fetchLaneText, parseConvergence, parseH1, parseH2, parseH3, parseH4, parseH5, parseH6, parseH7, parseRegister, type LaneFile, registerPath } from "../lib/gateb";
 import { Blocked, Digest, Stat, Station, useSurfaceState } from "../components/primitives";
 

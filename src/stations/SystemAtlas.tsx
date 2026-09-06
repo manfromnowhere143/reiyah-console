@@ -11,7 +11,8 @@
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import type { VerifiedEvidence } from "../boot/ProofBoot";
 import { fetchCatalog, fetchSurface } from "../lib/evidence";
-import { MONO, tones, useGround } from "../lib/roadScene";
+import { MONO, tones } from "../lib/roadScene";
+import { useGround } from "../lib/ground";
 import { Blocked, Digest, Station, useSurfaceState } from "../components/primitives";
 
 interface Art { path: string; role: string; sha: string; ring: number; bad: boolean; sealed: boolean }

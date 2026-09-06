@@ -8,6 +8,8 @@
    Web Worker over an OffscreenCanvas (with the WebGL2 post feeding on its
    scene) and, where that is unsupported, on the main thread as a fallback. */
 
+import { drawCabin, drawWorld } from "../lib/roadScene";
+
 export interface ArtifactRow {
   artifact: { path: string; sha256: string };
   byte_size: number;
@@ -20,6 +22,7 @@ export interface HarborEnv {
   dpr: number;
   dark: boolean;
   reduced: boolean;
+  dash?: number;   // height of the cabin dashboard band, in CSS pixels
   /* "canvas": the engine applies its own 2D bloom + vignette (fallback path).
      "none": a downstream GPU pass owns bloom/dispersion/vignette. */
   post?: "canvas" | "none";
@@ -143,7 +146,9 @@ export function createHarborEngine(
 
     /* ---- perspective of the road ---- */
     const horizon = Math.round(h * 0.40);
-    const cx = w / 2 + (reduced ? 0 : Math.sin(t * 0.37) * 3 + Math.sin(t * 1.3) * 0.8);
+    const cx = w / 2;
+    const edge = w * (w < 560 ? 0.06 : 0.075) + 12;   // clear of the A-pillars
+    const compact = w < 560;
     const groundH = h - horizon;
     const yAt = (p: number) => horizon + groundH * (p * p);
     const fAt = (y: number) => (y - horizon) / groundH;               // 0 at horizon, 1 at ego
@@ -169,60 +174,22 @@ export function createHarborEngine(
       mctx.beginPath(); mctx.arc(gx, gy, gr, 0, TAU); mctx.fill();
     };
 
-    /* the sky/road ground: a faint depth wash toward the horizon */
-    if (dark) glow(cx, horizon, Math.max(w, h) * 0.5, INK, 0.05);
+    /* the world: the same night road every station looks through */
+    drawWorld(mctx as CanvasRenderingContext2D, { w, h, dark, horizon, phase: flow % 1, headlight: true, dashes: 9 });
 
-    /* road edges converging to the vanishing point */
-    mctx.strokeStyle = `rgba(${INK},${dark ? 0.34 : 0.28})`;
-    mctx.lineWidth = 1.5; mctx.lineCap = "round";
-    mctx.beginPath();
-    mctx.moveTo(cx - 22, horizon); mctx.lineTo(cx - w * 0.54, h);
-    mctx.moveTo(cx + 22, horizon); mctx.lineTo(cx + w * 0.54, h);
-    mctx.stroke();
-    /* the horizon line */
-    mctx.strokeStyle = `rgba(${INK},${dark ? 0.28 : 0.24})`;
-    mctx.lineWidth = 1;
-    mctx.beginPath(); mctx.moveTo(0, horizon); mctx.lineTo(w, horizon); mctx.stroke();
-
-    /* ground ticks: faint cross-lines flowing toward the ego, so the road has depth */
-    for (let k = 0; k < 8; k++) {
-      const p = ((k / 8) + flow * 0.5) % 1;
-      const y = yAt(p), f = fAt(y), hw = halfAt(f);
-      mctx.strokeStyle = `rgba(${INK},${(0.03 + 0.07 * f).toFixed(3)})`;
-      mctx.lineWidth = 1;
-      mctx.beginPath(); mctx.moveTo(cx - hw, y); mctx.lineTo(cx + hw, y); mctx.stroke();
-    }
-    /* centre lane dashes, scrolling toward the ego (forward motion) */
-    const N = 11;
-    for (let k = 0; k < N; k++) {
-      let p = ((k / N) + flow) % 1;
-      const y = yAt(p), f = fAt(y);
-      mctx.strokeStyle = `rgba(${INK},${(0.18 + 0.34 * f).toFixed(3)})`;
-      mctx.lineWidth = 1.2 + f * 4;
-      mctx.beginPath(); mctx.moveTo(cx, y); mctx.lineTo(cx, y - (6 + f * 34)); mctx.stroke();
-    }
-
-    /* ---- the sensing reticle: REIYAH watches the road ahead ---- */
+    /* ---- the reticle is the mark: the Aware Iris watches the road ahead,
+       open toward what it cannot see, the pupil turned toward the gap ---- */
     const scan = reduced ? 0.5 : (Math.sin(t * 1.1) * 0.5 + 0.5);
-    const rr = 10 + scan * 6;
+    const rr = 11 + scan * 5;
     if (dark) mctx.globalCompositeOperation = "lighter";
-    glow(cx, horizon, 26 * (surge ? 1.4 : 1), RED, 0.14 * (surge ? 1.4 : 1));
+    glow(cx, horizon, 30 * (surge ? 1.4 : 1), RED, 0.12 * (surge ? 1.4 : 1));
     mctx.globalCompositeOperation = "source-over";
-    mctx.strokeStyle = `rgba(${RED},${0.7})`;
-    mctx.lineWidth = 1.2;
-    mctx.beginPath(); mctx.arc(cx, horizon, rr, 0, TAU); mctx.stroke();
-    mctx.strokeStyle = `rgba(${INK},0.5)`;
-    for (let a = 0; a < 4; a++) {
-      const ang = a * (TAU / 4) + t * 0.3;
-      mctx.beginPath();
-      mctx.moveTo(cx + Math.cos(ang) * (rr + 3), horizon + Math.sin(ang) * (rr + 3));
-      mctx.lineTo(cx + Math.cos(ang) * (rr + 8), horizon + Math.sin(ang) * (rr + 8));
-      mctx.stroke();
-    }
-    mctx.fillStyle = `rgba(${RED},0.95)`;
-    mctx.beginPath(); mctx.arc(cx, horizon, 2, 0, TAU); mctx.fill();
+    mctx.strokeStyle = `rgba(${INK},0.95)`; mctx.lineWidth = Math.max(2.2, rr * 0.22); mctx.lineCap = "round";
+    mctx.beginPath(); mctx.arc(cx, horizon, rr, -20 * Math.PI / 180, -70 * Math.PI / 180 + TAU); mctx.stroke();
+    mctx.fillStyle = `rgba(${RED},0.98)`;
+    mctx.beginPath(); mctx.arc(cx + rr * 0.18, horizon - rr * 0.15, rr * 0.3, 0, TAU); mctx.fill();
     mctx.font = monoSmall; mctx.textAlign = "center"; mctx.fillStyle = `rgba(${INK},${TA})`;
-    mctx.fillText("REIYAH SEES", cx, horizon - rr - 8);
+    mctx.fillText("REIYAH SEES", cx, horizon - rr - 10);
 
     /* ---- objects (the real artifacts) approaching through the kinds ---- */
     for (let i = 0; i < 6; i++) kindGlow[i] = Math.max(0, kindGlow[i] - rdt * 2.2);
@@ -287,6 +254,12 @@ export function createHarborEngine(
         glow(pr.x, pr.y, s * 2.6, rgb, 0.16 + pr.f * 0.14);
         mctx.globalCompositeOperation = "source-over";
       }
+      /* the wet road returns each object's light beneath it */
+      if (pr.f > 0.2) {
+        const rg = mctx.createLinearGradient(0, pr.y + s, 0, pr.y + s + s * 3.2);
+        rg.addColorStop(0, `rgba(${rgb},${(0.22 * pr.f).toFixed(3)})`); rg.addColorStop(1, `rgba(${rgb},0)`);
+        mctx.fillStyle = rg; mctx.fillRect(pr.x - s * 0.55, pr.y + s, s * 1.1, s * 3.2);
+      }
       /* a ground shadow beneath near objects: they stand on the road */
       if (pr.f > 0.25) {
         mctx.fillStyle = `rgba(${dark ? "0,0,0" : INK},${(0.10 * pr.f).toFixed(3)})`;
@@ -338,36 +311,36 @@ export function createHarborEngine(
     mctx.beginPath(); mctx.moveTo(cx - ghw, gy); mctx.lineTo(cx + ghw, gy); mctx.stroke();
     mctx.setLineDash([]);
     mctx.fillStyle = `rgba(${INK},${TA})`; mctx.font = monoSmall; mctx.textAlign = "left";
-    mctx.fillText("GATE · FAILS CLOSED", cx + ghw + 8, gy - 4);
+    mctx.fillText("GATE · FAILS CLOSED", Math.min(cx + ghw + 8, w - edge - 150), gy - 4);
     mctx.fillStyle = `rgba(${RED},0.85)`;
-    mctx.fillText(`REJECTED BY DESIGN · ${badTotal}`, cx + ghw + 8, gy + 8);
+    mctx.fillText(`REJECTED BY DESIGN · ${badTotal}`, Math.min(cx + ghw + 8, w - edge - 150), gy + 8);
     if (now - lastRejectAt < 2600) {
       mctx.fillStyle = `rgba(${RED},${(0.85 * (1 - (now - lastRejectAt) / 2600)).toFixed(2)})`;
-      mctx.fillText(lastRejectRule, cx + ghw + 8, gy + 20);
+      mctx.fillText(lastRejectRule, Math.min(cx + ghw + 8, w - edge - 150), gy + 20);
     }
 
     /* ---- the six kinds as a sensing readout down the left edge ---- */
-    mctx.textAlign = "left"; mctx.font = monoSmall;
-    for (let k = 0; k < 6; k++) {
-      const ky = horizon + 16 + k * 15;
-      const gk = kindGlow[k];
-      mctx.fillStyle = `rgba(${gk > 0.2 ? RED : INK},${(0.4 + gk * 0.55).toFixed(2)})`;
-      mctx.beginPath(); mctx.arc(14, ky, 2 + gk * 1.6, 0, TAU); mctx.fill();
-      mctx.fillStyle = `rgba(${INK},${(0.5 + gk * 0.45).toFixed(2)})`;
-      mctx.fillText(KINDS[k], 22, ky + 3);
+    if (!compact) {
+      mctx.textAlign = "left"; mctx.font = monoSmall;
+      for (let k = 0; k < 6; k++) {
+        const ky = horizon + 16 + k * 15;
+        const gk = kindGlow[k];
+        mctx.fillStyle = `rgba(${gk > 0.2 ? RED : INK},${(0.4 + gk * 0.55).toFixed(2)})`;
+        mctx.beginPath(); mctx.arc(edge, ky, 2 + gk * 1.6, 0, TAU); mctx.fill();
+        mctx.fillStyle = `rgba(${INK},${(0.5 + gk * 0.45).toFixed(2)})`;
+        mctx.fillText(KINDS[k], edge + 8, ky + 3);
+      }
+      mctx.fillStyle = `rgba(${INK},${TA})`;
+      mctx.fillText("SIX KINDS · NEVER MERGED", edge, horizon + 16 + 6 * 15 + 4);
     }
-    mctx.fillStyle = `rgba(${INK},${TA})`;
-    mctx.fillText("SIX KINDS · NEVER MERGED", 14, horizon + 16 + 6 * 15 + 4);
 
     /* ---- sealed ledger (objects that passed into evidence) ---- */
-    mctx.textAlign = "right";
+    mctx.textAlign = "right"; mctx.font = monoSmall;
     mctx.fillStyle = `rgba(${OK},${TA})`;
-    mctx.fillText(`SEALED · ${artifacts.length}`, w - 14, horizon + 18);
+    mctx.fillText(`SEALED · ${artifacts.length}`, w - edge, horizon + 18);
     mctx.fillStyle = `rgba(${INK},${TA})`;
-    mctx.fillText(`IN FLIGHT · ${packets.filter((p) => p.fall === 0).length}`, w - 14, horizon + 32);
-    mctx.fillStyle = `rgba(${INK},${dark ? 0.7 : 0.6})`;
-    if (w < 560) { mctx.fillText("◇ FIXTURE  ▢ SCHEMA", w - 14, horizon + 46); mctx.fillText("○ HISTORY  ⬡ VALIDATOR", w - 14, horizon + 60); }
-    else mctx.fillText("◇ FIXTURE  ▢ SCHEMA  ○ HISTORY  ⬡ VALIDATOR", w - 14, horizon + 46);
+    mctx.fillText(`IN FLIGHT · ${packets.filter((p) => p.fall === 0).length}`, w - edge, horizon + 32);
+    if (!compact) { mctx.fillStyle = `rgba(${INK},${dark ? 0.7 : 0.6})`; mctx.fillText("◇ FIXTURE  ▢ SCHEMA  ○ HISTORY  ⬡ VALIDATOR", w - edge, horizon + 46); }
 
     /* ---- ticker: the nearest object's identity, as a HUD line under the title
        (kept clear of the receipt chip and authority wall at the bottom) ---- */
@@ -376,8 +349,8 @@ export function createHarborEngine(
       mctx.fillStyle = `rgba(${INK},${TA})`;
       const name = leading.a.artifact.path.split("/").pop() ?? "";
       const label = `SENSING · ${name} · ${leading.a.artifact.sha256.slice(0, 16)}…`;
-      const maxc = Math.max(16, Math.floor((w - 28) / 5.4));
-      mctx.fillText(label.length > maxc ? label.slice(0, maxc - 1) + "…" : label, 14, 44);
+      const maxc = Math.max(16, Math.floor((w - edge * 2) / 5.4));
+      mctx.fillText(label.length > maxc ? label.slice(0, maxc - 1) + "…" : label, edge, 24);
     }
 
     /* ---- hover: identify the exact record ---- */
@@ -398,25 +371,8 @@ export function createHarborEngine(
     }
 
     /* ---- the cabin frame: this is a view from inside ---- */
+    drawCabin(mctx as CanvasRenderingContext2D, w, h, dark, w * (w < 560 ? 0.06 : 0.075), env.dash ?? 0);
     mctx.textAlign = "center";
-    /* A-pillars: darken the top corners */
-    const pil = (side: number) => {
-      const g = mctx.createLinearGradient(side < 0 ? 0 : w, 0, side < 0 ? w * 0.22 : w * 0.78, h * 0.5);
-      g.addColorStop(0, dark ? "rgba(3,3,5,0.85)" : "rgba(210,208,200,0.5)");
-      g.addColorStop(1, "rgba(0,0,0,0)");
-      mctx.fillStyle = g;
-      mctx.beginPath();
-      if (side < 0) { mctx.moveTo(0, 0); mctx.lineTo(w * 0.2, 0); mctx.lineTo(0, h * 0.42); }
-      else { mctx.moveTo(w, 0); mctx.lineTo(w * 0.8, 0); mctx.lineTo(w, h * 0.42); }
-      mctx.closePath(); mctx.fill();
-    };
-    pil(-1); pil(1);
-    /* dashboard: a soft rise at the very bottom with a faint instrument glow */
-    const dg = mctx.createLinearGradient(0, h - Math.max(26, h * 0.08), 0, h);
-    dg.addColorStop(0, "rgba(0,0,0,0)");
-    dg.addColorStop(1, dark ? "rgba(2,2,4,0.9)" : "rgba(214,212,204,0.85)");
-    mctx.fillStyle = dg;
-    mctx.fillRect(0, h - Math.max(26, h * 0.08), w, Math.max(26, h * 0.08));
 
     /* ---- 2D post (fallback path only) ---- */
     if (post === "canvas") {

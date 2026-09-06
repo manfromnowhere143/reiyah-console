@@ -3,7 +3,6 @@
    the frame the data stands in, the horizon, the road, the cabin. Obsidian
    draws night, paper draws day; the geometry is identical on both grounds.
    Drawn once for a still station, once per frame for a moving one. */
-import { useEffect, useState } from "react";
 
 export interface World { w: number; h: number; dark: boolean; horizon: number; vpX: number; nearHalf: number; farHalf: number }
 export interface WorldOpts {
@@ -132,16 +131,4 @@ export function drawCabin(ctx: CanvasRenderingContext2D, w: number, h: number, d
   const sh = ctx.createLinearGradient(0, 0, w * 0.55, h * 0.7);
   sh.addColorStop(0, `rgba(255,255,255,${dark ? 0.04 : 0.22})`); sh.addColorStop(0.55, "rgba(255,255,255,0)");
   ctx.fillStyle = sh; ctx.fillRect(0, 0, w, h);
-}
-
-/* the ground, observed: re-draws a still scene when the viewer flips it */
-export function useGround(): boolean {
-  const read = () => document.documentElement.dataset.ground === "dark";
-  const [dark, setDark] = useState(read);
-  useEffect(() => {
-    const mo = new MutationObserver(() => setDark(read()));
-    mo.observe(document.documentElement, { attributes: true, attributeFilter: ["data-ground"] });
-    return () => mo.disconnect();
-  }, []);
-  return dark;
 }

@@ -188,6 +188,31 @@ state changes on small elements (hover, cursor). Never: a full-panel overlay
 that blends or animates; animating box-shadow, background-position, filter,
 or SVG attributes; view-transition names on dock tabs or station content.
 
+## Shipped 2026-09-07 (night): HARBOR v3, the night drive with a dashboard
+- RESEARCH/DESIGN (in one line each): the first screen must show the whole
+  story at a glance and stay honest to the byte; the instrument already had
+  one cinematic world (roadScene) on ST-03/08/13, so the Harbor joins it
+  rather than keeping its own simpler road; the reticle at the vanishing
+  point is the brand (the Aware Iris, open toward what it cannot see, pupil
+  toward the gap); a cabin has a dashboard, so the dashboard carries the
+  instruments; every instrument is a live number from committed bytes with
+  press-to-prove and a tap that flies to its station (no decorative gauge).
+- ENGINE (`harborEngine.ts`, runs in the worker): `drawWorld` + `drawCabin`
+  from `src/lib/roadScene.ts` (now React-free; `useGround` moved to
+  `src/lib/ground.ts` so a worker can import the renderer); the iris reticle;
+  wet-road reflections under near objects; HUD text kept clear of the
+  A-pillars via `edge`; six-kinds readout and legend hidden on phones;
+  `env.dash` tells the engine how tall the dashboard band is.
+- DASHBOARD CLUSTER (`Harbor.tsx`, `.dash`/`.gauge`): THE FIELD (sealed,
+  rejected, bytes, index digest chip), IT CORRECTS ITSELF (releases from the
+  catalog + authority line), THE LAW (mini line: camera x lidar, eyes x
+  hands, LLM jury MMLU marginal, human x machine H6), THE REGISTER (33
+  claims as a segmented bar by status), THE MONITOR (V AUC vs naive), THE
+  SOURCE (engine head/branch/clean + lane head/branch/clean + GA-17 and
+  transport states). Loader keyed on `pulse` so a re-verification re-reads.
+  Desktop: absolute over the dashboard band; phone: below the scene, 2x3.
+- Rig: `ov.mjs` covers harbor; sweeps 51/51 both grounds.
+
 ## Shipped 2026-09-07 (later): the register successor, intervals everywhere, THE MONITOR
 - REGISTER BY DATE: `registerPath()` (gateb.ts) resolves the newest
   `evidence/claim-status-register-YYYY-MM-DD.json` from the lane manifest;

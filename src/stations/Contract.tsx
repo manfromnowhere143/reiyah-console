@@ -8,7 +8,8 @@
    that say so. Canvas in measured pixels; redrawn only on change. */
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { fetchSchemaIndex, fetchSurface, fetchSurfaceByPath, type SchemaRow } from "../lib/evidence";
-import { MONO, tones, useGround } from "../lib/roadScene";
+import { MONO, tones } from "../lib/roadScene";
+import { useGround } from "../lib/ground";
 import { getAt, setAt } from "../lib/urlstate";
 import { Blocked, FitList, Stat, Station, useSurfaceState } from "../components/primitives";
 
