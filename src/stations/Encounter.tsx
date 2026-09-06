@@ -193,7 +193,7 @@ export function Encounter() {
         fg.addColorStop(0, `rgba(${FIELD},${fa.toFixed(3)})`); fg.addColorStop(0.45, `rgba(${FIELD},${(fa * 0.45).toFixed(3)})`); fg.addColorStop(1, `rgba(${FIELD},0)`);
         ctx.fillStyle = fg; ctx.beginPath(); ctx.arc(gazeX, gazeY, gr, 0, TAU); ctx.fill();
         ctx.fillStyle = `rgba(${INK},${(0.6 * coneOn).toFixed(2)})`; ctx.font = `${fs}px ${MONO}`; ctx.textAlign = "center";
-        ctx.fillText("HUMAN · attention", gazeX, Math.max(horizon + 12, gazeY - gr * 0.55));
+        ctx.fillText("HUMAN · attention", gazeX, Math.max(horizon + 12, gazeY - gr * 0.55 - (jsm < 0.1 ? fs + 6 : 0)));
       }
       /* the automation's scan: one thin line sweeps the road, lidar-like */
       if (!reduced && coneOn > 0.5) {
@@ -257,7 +257,7 @@ export function Encounter() {
         ctx.moveTo(cx + b, objY + b - k); ctx.lineTo(cx + b, objY + b); ctx.lineTo(cx + b - k, objY + b);
         ctx.moveTo(cx - b + k, objY + b); ctx.lineTo(cx - b, objY + b); ctx.lineTo(cx - b, objY + b - k);
         ctx.stroke();
-        if (lockA > 0.05) { ctx.fillStyle = `rgba(${INK},${(0.55 * lockA).toFixed(2)})`; ctx.font = `${fs}px ${MONO}`; ctx.textAlign = "center"; ctx.fillText("AUTOMATION · lock", cx, objY + b + fs + 6); }
+        if (lockA > 0.05) { ctx.fillStyle = `rgba(${INK},${(0.55 * lockA).toFixed(2)})`; ctx.font = `${fs}px ${MONO}`; ctx.textAlign = "center"; ctx.fillText("AUTOMATION · lock", cx, objY - b - 6); }
         ctx.globalAlpha = 1;
       }
 
@@ -326,14 +326,14 @@ export function Encounter() {
 
       /* INTERVENTION t=3: assignment is not delivery */
       const intA = smooth(2.95, 3.35, t) * (1 - smooth(3.9, 4.2, t));
-      tag(mobile ? cx + r : cx - r, objY, mobile ? rightX : leftX, mobile ? objY - 34 : objY - 30, [
+      tag(mobile ? cx : cx - r, mobile ? objY + r : objY, mobile ? cx : leftX, mobile ? objY + r + 26 : objY - 30, [
         ["INTERVENTION · t 3", ink(0.55)],
         [`assigned ${evTxt(c.assigned)}`, okc],
         [`delivered ${evTxt(c.delivered)}`, ink(0.55)],
         [`received ${evTxt(c.received)}`, ink(0.55)],
         [`adherence ${evTxt(c.adherence)}`, ink(0.55)],
         [`physical control ${c.physical ? "TRUE" : "FALSE"}`, c.physical ? redc : ink(0.75)],
-      ], intA, mobile ? "left" : "right");
+      ], intA, mobile ? "center" : "right");
 
       /* OUTCOME window 4-10 */
       const [w0, w1] = c.window;
