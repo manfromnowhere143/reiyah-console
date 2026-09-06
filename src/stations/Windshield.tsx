@@ -108,7 +108,7 @@ function WindshieldScene({ w, h, marks, header }: { w: number; h: number; marks:
       ctx.font = `${mobile ? 8 : 9}px ${MONO}`; ctx.textAlign = "center";
       ctx.fillStyle = `rgba(${INK},${dark ? 0.8 : 0.7})`;
       if (!mobile) ctx.fillText(header, w / 2, 14);
-      if (!mobile) { ctx.textAlign = "left"; ctx.fillStyle = `rgba(${RED},0.9)`; ctx.fillText("independence · the horizon", pillarW + 8, horizon + 13); }
+      if (!mobile) { ctx.textAlign = "left"; ctx.fillStyle = `rgba(${RED},0.9)`; ctx.fillText("independence · the horizon", pillarW + 8, horizon + 28); }
       ctx.textAlign = "center";
       marks.forEach((m, i) => {
         if (!m) return;
@@ -219,8 +219,7 @@ export function Windshield() {
         </div>
 
         <div className="wsgrid">
-          <div className="ipanel wspanel">
-            <div className="ilabel">{h5 ? "the windshield · three coefficients above one independence line · automation, human, and the two together" : "the windshield · two coefficients above one independence line · automation left, human right"}</div>
+          <div className="ipanel wspanel wshero">
             <div className="mbox" ref={wbox.ref}>{wind ?? <div className="note">transcripts not present or not in their known shape</div>}</div>
           </div>
           <div className="wsside">

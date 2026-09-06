@@ -188,6 +188,27 @@ state changes on small elements (hover, cursor). Never: a full-panel overlay
 that blends or animates; animating box-shadow, background-position, filter,
 or SVG attributes; view-transition names on dock tabs or station content.
 
+## Shipped 2026-09-06 (night): the Encounter recomposed, the Windshield bared
+- User feedback on the phone: the Encounter was two thirds empty sky, the
+  cabin read as a box, the sightline cones ("radar lines") and tags collided
+  over a tiny object. Recomposed: on portrait the horizon sits at 30%, a real
+  dashboard takes the bottom 25% and the beat caption sits on it, the object
+  is larger with a ground shadow and a wet-road reflection, tags stack to the
+  right. The cones are GONE: the human's attention is a soft field of light
+  (white on obsidian, steel blue on paper) that rests near the object and
+  drifts away in the joint blind; the automation's detection is the lock
+  brackets that drop; the joint miss is one red ring. A thin lidar-like scan
+  line sweeps the road. Same language as ST-14's design (field, brackets,
+  ring).
+- roadScene: pillars now carry a soft inner shadow instead of a rim, a lens
+  vignette darkens the corners, the dashboard has a curved lit edge, and the
+  night sky holds a seeded still star field with distant lights along the
+  horizon (day has neither).
+- Windshield: the panel label is removed and the scene runs edge to edge
+  (`.wshero`, padding 0), 12rem minimum on phones, per the user's request.
+- Rig: `beats.mjs` captures the Encounter at OUT, JSM and BEL beats on
+  desktop and phone; ov.mjs only ever sees the prelude.
+
 ## Shipped 2026-09-06 (evening): the cinematic layer, and the build-to-seal pin
 - `src/lib/roadScene.ts`: ONE shared night-road renderer (sky glow, wet
   asphalt, edge lines, perspective dashes, headlight wedge) plus the cabin

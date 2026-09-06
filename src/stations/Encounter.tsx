@@ -156,75 +156,65 @@ export function Encounter() {
       const bob = reduced ? 0 : Math.sin(s * 1.1) * 1.1;
       ctx.save();
       ctx.translate(sway, bob);
-      const horizon = h * 0.42;
+      /* the composition follows the frame: a portrait phone keeps the horizon
+         high, a real dashboard low, and the object large between them */
+      const portrait = h > w * 1.05;
+      const horizon = portrait ? h * 0.3 : h * 0.42;
+      const dash = portrait ? h * 0.25 : mobile ? h * 0.12 : 0;
+      const floor = h - dash;
       const cx = w / 2;
       /* the shared world: sky, wet road, edge lines, dashes flowing toward the cabin */
       drawWorld(ctx, { w, h, dark, horizon, phase: reduced ? 0 : (s * 0.32) % 1, headlight: true });
 
       /* ---- the object: holds station (relative speed observed 0) ---- */
-      const objY = horizon + (h - horizon) * 0.34;
-      const r = mobile ? 9 : 11;
+      const objY = horizon + (floor - horizon) * (portrait ? 0.4 : 0.34);
+      const r = Math.round(Math.max(9, Math.min(17, w * (portrait ? 0.036 : 0.012))));
       const seen = smooth(-0.2, 0.15, t);               // detected at t=0
       ctx.restore();
 
       /* the cabin never sways: the camera sits in it */
-      drawCabin(ctx, w, h, dark, w * (mobile ? 0.06 : 0.075), 0);
+      drawCabin(ctx, w, h, dark, w * (portrait ? 0.11 : 0.075), dash);
 
-      /* ---- two sightlines: the human (dashed) and the automation (solid) ---- */
+      /* ---- the two channels, in the language of the field: the human's
+         attention is a soft field of light resting on the scene; the
+         automation's detection is the lock on the object; the joint miss is
+         one red ring, when the field has drifted and the lock has dropped ---- */
       const coneOn = smooth(-0.4, 0.4, t);
-      const jsm = smooth(6.3, 6.9, t) * (1 - smooth(9.0, 9.6, t)); // both look away at once
-      const apexL = { x: cx - w * 0.26, y: h + 14 }, apexR = { x: cx + w * 0.26, y: h + 14 };
-      const scanH = reduced ? 0 : Math.sin(s * 0.7) * w * 0.035;
-      const scanA = reduced ? 0 : Math.sin(s * 1.6 + 1) * w * 0.018;
-      const aimL = cx + scanH + (-w * 0.30 - scanH) * jsm;
-      const aimR = cx + scanA + (w * 0.30 - scanA) * jsm;
-      const halfW = mobile ? 22 : 30;
-      const cone = (apex: { x: number; y: number }, aimX: number, dashed: boolean, alpha: number) => {
-        if (alpha <= 0.01) return;
-        const dx = aimX - apex.x, dy = objY - apex.y, L = Math.hypot(dx, dy);
-        const ux = dx / L, uy = dy / L, px = -uy, py = ux;
-        const far = L * 1.1;
-        const fx = apex.x + ux * far, fy = apex.y + uy * far;
-        const hw = halfW * (far / L);
-        ctx.save();
-        ctx.beginPath();
-        ctx.moveTo(apex.x, apex.y); ctx.lineTo(fx + px * hw, fy + py * hw); ctx.lineTo(fx - px * hw, fy - py * hw); ctx.closePath();
-        const cg = ctx.createLinearGradient(apex.x, apex.y, fx, fy);
-        cg.addColorStop(0, `rgba(${INK},${(0.075 * alpha).toFixed(3)})`); cg.addColorStop(1, `rgba(${INK},0)`);
-        ctx.fillStyle = cg; ctx.fill();
-        ctx.strokeStyle = `rgba(${INK},${(0.26 * alpha).toFixed(3)})`; ctx.lineWidth = 1;
-        if (dashed) ctx.setLineDash([3, 4]);
-        ctx.stroke();
-        /* the scan beam sweeps the field of view */
-        ctx.setLineDash([]);
-        const sw = reduced ? 0 : Math.sin(s * (dashed ? 1.9 : 3.1) + (dashed ? 0 : 2));
-        ctx.strokeStyle = `rgba(${INK},${(0.22 * alpha).toFixed(3)})`;
-        ctx.beginPath(); ctx.moveTo(apex.x, apex.y); ctx.lineTo(fx + px * hw * sw, fy + py * hw * sw); ctx.stroke();
-        ctx.restore();
-      };
-      cone(apexL, aimL, true, coneOn);
-      cone(apexR, aimR, false, coneOn);
-      if (coneOn > 0.5 && !mobile) {
-        ctx.fillStyle = `rgba(${INK},0.55)`; ctx.font = `${fs}px ${MONO}`;
-        ctx.textAlign = "left"; ctx.fillText("HUMAN", apexL.x - 18, h - 6);
-        ctx.textAlign = "right"; ctx.fillText("AUTOMATION", apexR.x + 18, h - 6);
+      const jsm = smooth(6.3, 6.9, t) * (1 - smooth(9.0, 9.6, t)); // both leave the object at once
+      const wander = reduced ? 0 : Math.sin(s * 0.55) * w * 0.03;
+      const wanderY = reduced ? 0 : Math.sin(s * 0.9 + 1) * h * 0.015;
+      const gazeX = cx + wander + (-w * (portrait ? 0.24 : 0.3) - wander) * jsm;
+      const gazeY = objY + wanderY + jsm * (floor - objY) * 0.3;
+      const gr = portrait ? w * 0.19 : Math.max(60, w * 0.09);
+      const FIELD = dark ? INK : OK;
+      if (coneOn > 0.01) {
+        const fa = (dark ? 0.24 : 0.16) * coneOn;
+        const fg = ctx.createRadialGradient(gazeX, gazeY, 0, gazeX, gazeY, gr);
+        fg.addColorStop(0, `rgba(${FIELD},${fa.toFixed(3)})`); fg.addColorStop(0.45, `rgba(${FIELD},${(fa * 0.45).toFixed(3)})`); fg.addColorStop(1, `rgba(${FIELD},0)`);
+        ctx.fillStyle = fg; ctx.beginPath(); ctx.arc(gazeX, gazeY, gr, 0, TAU); ctx.fill();
+        ctx.fillStyle = `rgba(${INK},${(0.6 * coneOn).toFixed(2)})`; ctx.font = `${fs}px ${MONO}`; ctx.textAlign = "center";
+        ctx.fillText("HUMAN · attention", gazeX, Math.max(horizon + 12, gazeY - gr * 0.55));
       }
+      /* the automation's scan: one thin line sweeps the road, lidar-like */
+      if (!reduced && coneOn > 0.5) {
+        const sp = (s * 0.42) % 1, sy = horizon + (floor - horizon) * sp * sp;
+        ctx.strokeStyle = `rgba(${OK},${(0.16 * (1 - sp)).toFixed(3)})`; ctx.lineWidth = 1;
+        ctx.beginPath(); ctx.moveTo(cx - w * 0.5 * sp - 20, sy); ctx.lineTo(cx + w * 0.5 * sp + 20, sy); ctx.stroke();
+      }
+      const lockA = coneOn * (1 - jsm);
 
-      /* ---- the joint blind: neither sightline holds the object ---- */
+      /* ---- the joint blind: neither channel holds the object ---- */
       if (jsm > 0.02) {
-        const bw = (mobile ? 30 : 42) * (0.85 + 0.15 * (reduced ? 1 : Math.sin(s * 2) * 0.5 + 0.5));
-        ctx.save();
-        ctx.setLineDash([4, 4]);
-        ctx.strokeStyle = `rgba(${RED},${(0.7 * jsm).toFixed(3)})`; ctx.lineWidth = 1.4;
-        ctx.beginPath(); ctx.moveTo(cx - bw, h + 4); ctx.lineTo(cx, objY + r + 4); ctx.lineTo(cx + bw, h + 4); ctx.stroke();
-        ctx.restore();
-        const grd = ctx.createRadialGradient(cx, objY, r, cx, objY, r + 40);
+        const rr = r + 9 + (reduced ? 0 : Math.sin(s * 2) * 1.5);
+        const grd = ctx.createRadialGradient(cx, objY, r, cx, objY, r + 44);
         grd.addColorStop(0, `rgba(${RED},${(0.22 * jsm).toFixed(3)})`); grd.addColorStop(1, `rgba(${RED},0)`);
-        ctx.fillStyle = grd; ctx.beginPath(); ctx.arc(cx, objY, r + 40, 0, TAU); ctx.fill();
+        ctx.fillStyle = grd; ctx.beginPath(); ctx.arc(cx, objY, r + 44, 0, TAU); ctx.fill();
+        ctx.save(); ctx.setLineDash([4, 4]); ctx.strokeStyle = `rgba(${RED},${(0.9 * jsm).toFixed(3)})`; ctx.lineWidth = 1.4;
+        ctx.beginPath(); ctx.arc(cx, objY, rr, 0, TAU); ctx.stroke(); ctx.restore();
         ctx.fillStyle = `rgba(${RED},${(0.95 * jsm).toFixed(3)})`; ctx.font = `${fs}px ${MONO}`; ctx.textAlign = "center";
-        const jy = objY + (h - objY) * (mobile ? 0.22 : 0.42);
+        const jy = objY + (floor - objY) * (portrait ? 0.34 : 0.42);
         ctx.fillText("JOINT BLIND", cx, jy);
-        ctx.fillStyle = `rgba(${INK},${(0.5 * jsm).toFixed(3)})`;
+        ctx.fillStyle = `rgba(${INK},${(0.55 * jsm).toFixed(3)})`;
         ctx.fillText("concept · not measured in this fixture", cx, jy + fs + 4);
       }
 
@@ -237,6 +227,13 @@ export function Encounter() {
           ctx.fillStyle = grd; ctx.beginPath(); ctx.arc(cx, objY, r + 24 * doubt, 0, TAU); ctx.fill();
         }
         ctx.globalAlpha = seen;
+        /* its shadow and its reflection on the wet road: it has weight */
+        const sg = ctx.createRadialGradient(cx, objY + r * 1.1, 0, cx, objY + r * 1.1, r * 2.6);
+        sg.addColorStop(0, `rgba(${dark ? "0,0,0" : "16,18,21"},${dark ? 0.55 : 0.18})`); sg.addColorStop(1, `rgba(0,0,0,0)`);
+        ctx.fillStyle = sg; ctx.save(); ctx.scale(1, 0.32); ctx.beginPath(); ctx.arc(cx, (objY + r * 1.1) / 0.32, r * 2.6, 0, TAU); ctx.fill(); ctx.restore();
+        const rg = ctx.createLinearGradient(0, objY + r, 0, objY + r * 4);
+        rg.addColorStop(0, `rgba(${INK},${dark ? 0.16 : 0.08})`); rg.addColorStop(1, `rgba(${INK},0)`);
+        ctx.fillStyle = rg; ctx.fillRect(cx - r * 0.9, objY + r, r * 1.8, r * 3);
         /* a wire cuboid, its back face drawn toward the vanishing point */
         const fw = r * 1.15, fh = r * 0.95, kq = 0.72;
         const bx = cx, by = objY - (objY - horizon) * (1 - kq) * 0.5;
@@ -251,15 +248,16 @@ export function Encounter() {
         ctx.strokeStyle = `rgba(${INK},0.9)`; ctx.lineWidth = 1.5;
         ctx.beginPath(); ctx.rect(cx - fw, objY - fh, fw * 2, fh * 2); ctx.stroke();
         ctx.fillStyle = `rgba(${INK},0.75)`; ctx.beginPath(); ctx.arc(cx, objY, 1.8, 0, TAU); ctx.fill();
-        /* lock brackets: the observation happened; the object is a record now */
+        /* the lock: the automation holds the object; it drops in the joint blind */
         const b = r + 7, k = 5;
-        ctx.strokeStyle = `rgba(${INK},0.5)`; ctx.lineWidth = 1;
+        ctx.strokeStyle = `rgba(${INK},${(0.7 * lockA).toFixed(2)})`; ctx.lineWidth = 1.2;
         ctx.beginPath();
         ctx.moveTo(cx - b, objY - b + k); ctx.lineTo(cx - b, objY - b); ctx.lineTo(cx - b + k, objY - b);
         ctx.moveTo(cx + b - k, objY - b); ctx.lineTo(cx + b, objY - b); ctx.lineTo(cx + b, objY - b + k);
         ctx.moveTo(cx + b, objY + b - k); ctx.lineTo(cx + b, objY + b); ctx.lineTo(cx + b - k, objY + b);
         ctx.moveTo(cx - b + k, objY + b); ctx.lineTo(cx - b, objY + b); ctx.lineTo(cx - b, objY + b - k);
         ctx.stroke();
+        if (lockA > 0.05) { ctx.fillStyle = `rgba(${INK},${(0.55 * lockA).toFixed(2)})`; ctx.font = `${fs}px ${MONO}`; ctx.textAlign = "center"; ctx.fillText("AUTOMATION · lock", cx, objY + b + fs + 6); }
         ctx.globalAlpha = 1;
       }
 
@@ -317,7 +315,7 @@ export function Encounter() {
 
       /* DECISION t=2 */
       const decA = smooth(1.95, 2.35, t) * (1 - smooth(2.9, 3.2, t));
-      tag(cx, objY + r, cx + 40, objY + (h - objY) * 0.36, [
+      tag(cx, objY + r, cx + 40, objY + (floor - objY) * 0.36, [
         ["DECISION · t 2", ink(0.55)],
         [c.action, ink(0.95)],
         [c.researchOnly ? "research only · never touches the wheel" : "research_only: FALSE", c.researchOnly ? ink(0.6) : redc],
@@ -325,14 +323,14 @@ export function Encounter() {
 
       /* INTERVENTION t=3: assignment is not delivery */
       const intA = smooth(2.95, 3.35, t) * (1 - smooth(3.9, 4.2, t));
-      tag(mobile ? cx : cx - r, mobile ? objY + r : objY, mobile ? cx : leftX, mobile ? objY + r + 22 : objY - 30, [
+      tag(mobile ? cx + r : cx - r, objY, mobile ? rightX : leftX, mobile ? objY - 34 : objY - 30, [
         ["INTERVENTION · t 3", ink(0.55)],
         [`assigned ${evTxt(c.assigned)}`, okc],
         [`delivered ${evTxt(c.delivered)}`, ink(0.55)],
         [`received ${evTxt(c.received)}`, ink(0.55)],
         [`adherence ${evTxt(c.adherence)}`, ink(0.55)],
         [`physical control ${c.physical ? "TRUE" : "FALSE"}`, c.physical ? redc : ink(0.75)],
-      ], intA, mobile ? "center" : "right");
+      ], intA, mobile ? "left" : "right");
 
       /* OUTCOME window 4-10 */
       const [w0, w1] = c.window;
@@ -353,7 +351,7 @@ export function Encounter() {
 
       /* EVIDENCE after the window */
       const evdA = smooth(w1 + 0.35, w1 + 0.7, t);
-      tag(cx, objY + r, cx + 40, objY + (h - objY) * 0.36, [
+      tag(cx, objY + r, cx + 40, objY + (floor - objY) * 0.36, [
         ["EVIDENCE · after t 10", ink(0.55)],
         [`basis ${c.basis.replace(/_/g, " ")} · validity ${c.validity}`, ink(0.95)],
         ["a gap stays a gap", ink(0.6)],

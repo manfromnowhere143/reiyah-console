@@ -923,7 +923,9 @@ button:focus-visible, a:focus-visible { outline: 2px solid var(--ink-soft); outl
   flex: none; font-variant-numeric: tabular-nums; min-width: 3.2rem; text-align: right;
 }
 @media (max-width: 760px) {
-  .encCaption { bottom: 1rem; max-width: 86vw; }
+  .encCaption { bottom: 0.9rem; max-width: 86vw; }
+  .encBeatBody { font-size: 0.72rem; line-height: 1.45; }
+  .encBeatK { font-size: 1.2rem; margin: 0.25rem 0 0.35rem; }
   .encTag { font-size: 0.5rem; }
   .encMarkL { font-size: 0.42rem; letter-spacing: 0.06em; }
   .encBeatBody { font-size: 0.76rem; }
@@ -1888,3 +1890,8 @@ button:focus-visible, a:focus-visible { outline: 2px solid var(--ink-soft); outl
   .shud .mline { font-size: 0.6rem; }
   .sread { bottom: 0.4rem; }
 }
+
+/* the windshield hero: the scene runs edge to edge, nothing above it */
+.wshero { padding: 0; overflow: hidden; }
+.wshero .mbox { border-radius: inherit; }
+@media (max-width: 760px) { .wshero .mbox { min-height: 12rem; } }
