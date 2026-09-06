@@ -206,7 +206,7 @@ const server = http.createServer((req, res) => {
         "evidence/claim-status-register-2026-08-29.json",
         "evidence/measurement/result_l.txt", "evidence/measurement/result_m.txt", "evidence/measurement/result_n.txt",
         "evidence/measurement/result_o.txt", "evidence/measurement/result_p.txt", "evidence/measurement/result_q.txt",
-  "evidence/measurement/result_i.txt", "evidence/measurement/result_j.txt",
+  "evidence/measurement/result_i.txt", "evidence/measurement/result_j.txt", "evidence/measurement/result_s.txt",
   "human-channel/evidence/h1_driver_observation.txt", "human-channel/evidence/h2_glance_at_conflict.txt",
   "human-channel/evidence/h3_observation_response_joint.txt", "human-channel/evidence/h4_dcpt_takeover.txt",
   "human-channel/README.md",

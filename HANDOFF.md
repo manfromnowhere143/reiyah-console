@@ -188,6 +188,18 @@ state changes on small elements (hover, cursor). Never: a full-panel overlay
 that blends or animates; animating box-shadow, background-position, filter,
 or SVG attributes; view-transition names on dock tabs or station content.
 
+## Shipped 2026-09-06 (later): the third pillar as an explicit unknown; Result S under the register
+- The Windshield draws HUMAN × AUTOMATION as a hollow dashed pillar, "not yet
+  measured": the meeting point is a state, shown, never a guess.
+- Result S (corrected safety calculus) is in the lane, but the claim-status
+  register still marks the three evidence-cost claims withdrawn as stated,
+  use forbidden. The Windshield shows a register-check row and never the
+  transcript's multiplier. LAW: the register governs; a newer transcript does
+  not lift a withdrawal until the register says so.
+- `docs/LANE_REQUEST_J1.md`: the exact artifacts the lane must commit for
+  ST-14 (transcript, per-object table, exhibits with rights records, register
+  entry). Lane file list gains result_s.txt.
+
 ## DESIGN DECISIONS · ST-14 THE SAME HAZARD · final, 2026-09-06 (build only when j1 lands)
 1. One frame, one sentence. The page opens on a single exhibit frame filling
    the stage, the road as the viewer would see it. No stat strip above it.

@@ -8,7 +8,7 @@
   "commit_count": 53,
   "root": "/Users/danielwahnich/workspace/reiyah-gate-b"
  },
- "sealedAt": "2026-09-06T07:02:14.726Z",
+ "sealedAt": "2026-09-06T07:23:55.396Z",
  "files": [
   {
    "id": "evidence__claim-status-register-2026-08-29.json",
@@ -63,6 +63,12 @@
    "path": "evidence/measurement/result_j.txt",
    "bytes": 3305,
    "sha256": "sha256:49ddb35f6fd2ebf7534966b211f97491fbce14b6a81549857199fe8bee7c90c7"
+  },
+  {
+   "id": "evidence__measurement__result_s.txt",
+   "path": "evidence/measurement/result_s.txt",
+   "bytes": 2592,
+   "sha256": "sha256:980797145168cadff6c8676057a1ab6df3207a3a09949abc53c9bd4353ec1c39"
   },
   {
    "id": "human-channel__evidence__h1_driver_observation.txt",

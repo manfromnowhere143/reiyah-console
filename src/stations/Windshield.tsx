@@ -8,13 +8,14 @@
    carries its digest; the lane's non-claims are rendered verbatim: descriptive,
    proposed, not causal, not a safety determination, not driver-clustered. */
 import { useLayoutEffect, useRef, useState } from "react";
-import { fetchLane, fetchLaneText, parseConvergence, parseH1, parseH2, parseH3, parseH4, type LaneFile } from "../lib/gateb";
+import { fetchLane, fetchLaneText, parseConvergence, parseH1, parseH2, parseH3, parseH4, parseRegister, type LaneFile } from "../lib/gateb";
 import { Blocked, Digest, Stat, Station, useSurfaceState } from "../components/primitives";
 
 const F = {
   L: "evidence/measurement/result_l.txt",
   H1: "human-channel/evidence/h1_driver_observation.txt", H2: "human-channel/evidence/h2_glance_at_conflict.txt",
   H3: "human-channel/evidence/h3_observation_response_joint.txt", H4: "human-channel/evidence/h4_dcpt_takeover.txt",
+  S: "evidence/measurement/result_s.txt", R: "evidence/claim-status-register-2026-08-29.json",
 };
 const src = (f: LaneFile) => ({ id: `gateb/${f.id}`, path: `gate-b · ${f.path}`, sha256: f.sha256 ?? "" });
 const fmt = (x: number | undefined, d = 3) => (x === undefined ? "∅" : x.toFixed(d));
@@ -34,7 +35,7 @@ export function Windshield() {
   const state = useSurfaceState(async () => {
     const lane = await fetchLane();
     if (!lane.present) return { lane, d: null };
-    const [L, H1, H2, H3, H4] = await Promise.all([F.L, F.H1, F.H2, F.H3, F.H4].map((p) => fetchLaneText(p).catch(() => null)));
+    const [L, H1, H2, H3, H4, S, R] = await Promise.all([F.L, F.H1, F.H2, F.H3, F.H4, F.S, F.R].map((p) => fetchLaneText(p).catch(() => null)));
     return {
       lane,
       d: {
@@ -43,6 +44,8 @@ export function Windshield() {
         h2: H2 ? { ...parseH2(H2.text), file: H2.file } : null,
         h3: H3 ? { ...parseH3(H3.text), file: H3.file } : null,
         h4: H4 ? { ...parseH4(H4.text), file: H4.file } : null,
+        s: S ? { present: true, file: S.file, headline: /understated by a factor of\s*\n?\s*sqrt\(([\d.]+)\) = ([\d.]+)/.exec(S.text) } : null,
+        reg: R ? { ...parseRegister(R.text), file: R.file } : null,
       },
     };
   });
@@ -70,12 +73,13 @@ export function Windshield() {
     const ymin = 0.9, ymax = 1.75;
     const y = (v: number) => bottom - (bottom - top) * ((Math.min(ymax, Math.max(ymin, v)) - ymin) / (ymax - ymin));
     const mobile = W < 560;
-    const cx = W / 2, xa = W * 0.27, xh = W * 0.73;
-    const glass = `M ${W * 0.06} ${bottom + 10} L ${W * 0.2} ${top - 18} L ${W * 0.8} ${top - 18} L ${W * 0.94} ${bottom + 10} Z`;
+    const cx = W / 2, xa = W * 0.2, xh = W * 0.5, xj = W * 0.8;
+    const glass = `M ${W * 0.04} ${bottom + 10} L ${W * 0.16} ${top - 18} L ${W * 0.84} ${top - 18} L ${W * 0.96} ${bottom + 10} Z`;
     return (
       <svg width={W} height={H} viewBox={`0 0 ${W} ${H}`} className="mchart wind" aria-label="Two coefficients above the same independence line: automation and human">
         <path d={glass} className="wglass" />
-        <line x1={cx} x2={cx} y1={top - 18} y2={bottom + 10} className="wsplit" />
+        <line x1={(xa + xh) / 2} x2={(xa + xh) / 2} y1={top - 18} y2={bottom + 10} className="wsplit" />
+        <line x1={(xh + xj) / 2} x2={(xh + xj) / 2} y1={top - 18} y2={bottom + 10} className="wsplit" />
         <line x1={W * 0.08} x2={W * 0.92} y1={y(1)} y2={y(1)} className="mind" />
         <text x={W * 0.08} y={y(1) - 5} className="mlab" textAnchor="start">independence 1.0</text>
         {autoT && (
@@ -84,8 +88,8 @@ export function Windshield() {
             <line x1={xa} x2={xa} y1={y(1)} y2={y(autoT.c)} className="wstem" />
             <circle cx={xa} cy={y(autoT.c)} r={mobile ? 6 : 8} className="mdot" />
             <text x={xa} y={y(autoT.hi) - 10} className="wbig" textAnchor="middle">{fmt(autoT.c)}</text>
-            <text x={xa} y={bottom + 16} className="mlab" textAnchor="middle">AUTOMATION · camera × lidar</text>
-            <text x={xa} y={bottom + 28} className="mlab dim" textAnchor="middle">{"nuScenes val · 95% interval"}</text>
+            <text x={xa} y={bottom + 16} className="mlab" textAnchor="middle">{mobile ? "AUTOMATION" : "AUTOMATION · camera × lidar"}</text>
+            {!mobile && <text x={xa} y={bottom + 28} className="mlab dim" textAnchor="middle">nuScenes val · 95% interval</text>}
           </g>
         )}
         {h3all && (
@@ -93,12 +97,21 @@ export function Windshield() {
             <line x1={xh} x2={xh} y1={y(1)} y2={y(h3all.c)} className="wstem" />
             <circle cx={xh} cy={y(h3all.c)} r={mobile ? 6 : 8} className="mdot" />
             <text x={xh} y={y(h3all.c) - 14} className="wbig" textAnchor="middle">{fmt(h3all.c, 2)}</text>
-            <text x={xh} y={bottom + 16} className="mlab" textAnchor="middle">HUMAN · looking × acting</text>
-            <text x={xh} y={bottom + 28} className="mlab dim" textAnchor="middle">{mobile ? "100-Car · no interval" : "100-Car naturalistic · no interval"}</text>
+            <text x={xh} y={bottom + 16} className="mlab" textAnchor="middle">{mobile ? "HUMAN" : "HUMAN · looking × acting"}</text>
+            {!mobile && <text x={xh} y={bottom + 28} className="mlab dim" textAnchor="middle">100-Car naturalistic · no interval</text>}
           </g>
         )}
-        {autoT && h3all && <path d={`M ${xa} ${y(autoT.c)} Q ${cx} ${Math.min(y(autoT.c), y(h3all.c)) - 28} ${xh} ${y(h3all.c)}`} className="warc" />}
-        <text x={cx} y={top - 4} className="mlab" textAnchor="middle">the same signature on both sides</text>
+        {autoT && h3all && <path d={`M ${xa} ${y(autoT.c)} Q ${(xa + xh) / 2} ${Math.min(y(autoT.c), y(h3all.c)) - 28} ${xh} ${y(h3all.c)}`} className="warc" />}
+        {/* the third pillar: human × automation on the same hazard. Not yet
+            measured: drawn as the explicit unknown it is, never as a guess */}
+        <g className="wunk">
+          <line x1={xj} x2={xj} y1={y(1)} y2={top + 6} className="wunkstem" />
+          <circle cx={xj} cy={top + 14} r={mobile ? 6 : 8} className="wunkdot" />
+          <text x={xj} y={top + 4} className="wbig unk" textAnchor="middle">∅</text>
+          <text x={xj} y={bottom + 16} className="mlab" textAnchor="middle">{mobile ? "HUMAN × AUTO" : "HUMAN × AUTOMATION"}</text>
+          <text x={xj} y={bottom + 28} className="mlab dim" textAnchor="middle">{mobile ? "not yet measured" : "the same hazard · not yet measured"}</text>
+        </g>
+        <text x={cx} y={top - 4} className="mlab" textAnchor="middle">{mobile ? "the same signature · the meeting point unmeasured" : "the same signature on both sides · the meeting point still unmeasured"}</text>
       </svg>
     );
   })() : null;
@@ -190,6 +203,20 @@ export function Windshield() {
             </div>
           </div>
         </div>
+        {d.s && d.reg && (() => {
+          /* the register governs: evidence-cost claims are withdrawn as stated
+             and their use forbidden until the register's reconsideration
+             requirements are met; a newer transcript does not lift that */
+          const cost = d.reg.claims.filter((c) => /evidence-cost|result-g/.test(c.claim_id));
+          const forbidden = cost.filter((c) => c.current_scientific_use === "forbidden").length;
+          return (
+            <div className="wsreg">
+              <span className="cvl">register check</span>
+              <span className="wsregv">Result S computes a corrected evidence figure from the measured c; the claims register holds {cost.length} evidence-cost claims <b>withdrawn as stated</b>, use forbidden ({forbidden}/{cost.length}), with reconsideration requirements; the instrument shows the register's state, not the newer transcript's number</span>
+              <Digest id={src(d.s.file).id} sha={src(d.s.file).sha256} path={src(d.s.file).path} />
+            </div>
+          );
+        })()}
         <div className="mnon">
           {[d.h1?.nonclaims, d.h3?.nonclaims, d.h4?.nonclaims].filter(Boolean).join(" · ")} · <Digest id={src((h3 ?? d.h1)!.file).id} sha={src((h3 ?? d.h1)!.file).sha256} path={src((h3 ?? d.h1)!.file).path} />
         </div>
