@@ -188,6 +188,18 @@ state changes on small elements (hover, cursor). Never: a full-panel overlay
 that blends or animates; animating box-shadow, background-position, filter,
 or SVG attributes; view-transition names on dock tabs or station content.
 
+## Shipped 2026-09-06: ST-13 THE WINDSHIELD — the human channel, both sides
+The lane added `human-channel/` (H1..H4: 100-Car NDS CC0, DCPT CC BY 4.0;
+transcripts under human-channel/evidence, tools, README). The station reads
+the transcripts with strict parsers (`parseH1..H4` in gateb.ts) and draws:
+the windshield (automation c 1.151 with interval, human c 1.46 without, one
+independence line, an arc between them), the human rows (eyes-forward-
+throughout 39.1% → 4.5% → 1.7%, off-road means, gaze forward at the instant
+70.2% / 67.8%, the H3 joint by severity with "forward yet no reaction"), and
+the DCPT takeover chart by task with the no-task baseline. Non-claims are the
+transcripts' own NON-CLAIMS lines, verbatim. Lane file list gains the five
+human-channel files (sealer + server). Every figure explains its derivation.
+
 ## Shipped 2026-09-05 (night): ST-12 redrawn as THE ROAD
 The class × range field is now a first-person road on canvas: range bands are
 depth zones ahead of the vehicle (near at the bottom), classes are columns,

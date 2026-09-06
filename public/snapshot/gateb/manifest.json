@@ -2,13 +2,13 @@
  "present": true,
  "identity": {
   "state": "observed",
-  "head": "d1a6d5e9681d8f3d4b0112b42c76407e51e316f6",
+  "head": "215b3b0bea14117834c13268b58aceea24ef8795",
   "branch": "gate-b-measurement",
   "worktree_clean": true,
-  "commit_count": 47,
+  "commit_count": 52,
   "root": "/Users/danielwahnich/workspace/reiyah-gate-b"
  },
- "sealedAt": "2026-09-05T19:06:45.495Z",
+ "sealedAt": "2026-09-06T06:45:07.931Z",
  "files": [
   {
    "id": "evidence__claim-status-register-2026-08-29.json",
@@ -63,6 +63,36 @@
    "path": "evidence/measurement/result_j.txt",
    "bytes": 3305,
    "sha256": "sha256:49ddb35f6fd2ebf7534966b211f97491fbce14b6a81549857199fe8bee7c90c7"
+  },
+  {
+   "id": "human-channel__evidence__h1_driver_observation.txt",
+   "path": "human-channel/evidence/h1_driver_observation.txt",
+   "bytes": 2967,
+   "sha256": "sha256:d90d441c0a465221024dde6fb5fd62aae4a5ba78d4cd12dd74b8e166b1179e0f"
+  },
+  {
+   "id": "human-channel__evidence__h2_glance_at_conflict.txt",
+   "path": "human-channel/evidence/h2_glance_at_conflict.txt",
+   "bytes": 1309,
+   "sha256": "sha256:e485fce5f6b43dc7e7f38a33d21f34bf1310e3f810a83c7024bf8e05339fee3d"
+  },
+  {
+   "id": "human-channel__evidence__h3_observation_response_joint.txt",
+   "path": "human-channel/evidence/h3_observation_response_joint.txt",
+   "bytes": 1579,
+   "sha256": "sha256:a457e3720ce44d2cf0f5325c6635485820bf79aa9b65422e3160fed2665cfc08"
+  },
+  {
+   "id": "human-channel__evidence__h4_dcpt_takeover.txt",
+   "path": "human-channel/evidence/h4_dcpt_takeover.txt",
+   "bytes": 1971,
+   "sha256": "sha256:ce828a87ae455a5ad54fd94f755b5e936bad735f3325976f2c410c1cfac663d8"
+  },
+  {
+   "id": "human-channel__README.md",
+   "path": "human-channel/README.md",
+   "bytes": 2969,
+   "sha256": "sha256:ad971c652f41a4f011dce9ea27df23a042aeaa3acadf04f563ee67447937836f"
   },
   {
    "id": "evidence__measurement__joint-performance-nuscenes-val.excerpt.json",

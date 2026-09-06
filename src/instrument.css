@@ -1773,3 +1773,40 @@ button:focus-visible, a:focus-visible { outline: 2px solid var(--ink-soft); outl
   .wgrowfree { height: 3rem; }
   .wgrowfree .wgdisc span { display: none; }
 }
+
+/* ============================================================
+   THE WINDSHIELD — ST-13 both sides
+   ============================================================ */
+.wsgrid { flex: 1; min-height: 0; display: grid; grid-template-columns: minmax(0, 1.25fr) minmax(18rem, 1fr); gap: 0.6rem; }
+.wspanel { display: flex; flex-direction: column; min-height: 0; overflow: hidden; }
+.wspanel > .ilabel { flex: none; }
+.wsside { display: flex; flex-direction: column; gap: 0.6rem; min-height: 0; }
+.wsside .wspanel:first-child { flex: none; }
+.wind .wglass { fill: color-mix(in srgb, var(--ink) 4%, transparent); stroke: color-mix(in srgb, var(--ink) 22%, transparent); stroke-width: 1; }
+.wind .wsplit { stroke: color-mix(in srgb, var(--ink) 18%, transparent); stroke-width: 1; stroke-dasharray: 3 4; }
+.wind .wstem { stroke: var(--ok); stroke-width: 2; opacity: 0.55; }
+.wind .wbig { font-family: var(--mono); font-size: 18px; font-weight: 600; fill: var(--ink); }
+.wind .warc { fill: none; stroke: color-mix(in srgb, var(--ok) 55%, transparent); stroke-width: 1; stroke-dasharray: 2 4; }
+.wind .mlab.dim { fill: var(--ink-ghost); }
+.wsrows { display: flex; flex-direction: column; }
+.wsrow { display: grid; grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.4fr); gap: 0.6rem; padding: 0.3rem 0; border-bottom: 1px solid var(--line-soft); align-items: baseline; }
+.wsrow .wsk { font-family: var(--mono); font-size: 0.52rem; letter-spacing: 0.06em; text-transform: uppercase; color: var(--ink-faint); }
+.wsrow .wsv { font-family: var(--mono); font-size: 0.56rem; color: var(--ink-soft); line-height: 1.4; }
+.wsrow .wsv b { color: var(--ink); font-weight: 600; }
+.wsrow[data-joint="true"] .wsv b { color: var(--ok); }
+@media (max-width: 760px) {
+  .wsgrid { grid-template-columns: 1fr; grid-template-rows: minmax(9rem, 0.9fr) auto minmax(0, 1fr); }
+  .wsgrid > .wspanel:first-child { min-height: 9rem; }
+  .wsside { display: contents; }
+  .wsrow { grid-template-columns: 1fr; gap: 0.05rem; padding: 0.22rem 0; }
+  .wsrow .wsk { font-size: 0.46rem; }
+  .wsrow .wsv { font-size: 0.5rem; }
+  .wind .wbig { font-size: 14px; }
+}
+@media (max-width: 760px) and (max-height: 800px) {
+  .wsrow:nth-child(2), .wsrow:nth-child(6) { display: none; }
+  .wsrow { padding: 0.16rem 0; }
+  .wsrow .wsv { font-size: 0.46rem; }
+  .wsgrid { grid-template-rows: minmax(7rem, 0.9fr) auto minmax(0, 0.9fr); gap: 0.3rem; }
+  .wsgrid > .wspanel:first-child { min-height: 7rem; }
+}

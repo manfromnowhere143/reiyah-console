@@ -146,6 +146,50 @@ export function parseStrata(text: string): Stratum[] {
   return out;
 }
 
+/* ---------- the human channel transcripts (H1..H4) ---------- */
+const pct = (s: string) => Number(s.replace("%", ""));
+const nonclaims = (text: string) => (/NON-CLAIMS:\s*([\s\S]*?)\s*$/.exec(text)?.[1] ?? "").replace(/\s+/g, " ").trim();
+export interface H1 { groups: Array<{ name: string; n: number; offMean: number; offMedian: number; anyOff: number; halfOff: number; forwardEntire: number; unknown: number }>; baseline: { n: number; offMean: number; offMedian: number; forwardEntire: number } | null; nonclaims: string }
+export function parseH1(text: string): H1 {
+  const strictEnd = text.indexOf("### ON-ROAD = Forward + Left");
+  const strict = strictEnd > 0 ? text.slice(0, strictEnd) : text;
+  const groups: H1["groups"] = [];
+  const re = /^\s*(all events|crashes|near-crashes): n=(\d+)\s*\n\s*off-road proportion of observed window: mean ([\d.]+)%, median ([\d.]+)%\s*\n\s*any off-road glance in window\s*: ([\d.]+)%\s*\n\s*off-road for >= half the window\s*: ([\d.]+)%\s*\n\s*forward for the ENTIRE observed window : ([\d.]+)%[^\n]*\n\s*events with some No-Video \(unknown\)\s*: ([\d.]+)%/gm;
+  let m: RegExpExecArray | null;
+  while ((m = re.exec(strict))) groups.push({ name: m[1], n: Number(m[2]), offMean: Number(m[3]), offMedian: Number(m[4]), anyOff: Number(m[5]), halfOff: Number(m[6]), forwardEntire: Number(m[7]), unknown: Number(m[8]) });
+  const b = /baseline \(normal driving\), n=(\d+) epochs:\s*\n\s*off-road proportion: mean ([\d.]+)%, median ([\d.]+)%; forward entire epoch ([\d.]+)%/.exec(text);
+  return { groups, baseline: b ? { n: Number(b[1]), offMean: Number(b[2]), offMedian: Number(b[3]), forwardEntire: Number(b[4]) } : null, nonclaims: nonclaims(text) };
+}
+export interface H2 { groups: Array<{ name: string; n: number; windowOff: number; forward: number; off: number; unknown: number }>; nonclaims: string }
+export function parseH2(text: string): H2 {
+  const groups: H2["groups"] = [];
+  const re = /^\s*(all events|crashes|near-crashes): n=(\d+)\s*\n\s*reaction-window off-road proportion : mean ([\d.]+)%, median [\d.]+%\s*\n\s*gaze AT the conflict instant\s+forward : ([\d.]+)%[^\n]*\n\s*off-road : ([\d.]+)%\s*\n\s*unknown\s*: ([\d.]+)%/gm;
+  let m: RegExpExecArray | null;
+  while ((m = re.exec(text))) groups.push({ name: m[1], n: Number(m[2]), windowOff: Number(m[3]), forward: Number(m[4]), off: Number(m[5]), unknown: Number(m[6]) });
+  return { groups, nonclaims: nonclaims(text) };
+}
+export interface H3 { groups: Array<{ name: string; n: number; pObs: number; pResp: number; pBoth: number; expected: number; c: number; forwardNoReact: number; forwardNoReactN: number }>; nonclaims: string }
+export function parseH3(text: string): H3 {
+  const groups: H3["groups"] = [];
+  const re = /^\s*(all events|crashes|near-crashes): n=(\d+)\s*\n\s*P\(obs fail = gaze not forward\)\s*: ([\d.]+)%\s*\n\s*P\(resp fail = no reaction\)\s*: ([\d.]+)%\s*\n\s*P\(both fail\)\s*: ([\d.]+)%\s*\n\s*expected if independent P_obs\*P_resp: ([\d.]+)%\s*\n\s*coefficient c = observed\/expected\s*: ([\d.]+)\s*\n\s*looked forward yet DID NOT react\s*: ([\d.]+)%\s+\(n=(\d+)\)/gm;
+  let m: RegExpExecArray | null;
+  while ((m = re.exec(text))) groups.push({ name: m[1], n: Number(m[2]), pObs: Number(m[3]), pResp: Number(m[4]), pBoth: Number(m[5]), expected: Number(m[6]), c: Number(m[7]), forwardNoReact: Number(m[8]), forwardNoReactN: Number(m[9]) });
+  return { groups, nonclaims: nonclaims(text) };
+}
+export interface H4 { trials: number; participants: number; tasks: Array<{ id: string; name: string; n: number; mean: number; median: number; sd: number }>; grouped: Array<{ name: string; n: number; mean: number; median: number; sd: number }>; nonclaims: string }
+export function parseH4(text: string): H4 {
+  const t = /trials (\d+), participants (\d+)/.exec(text);
+  const tasks: H4["tasks"] = [];
+  const re = /^\s*(\d) ([a-z ]+?)\s+n=\s*(\d+)\s+mean ([\d.]+)s\s+median ([\d.]+)s\s+sd ([\d.]+)/gm;
+  let m: RegExpExecArray | null;
+  while ((m = re.exec(text))) tasks.push({ id: m[1], name: m[2].trim(), n: Number(m[3]), mean: Number(m[4]), median: Number(m[5]), sd: Number(m[6]) });
+  const grouped: H4["grouped"] = [];
+  const rg = /^\s*(no task \(baseline\)|cognitive-only \([\d,]+\)|visual-manual \([\d,]+\))\s+n=\s*(\d+)\s+mean ([\d.]+)s\s+median ([\d.]+)s\s+sd ([\d.]+)/gm;
+  while ((m = rg.exec(text))) grouped.push({ name: m[1].replace(/ \([\d,]+\)| \(baseline\)/, ""), n: Number(m[2]), mean: Number(m[3]), median: Number(m[4]), sd: Number(m[5]) });
+  return { trials: t ? Number(t[1]) : 0, participants: t ? Number(t[2]) : 0, tasks, grouped, nonclaims: nonclaims(text) };
+}
+void pct;
+
 export interface Claim { claim_id: string; status: string; current_scientific_use: string; estimand: string; lineage?: { first_stated_in?: string; superseded_by?: string | null } }
 export function parseRegister(text: string): { claims: Claim[]; policy: Record<string, unknown> } {
   const j = JSON.parse(text);
