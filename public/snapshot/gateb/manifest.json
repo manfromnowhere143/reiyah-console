@@ -2,13 +2,13 @@
  "present": true,
  "identity": {
   "state": "observed",
-  "head": "00c362a339751455902eb8c35c9c0fbb4a6ac34e",
+  "head": "945caa9217e9e08b9e37d3b4c3e6042fb4c8d3e4",
   "branch": "gate-b-measurement",
   "worktree_clean": true,
-  "commit_count": 58,
+  "commit_count": 59,
   "root": "/Users/danielwahnich/workspace/reiyah-gate-b"
  },
- "sealedAt": "2026-09-06T10:44:19.060Z",
+ "sealedAt": "2026-09-06T10:54:33.704Z",
  "files": [
   {
    "id": "evidence__claim-status-register-2026-08-29.json",
@@ -71,6 +71,12 @@
    "sha256": "sha256:980797145168cadff6c8676057a1ab6df3207a3a09949abc53c9bd4353ec1c39"
   },
   {
+   "id": "evidence__measurement__result_h_instance_unit.txt",
+   "path": "evidence/measurement/result_h_instance_unit.txt",
+   "bytes": 2982,
+   "sha256": "sha256:a3ca7b32ae8958d1080322462a30fda96e464699e9dfa96605d4e4f71909e49f"
+  },
+  {
    "id": "human-channel__evidence__h1_driver_observation.txt",
    "path": "human-channel/evidence/h1_driver_observation.txt",
    "bytes": 2967,
@@ -105,6 +111,60 @@
    "path": "human-channel/H5_CROSS_AGENT_JOINT.md",
    "bytes": 4838,
    "sha256": "sha256:a833998de9582a43588265c589a23d78b3a8f2e6f048af8b9350ba7fdc8a12f3"
+  },
+  {
+   "id": "human-channel__evidence__h6_total_both_miss.txt",
+   "path": "human-channel/evidence/h6_total_both_miss.txt",
+   "bytes": 1612,
+   "sha256": "sha256:d490f1f3917b0fe067c25f5e2bc7ea8ed0d429c50cf826a81983b8bfa12dcd23"
+  },
+  {
+   "id": "human-channel__H6_TOTAL_BOTH_MISS.md",
+   "path": "human-channel/H6_TOTAL_BOTH_MISS.md",
+   "bytes": 5054,
+   "sha256": "sha256:966e91893d5a489b64b73079a82f984f9fd0e058ba9a5c439f2f3cdb21358a60"
+  },
+  {
+   "id": "llm-generalization__evidence__result_t.txt",
+   "path": "llm-generalization/evidence/result_t.txt",
+   "bytes": 2128,
+   "sha256": "sha256:1a53ddc34fa5d73714af2db5c43a94175c9022896427b31b06cc5feba327a560"
+  },
+  {
+   "id": "llm-generalization__evidence__result_u.txt",
+   "path": "llm-generalization/evidence/result_u.txt",
+   "bytes": 2324,
+   "sha256": "sha256:b076cdb1e998308f325e19492ff29f7c2f2643805f0c6675b8acabc9de20e768"
+  },
+  {
+   "id": "llm-generalization__evidence__result_v.txt",
+   "path": "llm-generalization/evidence/result_v.txt",
+   "bytes": 1693,
+   "sha256": "sha256:674580d2d92acbc5926954a724e1e6481c0f6d269fe0951074dfc38217ea2b8f"
+  },
+  {
+   "id": "llm-generalization__RESULT_V_DEPLOYED_MONITOR.md",
+   "path": "llm-generalization/RESULT_V_DEPLOYED_MONITOR.md",
+   "bytes": 3994,
+   "sha256": "sha256:d737e8b66b4bda9f846decb73e756cd4c1267d0e8598a816208720aef00b77ce"
+  },
+  {
+   "id": "llm-generalization__RESULT_T_LLM_INDEPENDENCE.md",
+   "path": "llm-generalization/RESULT_T_LLM_INDEPENDENCE.md",
+   "bytes": 4634,
+   "sha256": "sha256:01e77a91f6c2b2a604f8bbd1a2121235b75a8f3f05ae61fea4cd6c29a72e9b3f"
+  },
+  {
+   "id": "llm-generalization__RESULT_U_AGREEMENT_RELIABILITY.md",
+   "path": "llm-generalization/RESULT_U_AGREEMENT_RELIABILITY.md",
+   "bytes": 3485,
+   "sha256": "sha256:2a60bbbc2656ca3a2e557793a1840c1c60728deb9cc12f729b6b81aabc1556ae"
+  },
+  {
+   "id": "llm-generalization__README.md",
+   "path": "llm-generalization/README.md",
+   "bytes": 2755,
+   "sha256": "sha256:dd89538f80ca47b70348e02937755ce02c3ebe1ae6a962bab1a6c5b8592dea29"
   },
   {
    "id": "human-channel__README.md",

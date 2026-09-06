@@ -1895,3 +1895,41 @@ button:focus-visible, a:focus-visible { outline: 2px solid var(--ink-soft); outl
 .wshero { padding: 0; overflow: hidden; }
 .wshero .mbox { border-radius: inherit; }
 @media (max-width: 760px) { .wshero .mbox { min-height: 12rem; } }
+
+/* ST-15 · THE LAW */
+.lawgrid { flex: 1; min-height: 0; display: grid; grid-template-columns: minmax(0, 1.5fr) minmax(16rem, 1fr); gap: 0.6rem; }
+.lawside { display: flex; flex-direction: column; gap: 0.6rem; min-height: 0; }
+.lawside .lawu { flex: none; }
+.lawline .lawgrid, .lawline .lawgrid { stroke: color-mix(in srgb, var(--ink) 10%, transparent); }
+.lawline line.lawgrid { stroke: color-mix(in srgb, var(--ink) 12%, transparent); stroke-width: 1; }
+.lawline .lawdom { font-family: var(--mono); font-size: 8px; letter-spacing: 0.14em; fill: var(--ink-faint); }
+.lawline .lawstem { stroke: color-mix(in srgb, var(--ink) 30%, transparent); stroke-width: 1; }
+.lawline .lawci { stroke: var(--ink); stroke-width: 2; stroke-linecap: round; }
+.lawline .lawrange { stroke: color-mix(in srgb, var(--ink) 45%, transparent); stroke-width: 1; stroke-dasharray: 2 3; }
+.lawline .lawdot { fill: var(--ink); }
+.lawline .lawmark.cross .lawdot { fill: var(--ok); }
+.lawline .lawmark.cross .lawci { stroke: var(--ok); }
+.lawline .lawmark.cross .lawstem { stroke: color-mix(in srgb, var(--ok) 55%, transparent); }
+.lawline .lawmark.cross .mval { fill: var(--ok); }
+.jury .jurybar { fill: color-mix(in srgb, var(--ink) 14%, transparent); }
+.jury .jurylit { fill: color-mix(in srgb, var(--ink) 78%, transparent); }
+.ucells { display: grid; grid-template-columns: repeat(20, 1fr); gap: 2px; margin: 0.2rem 0 0.4rem; }
+.ucells span { aspect-ratio: 1; border-radius: 2px; background: color-mix(in srgb, var(--ink) 16%, transparent); }
+.ucells span.uwrong { background: var(--accent); }
+.ulegend { font-family: var(--mono); font-size: 0.54rem; color: var(--ink-faint); line-height: 1.4; }
+.ulegend b { color: var(--ink); }
+@media (max-width: 760px) {
+  .lawgrid { grid-template-columns: 1fr; grid-template-rows: minmax(0, 1.2fr) minmax(0, 1fr); }
+  .lawside .lawu { display: none; }
+  .ucells { gap: 2px; }
+}
+
+.shzhero .mbox { border-radius: 10px; }
+
+.lawrow { display: grid; grid-template-columns: 1fr 1fr; gap: 0.6rem; flex: none; }
+.lawv .mbox { min-height: 6.5rem; }
+.monitor .mondiag { stroke: color-mix(in srgb, var(--ink) 30%, transparent); stroke-width: 1; stroke-dasharray: 3 3; }
+.monitor .monax { stroke: color-mix(in srgb, var(--ink) 18%, transparent); stroke-width: 1; }
+.monitor .monnaive circle { fill: none; stroke: var(--accent); stroke-width: 1.5; }
+.monitor .monnaive .mlab { fill: var(--accent); }
+@media (max-width: 760px) { .lawrow { display: none; } }

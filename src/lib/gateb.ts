@@ -233,3 +233,79 @@ export function parsePairRow(text: string, pair: "megvii" | "pointpillars", thr:
   const m = re.exec(sec); if (!m) return null;
   return { thr: Number(thr), pA: Number(m[1]), pB: Number(m[2]), c: Number(m[3]), lo: Number(m[4]), hi: Number(m[5]), pBoth: Number(m[6]) };
 }
+
+/* ---------- H6: the total both-miss, with a clip-clustered interval ---------- */
+export interface H6 { clips: number; frames: number; objects: number; pAuto: number; pHum: number; pBoth: number; expected: number; c: number; lo: number; hi: number; verdict: string; counts: [number, number, number, number]; nonclaims: string }
+export function parseH6(text: string): H6 | null {
+  const num = (x: string) => Number(x.replace(/,/g, ""));
+  const u = /BDD-A validation, ([\d,]+) clips, ([\d,]+) frames, ([\d,]+) reference objects/.exec(text);
+  const pa = /P\(automation totally misses a present object\)\s*: ([\d.]+)%/.exec(text);
+  const ph = /P\(human misses\)\s*: ([\d.]+)%/.exec(text);
+  const pb = /P\(BOTH miss = the joint silent miss\)\s*: ([\d.]+)%/.exec(text);
+  const ex = /expected if independent\s*: ([\d.]+)%/.exec(text);
+  const cc = /coefficient c\s*: ([\d.]+)/.exec(text);
+  const ci = /clip-clustered bootstrap 95% CI\s*: \[([\d.]+), ([\d.]+)\]/.exec(text);
+  const vd = /verdict\s*: ([^\n]+)/.exec(text);
+  const k = /2x2 \[both,autoOnly,humOnly,neither\]\s*: ([\d,]+), ([\d,]+), ([\d,]+), ([\d,]+)/.exec(text);
+  if (!u || !pa || !ph || !pb || !ex || !cc || !ci || !vd || !k) return null;
+  return { clips: num(u[1]), frames: num(u[2]), objects: num(u[3]), pAuto: Number(pa[1]), pHum: Number(ph[1]), pBoth: Number(pb[1]), expected: Number(ex[1]), c: Number(cc[1]), lo: Number(ci[1]), hi: Number(ci[2]), verdict: vd[1].trim(), counts: [num(k[1]), num(k[2]), num(k[3]), num(k[4])], nonclaims: nonclaims(text) };
+}
+/* ---------- Result T: LLM juries fail together ---------- */
+export interface ResultT { models: Array<{ id: string; family: string; wrong: number }>; questions: number; marginalMean: number; marginalLo: number; marginalHi: number; sameFamily: number; crossFamily: number; condMean: number; condLo: number; condHi: number; sameCond: number; crossCond: number; allWrong: number; allWrongIndep: number; inflation: number; effective: number; nonclaims: string }
+export function parseT(text: string): ResultT | null {
+  const q = /(\d+) models, ([\d,]+) questions answered by all/.exec(text);
+  const models: ResultT["models"] = [];
+  const re = /^\s{4}(\S+)\s+(\S+)\s+wrong ([\d.]+)%/gm; let m: RegExpExecArray | null;
+  while ((m = re.exec(text))) models.push({ id: m[1], family: m[2], wrong: Number(m[3]) });
+  const mg = /marginal coefficient c across all 21 model pairs:\s*\n\s*mean ([\d.]+), range \[([\d.]+), ([\d.]+)\]/.exec(text);
+  const sf = /same-family pairs \(\d+\): mean marginal c = ([\d.]+)/.exec(text);
+  const cf = /cross-family pairs \(\d+\): mean marginal c = ([\d.]+)/.exec(text);
+  const cd = /CONDITIONAL c \(beyond shared question difficulty\), all pairs:\s*\n\s*mean ([\d.]+), range \[([\d.]+), ([\d.]+)\]/.exec(text);
+  const sc = /same-family conditional c\s*: ([\d.]+)/.exec(text);
+  const cc = /cross-family conditional c\s*: ([\d.]+)/.exec(text);
+  const aw = /observed P\(all wrong\)\s*: ([\d.]+)%/.exec(text);
+  const ai = /if independent \(prod p\)\s*: ([\d.]+)%/.exec(text);
+  const inf = /inflation over independence: ([\d.]+)x/.exec(text);
+  const ef = /effective independent models: ([\d.]+)/.exec(text);
+  if (!q || models.length < 2 || !mg || !sf || !cf || !cd || !sc || !cc || !aw || !ai || !inf || !ef) return null;
+  return { models, questions: Number(q[2].replace(/,/g, "")), marginalMean: Number(mg[1]), marginalLo: Number(mg[2]), marginalHi: Number(mg[3]), sameFamily: Number(sf[1]), crossFamily: Number(cf[1]), condMean: Number(cd[1]), condLo: Number(cd[2]), condHi: Number(cd[3]), sameCond: Number(sc[1]), crossCond: Number(cc[1]), allWrong: Number(aw[1]), allWrongIndep: Number(ai[1]), inflation: Number(inf[1]), effective: Number(ef[1]), nonclaims: nonclaims(text) };
+}
+/* ---------- Result U: agreement is not confidence ---------- */
+export interface ResultU { pairs: Array<{ pair: string; pAgree: number; pCorrect: number; pBothWrong: number }>; avgCorrect: number; avgBothWrong: number; unanimous: number; unanimousWrong: number; unanimousWrongN: number; nonclaims: string }
+export function parseU(text: string): ResultU | null {
+  const pairs: ResultU["pairs"] = [];
+  const re = /^\s{2}(\S+ \+ \S+)\s+(\d+)%\s+([\d.]+)%\s+([\d.]+)%/gm; let m: RegExpExecArray | null;
+  while ((m = re.exec(text))) pairs.push({ pair: m[1], pAgree: Number(m[2]), pCorrect: Number(m[3]), pBothWrong: Number(m[4]) });
+  const av = /average over 21 pairs: P\(correct\|agree\) ([\d.]+)%, P\(both wrong\|agree\) ([\d.]+)%/.exec(text);
+  const un = /unanimous \(all chose the same answer\): ([\d.]+)% of questions/.exec(text);
+  const uw = /UNANIMOUS AND WRONG\s*: ([\d.]+)%\s+\((\d+) questions\)/.exec(text);
+  if (!pairs.length || !av || !un || !uw) return null;
+  return { pairs, avgCorrect: Number(av[1]), avgBothWrong: Number(av[2]), unanimous: Number(un[1]), unanimousWrong: Number(uw[1]), unanimousWrongN: Number(uw[2]), nonclaims: nonclaims(text) };
+}
+
+/* ---------- Result H restated at the instance unit: one row per detector pair ---------- */
+export interface HPair { pair: string; modalities: string; c: number; lo: number; hi: number; condC: number; condLo: number; condHi: number; same: boolean }
+export function parseHInstance(text: string): HPair[] {
+  const out: HPair[] = [];
+  const re = /^(\S+ x \S+)\s+(camera\/lidar|lidar\/lidar|camera\/camera)\s+([\d.]+)\s+\[([\d.]+), ([\d.]+)\]\s+([\d.]+)\s+\[([\d.]+), ([\d.]+)\]\s+(SAME modality|cross-modality)/gm;
+  let m: RegExpExecArray | null;
+  while ((m = re.exec(text))) out.push({ pair: m[1], modalities: m[2], c: Number(m[3]), lo: Number(m[4]), hi: Number(m[5]), condC: Number(m[6]), condLo: Number(m[7]), condHi: Number(m[8]), same: m[9] === "SAME modality" });
+  return out;
+}
+
+/* ---------- Result V: the deployed monitor, coupling-corrected risk from outputs ---------- */
+export interface ResultV { train: number; test: number; baseError: number; naive: { auc: number; brier: number; ece: number }; monitor: { auc: number; brier: number; ece: number }; unanimousN: number; unanimousOf: number; unanimousActual: number; unanimousNaive: number; unanimousMonitor: number; bands: Array<{ band: number; predicted: number; actual: number; n: number }>; nonclaims: string }
+export function parseV(text: string): ResultV | null {
+  const hd = /train (\d+), held-out test (\d+); base ensemble error ([\d.]+)%/.exec(text);
+  const nv = /naive: risk = 1 - agreement\s+([\d.]+)\s+([\d.]+)\s+([\d.]+)/.exec(text);
+  const mo = /MONITOR: coupling-aware, calibrated\s+([\d.]+)\s+([\d.]+)\s+([\d.]+)/.exec(text);
+  const un = /on held-out UNANIMOUS items \((\d+) of (\d+)\)/.exec(text);
+  const ua = /actual wrong rate\s*: ([\d.]+)%/.exec(text);
+  const unv = /naive risk \(1 - agreement\)\s*: ([\d.]+)%/.exec(text);
+  const umo = /MONITOR risk\s*: ([\d.]+)%/.exec(text);
+  const bands: ResultV["bands"] = [];
+  const re = /risk band (\d+): predicted\s+([\d.]+)%\s+actual\s+([\d.]+)%\s+\(n=(\d+)\)/g; let m: RegExpExecArray | null;
+  while ((m = re.exec(text))) bands.push({ band: Number(m[1]), predicted: Number(m[2]), actual: Number(m[3]), n: Number(m[4]) });
+  if (!hd || !nv || !mo || !un || !ua || !unv || !umo || bands.length < 3) return null;
+  return { train: Number(hd[1]), test: Number(hd[2]), baseError: Number(hd[3]), naive: { auc: Number(nv[1]), brier: Number(nv[2]), ece: Number(nv[3]) }, monitor: { auc: Number(mo[1]), brier: Number(mo[2]), ece: Number(mo[3]) }, unanimousN: Number(un[1]), unanimousOf: Number(un[2]), unanimousActual: Number(ua[1]), unanimousNaive: Number(unv[1]), unanimousMonitor: Number(umo[1]), bands, nonclaims: nonclaims(text) };
+}

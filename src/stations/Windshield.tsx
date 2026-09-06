@@ -9,14 +9,14 @@
    proposed, not causal, not a safety determination, not driver-clustered. */
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { MONO, drawCabin, drawWorld, tones, useGround } from "../lib/roadScene";
-import { fetchLane, fetchLaneText, parseConvergence, parseH1, parseH2, parseH3, parseH4, parseH5, parseRegister, type LaneFile } from "../lib/gateb";
+import { fetchLane, fetchLaneText, parseConvergence, parseH1, parseH2, parseH3, parseH4, parseH5, parseH6, parseRegister, type LaneFile } from "../lib/gateb";
 import { Blocked, Digest, Stat, Station, useSurfaceState } from "../components/primitives";
 
 const F = {
   L: "evidence/measurement/result_l.txt",
   H1: "human-channel/evidence/h1_driver_observation.txt", H2: "human-channel/evidence/h2_glance_at_conflict.txt",
   H3: "human-channel/evidence/h3_observation_response_joint.txt", H4: "human-channel/evidence/h4_dcpt_takeover.txt",
-  H5: "human-channel/evidence/h5_cross_agent_joint.txt",
+  H5: "human-channel/evidence/h5_cross_agent_joint.txt", H6: "human-channel/evidence/h6_total_both_miss.txt",
   S: "evidence/measurement/result_s.txt", R: "evidence/claim-status-register-2026-08-29.json",
 };
 const src = (f: LaneFile) => ({ id: `gateb/${f.id}`, path: `gate-b · ${f.path}`, sha256: f.sha256 ?? "" });
@@ -128,7 +128,7 @@ export function Windshield() {
   const state = useSurfaceState(async () => {
     const lane = await fetchLane();
     if (!lane.present) return { lane, d: null };
-    const [L, H1, H2, H3, H4, H5, S, R] = await Promise.all([F.L, F.H1, F.H2, F.H3, F.H4, F.H5, F.S, F.R].map((p) => fetchLaneText(p).catch(() => null)));
+    const [L, H1, H2, H3, H4, H5, H6, S, R] = await Promise.all([F.L, F.H1, F.H2, F.H3, F.H4, F.H5, F.H6, F.S, F.R].map((p) => fetchLaneText(p).catch(() => null)));
     return {
       lane,
       d: {
@@ -138,6 +138,7 @@ export function Windshield() {
         h3: H3 ? { ...parseH3(H3.text), file: H3.file } : null,
         h4: H4 ? { ...parseH4(H4.text), file: H4.file } : null,
         h5: H5 ? (() => { const v = parseH5(H5.text); return v ? { ...v, file: H5.file } : null; })() : null,
+        h6: H6 ? (() => { const v = parseH6(H6.text); return v ? { ...v, file: H6.file } : null; })() : null,
         s: S ? { present: true, file: S.file, headline: /understated by a factor of\s*\n?\s*sqrt\(([\d.]+)\) = ([\d.]+)/.exec(S.text) } : null,
         reg: R ? { ...parseRegister(R.text), file: R.file } : null,
       },
@@ -161,15 +162,16 @@ export function Windshield() {
   const h4vm = h4?.grouped.find((g) => g.name.startsWith("visual-manual"));
   const h4cog = h4?.grouped.find((g) => g.name.startsWith("cognitive"));
   const h5 = d.h5;
+  const h6 = d.h6;
 
   /* ---- the windshield: the marks, then the scene ---- */
   const marks: Array<Mark | null> = [
     autoT ? { c: autoT.c, lo: autoT.lo, hi: autoT.hi, label: "AUTOMATION · camera × lidar", short: "AUTOMATION", sub: "nuScenes val · 95% CI" } : null,
     h3all ? { c: h3all.c, label: "HUMAN · looking × acting", short: "HUMAN", sub: "100-Car · no interval" } : null,
-    h5 ? { c: h5.c, label: "HUMAN × AUTOMATION", short: "HUMAN × AUTO", sub: "BDD-A · no interval", hold: true } : null,
+    h6 ? { c: h6.c, lo: h6.lo, hi: h6.hi, label: "HUMAN × AUTOMATION", short: "HUMAN × AUTO", sub: "BDD-A · total miss · 95% CI", hold: true } : h5 ? { c: h5.c, label: "HUMAN × AUTOMATION", short: "HUMAN × AUTO", sub: "BDD-A · no interval", hold: true } : null,
   ];
   const wind = wbox.w > 0 && (autoT || h3all)
-    ? <WindshieldScene w={wbox.w} h={wbox.h} marks={marks} header={h5 ? "same-kind redundancy fails together · different-kind roughly holds" : "the same signature on both sides · the meeting point still unmeasured"} />
+    ? <WindshieldScene w={wbox.w} h={wbox.h} marks={marks} header={(h5 || h6) ? "same-kind redundancy fails together · different-kind roughly holds" : "the same signature on both sides · the meeting point still unmeasured"} />
     : null;
 
   /* ---- takeover by task: a dot-and-bar chart in pixels ---- */

@@ -188,6 +188,36 @@ state changes on small elements (hover, cursor). Never: a full-panel overlay
 that blends or animates; animating box-shadow, background-position, filter,
 or SVG attributes; view-transition names on dock tabs or station content.
 
+## Shipped 2026-09-06 (late night): the exposure audit, and THE LAW
+- Audit method: list every committed lane transcript and every engine 1.2.x
+  record, compare with the file paths the stations read (`grep` for
+  "evidence/" and "human-channel/" and "llm-generalization/" in src). The
+  engine's 1.2.9 readiness-input seal-truth records (incident, correction,
+  plan, fixture catalog) were already sealed and read by the Chair; the gap
+  was the lane's newest work: H6, Results T, U, V.
+- ST-15 THE LAW (`src/stations/Law.tsx`, camera row 4 col 2): ONE LINE with
+  every pairing above one independence mark, grouped by domain: SENSORS (two
+  lidars, Result H instance unit conditioned, with CI; camera x lidar, Result
+  L, with CI), ONE HUMAN (H3), HUMAN x MACHINE (H5; H6 with clip-clustered
+  CI), LLM JURIES (T same-family, cross-family, conditional with its range).
+  Ink = same kind, steel blue = different kinds. Right column: THE JURY
+  (seven models' error rates, the lit share of each bar = effective
+  independent models 3.6 of 7), AGREEMENT IS NOT CONFIDENCE (100 cells, ten
+  red: unanimous-and-wrong 10.4%), THE MONITOR (Result V reliability: five
+  predicted-vs-actual bands on the diagonal, the naive's 0% on unanimous
+  items as a red hollow dot). Register check: the register has NO entry for
+  H6, T, U, V and the instrument says so; parsers `parseH6`, `parseT`,
+  `parseU`, `parseV`, `parseHInstance` (strict, fail closed).
+- ST-14 THE SAME HAZARD hero is a canvas (`SquaresScene`): where the
+  transcript gives 2x2 counts (H5, H6) every object is one point, red where
+  both channels missed it; placement inside a cell is arbitrary, populations
+  are not. Area-only squares for Result P and H3. Fourth square = H6 total
+  miss with its interval. Stats: H6 c with CI and verdict, H5 c, register.
+- ST-13 third pillar now shows H6 (0.981 with CI bracket) when present,
+  falling back to H5, then to the explicit unknown.
+- Lane file lists gain h6 txt + md, result_h_instance_unit, T/U/V txt + md,
+  llm-generalization README. Lane head at seal: 945caa9 (Result V).
+
 ## Shipped 2026-09-06 (night): the Encounter recomposed, the Windshield bared
 - User feedback on the phone: the Encounter was two thirds empty sky, the
   cabin read as a box, the sightline cones ("radar lines") and tags collided
