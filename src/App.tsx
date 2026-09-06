@@ -28,6 +28,7 @@ import { WorstGroup } from "./stations/WorstGroup";
 import { Windshield } from "./stations/Windshield";
 import { SameHazard } from "./stations/SameHazard";
 import { Law } from "./stations/Law";
+import { Monitor } from "./stations/Monitor";
 
 export default function App() {
   const [evidence, setEvidence] = useState<VerifiedEvidence | null>(null);
@@ -134,6 +135,7 @@ function Stage({ ev, onEvidence }: { ev: VerifiedEvidence; onEvidence: (e: Verif
       case "windshield": return <Windshield />;
       case "samehazard": return <SameHazard />;
       case "law": return <Law />;
+      case "monitor": return <Monitor />;
       default: return null;
     }
   };

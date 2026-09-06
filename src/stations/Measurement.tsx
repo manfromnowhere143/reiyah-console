@@ -7,12 +7,12 @@
    withdrawn claims shown as withdrawn. Proposed, not externally audited,
    association after declared conditioning, never causation. */
 import { useLayoutEffect, useRef, useState } from "react";
-import { fetchLane, fetchLaneText, parseConvergence, parseEValues, parseGrid, parseOpposite, parseRegister, parseSweep, type LaneFile } from "../lib/gateb";
+import { fetchLane, fetchLaneText, parseConvergence, parseEValues, parseGrid, parseOpposite, parseRegister, parseSweep, type LaneFile, registerPath } from "../lib/gateb";
 import { Blocked, Digest, FitList, Stat, Station, useSurfaceState } from "../components/primitives";
 
 const P = {
   L: "evidence/measurement/result_l.txt", N: "evidence/measurement/result_n.txt", O: "evidence/measurement/result_o.txt",
-  P: "evidence/measurement/result_p.txt", Q: "evidence/measurement/result_q.txt", R: "evidence/claim-status-register-2026-08-29.json",
+  P: "evidence/measurement/result_p.txt", Q: "evidence/measurement/result_q.txt", R: "evidence/claim-status-register-2026-08-29.json" /* superseded at read time by registerPath() */,
 };
 const src = (f: LaneFile) => ({ id: `gateb/${f.id}`, path: `gate-b · ${f.path}`, sha256: f.sha256 ?? "" });
 const fmt = (x: number) => x.toFixed(3);

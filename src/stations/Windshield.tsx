@@ -9,15 +9,15 @@
    proposed, not causal, not a safety determination, not driver-clustered. */
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { MONO, drawCabin, drawWorld, tones, useGround } from "../lib/roadScene";
-import { fetchLane, fetchLaneText, parseConvergence, parseH1, parseH2, parseH3, parseH4, parseH5, parseH6, parseRegister, type LaneFile } from "../lib/gateb";
+import { fetchLane, fetchLaneText, parseConvergence, parseH1, parseH2, parseH3, parseH4, parseH5, parseH6, parseH7, parseRegister, type LaneFile, registerPath } from "../lib/gateb";
 import { Blocked, Digest, Stat, Station, useSurfaceState } from "../components/primitives";
 
 const F = {
   L: "evidence/measurement/result_l.txt",
   H1: "human-channel/evidence/h1_driver_observation.txt", H2: "human-channel/evidence/h2_glance_at_conflict.txt",
   H3: "human-channel/evidence/h3_observation_response_joint.txt", H4: "human-channel/evidence/h4_dcpt_takeover.txt",
-  H5: "human-channel/evidence/h5_cross_agent_joint.txt", H6: "human-channel/evidence/h6_total_both_miss.txt",
-  S: "evidence/measurement/result_s.txt", R: "evidence/claim-status-register-2026-08-29.json",
+  H5: "human-channel/evidence/h5_cross_agent_joint.txt", H6: "human-channel/evidence/h6_total_both_miss.txt", H7: "human-channel/evidence/h7_intervals.txt",
+  S: "evidence/measurement/result_s.txt", R: "evidence/claim-status-register-2026-08-29.json" /* superseded at read time by registerPath() */,
 };
 const src = (f: LaneFile) => ({ id: `gateb/${f.id}`, path: `gate-b · ${f.path}`, sha256: f.sha256 ?? "" });
 const fmt = (x: number | undefined, d = 3) => (x === undefined ? "∅" : x.toFixed(d));
@@ -97,7 +97,7 @@ function WindshieldScene({ w, h, marks, header }: { w: number; h: number; marks:
         }
         head(x, yc, r0);
         ctx.fillStyle = `rgba(${INK},1)`; ctx.font = `600 ${big}px ${MONO}`;
-        const ty = (m.hi !== undefined ? y(m.hi) : Math.min(yc, horizon)) - r0 - 8;
+        const ty = Math.max(top + 12, (m.hi !== undefined ? y(m.hi) : Math.min(yc, horizon)) - r0 - 8);
         ctx.fillText(m.c.toFixed(i === 1 ? 2 : i === 2 ? 2 : 3), x, ty);
       });
       /* the arc between the two same-kind columns */
@@ -128,7 +128,7 @@ export function Windshield() {
   const state = useSurfaceState(async () => {
     const lane = await fetchLane();
     if (!lane.present) return { lane, d: null };
-    const [L, H1, H2, H3, H4, H5, H6, S, R] = await Promise.all([F.L, F.H1, F.H2, F.H3, F.H4, F.H5, F.H6, F.S, F.R].map((p) => fetchLaneText(p).catch(() => null)));
+    const [L, H1, H2, H3, H4, H5, H6, H7, S, R] = await Promise.all([F.L, F.H1, F.H2, F.H3, F.H4, F.H5, F.H6, F.H7, F.S, await registerPath()].map((p) => fetchLaneText(p).catch(() => null)));
     return {
       lane,
       d: {
@@ -139,6 +139,7 @@ export function Windshield() {
         h4: H4 ? { ...parseH4(H4.text), file: H4.file } : null,
         h5: H5 ? (() => { const v = parseH5(H5.text); return v ? { ...v, file: H5.file } : null; })() : null,
         h6: H6 ? (() => { const v = parseH6(H6.text); return v ? { ...v, file: H6.file } : null; })() : null,
+        h7: H7 ? (() => { const v = parseH7(H7.text); return v ? { ...v, file: H7.file } : null; })() : null,
         s: S ? { present: true, file: S.file, headline: /understated by a factor of\s*\n?\s*sqrt\(([\d.]+)\) = ([\d.]+)/.exec(S.text) } : null,
         reg: R ? { ...parseRegister(R.text), file: R.file } : null,
       },
@@ -163,11 +164,14 @@ export function Windshield() {
   const h4cog = h4?.grouped.find((g) => g.name.startsWith("cognitive"));
   const h5 = d.h5;
   const h6 = d.h6;
+  const h7 = d.h7;
+  const h7all = h7?.groups.find((g) => g.name === "all events") ?? null;
+  const h7cr = h7?.groups.find((g) => g.name === "crashes") ?? null;
 
   /* ---- the windshield: the marks, then the scene ---- */
   const marks: Array<Mark | null> = [
     autoT ? { c: autoT.c, lo: autoT.lo, hi: autoT.hi, label: "AUTOMATION · camera × lidar", short: "AUTOMATION", sub: "nuScenes val · 95% CI" } : null,
-    h3all ? { c: h3all.c, label: "HUMAN · looking × acting", short: "HUMAN", sub: "100-Car · no interval" } : null,
+    h3all ? { c: h3all.c, lo: h7all?.lo, hi: h7all?.hi, label: "HUMAN · looking × acting", short: "HUMAN", sub: h7all ? "100-Car · event-resampled 95% CI" : "100-Car · no interval" } : null,
     h6 ? { c: h6.c, lo: h6.lo, hi: h6.hi, label: "HUMAN × AUTOMATION", short: "HUMAN × AUTO", sub: "BDD-A · total miss · 95% CI", hold: true } : h5 ? { c: h5.c, label: "HUMAN × AUTOMATION", short: "HUMAN × AUTO", sub: "BDD-A · no interval", hold: true } : null,
   ];
   const wind = wbox.w > 0 && (autoT || h3all)
@@ -210,13 +214,13 @@ export function Windshield() {
         <div className="statstrip">
           <Stat label="automation · c" value={autoT ? fmt(autoT.c) : "∅"} sub={autoT ? `camera × lidar · [${fmt(autoT.lo)}, ${fmt(autoT.hi)}]` : "transcript absent"}
             rule="the terminal conditional coefficient of Result L: joint-miss rate over independence within strata of class, range, visibility, weather and motion" from={d.auto ? [src(d.auto.file)] : []} />
-          <Stat label="human · c" value={h3all ? fmt(h3all.c, 2) : "∅"} sub={h3all ? `looking × acting · ${h3all.n} conflicts · no interval` : "transcript absent"}
-            rule="H3: P(both fail) over P(obs fail) × P(resp fail) across all events with known gaze and known reaction; obs fail = gaze not forward at the conflict instant, resp fail = no reaction; illustrative on counts, not an inferential test" from={h3 ? [src(h3.file)] : []} />
-          <Stat label="looked forward, did nothing" value={h3cr ? `${fmt(h3cr.forwardNoReact, 1)}%` : "∅"} sub={h3cr ? `of crashes · n ${h3cr.forwardNoReactN} · the human silent miss` : "transcript absent"}
+          <Stat label="human · c" value={h3all ? fmt(h3all.c, 2) : "∅"} sub={h3all ? (h7all ? `looking × acting · ${h3all.n} conflicts · [${fmt(h7all.lo, 2)}, ${fmt(h7all.hi, 2)}] · H7` : `looking × acting · ${h3all.n} conflicts · no interval`) : "transcript absent"}
+            rule="H3: P(both fail) over P(obs fail) × P(resp fail) across all events with known gaze and known reaction; obs fail = gaze not forward at the conflict instant, resp fail = no reaction; H7 adds an event-resampled bootstrap interval, not driver-clustered" from={[...(h3 ? [src(h3.file)] : []), ...(h7 ? [src(h7.file)] : [])]} />
+          <Stat label="looked forward, did nothing" value={h3cr ? `${fmt(h3cr.forwardNoReact, 1)}%` : "∅"} sub={h3cr ? (h7cr ? `of crashes · n ${h3cr.forwardNoReactN} · [${fmt(h7cr.fnrLo, 1)}, ${fmt(h7cr.fnrHi, 1)}]% · the human silent miss` : `of crashes · n ${h3cr.forwardNoReactN} · the human silent miss`) : "transcript absent"}
             rule="H3, crashes: share of events where the gaze was forward at the conflict instant and the reaction was none" from={h3 ? [src(h3.file)] : []} />
           <Stat label="eyes forward, entire window" value={h1 ? <>{fmt(g1("crashes")?.forwardEntire, 1)}%<em> ← {fmt(h1.baseline!.forwardEntire, 1)}%</em></> : "∅"} sub={h1 ? `crashes ← normal driving · n ${g1("crashes")?.n} vs ${h1.baseline!.n} epochs` : "transcript absent"}
             rule="H1, strict Forward: share of events whose observed window is forward throughout, crashes versus the normal-driving baseline epochs" from={h1 ? [src(h1.file)] : []} />
-          <Stat label="takeover · visual-manual" value={h4vm && h4base ? `+${fmt(h4vm.mean - h4base.mean, 2)} s` : "∅"} sub={h4vm && h4base ? `+${Math.round(((h4vm.mean - h4base.mean) / h4base.mean) * 100)}% vs no task · cognitive +${fmt((h4cog?.mean ?? 0) - h4base.mean, 2)} s · ${h4?.trials ?? "?"} trials` : "transcript absent"}
+          <Stat label="takeover · visual-manual" value={h4vm && h4base ? `+${fmt(h4vm.mean - h4base.mean, 2)} s` : "∅"} sub={h4vm && h4base ? (h7?.takeover ? `[${fmt(h7.takeover.vmLo, 2)}, ${fmt(h7.takeover.vmHi, 2)}] s · participant-clustered · cognitive +${fmt(h7.takeover.cog, 2)} s [${fmt(h7.takeover.cogLo, 2)}, ${fmt(h7.takeover.cogHi, 2)}]` : `+${Math.round(((h4vm.mean - h4base.mean) / h4base.mean) * 100)}% vs no task · cognitive +${fmt((h4cog?.mean ?? 0) - h4base.mean, 2)} s · ${h4?.trials ?? "?"} trials`) : "transcript absent"}
             rule="H4, DCPT: mean takeover time for visual-manual tasks minus the no-task baseline, and the same for cognitive-only tasks" from={h4 ? [src(h4.file)] : []} />
         </div>
 
@@ -269,7 +273,7 @@ export function Windshield() {
           return (
             <div className="wsreg">
               <span className="cvl">register check</span>
-              <span className="wsregv">Result S computes a corrected evidence figure from the measured c; the claims register holds {cost.length} evidence-cost claims <b>withdrawn as stated</b>, use forbidden ({forbidden}/{cost.length}), with reconsideration requirements; the instrument shows the register's state, not the newer transcript's number</span>
+              <span className="wsregv">register {d.reg.version} of {d.reg.createdOn}{d.reg.predecessor ? ", successor of its predecessor," : ","} holds {cost.length} evidence-cost claims <b>withdrawn as stated</b>, use forbidden ({forbidden}/{cost.length}); Result S computes a corrected evidence figure from the measured c, and the instrument shows the register's state, not the newer transcript's number</span>
               <Digest id={src(d.s.file).id} sha={src(d.s.file).sha256} path={src(d.s.file).path} />
             </div>
           );

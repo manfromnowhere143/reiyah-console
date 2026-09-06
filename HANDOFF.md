@@ -188,6 +188,33 @@ state changes on small elements (hover, cursor). Never: a full-panel overlay
 that blends or animates; animating box-shadow, background-position, filter,
 or SVG attributes; view-transition names on dock tabs or station content.
 
+## Shipped 2026-09-07 (later): the register successor, intervals everywhere, THE MONITOR
+- REGISTER BY DATE: `registerPath()` (gateb.ts) resolves the newest
+  `evidence/claim-status-register-YYYY-MM-DD.json` from the lane manifest;
+  every station that reads the register (Measurement, Windshield, Same
+  Hazard, Law, Monitor) now reads the successor 0.2.6 of 2026-09-06 (33
+  claims, predecessor named, deletion prohibited). `parseRegister` returns
+  version, createdOn, predecessor. Register chips (`.regchip`) show each
+  relevant claim's status in the register's words; forbidden in red,
+  measured/derived in steel blue; inconclusive stays inconclusive.
+- LANE LISTS BY DIRECTORY: sealer and server now glob every transcript
+  (evidence/measurement, human-channel/evidence, llm-generalization/evidence
+  .txt), every register, every narrative .md, docs/RESULT_*, GATE_B_*,
+  GENERAL_SYNTHESIS: 88 lane files. A new result is sealed the moment it is
+  committed; no list edit needed.
+- H7 intervals on the Windshield (human column CI, "looked forward" CI,
+  takeover CI, participant-clustered) and on The Law's human row.
+- THE LAW: LLM rows per benchmark from Result AC (MMLU same/cross family
+  and conditional with 95% CI; ARC and HellaSwag marginal and conditional);
+  axis to 2.4; group gaps; the jury line carries effective models for three
+  benchmarks; U cells carry ARC/HellaSwag unanimous-yet-wrong.
+- ST-16 THE MONITOR (`src/stations/Monitor.tsx`, row 4 col 3): V
+  reliability (moved from Law), X/X2 transfer rows (naive -> monitor, with
+  ceiling), Z/AA/AB sensor rows (scene monitor vs density; per-object
+  realness vs score), register chips for all monitor claims. Parsers:
+  parseH7, parseAC, parseX, parseZcv, parseAAcv, parseAB.
+- Lane head at seal: 0785c79 (dirty: an AD tool in progress, not rendered).
+
 ## Shipped 2026-09-07: instant stations, THE HORIZON, THE VAULT, a schema gap closed
 - INSTANT STATIONS. `useSurfaceState` keeps every station's assembled data
   for the session (keyed by the loader's source + deps) and mounts ready in

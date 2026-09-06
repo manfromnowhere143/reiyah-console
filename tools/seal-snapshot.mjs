@@ -128,6 +128,10 @@ console.log(`[seal] ${schemaRows.length} schemas indexed`);
    snapshot/gateb with its own identity and its own digests, and never mixed
    with the Gate A packet. Absent worktree = absent lane, recorded as such. */
 const GATEB = process.env.GATEB_ROOT ?? "/Users/danielwahnich/workspace/reiyah-gate-b";
+/* every transcript and narrative the lane retains, found by directory so a
+   new result is sealed the moment it is committed; the explicit list below
+   carries the fixed artifacts */
+const laneGlob = (root, dir, re) => { try { return fs.readdirSync(path.join(root, dir)).filter((f) => re.test(f)).sort().map((f) => `${dir}/${f}`); } catch { return []; } };
 const GATEB_FILES = [
   "evidence/claim-status-register-2026-08-29.json",
   "evidence/measurement/result_l.txt", "evidence/measurement/result_m.txt", "evidence/measurement/result_n.txt",
@@ -146,6 +150,13 @@ const GATEB_FILES = [
   "evidence/measurement/worst-group-records.jsonl",
   "docs/gate_b_robustness_figure.svg",
   "docs/GATE_B_MEASUREMENT_CONTRACT.md", "docs/GATE_B_FINDINGS_SYNTHESIS.md",
+  ...laneGlob(GATEB, "evidence", /^claim-status-register-\d{4}-\d{2}-\d{2}\.json$/),
+  ...laneGlob(GATEB, "evidence/measurement", /\.txt$/),
+  ...laneGlob(GATEB, "human-channel/evidence", /\.txt$/),
+  ...laneGlob(GATEB, "llm-generalization/evidence", /\.txt$/),
+  ...laneGlob(GATEB, "human-channel", /\.md$/),
+  ...laneGlob(GATEB, "llm-generalization", /\.md$/),
+  ...laneGlob(GATEB, "docs", /^(RESULT_|GATE_B_|GENERAL_SYNTHESIS).*\.md$/),
 ];
 fs.mkdirSync(path.join(OUT, "gateb", "raw"), { recursive: true });
 let gateb = { present: false, reason: "gate-b worktree not present at seal time" };
@@ -156,7 +167,7 @@ try {
   const clean = execFileSync("git", ["status", "--porcelain=v1"], gopt).trim() === "";
   const commits = Number(execFileSync("git", ["rev-list", "--count", "HEAD"], gopt).trim());
   const files = [];
-  for (const rel of GATEB_FILES) {
+  for (const rel of [...new Set(GATEB_FILES)]) {
     try {
       const bytes = fs.readFileSync(path.join(GATEB, rel));
       const id = rel.replaceAll("/", "__");

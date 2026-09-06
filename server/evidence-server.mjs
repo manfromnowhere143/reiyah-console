@@ -202,7 +202,11 @@ const server = http.createServer((req, res) => {
     }
     if (p === "/api/gateb/manifest" || p.startsWith("/api/gateb/raw/")) {
       const GATEB = process.env.GATEB_ROOT ?? "/Users/danielwahnich/workspace/reiyah-gate-b";
-      const FILES = [
+      const laneGlob = (dir, re) => { try { return fs.readdirSync(path.join(GATEB, dir)).filter((f) => re.test(f)).sort().map((f) => `${dir}/${f}`); } catch { return []; } };
+      const FILES = [...new Set([
+        ...laneGlob("evidence", /^claim-status-register-\d{4}-\d{2}-\d{2}\.json$/),
+        ...laneGlob("evidence/measurement", /\.txt$/), ...laneGlob("human-channel/evidence", /\.txt$/), ...laneGlob("llm-generalization/evidence", /\.txt$/),
+        ...laneGlob("human-channel", /\.md$/), ...laneGlob("llm-generalization", /\.md$/), ...laneGlob("docs", /^(RESULT_|GATE_B_|GENERAL_SYNTHESIS).*\.md$/),
         "evidence/claim-status-register-2026-08-29.json",
         "evidence/measurement/result_l.txt", "evidence/measurement/result_m.txt", "evidence/measurement/result_n.txt",
         "evidence/measurement/result_o.txt", "evidence/measurement/result_p.txt", "evidence/measurement/result_q.txt",
@@ -220,7 +224,7 @@ const server = http.createServer((req, res) => {
         "evidence/measurement/worst-group-records.jsonl",
         "docs/gate_b_robustness_figure.svg",
         "docs/GATE_B_MEASUREMENT_CONTRACT.md", "docs/GATE_B_FINDINGS_SYNTHESIS.md",
-      ];
+      ])];
       const g = (args) => execFileSync("git", ["-C", GATEB, ...args], { encoding: "utf8" }).trim();
       if (p === "/api/gateb/manifest") {
         try {

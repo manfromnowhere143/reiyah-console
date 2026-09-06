@@ -191,10 +191,20 @@ export function parseH4(text: string): H4 {
 void pct;
 
 export interface Claim { claim_id: string; status: string; current_scientific_use: string; estimand: string; lineage?: { first_stated_in?: string; superseded_by?: string | null } }
-export function parseRegister(text: string): { claims: Claim[]; policy: Record<string, unknown> } {
+export interface Register { claims: Claim[]; policy: Record<string, unknown>; version: string; createdOn: string; predecessor: { path: string; sha256: string } | null; schemaId: string }
+export function parseRegister(text: string): Register {
   const j = JSON.parse(text);
-  return { claims: (j.claims ?? []) as Claim[], policy: j.reconciliation_policy ?? {} };
+  return { claims: (j.claims ?? []) as Claim[], policy: j.reconciliation_policy ?? {}, version: String(j.version ?? ""), createdOn: String(j.created_on ?? ""), predecessor: j.predecessor?.path ? { path: String(j.predecessor.path), sha256: String(j.predecessor.sha256 ?? "") } : null, schemaId: String(j.schema_id ?? "") };
 }
+/* the register is append-only: the newest dated successor governs, and it
+   names its predecessor. The path is resolved from the lane manifest, never
+   hard-coded, so a new successor is read the moment it is sealed. */
+export async function registerPath(): Promise<string> {
+  const lane = await fetchLane();
+  const regs = (lane.files ?? []).map((f) => f.path).filter((p) => /^evidence\/claim-status-register-\d{4}-\d{2}-\d{2}\.json$/.test(p)).sort();
+  return regs.at(-1) ?? "evidence/claim-status-register-2026-08-29.json";
+}
+export const claimShort = (id: string) => id.replace(/^reiyah\.gate-b\.claim\./, "").replace(/-/g, " ");
 
 /* ---------- H5: the cross-agent joint on BDD-A (human attention x automation detection) ---------- */
 export interface H5 { clips: number; frames: number; objects: number; tau: number; median: number; pAuto: number; pHum: number; pBoth: number; expected: number; c: number; counts: [number, number, number, number]; corr: number; nonclaims: string }
@@ -320,4 +330,67 @@ export function warmLane() {
       for (const f of lane.files ?? []) { try { await fetchLaneText(f.path); } catch { /* the station will report it */ } }
     } catch { /* the station will report it */ }
   });
+}
+
+/* ---------- H7: intervals for the human-channel coefficients ---------- */
+export interface H7 { groups: Array<{ name: string; c: number; lo: number; hi: number; forwardNoReact: number; fnrLo: number; fnrHi: number }>; takeover: { vm: number; vmLo: number; vmHi: number; cog: number; cogLo: number; cogHi: number } | null; nonclaims: string }
+export function parseH7(text: string): H7 | null {
+  const groups: H7["groups"] = [];
+  const re = /^\s{2}(all events|crashes|near-crashes): [^\n]+\n(?:[^\n]*\n){1,2}?\s+coefficient c \(H3\)\s+([\d.]+)\s+([\d.]+)\s+([\d.]+)\n\s+looked forward yet no reaction \(H3\)\s+([\d.]+)\s+([\d.]+)\s+([\d.]+)/gm;
+  let m: RegExpExecArray | null;
+  while ((m = re.exec(text))) groups.push({ name: m[1], c: Number(m[2]), lo: Number(m[3]), hi: Number(m[4]), forwardNoReact: Number(m[5]) * 100, fnrLo: Number(m[6]) * 100, fnrHi: Number(m[7]) * 100 });
+  const vm = /visual-manual minus no task, s\s+([\d.]+)\s+(-?[\d.]+)\s+(-?[\d.]+)/.exec(text);
+  const cg = /cognitive-only minus no task, s\s+([\d.]+)\s+(-?[\d.]+)\s+(-?[\d.]+)/.exec(text);
+  if (!groups.length) return null;
+  return { groups, takeover: vm && cg ? { vm: Number(vm[1]), vmLo: Number(vm[2]), vmHi: Number(vm[3]), cog: Number(cg[1]), cogLo: Number(cg[2]), cogHi: Number(cg[3]) } : null, nonclaims: nonclaims(text) };
+}
+/* ---------- AC: bootstrap intervals for every LLM-jury quantity, three benchmarks ---------- */
+export interface ACBench { name: string; models: number; questions: number; q: Map<string, { point: number; lo: number; hi: number }> }
+export function parseAC(text: string): { benches: ACBench[]; nonclaims: string } | null {
+  const benches: ACBench[] = [];
+  const parts = text.split(/^\s{2}(?=(?:mmlu|arc|hellaswag): \d+ models)/m);
+  for (const part of parts) {
+    const h = /^(mmlu|arc|hellaswag): (\d+) models \([^)]*\), (\d+) questions/.exec(part);
+    if (!h) continue;
+    const q = new Map<string, { point: number; lo: number; hi: number }>();
+    const re = /^\s{4}([^\n]+?)\s{2,}(-?[\d.]+)\s+(-?[\d.]+)\s+(-?[\d.]+)\s*$/gm; let m: RegExpExecArray | null;
+    while ((m = re.exec(part))) q.set(m[1].trim(), { point: Number(m[2]), lo: Number(m[3]), hi: Number(m[4]) });
+    if (q.size) benches.push({ name: h[1], models: Number(h[2]), questions: Number(h[3]), q });
+  }
+  if (!benches.length) return null;
+  return { benches, nonclaims: nonclaims(text) };
+}
+/* ---------- X: the monitor read on juries and benchmarks it never saw ---------- */
+export interface XBlock { id: string; title: string; kind: string; models: number; n: number; wrong: number; naive: { auc: number; brier: number; ece: number }; monitor: { auc: number; brier: number; ece: number }; unanimousN: number; unanimousActual: number; unanimousMonitor: number; ceiling: number }
+export function parseX(text: string): { blocks: XBlock[]; nonclaims: string } | null {
+  const blocks: XBlock[] = [];
+  const re = /^\s{2}(X\d(?:-\d)?): (.+?)\s{2}\((.+?)\)\s+\[(\d+) models[^\n]*\n\s+n = (\d+), jury \(plurality\) wrong rate ([\d.]+)%\n[^\n]*\n\s+naive: 1 - agreement\s+([\d.]+)\s+([\d.]+)\s+([\d.]+)\n\s+monitor \(no refit\)\s+([\d.]+)\s+([\d.]+)\s+([\d.]+)\n\s+unanimous items \((\d+)\): actual wrong ([\d.]+)%, naive risk [\d.]+%, monitor risk ([\d.]+)%\n[^\n]*\n\s+in-domain ceiling on [^:]+: AUC ([\d.]+)/gm;
+  let m: RegExpExecArray | null;
+  while ((m = re.exec(text))) blocks.push({ id: m[1], title: m[2].trim(), kind: m[3].trim(), models: Number(m[4]), n: Number(m[5]), wrong: Number(m[6]), naive: { auc: Number(m[7]), brier: Number(m[8]), ece: Number(m[9]) }, monitor: { auc: Number(m[10]), brier: Number(m[11]), ece: Number(m[12]) }, unanimousN: Number(m[13]), unanimousActual: Number(m[14]), unanimousMonitor: Number(m[15]), ceiling: Number(m[16]) });
+  if (!blocks.length) return null;
+  return { blocks, nonclaims: nonclaims(text) };
+}
+/* ---------- Z and AA (and AB, their replication on other pairs): cross-validated summaries ---------- */
+export interface CvRow { name: string; a: number; aSd: number; b: number; bSd: number; c: number; cSd: number }
+export function parseZcv(text: string): CvRow[] {
+  const out: CvRow[] = []; const re = /^\s+(constant|proportional|monitor)\s+Spearman ([\d.]+) \+\/- ([\d.]+)\s+MAE ([\d.]+) \+\/- ([\d.]+)\s+AUC ([\d.]+) \+\/- ([\d.]+)/gm; let m: RegExpExecArray | null;
+  while ((m = re.exec(text))) out.push({ name: m[1], a: Number(m[2]), aSd: Number(m[3]), b: Number(m[4]), bSd: Number(m[5]), c: Number(m[6]), cSd: Number(m[7]) });
+  return out;
+}
+export function parseAAcv(text: string): CvRow[] {
+  const out: CvRow[] = []; const re = /^\s+(score alone|own features|own \+ context)\s+AUC ([\d.]+) \+\/- ([\d.]+)\s+Brier ([\d.]+) \+\/- ([\d.]+)\s+ECE ([\d.]+) \+\/- ([\d.]+)/gm; let m: RegExpExecArray | null;
+  while ((m = re.exec(text))) out.push({ name: m[1], a: Number(m[2]), aSd: Number(m[3]), b: Number(m[4]), bSd: Number(m[5]), c: Number(m[6]), cSd: Number(m[7]) });
+  return out;
+}
+export interface ABSection { pair: string; tool: "z" | "aa"; rows: CvRow[] }
+export function parseAB(text: string): ABSection[] {
+  const out: ABSection[] = [];
+  const parts = text.split(/^#{20,}\n# RESULT AB\s+/m).slice(1);
+  for (const part of parts) {
+    const h = /^(P\d [^:]+?)\s+::\s+(result_z_scene_blindness_monitor|result_aa_disagreement_monitor)/.exec(part);
+    if (!h) continue;
+    const tool = h[2].startsWith("result_z") ? "z" : "aa";
+    out.push({ pair: h[1].trim(), tool, rows: tool === "z" ? parseZcv(part) : parseAAcv(part) });
+  }
+  return out;
 }

@@ -13,7 +13,7 @@
    lane, so the hero stays an explicit wait, never a stand-in. */
 import { useLayoutEffect, useRef, useState } from "react";
 import { useEffect } from "react";
-import { fetchLane, fetchLaneText, parseH3, parseH5, parseH5Bounds, parseH6, parsePairRow, parseRegister, type LaneFile } from "../lib/gateb";
+import { fetchLane, fetchLaneText, parseH3, parseH5, parseH5Bounds, parseH6, parsePairRow, parseRegister, type LaneFile, registerPath } from "../lib/gateb";
 import { MONO, tones, useGround } from "../lib/roadScene";
 import { Blocked, Digest, Stat, Station, useSurfaceState } from "../components/primitives";
 
@@ -21,7 +21,7 @@ const F = {
   H5: "human-channel/evidence/h5_cross_agent_joint.txt", MD: "human-channel/H5_CROSS_AGENT_JOINT.md",
   H3: "human-channel/evidence/h3_observation_response_joint.txt", P: "evidence/measurement/result_p.txt",
   H6: "human-channel/evidence/h6_total_both_miss.txt",
-  R: "evidence/claim-status-register-2026-08-29.json",
+  R: "evidence/claim-status-register-2026-08-29.json" /* superseded at read time by registerPath() */,
 };
 const src = (f: LaneFile) => ({ id: `gateb/${f.id}`, path: `gate-b · ${f.path}`, sha256: f.sha256 ?? "" });
 const fmt = (x: number | undefined, d = 3) => (x === undefined ? "∅" : x.toFixed(d));
@@ -153,6 +153,7 @@ export function SameHazard() {
   const h3all = d.h3?.groups.find((g) => g.name === "all events") ?? null;
   const pr = d.pair?.row ?? null;
   const joint = d.reg?.claims.find((c) => /joint-silent-miss/.test(c.claim_id)) ?? null;
+  const total = d.reg?.claims.find((c) => /cross-agent-total-miss/.test(c.claim_id)) ?? null;
 
   const squares: Sq[] = [];
   if (pr && d.pair) squares.push({ key: "auto", name: "AUTOMATION · camera × lidar", short: "AUTOMATION", sub: "Result P · nuScenes · marginal", a: "camera miss", b: "lidar miss", pA: pr.pA, pB: pr.pB, pBoth: pr.pBoth, c: pr.c, file: d.pair.file });
@@ -171,8 +172,8 @@ export function SameHazard() {
             rule="H6: P(both miss) over P(deployed automation totally misses a present object) × P(human misses); reference objects from a strong detector at score ≥ 0.6, deployed SSDLite at ≥ 0.25, a miss is no box at IoU ≥ 0.5; clip-clustered bootstrap interval over 96 clips" from={d.h6 ? [src(d.h6.file)] : []} />
           <Stat label="detectable · c" value={fmt(h5.c)} sub={`${thou(h5.objects)} objects · ${h5.clips} clips · ${h5.frames} frames · no interval`}
             rule={`H5: P(both miss) over P(automation miss) × P(human miss); automation miss = detector score below ${h5.tau}; human miss = mean gaze attention inside the box below the per-run median (${h5.median}); object set = detections at score ≥ 0.3 in eight driving classes; descriptive, not clustered`} from={[src(h5.file)]} />
-          <Stat label="register · joint-silent-miss" value={joint ? joint.status : "∅"} sub={joint && d.reg ? `use ${joint.current_scientific_use} · register 2026-08-29 · H5 measures ${fmt(h5.c)} · neither upgraded` : "register absent"}
-            rule="the claim-status register's state for the joint-silent-miss claim; the instrument shows the register's state beside the transcript's number and upgrades neither; a newer transcript does not change a register entry" from={d.reg ? [src(d.reg.file), src(h5.file)] : [src(h5.file)]} />
+          <Stat label="register · this measurement" value={total ? total.status : joint ? joint.status : "∅"} small sub={d.reg ? `${total ? `cross-agent total miss ${total.status}, use ${total.current_scientific_use}` : "no entry for the total miss"} · joint-silent-miss ${joint?.status ?? "∅"}, use ${joint?.current_scientific_use ?? "∅"} · register ${d.reg.version} of ${d.reg.createdOn}` : "register absent"}
+            rule="the newest dated claim-status register's states for the cross-agent total-miss claim and for the original joint-silent-miss claim (which needs ground-truth boxes and remains unknown); the instrument shows the register's state beside the transcript's number and upgrades neither" from={d.reg ? [src(d.reg.file), src(h5.file)] : [src(h5.file)]} />
         </div>
 
         <div className="shzgrid">
