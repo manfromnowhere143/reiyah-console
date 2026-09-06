@@ -2011,3 +2011,13 @@ html[data-ground="dark"] .derive, html[data-ground="dark"] .provecard, html[data
 .dash { opacity: 0; transition: opacity 0.6s var(--ease); }
 .dash[data-ready="true"] { opacity: 1; }
 @media (prefers-reduced-motion: reduce) { .dash { transition: none; } }
+
+/* ST-06 · the wall and the rules as canvases */
+.wallbox { flex: 1; min-height: 0; position: relative; }
+.wallcv { position: absolute; inset: 0; display: block; cursor: crosshair; }
+.ruleon { color: var(--ok); font-weight: 600; text-transform: none; letter-spacing: 0; }
+.replayrow { grid-template-columns: auto minmax(0, 1fr); grid-template-areas: "k v" "k d"; row-gap: 0.25rem; }
+.replayrow .cvl { grid-area: k; } .replayrow .wsregv { grid-area: v; display: flex; flex-wrap: wrap; gap: 0.35rem 1rem; align-items: center; } .replayrow .wsregv.dim { grid-area: d; color: var(--ink-faint); display: block; }
+.replay { display: inline-flex; align-items: center; gap: 0.35rem; white-space: nowrap; }
+.replay b { color: var(--ink); font-weight: 600; } .replay[data-ok="true"] b { color: var(--ok); }
+@media (max-width: 760px) { .wallgrid { grid-template-columns: 1fr; grid-template-rows: minmax(0, 1.9fr) minmax(0, 1fr); } .replayrow .wsregv.dim { display: none; } .replayrow { padding: 0.3rem 0.6rem; } .replay { font-size: 0.5rem; } }

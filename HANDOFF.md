@@ -188,6 +188,29 @@ state changes on small elements (hover, cursor). Never: a full-panel overlay
 that blends or animates; animating box-shadow, background-position, filter,
 or SVG attributes; view-transition names on dock tabs or station content.
 
+## Shipped 2026-09-08 (night): ADVERSARIES v2, the wall, the rules, the replay
+- Research: 569 fixtures (511 known-bad, 58 known-good) in 5 families, 253
+  declared rules; the old bar list showed ~12 rules of 253. The sealed
+  reports carry replay ledgers: gate-a-validation-1.2.1 (fixtures block:
+  24 fixtures, 23 rejected for the declared diagnostic, 1 passed), the
+  1.2.8 continuity contract (fixture_validation 40/40 rejected, 5/5
+  passed, actuals sha frozen before expectations), the 1.2.6 schema
+  mutation results (18/18 rejected) and the 1.2.7 mutation validation
+  (53/53 rejected, actuals sha). None of this was exposed before.
+- THE WALL is a canvas: every fixture one cell banded by family; red for
+  must-be-rejected with depth by byte size (log), hollow ink for must-pass,
+  faded for retained history; the cursor and hover as before; the fit loop
+  picks the largest square that fits every band.
+- THE RULES is a squarified treemap (canvas) of all 253 declared rules,
+  area = fixtures aimed at the rule, labels where the tile has room.
+  LINKED: resting on a cell lights its rule; resting on a rule lights every
+  cell that must fail against it and dims the rest (press to pin).
+- THE REPLAY row: every validation report with a replay or mutation block,
+  version, rejected n/n, passed n/n, "actuals frozen" when the sha is
+  recorded, a Digest chip per report; the catalog's own binding sentence.
+- Phone: cells down to 2 px with 2 px gaps and 12 px bands; wall 1.9fr over
+  the treemap 1fr.
+
 ## Shipped 2026-09-08 (later): ONE CARD AT A TIME
 - `src/lib/layers.ts`: a tiny layer bus. Every floating surface (Stat's
   derivation, Digest's receipt, the Palette) takes a token, claims the layer
