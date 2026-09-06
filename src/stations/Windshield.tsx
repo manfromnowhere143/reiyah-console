@@ -81,7 +81,7 @@ export function Windshield() {
         <line x1={(xa + xh) / 2} x2={(xa + xh) / 2} y1={top - 18} y2={bottom + 10} className="wsplit" />
         <line x1={(xh + xj) / 2} x2={(xh + xj) / 2} y1={top - 18} y2={bottom + 10} className="wsplit" />
         <line x1={W * 0.08} x2={W * 0.92} y1={y(1)} y2={y(1)} className="mind" />
-        <text x={W * 0.08} y={y(1) - 5} className="mlab" textAnchor="start">independence 1.0</text>
+        {!mobile && <text x={W * 0.08} y={y(1) - 5} className="mlab" textAnchor="start">independence 1.0</text>}
         {autoT && (
           <g className="mser s0">
             <line x1={xa} x2={xa} y1={y(autoT.lo)} y2={y(autoT.hi)} className="mci" />

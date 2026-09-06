@@ -1820,4 +1820,4 @@ button:focus-visible, a:focus-visible { outline: 2px solid var(--ink-soft); outl
   .wsgrid > .wspanel:first-child { min-height: 7rem; }
 }
 
-.wind .wunkmark { font-family: "B612 Mono", Menlo, monospace; font-size: 10px; fill: var(--ink-3); }
+.wind .wunkmark { font-family: "B612 Mono", Menlo, monospace; font-size: 11px; fill: var(--ink-2); }
