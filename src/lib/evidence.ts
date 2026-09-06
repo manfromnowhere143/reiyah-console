@@ -6,6 +6,12 @@
    In both modes WebCrypto re-verification works on the exact bytes; the mode
    is always displayed, never blended. */
 
+/* every sealed byte is fetched under the build that shipped with it: the
+   bundle is immutable and hashed, the snapshot is cached for minutes in the
+   browser and an hour at the edge, so without this a new station could meet
+   an old manifest and block on bytes that exist. The query pins the pair. */
+export const snap = (path: string) => `${path}${path.includes("?") ? "&" : "?"}b=${__BUILD_ID__}`;
+
 export type SurfaceState<T = unknown> =
   | { state: "loading" }
   | { state: "observed"; meta: SurfaceMeta; data: T }
@@ -65,7 +71,7 @@ export function getSealedInfo(): SealedInfo | null {
 
 async function loadSealed(): Promise<boolean> {
   try {
-    const r = await fetch("/snapshot/manifest.json", opts());
+    const r = await fetch(snap("/snapshot/manifest.json"), opts());
     if (!r.ok) return false;
     const m = await r.json();
     if (m?.kind !== "sealed_snapshot") return false;
@@ -85,7 +91,7 @@ export async function fetchCatalog(): Promise<CatalogEntry[]> {
   if (catalogCache) return catalogCache;
   try {
     if (mode === "sealed") {
-      const r = await fetch("/snapshot/catalog.json");
+      const r = await fetch(snap("/snapshot/catalog.json"));
       if (r.ok) { catalogCache = (await r.json()).entries ?? []; return catalogCache!; }
       return [];
     }
@@ -124,7 +130,7 @@ export function warmSealedSurfaces() {
 async function fetchSurfaceByPathUncached<T = unknown>(rel: string): Promise<SurfaceState<T>> {
   if (mode === "sealed") {
     try {
-      const r = await fetch(`/snapshot/p/${rel.replaceAll("/", "__")}`);
+      const r = await fetch(snap(`/snapshot/p/${rel.replaceAll("/", "__")}`));
       if (!r.ok) return { state: "blocked", reason: `sealed_missing_${r.status}` };
       const bytes = await r.arrayBuffer();
       const text = new TextDecoder().decode(bytes);
@@ -172,7 +178,7 @@ let schemaMemo: Promise<SchemaRow[]> | null = null;
 export function fetchSchemaIndex(): Promise<SchemaRow[]> {
   if (schemaMemo && !bypass) return schemaMemo;
   schemaMemo = (async () => {
-    const r = await fetch(mode === "sealed" ? "/snapshot/schemas-index.json" : "/api/schemas", opts());
+    const r = await fetch(mode === "sealed" ? snap("/snapshot/schemas-index.json") : "/api/schemas", opts());
     if (!r.ok) throw new Error(`schema_index_http_${r.status}`);
     const j = await r.json();
     return (j.rows ?? []) as SchemaRow[];
@@ -229,10 +235,10 @@ export async function fetchRaw(id: string): Promise<RawResult> {
   if (id.startsWith("gateb/")) {
     /* the Gate B lane: a second source with its own digests, never mixed */
     const fid = id.slice("gateb/".length);
-    const r = await fetch(mode === "sealed" ? `/snapshot/gateb/raw/${fid}` : `/api/gateb/raw/${fid}`, opts());
+    const r = await fetch(mode === "sealed" ? snap(`/snapshot/gateb/raw/${fid}`) : `/api/gateb/raw/${fid}`, opts());
     if (!r.ok) throw new Error(`gateb_raw_http_${r.status}`);
     const bytes = await r.arrayBuffer();
-    const m = await fetch(mode === "sealed" ? "/snapshot/gateb/manifest.json" : "/api/gateb/manifest", opts()).then((x) => x.json()).catch(() => null);
+    const m = await fetch(mode === "sealed" ? snap("/snapshot/gateb/manifest.json") : "/api/gateb/manifest", opts()).then((x) => x.json()).catch(() => null);
     const row = m?.files?.find((f: any) => f.id === fid);
     return { bytes, path: row?.path ?? fid, serverSha256: row?.sha256 ?? "unknown", byteLength: bytes.byteLength };
   }
@@ -241,7 +247,7 @@ export async function fetchRaw(id: string): Promise<RawResult> {
     if (!row) throw new Error("unknown_sealed_surface");
     if (!bypass && rawMemo.has(id)) return rawMemo.get(id)!;
     const job = (async () => {
-      const r = await fetch(`/snapshot/raw/${id}`, opts());
+      const r = await fetch(snap(`/snapshot/raw/${id}`), opts());
       if (!r.ok) throw new Error(`sealed_raw_http_${r.status}`);
       const bytes = await r.arrayBuffer();
       return { bytes, path: row.path, serverSha256: row.sha256 ?? "unknown", byteLength: bytes.byteLength };

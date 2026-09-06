@@ -2,13 +2,13 @@
  "present": true,
  "identity": {
   "state": "observed",
-  "head": "f3963ee4c8c3097a51259c7f1a4f219c4d5bc035",
+  "head": "678c3be34e40ecfe303b9d2828c507f00fadd84e",
   "branch": "gate-b-measurement",
-  "worktree_clean": false,
-  "commit_count": 54,
+  "worktree_clean": true,
+  "commit_count": 55,
   "root": "/Users/danielwahnich/workspace/reiyah-gate-b"
  },
- "sealedAt": "2026-09-06T09:53:20.753Z",
+ "sealedAt": "2026-09-06T09:59:56.459Z",
  "files": [
   {
    "id": "evidence__claim-status-register-2026-08-29.json",
@@ -109,8 +109,8 @@
   {
    "id": "human-channel__README.md",
    "path": "human-channel/README.md",
-   "bytes": 3451,
-   "sha256": "sha256:f02a59e77fb6168c9af2ef36ef73bc9cb3b2e4684c803448f7166a4e7521f1c9"
+   "bytes": 3918,
+   "sha256": "sha256:219c698fe2402e7d4c25df4c05272b052e8c954adbe5f2a6442b3853192618a7"
   },
   {
    "id": "evidence__measurement__joint-performance-nuscenes-val.excerpt.json",

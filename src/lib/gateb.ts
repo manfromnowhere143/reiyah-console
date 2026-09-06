@@ -3,7 +3,7 @@
    Transcripts are parsed with strict patterns; a transcript that does not
    match its known shape yields a blocked panel, never a guessed number.
    Every parsed figure carries the transcript's path and digest. */
-import { getMode, setBypassCache } from "./evidence";
+import { getMode, setBypassCache, snap } from "./evidence";
 void setBypassCache;
 
 export interface LaneFile { id: string; path: string; bytes?: number; sha256?: string; state?: string }
@@ -19,7 +19,7 @@ const rawMemo = new Map<string, Promise<{ text: string; file: LaneFile }>>();
 export function fetchLane(): Promise<LaneManifest> {
   if (manifestMemo) return manifestMemo;
   manifestMemo = (async () => {
-    const r = await fetch(getMode() === "sealed" ? "/snapshot/gateb/manifest.json" : "/api/gateb/manifest");
+    const r = await fetch(getMode() === "sealed" ? snap("/snapshot/gateb/manifest.json") : "/api/gateb/manifest");
     if (!r.ok) return { present: false, reason: `lane_manifest_http_${r.status}` };
     return (await r.json()) as LaneManifest;
   })();
@@ -34,7 +34,7 @@ export async function fetchLaneText(pathRel: string): Promise<{ text: string; fi
     const m = await fetchLane();
     const file = m.files?.find((f) => f.id === id);
     if (!m.present || !file || file.state === "absent") throw new Error(`lane_file_absent:${pathRel}`);
-    const r = await fetch(getMode() === "sealed" ? `/snapshot/gateb/raw/${id}` : `/api/gateb/raw/${id}`);
+    const r = await fetch(getMode() === "sealed" ? snap(`/snapshot/gateb/raw/${id}`) : `/api/gateb/raw/${id}`);
     if (!r.ok) throw new Error(`lane_raw_http_${r.status}`);
     return { text: await r.text(), file };
   })();
