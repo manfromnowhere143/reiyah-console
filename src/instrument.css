@@ -209,14 +209,10 @@ button:focus-visible, a:focus-visible { outline: 2px solid var(--ink-soft); outl
    the GPU thread, so it stays smooth even entering the canvas stations. */
 ::view-transition-group(stage-panel) { animation-timing-function: var(--ease); }
 ::view-transition-old(root), ::view-transition-new(root) { animation: none; }
-/* a cover fade: the old panel stays fully opaque underneath while the new one
-   fades in over it. Brightness cannot dip, no blend mode is relied upon, and
-   the result is identical on every compositor. Old and new are the same
-   size and place, so the cover reads as one panel becoming the next. */
-::view-transition-image-pair(stage-panel) { isolation: isolate; }
-::view-transition-old(stage-panel) { animation: none; opacity: 1; mix-blend-mode: normal; }
-::view-transition-new(stage-panel) { animation: panelIn 0.28s var(--ease) both; mix-blend-mode: normal; will-change: opacity; }
-@keyframes panelIn { from { opacity: 0; } to { opacity: 1; } }
+::view-transition-old(stage-panel) { animation: panelOut 0.22s var(--damped) both; will-change: opacity, transform; }
+::view-transition-new(stage-panel) { animation: panelIn 0.34s var(--ease) both; will-change: opacity, transform; }
+@keyframes panelOut { to { opacity: 0; transform: scale(0.992); } }
+@keyframes panelIn { from { opacity: 0; transform: scale(1.008); } }
 
 /* the dock: persistent station cards */
 .dock {
@@ -669,7 +665,7 @@ button:focus-visible, a:focus-visible { outline: 2px solid var(--ink-soft); outl
 /* harbor */
 .harbor { display: grid; grid-template-rows: 1fr; height: 100%; min-height: 0; }
 .fieldwrap { position: relative; overflow: hidden; background: transparent; min-height: 0; margin: -1.1rem -1.3rem -0.9rem; }
-.fieldwrap canvas { position: absolute; inset: 0; width: 100%; height: 100%; transition: opacity 180ms var(--ease); }
+.fieldwrap canvas { position: absolute; inset: 0; width: 100%; height: 100%; transition: opacity 0.5s var(--ease); }
 /* worker path: hidden until the worker's first frame lands, then fades in.
    the main-thread fallback never sets data-live, so its synchronous first
    frame is visible immediately (and lands in the view-transition snapshot). */
@@ -1856,7 +1852,7 @@ button:focus-visible, a:focus-visible { outline: 2px solid var(--ink-soft); outl
 }
 
 /* the windshield scene: a still canvas, revealed once (opacity only) */
-.wscene { position: absolute; inset: 0; display: block; opacity: 0; transition: opacity 180ms ease; }
+.wscene { position: absolute; inset: 0; display: block; opacity: 0; transition: opacity 700ms ease; }
 .wscene[data-ready="true"] { opacity: 1; }
 @media (prefers-reduced-motion: reduce) { .wscene { transition: none; } }
 
@@ -2012,7 +2008,7 @@ button:focus-visible, a:focus-visible { outline: 2px solid var(--ink-soft); outl
   box-shadow: inset 0 1px 0 color-mix(in srgb, var(--sheen) 60%, transparent), 0 0 0 1px color-mix(in srgb, var(--ink) 12%, transparent), 0 30px 70px -24px rgba(0, 0, 0, 0.7), 0 10px 24px -12px rgba(0, 0, 0, 0.5);
 }
 html[data-ground="dark"] .derive, html[data-ground="dark"] .provecard, html[data-ground="dark"] .palette { background: #101318; }
-.dash { opacity: 0; transition: opacity 180ms var(--ease); }
+.dash { opacity: 0; transition: opacity 0.6s var(--ease); }
 .dash[data-ready="true"] { opacity: 1; }
 @media (prefers-reduced-motion: reduce) { .dash { transition: none; } }
 
@@ -2047,9 +2043,6 @@ html[data-ground="dark"] .derive, html[data-ground="dark"] .provecard, html[data
 .dockwrap[data-right="true"] > .dock { -webkit-mask-image: linear-gradient(90deg, #000 0, #000 calc(100% - 4.5rem), transparent 100%); mask-image: linear-gradient(90deg, #000 0, #000 calc(100% - 4.5rem), transparent 100%); }
 .dockwrap[data-left="true"] > .dock { -webkit-mask-image: linear-gradient(90deg, transparent 0, #000 3rem, #000 100%); mask-image: linear-gradient(90deg, transparent 0, #000 3rem, #000 100%); }
 .dockwrap[data-left="true"][data-right="true"] > .dock { -webkit-mask-image: linear-gradient(90deg, transparent 0, #000 3rem, #000 calc(100% - 4.5rem), transparent 100%); mask-image: linear-gradient(90deg, transparent 0, #000 3rem, #000 calc(100% - 4.5rem), transparent 100%); }
-/* the pressed card answers at once, before the station has arrived */
-.navcard[data-pending="true"] { background: color-mix(in srgb, var(--glass) 55%, var(--ink) 9%); border-color: var(--glass-rim); }
-.navcard[data-pending="true"] .nid { color: var(--ink); }
 .navcard .nrail { color: var(--ink-ghost); letter-spacing: 0.1em; }
 .navcard[data-rail="measurement"] .nrail, .navcard[data-rail="audit"] .nrail { color: var(--ok); }
 /* a rail begins: a hairline stands before its first card */

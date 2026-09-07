@@ -75,7 +75,7 @@ export function Adversaries() {
     replays.sort((a, b) => a.version.localeCompare(b.version, undefined, { numeric: true }));
     return { fx, replays };
   });
-  if (state.phase === "loading") return <Station id="ST–06" name="Adversaries"><div className="note" data-loading="true">reading fixture catalog…</div></Station>;
+  if (state.phase === "loading") return <Station id="ST–06" name="Adversaries"><div className="note">reading fixture catalog…</div></Station>;
   if (state.phase === "blocked" || state.data.fx.state !== "observed")
     return <Station id="ST–06" name="Adversaries"><Blocked reason={state.phase === "blocked" ? state.reason : (state.data.fx as any).reason} /></Station>;
   return <Wall meta={state.data.fx.meta} fixtures={state.data.fx.data.fixtures ?? []} catalog={state.data.fx.data} replays={state.data.replays} />;

@@ -109,30 +109,3 @@ export function prefetchNeighbours(active: string): void {
     }
   });
 }
-
-/* after the first screen has settled: warm the whole field, gently. One
-   station at a time, in dock order outward from the active one, each in idle
-   time, so the network is never flooded and the first press of any station
-   finds its code and bytes already here. The shared surfaces (index, fixture
-   catalog, register) are memoised, so the remaining field costs about 600 KB
-   over the wire in total. Skipped under a data-saver preference. */
-let warmingAll = false;
-export function warmFieldGently(active: string): void {
-  if (warmingAll) return;
-  warmingAll = true;
-  const conn = (navigator as any).connection;
-  if (conn?.saveData) return;
-  const i = Math.max(0, STATIONS.findIndex((s) => s.id === active));
-  const order: string[] = [];
-  for (let k = 1; k < STATIONS.length; k++) { for (const j of [i + k, i - k]) { const s = STATIONS[(j + STATIONS.length) % STATIONS.length]; if (s && !order.includes(s.id) && s.id !== active) order.push(s.id); } }
-  const step = (n: number) => {
-    if (n >= order.length) return;
-    idle(async () => {
-      const id = order[n];
-      try { await STATION_CODE[id]?.(); } catch { /* pressed later, fetched then */ }
-      try { await prefetchStation(id); } catch { /* the station reports it */ }
-      step(n + 1);
-    });
-  };
-  setTimeout(() => step(0), 1200);
-}

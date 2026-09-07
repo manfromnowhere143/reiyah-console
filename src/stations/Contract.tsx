@@ -152,7 +152,7 @@ export function Contract() {
   }, [hover, rows.length]);
   const pick = (i: number) => { setHover(i); setAt(rows[i]?.path ?? null); };
 
-  if (state.phase === "loading") return <Station id="ST–10" name="The Contract"><div className="note" data-loading="true">reading the contract layer…</div></Station>;
+  if (state.phase === "loading") return <Station id="ST–10" name="The Contract"><div className="note">reading the contract layer…</div></Station>;
   if (state.phase === "blocked") return <Station id="ST–10" name="The Contract"><Blocked reason={state.reason} /></Station>;
 
   const { fixtures, profile, register, mission, SRC } = state.data;
