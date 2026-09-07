@@ -185,7 +185,7 @@ export function Reference() {
     };
   });
   const box = useBox(state.phase);
-  if (state.phase === "loading") return <Station id="ST–17" name="The Reference"><div className="note">reading the reference audit…</div></Station>;
+  if (state.phase === "loading") return <Station id="ST–17" name="The Reference"><div className="note" data-loading="true">reading the reference audit…</div></Station>;
   if (state.phase === "blocked") return <Station id="ST–17" name="The Reference"><Blocked reason={state.reason} /></Station>;
   const { lane, d } = state.data;
   if (!lane.present || !d) return <Station id="ST–17" name="The Reference"><Blocked reason={`the Gate B lane is not present in this source: ${lane.reason ?? "unknown"}`} /></Station>;

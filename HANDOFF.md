@@ -188,6 +188,39 @@ state changes on small elements (hover, cursor). Never: a full-panel overlay
 that blends or animates; animating box-shadow, background-position, filter,
 or SVG attributes; view-transition names on dock tabs or station content.
 
+## Shipped 2026-09-07 (night): ONE MOTION, the flash on every press removed
+User's 120 fps phone recording, read frame by frame: pressing a station showed
+the old panel fading to near black, then the new one arriving in pieces (its
+canvas fading in over 700 ms after the crossfade, the Harbor field after its
+worker's first frame). Three causes, each fixed at the source:
+- **The snapshot was taken before the station was ready.** `go()` now
+  prepares the destination first (code chunk + declared bytes, capped 350 ms)
+  and runs ONE view transition whose commit callback waits until the new
+  panel carries no `[data-loading]`, no `[data-ready="false"]` and no
+  `[data-live="false"]` (capped 520 ms), so the browser snapshots a complete
+  station. The wait is polled with setTimeout, not requestAnimationFrame:
+  inside a view-transition callback rendering is paused and animation frames
+  never fire (the first attempt hung to Chrome's 4 s limit). Every loading
+  note carries `data-loading="true"`. Canvas fades (`.wscene`, `.dash`, the
+  Harbor field) are 180 ms; the crossfade is the arrival.
+- **React.lazy held the reveal 300 ms.** A station chunk resolving inside the
+  commit suspended, showed the null fallback, and React's fallback throttle
+  then delayed the content: the flash. Chunks are now held in a plain module
+  registry awaited before the commit (`ensureStation`); no Suspense.
+- **The crossfade dipped through the ground colour.** Old and new panel are
+  now blended `plus-lighter` inside an isolated image pair with equal 0.3 s
+  durations: their opacities sum to one at every instant.
+- The field index and the palette close INSIDE the transition commit
+  (`go(id, push, before)`), so the overlay and the station change in the
+  same frame. Dock count uses card centres, steady while the dock glides.
+- Measured (headless, phone size, through the field index): every navigation
+  snapshots with 0 unready markers after 21 to 42 ms (was 320 ms with the
+  Suspense throttle); boot unchanged at 1.6 MB / 30 requests; 61 fps; 18
+  stations x 2 viewports x 2 grounds zero overflow.
+- Rig: `transition-probe.mjs` (scratchpad) wraps startViewTransition,
+  records per navigation the wait and the unready count at snapshot, and
+  screencasts a walk for frame sheets.
+
 ## Shipped 2026-09-07 (evening): THE FOUR, measured before and after
 Baseline captured first with a headless rig over the sealed build: 17 stations
 x 2 viewports x 2 grounds, zero overflow, 61 fps, but 4.9 MB over 250

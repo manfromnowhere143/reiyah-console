@@ -145,7 +145,7 @@ export function Frontier() {
   }, [hover, ordered.length]);
   const pick = (i: number) => { setHover(i); setAt(ordered[i]?.discovery_id ?? null); };
 
-  if (state.phase === "loading") return <Station id="ST–08" name="Frontier"><div className="note">reading discovery register…</div></Station>;
+  if (state.phase === "loading") return <Station id="ST–08" name="Frontier"><div className="note" data-loading="true">reading discovery register…</div></Station>;
   if (state.phase === "blocked" || state.data.state !== "observed")
     return <Station id="ST–08" name="Frontier"><Blocked reason={state.phase === "blocked" ? state.reason : (state.data as any).reason} /></Station>;
 

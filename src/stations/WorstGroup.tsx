@@ -219,7 +219,7 @@ export function WorstGroup() {
     return () => clearInterval(t);
   }, [hover, allGroups.length]);
 
-  if (state.phase === "loading") return <Station id="ST–12" name="The Worst Group"><div className="note">reading the worst-group records…</div></Station>;
+  if (state.phase === "loading") return <Station id="ST–12" name="The Worst Group"><div className="note" data-loading="true">reading the worst-group records…</div></Station>;
   if (state.phase === "blocked") return <Station id="ST–12" name="The Worst Group"><Blocked reason={state.reason} /></Station>;
   const { lane, wg, strata } = state.data;
   if (!lane.present || !wg) return <Station id="ST–12" name="The Worst Group"><Blocked reason={`the Gate B lane's worst-group records are not present in this source: ${lane.reason ?? "unknown"}`} /></Station>;

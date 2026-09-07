@@ -57,7 +57,7 @@ export function Law() {
   });
   const box = useBox(state.phase);
   const jbox = useBox(state.phase);
-  if (state.phase === "loading") return <Station id="ST–15" name="The Law"><div className="note">reading three domains…</div></Station>;
+  if (state.phase === "loading") return <Station id="ST–15" name="The Law"><div className="note" data-loading="true">reading three domains…</div></Station>;
   if (state.phase === "blocked") return <Station id="ST–15" name="The Law"><Blocked reason={state.reason} /></Station>;
   const { lane, d } = state.data;
   if (!lane.present || !d) return <Station id="ST–15" name="The Law"><Blocked reason={`the Gate B lane is not present in this source: ${lane.reason ?? "unknown"}`} /></Station>;
