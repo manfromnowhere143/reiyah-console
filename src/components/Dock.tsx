@@ -11,11 +11,16 @@ import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import { RAILS, STATIONS } from "../lib/camera";
 import { claimLayer, newLayerToken, onLayerClaim } from "../lib/layers";
+import { prefetchStation, STATION_CODE } from "../lib/prefetch";
+import type { Navigate } from "./StationFrame";
 
-export function Dock({ active, go }: { active: string; go: (id: string) => void }) {
+const warm = (id: string) => { STATION_CODE[id]?.().catch(() => {}); prefetchStation(id).catch(() => {}); };
+
+export function Dock({ active, pending, go }: { active: string; pending: string | null; go: Navigate }) {
   const ref = useRef<HTMLElement>(null);
   const [edge, setEdge] = useState({ left: false, right: false, beyond: 0 });
   const [open, setOpen] = useState(false);
+  const indexRef = useRef<HTMLDivElement>(null);
   const token = useRef(newLayerToken());
   useEffect(() => onLayerClaim((t) => { if (t !== token.current) setOpen(false); }), []);
 
@@ -35,19 +40,40 @@ export function Dock({ active, go }: { active: string; go: (id: string) => void 
     return () => { ro.disconnect(); el.removeEventListener("scroll", measure); };
   }, []);
 
-  /* the pressed station is never left out of view */
-  useEffect(() => {
+  /* Settle the selected card in the same paint as the page. A second smooth
+     scroll left the rail moving under the user's next tap after arrival. */
+  useLayoutEffect(() => {
     const el = ref.current?.querySelector<HTMLElement>(`.navcard[data-station="${active}"]`);
-    el?.scrollIntoView({ inline: "nearest", block: "nearest", behavior: matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth" });
+    el?.scrollIntoView({ inline: "nearest", block: "nearest", behavior: "instant" });
   }, [active]);
 
   const openIndex = () => { claimLayer(token.current); setOpen(true); };
+  const closeIndex = () => { if (pending) go(active); setOpen(false); };
+  useLayoutEffect(() => {
+    if (!open) return;
+    const previous = document.activeElement as HTMLElement | null;
+    indexRef.current?.querySelector<HTMLElement>(".fixrow[data-active='true']")?.focus({ preventScroll: true });
+    return () => { if (previous?.isConnected) previous.focus({ preventScroll: true }); };
+  }, [open]);
   useEffect(() => {
     if (!open) return;
-    const onKey = (e: KeyboardEvent) => { if (e.key === "Escape") { e.preventDefault(); e.stopPropagation(); setOpen(false); } };
+    const onKey = (e: KeyboardEvent) => { if (e.key === "Escape") { e.preventDefault(); e.stopImmediatePropagation(); closeIndex(); } };
     window.addEventListener("keydown", onKey, true);
     return () => window.removeEventListener("keydown", onKey, true);
-  }, [open]);
+  }, [open, pending, active, go]);
+
+  const onIndexKey = (e: React.KeyboardEvent) => {
+    const rows = [...(indexRef.current?.querySelectorAll<HTMLButtonElement>(".fixrow") ?? [])];
+    const index = rows.indexOf(document.activeElement as HTMLButtonElement);
+    let next: number | undefined;
+    if (e.key === "ArrowDown" || e.key === "ArrowRight") next = (index + 1) % rows.length;
+    if (e.key === "ArrowUp" || e.key === "ArrowLeft") next = (index - 1 + rows.length) % rows.length;
+    if (e.key === "Home") next = 0;
+    if (e.key === "End") next = rows.length - 1;
+    if (e.key === "Tab") next = (index + (e.shiftKey ? -1 : 1) + rows.length) % rows.length;
+    if (next !== undefined) { e.preventDefault(); rows[next]?.focus(); }
+    e.stopPropagation();
+  };
 
   let lastRail = "";
   return (
@@ -65,7 +91,10 @@ export function Dock({ active, go }: { active: string; go: (id: string) => void 
               data-first={String(first)}
               data-red={String(!!s.red)}
               data-active={String(s.id === active)}
+              data-pending={String(s.id === pending)}
+              aria-busy={s.id === pending || undefined}
               aria-current={s.id === active ? "page" : undefined}
+              onPointerEnter={() => warm(s.id)} onFocus={() => warm(s.id)} onPointerDown={() => warm(s.id)}
               onClick={() => go(s.id)}
             >
               <span className="nid">{s.num}<span className="nrail"> · {rail.name.replace(/^The /, "")}</span></span>
@@ -80,15 +109,18 @@ export function Dock({ active, go }: { active: string; go: (id: string) => void 
         <span className="dal">{edge.beyond > 0 ? "more" : "all"}</span>
       </button>
       {open && createPortal(
-        <div className="overlay" onClick={() => setOpen(false)}>
-          <div className="fieldindex" role="dialog" aria-label="The field index: every station" onClick={(e) => e.stopPropagation()}>
+        <div className="overlay" onClick={closeIndex}>
+          <div className="fieldindex" ref={indexRef} role="dialog" aria-modal="true" aria-label="The field index: every station" onClick={(e) => e.stopPropagation()} onKeyDown={onIndexKey}>
             <div className="fixhead"><span className="fixk">the field index</span><span className="fixn">{STATIONS.length} stations · three rails · press to fly · esc</span></div>
             <div className="fixrails">
               {RAILS.map((r) => (
                 <section key={r.id} className="fixrail" data-rail={r.id} aria-label={r.name}>
                   <div className="fixrk">{r.name}<i>{r.kicker}</i></div>
                   {STATIONS.filter((s) => s.rail === r.id).map((s) => (
-                    <button key={s.id} className="fixrow" data-active={String(s.id === active)} data-red={String(!!s.red)} onClick={() => { setOpen(false); go(s.id); }}>
+                    <button key={s.id} className="fixrow" data-station={s.id} data-active={String(s.id === active)} data-red={String(!!s.red)}
+                      aria-current={s.id === active ? "page" : undefined} aria-busy={s.id === pending || undefined} data-pending={String(s.id === pending)}
+                      onPointerEnter={() => warm(s.id)} onFocus={() => warm(s.id)} onPointerDown={() => warm(s.id)}
+                      onClick={() => go(s.id, { animate: false, onCommit: () => setOpen(false) })}>
                       <span className="fixid">{s.num}</span>
                       <span className="fixnm">{s.name}</span>
                       <span className="fixds">{s.desc}</span>

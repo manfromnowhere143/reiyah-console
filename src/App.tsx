@@ -3,7 +3,7 @@
    morphs the panel's content in place through the View Transitions API
    (compositor-speed cross-morph; jump cut under reduced motion). The dock
    and HUD never move. The URL is the panel state. Escape returns home. */
-import { useEffect, useRef, useState } from "react";
+import { lazy, useCallback, useEffect, useRef, useState } from "react";
 import { flushSync } from "react-dom";
 import { ProofBoot, verifyEvidenceOnce, type VerifiedEvidence } from "./boot/ProofBoot";
 import { STATIONS } from "./lib/camera";
@@ -16,7 +16,7 @@ import { ReceiptHost } from "./components/primitives";
 import { Harbor } from "./stations/Harbor";
 import { Dock } from "./components/Dock";
 import { STATION_CODE, prefetchNeighbours } from "./lib/prefetch";
-import { Suspense, lazy } from "react";
+import { StationFrame, type Navigate, type NavigationOptions } from "./components/StationFrame";
 
 /* every station but the Harbor is its own code chunk, fetched when first
    pressed (or a moment earlier, by the neighbour prefetch); the Harbor is the
@@ -36,10 +36,23 @@ export default function App() {
   );
 }
 
-const urlStation = () => new URLSearchParams(location.search).get("st") ?? "harbor";
+const urlStation = () => {
+  const id = new URLSearchParams(location.search).get("st");
+  return STATIONS.some((s) => s.id === id) ? id! : "harbor";
+};
+interface Frame { id: string; key: number }
+interface NavigationRequest { frame: Frame; options: NavigationOptions }
+interface PanelTransition { skipTransition(): void; ready: Promise<void>; finished: Promise<void> }
 
 function Stage({ ev, onEvidence }: { ev: VerifiedEvidence; onEvidence: (e: VerifiedEvidence) => void }) {
-  const [active, setActive] = useState<string>(urlStation());
+  const [current, setCurrent] = useState<Frame>(() => ({ id: urlStation(), key: 0 }));
+  const [pending, setPending] = useState<Frame | null>(null);
+  const active = current.id;
+  const currentRef = useRef(current);
+  currentRef.current = current;
+  const sequence = useRef(0);
+  const request = useRef<NavigationRequest | null>(null);
+  const transition = useRef<PanelTransition | null>(null);
   const [lastEventAt, setLastEventAt] = useState<number | null>(Date.now());
   const [connected, setConnected] = useState(true);
   const [gen, setGen] = useState(0);
@@ -47,34 +60,66 @@ function Stage({ ev, onEvidence }: { ev: VerifiedEvidence; onEvidence: (e: Verif
   const sealed = getSealedInfo();
   const reverifying = useRef(false);
 
-  /* navigation: the panel content cross-morphs in place through the View
-     Transitions API (compositor-only opacity + scale on the stage panel).
-     The earlier shared-element "forge" morph is gone: WebKit snapshots only
-     the composited parts of a named element, so mid-morph the new station
-     appeared torn, a canvas and a chip floating with the rest missing. */
-  const go = (id: string, push = true) => {
-    if (id === active) return;
+  /* Keep the current DOM alive while one destination loads and lays out.
+     Only the latest request may commit; a slow earlier request cannot take
+     the user back. Menu dismissal, page selection and history are one act. */
+  const go = useCallback<Navigate>((id, options = {}) => {
+    if (!STATIONS.some((s) => s.id === id)) return;
+    transition.current?.skipTransition();
+    request.current = null;
+    if (id === currentRef.current.id) {
+      setPending(null);
+      options.onCommit?.();
+      return;
+    }
+    const frame = { id, key: ++sequence.current };
+    request.current = { frame, options };
+    setPending(frame);
+  }, []);
+
+  const reveal = useCallback((key: number) => {
+    const next = request.current;
+    if (!next || next.frame.key !== key) return;
     const commit = () => {
-      flushSync(() => setActive(id));
-      if (push) history.pushState({ st: id }, "", id === "harbor" ? location.pathname : `?st=${id}`);
+      if (request.current !== next) return;
+      request.current = null;
+      if (next.options.push !== false) {
+        const url = new URL(location.href);
+        url.searchParams.delete("at");
+        if (next.frame.id === "harbor") url.searchParams.delete("st");
+        else url.searchParams.set("st", next.frame.id);
+        history.pushState({ st: next.frame.id }, "", url.pathname + url.search + url.hash);
+      }
+      currentRef.current = next.frame;
+      flushSync(() => {
+        setCurrent(next.frame);
+        setPending(null);
+        next.options.onCommit?.();
+      });
     };
     const reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
     const svt = (document as any).startViewTransition?.bind(document);
-    if (reduced || !svt) { commit(); return; }
-    svt(commit);
-  };
+    if (next.options.animate === false || reduced || !svt) { commit(); return; }
+    try {
+      const running: PanelTransition = svt(commit);
+      transition.current = running;
+      running.ready.catch(() => {}); // a newer gesture may skip the snapshot
+      running.finished.catch(() => {}).then(() => {
+        if (transition.current === running) transition.current = null;
+      });
+    } catch { commit(); } // a transition is optional; navigation is not
+  }, []);
+
+  useEffect(() => () => { request.current = null; transition.current?.skipTransition(); }, []);
 
   useEffect(() => {
-    const onPop = () => {
-      const id = urlStation();
-      const reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
-      const svt = (document as any).startViewTransition?.bind(document);
-      const commit = () => flushSync(() => setActive(id));
-      if (!reduced && svt) svt(commit); else commit();
-    };
+    const onPop = () => go(urlStation(), { push: false });
     const onKey = (e: KeyboardEvent) => {
-      if (e.key === "Escape") go("harbor");
-      const idx = STATIONS.findIndex((s) => s.id === active);
+      if (e.defaultPrevented || (e.target instanceof Element && e.target.closest("input, textarea, select, [contenteditable='true'], [role='dialog']"))) return;
+      if (!["Escape", "ArrowRight", "ArrowLeft"].includes(e.key)) return;
+      e.preventDefault();
+      if (e.key === "Escape") { go("harbor"); return; }
+      const idx = STATIONS.findIndex((s) => s.id === (request.current?.frame.id ?? currentRef.current.id));
       if (e.key === "ArrowRight") go(STATIONS[(idx + 1) % STATIONS.length].id);
       if (e.key === "ArrowLeft") go(STATIONS[(idx - 1 + STATIONS.length) % STATIONS.length].id);
     };
@@ -84,8 +129,7 @@ function Stage({ ev, onEvidence }: { ev: VerifiedEvidence; onEvidence: (e: Verif
       window.removeEventListener("popstate", onPop);
       window.removeEventListener("keydown", onKey);
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [active]);
+  }, [go]);
 
   /* after boot, in idle time, warm every station's bytes. Sealed bytes are
      content-addressed and immutable within a snapshot, so this is honest
@@ -116,7 +160,7 @@ function Stage({ ev, onEvidence }: { ev: VerifiedEvidence; onEvidence: (e: Verif
     const C = LAZY[id];
     if (!C) return null;
     const props: Record<string, unknown> = id === "ledger" || id === "controls" || id === "system" ? { ev } : id === "lineage" ? { summary: ev.summary } : {};
-    return <Suspense fallback={null}><C {...props} /></Suspense>;
+    return <C {...props} />;
   };
 
   /* after each station renders: warm its two dock neighbours in idle time */
@@ -166,14 +210,17 @@ function Stage({ ev, onEvidence }: { ev: VerifiedEvidence; onEvidence: (e: Verif
         </div>
       </div>
 
-      <main className="stagepanel" aria-live="polite">
-        <div key={`${active}:${gen}`} className="panelcontent">
-          {render(active)}
-        </div>
+      <main className="stagepanel" aria-live="polite" aria-busy={!!pending}>
+        {[current, ...(pending ? [pending] : [])].map((frame) => (
+          <StationFrame key={`${frame.key}:${gen}`} id={frame.id} frameKey={frame.key}
+            preparing={frame !== current} onReady={reveal}>
+            {render(frame.id)}
+          </StationFrame>
+        ))}
         <div className="grain" aria-hidden="true" />
       </main>
 
-      <Dock active={active} go={go} />
+      <Dock active={active} pending={pending?.id ?? null} go={go} />
     </div>
   );
 }

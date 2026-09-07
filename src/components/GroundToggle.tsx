@@ -21,7 +21,11 @@ export function GroundToggle() {
     const commit = () => { apply(next); setGround(next); };
     const reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
     const svt = (document as any).startViewTransition?.bind(document);
-    if (!reduced && svt) svt(commit);
+    if (!reduced && svt) {
+      const transition = svt(commit);
+      transition.ready.catch(() => {});
+      transition.finished.catch(() => {});
+    }
     else commit();
   };
   return (

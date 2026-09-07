@@ -50,6 +50,22 @@ keys move between neighbors; the URL (`?st=...`) is the camera position.
 
 ## Verification rigs
 
+For navigation regression, build and serve the existing snapshot locally:
+
+```sh
+npm run build
+python3 -m http.server 4620 --bind 127.0.0.1 --directory dist
+# In another terminal:
+npm run test:navigation
+```
+
+This checks all eighteen stations through the field index, both grounds and three
+viewport sizes, plus slow/failed loads, interrupted selections, history, keyboard
+focus and motion fallbacks. It requires installed Chrome. `NAV_BASE` changes the
+test URL and `NAV_OUT` the capture directory. `NAV_WEBKIT` optionally names an
+installed Playwright `index.mjs` to run the same checks in its WebKit browser.
+No evidence sealer or engine service is used by this test.
+
 ```sh
 node tools/shots.mjs out/ [--mobile]   # capture boot + all nine stations
 node tools/hangar-test.mjs             # offline proof: SW shell + cached evidence + honest OFFLINE pill

@@ -191,6 +191,9 @@ button:focus-visible, a:focus-visible { outline: 2px solid var(--ink-soft); outl
   padding: 1.1rem 1.3rem 0.9rem;
   min-height: 0;
 }
+/* The destination gets the same geometry while preparing. It cannot paint,
+   take focus or receive input until its code, readers and layout have settled. */
+.panelcontent[data-preparing="true"] { visibility: hidden; pointer-events: none; }
 /* film grain: a static, unblended tooth. It was a mix-blend-mode layer moved
    six times a second; on WebKit that re-composited the whole panel on every
    step and intermittently painted it empty (only backdrop-filtered chips
@@ -207,12 +210,15 @@ button:focus-visible, a:focus-visible { outline: 2px solid var(--ink-soft); outl
    blur here forced a full re-raster of the panel (which already carries a
    live backdrop blur) on every frame; the crossfade now runs entirely on
    the GPU thread, so it stays smooth even entering the canvas stations. */
+/* Only the ready panel participates; glass chrome and menus stay live. */
+:root { view-transition-name: none; }
+::view-transition { pointer-events: none; }
 ::view-transition-group(stage-panel) { animation-timing-function: var(--ease); }
 ::view-transition-old(root), ::view-transition-new(root) { animation: none; }
-::view-transition-old(stage-panel) { animation: panelOut 0.22s var(--damped) both; will-change: opacity, transform; }
-::view-transition-new(stage-panel) { animation: panelIn 0.34s var(--ease) both; will-change: opacity, transform; }
-@keyframes panelOut { to { opacity: 0; transform: scale(0.992); } }
-@keyframes panelIn { from { opacity: 0; transform: scale(1.008); } }
+::view-transition-old(stage-panel) { animation: panelOut 0.18s var(--ease) both; }
+::view-transition-new(stage-panel) { animation: panelIn 0.18s var(--ease) both; }
+@keyframes panelOut { to { opacity: 0; } }
+@keyframes panelIn { from { opacity: 0; } }
 
 /* the dock: persistent station cards */
 .dock {
@@ -1065,10 +1071,8 @@ button:focus-visible, a:focus-visible { outline: 2px solid var(--ink-soft); outl
   color: var(--ink-ghost);
 }
 
-/* seamless content arrival, with or without View Transitions */
-.panelcontent { animation: contentIn 0.34s var(--ease) both; }
-@media (prefers-reduced-motion: reduce) { .panelcontent { animation: none; } }
-@keyframes contentIn { from { opacity: 0; transform: translateY(6px); } }
+/* A ready page is fully painted on its first visible frame. An entrance
+   fade here would make the View Transition capture a transparent page. */
 
 @media (max-width: 700px) {
   .sthead .stsub { display: none; }
@@ -2072,6 +2076,15 @@ html[data-ground="dark"] .derive, html[data-ground="dark"] .provecard, html[data
 .fixrow:hover, .fixrow:focus-visible { background: color-mix(in srgb, var(--ink) 6%, transparent); }
 .fixrow[data-active="true"] { background: color-mix(in srgb, var(--ink) 9%, transparent); }
 .fixrow[data-active="true"] .fixid::after { content: " ●"; color: var(--accent); }
+.fixrow[data-pending="true"] .fixnm::after, .navcard[data-pending="true"] .nnm::after {
+  content: ""; display: inline-block; width: 0.55em; height: 0.55em; margin-left: 0.5em;
+  border: 1px solid currentColor; border-right-color: transparent; border-radius: 50%;
+  animation: stationPending 0.8s linear infinite;
+}
+@keyframes stationPending { to { transform: rotate(360deg); } }
+@media (prefers-reduced-motion: reduce) {
+  .fixrow[data-pending="true"] .fixnm::after, .navcard[data-pending="true"] .nnm::after { animation: none; }
+}
 .fixid { grid-area: id; font-family: var(--mono); font-size: 0.52rem; letter-spacing: 0.14em; color: var(--ink-faint); }
 .fixrow[data-red="true"] .fixid { color: var(--ink); }
 .fixnm { grid-area: nm; font-family: var(--display); text-transform: uppercase; font-weight: 600; font-size: 0.98rem; letter-spacing: 0.04em; line-height: 1.1; }

@@ -4,6 +4,42 @@ Living handoff for the next session. This repo is **reiyah-console** (the Harbor
 Instrument UI), separate from the Reiyah **engine** repo (`~/workspace/reiyah`,
 which has the Gate-A baton/denylist — none of that applies here; normal git).
 
+## Current navigation contract, 2026-09-07
+
+The operator's 13.75-second iPhone recording showed the field index disappearing,
+the previous page showing through, then a dark interval before the destination.
+Reproduction on the original `78bb612` build found empty DOM content during three
+first-time transitions and a second opacity animation on every keyed page mount.
+
+`StationFrame` now prepares only one destination at the actual panel size, hidden
+and inert, while the current page remains mounted. `useSurfaceState` reports its
+loading/ready/blocked phase to that frame. Once the code and readers settle, two
+animation frames allow layout and canvas effects to run. The same prepared DOM
+becomes visible; it is not remounted. Field-index and palette dismissal happen in
+the same commit. A menu selection directly reveals the ready page; dock and history
+navigation may use one 180 ms panel transition. Never restore a second
+`.panelcontent` entrance fade or dismiss a menu before destination readiness.
+
+Only the latest request may commit. Escape cancels a pending field-index selection.
+The dock settles its scroll before paint, so it does not move under the next tap.
+Transition pseudo-elements do not intercept input; reduced motion and browsers
+without View Transitions take the same readiness path. Failed readers remain
+explicit blocked states; a failed station chunk leaves navigation usable.
+
+Validation: production build passes; `npm run test:navigation` passes all 18
+stations at 1280x820, 430x745 and 390x660 in both grounds (108 combinations),
+with no sampled empty/transparent content frames, no station/document overflow,
+and a stationary dock. Eight additional controls cover history, keyboard/focus,
+slow code/data, cancellation, out-of-order completion, failures and motion fallbacks.
+Captures and reports are in `/tmp/reiyah-navigation-review.RX24Kd/` for this session.
+Chromium results are browser observations, not measurements on the operator's iPhone.
+The installed Playwright WebKit process could not create a page; Safari 17.4
+WebDriver explicitly refused a session because Allow Remote Automation is disabled.
+
+The operator authorized production publication of the proven transition fix first,
+then a separate visual redesign of the field index and opening verification page.
+Do not reseal or change engine evidence as part of that visual work.
+
 ## The mission and the bar
 Build the most state-of-the-art 2026 UI/UX for Reiyah: **SpaceX / Tesla /
 Mobileye / HBO / Steve-Jobs level, edge of elegance, honest to the byte.** The

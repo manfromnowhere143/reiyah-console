@@ -11,6 +11,7 @@ import type { VerifiedEvidence } from "../boot/ProofBoot";
 import { STATIONS } from "../lib/camera";
 import { fetchSchemaIndex, fetchSurface, getMode } from "../lib/evidence";
 import { Digest } from "./primitives";
+import type { Navigate } from "./StationFrame";
 
 interface Item { kind: string; label: string; sub: string; station: string; sha?: string; path?: string; id?: string }
 
@@ -25,7 +26,7 @@ function score(q: string, text: string): number {
   return best / (1 + t.length / 40);
 }
 
-export function Palette({ ev, go }: { ev: VerifiedEvidence; go: (id: string) => void }) {
+export function Palette({ ev, go }: { ev: VerifiedEvidence; go: Navigate }) {
   const [open, setOpen] = useState(false);
   const token = useRef(newLayerToken());
   useEffect(() => onLayerClaim((t) => { if (t !== token.current) setOpen(false); }), []);
@@ -88,7 +89,7 @@ export function Palette({ ev, go }: { ev: VerifiedEvidence; go: (id: string) => 
   }, [items, q]);
   useEffect(() => { setSel(0); }, [q]);
 
-  const choose = (it: Item) => { setOpen(false); go(it.station); };
+  const choose = (it: Item) => go(it.station, { animate: false, onCommit: () => setOpen(false) });
   const onKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === "ArrowDown") { e.preventDefault(); setSel((s) => Math.min(results.length - 1, s + 1)); }
     if (e.key === "ArrowUp") { e.preventDefault(); setSel((s) => Math.max(0, s - 1)); }

@@ -12,7 +12,8 @@
     "seal": "node tools/seal-snapshot.mjs",
     "live": "node tools/watch-and-publish.mjs",
     "shots": "node tools/shots.mjs",
-    "test:hangar": "node tools/hangar-test.mjs"
+    "test:hangar": "node tools/hangar-test.mjs",
+    "test:navigation": "node tools/navigation-test.mjs"
   },
   "dependencies": {
     "react": "^19.0.0",

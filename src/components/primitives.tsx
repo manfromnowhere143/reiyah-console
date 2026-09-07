@@ -7,6 +7,7 @@ import { claimLayer, newLayerToken, onLayerClaim } from "../lib/layers";
 import { getMerkle, prove, proveInclusion, type Proof, type LiveState, type InclusionProof } from "../lib/evidence";
 import type { MerkleTree } from "../lib/merkle";
 import { Fold } from "./Fold";
+import { useStationReadiness } from "./StationFrame";
 
 /* ---------- FitList: a list that is measured, not hoped ----------
    One page, one screen, no scrolling is a law here. A list that might not
@@ -372,5 +373,6 @@ export function useSurfaceState<T>(loader: () => Promise<T>, deps: unknown[] = [
     return () => { alive = false; };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, deps);
+  useStationReadiness(state.phase);
   return state;
 }
