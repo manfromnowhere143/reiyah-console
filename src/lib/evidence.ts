@@ -117,18 +117,13 @@ export async function fetchSurfaceByPath<T = unknown>(rel: string): Promise<Surf
   return fetchSurfaceByPathUncached<T>(rel);
 }
 
-/** Warm every sealed surface and the catalog's decision records in idle time. */
+/** After boot, in idle time, warm only the catalog: the one list the Harbor
+    and the palette read. Every other byte is fetched by the station that
+    parses it, or by the neighbour prefetch (src/lib/prefetch.ts). */
 export function warmSealedSurfaces() {
   if (mode !== "sealed" || !sealedManifest) return;
   const idle = (cb: () => void) => ((window as any).requestIdleCallback ? (window as any).requestIdleCallback(cb, { timeout: 4000 }) : setTimeout(cb, 800));
-  idle(async () => {
-    for (const row of sealedManifest!.surfaces) { try { await fetchRaw(row.id); } catch { /* the station will report it */ } }
-    try {
-      const cat = await fetchCatalog();
-      for (const c of cat) if (c.path.endsWith(".json")) { try { await fetchSurfaceByPath(c.path); } catch { /* reported by the station */ } }
-    } catch { /* reported by the station */ }
-    try { await fetchSchemaIndex(); } catch { /* reported by the station */ }
-  });
+  idle(() => { fetchCatalog().catch(() => { /* the stations report it */ }); });
 }
 
 async function fetchSurfaceByPathUncached<T = unknown>(rel: string): Promise<SurfaceState<T>> {

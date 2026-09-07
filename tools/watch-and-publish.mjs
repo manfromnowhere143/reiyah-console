@@ -28,13 +28,14 @@ const STATE = path.join(CONSOLE_DIR, ".live-state.json");
 const log = (m) => console.log(`[live ${new Date().toISOString()}] ${m}`);
 const git = (args) => execFileSync("git", ["-C", REPO, ...args], { encoding: "utf8" }).trim();
 
-const GATEB = process.env.GATEB_ROOT ?? `${process.env.HOME}/workspace/reiyah-gate-b`;
-/* the published state is the pair of heads: the Gate A worktree and the Gate B lane */
+/* the published state is the pair of heads: the Gate A worktree and the Gate B
+   lane, the latter read from the exact ref the sealer reads (GATEB_REF) */
+const GATEB_REF = process.env.GATEB_REF ?? "research/2026-09-07-physical-reference-transfer";
 function head() {
   try {
     const a = git(["rev-parse", "HEAD"]);
     let b = "absent";
-    try { b = execFileSync("git", ["-C", GATEB, "rev-parse", "HEAD"], { encoding: "utf8" }).trim(); } catch { /* lane absent */ }
+    try { b = git(["rev-parse", "--verify", `${GATEB_REF}^{commit}`]); } catch { /* lane ref absent */ }
     return `${a}+${b.slice(0, 12)}`;
   } catch { return null; }
 }

@@ -88,7 +88,8 @@ independence-based evidence figure is understated by a factor of `sqrt(1.587) = 
 26% more validation evidence than Corollary 3 claims, for this pair (withdrawn as stated). Withdrawn
 on the five grounds above. The range it described, `1.11x` to `1.51x`, is likewise withdrawn as stated,
 because the marginal coefficient depends on the operating threshold (Result P). And it is a
-**lower bound**, because the benchmark deletes the camera-only-visible objects before scoring
+**lower bound** (this direction is contradicted by Result D's transcript, which shows the filtered
+set overstates the coefficient by about 3 percent; corrected 2026-09-06), because the benchmark deletes the camera-only-visible objects before scoring
 (Result A), which biases the coefficient toward independence.
 
 ## The redundancy RSS does not model at all
@@ -115,7 +116,7 @@ headline; the `sqrt(c)` evidence scaling is the load-bearing result.
 It is the honest correction to a published formula, computed from coefficients measured on public
 data and verified against RSS's own example. It is **not** a certification, not a required-evidence
 figure for any real deployed system, and not a safety determination. The constant `6` and the
-`sqrt(c)` scaling are taken from the retained primary text; the coefficient is a lower bound; and
+`sqrt(c)` scaling are taken from the retained primary text; the coefficient is a lower bound (contradicted by Result D, see the correction and the adversarial reading); and
 no adjustment here is claimed sufficient for a real safety case, which would need the operating
 distribution and error rates of the specific system, not a public benchmark.
 
@@ -123,9 +124,21 @@ What it does establish is the shape of the answer the field has left open: the l
 dependence back into the evidence requirement. Closing that loop is the contribution. The number
 for any particular system is that system owner's to compute with this method and their own data.
 
+## Adversarial reading, 2026-09-06
+
+A context-free reader (model-assisted, advisory, same model family as the author) read this document against its transcript alone. The points below are the ones that changed a sentence; the full record is `evidence/review-model-assisted-2026-09-06.json`.
+
+1. The non-claims still said "the coefficient is a lower bound"; that clause is now marked as
+   contradicted by Result D (the filter inflates the coefficient by about 3 percent).
+2. The five grounds on which the figures were withdrawn (population, arity, uniform bound, ghosts,
+   confidence) bear on the sign as well as the magnitude; the retained "direction" is therefore
+   conditional on the measured coefficient standing in for the corollary's, which is not
+   established. The register's evidence-cost-direction entry is narrowed to say so.
+3. The header says corrected and the non-claims said proposed; the non-claims now say corrected.
+
 ## Non-claims
 
 A correction to a published formula using coefficients measured on two public detection outputs,
-retained as `proposed`. Not a certification, not a safety determination, not a comparative claim
+retained as `corrected` (figures withdrawn as stated). Not a certification, not a safety determination, not a comparative claim
 about any vendor. RSS's formula is reproduced from retained primary text under fair use for
 analysis. No released `1.2` byte is modified.

@@ -65,7 +65,7 @@ export function Law() {
   const h7all = h7?.groups.find((g) => g.name === "all events") ?? null;
   const bench = (n: string) => ac?.benches.find((b) => b.name === n) ?? null;
   const qv = (b: ReturnType<typeof bench>, k: string) => b?.q.get(k) ?? null;
-  const autoT = d.auto && d.auto.rows.length ? d.auto.rows[d.auto.rows.length - 1] : null;
+  const autoT = d.auto?.terminal ?? null;
   const h3all = d.h3?.groups.find((g) => g.name === "all events") ?? null;
 
   const marks: Mark[] = [];

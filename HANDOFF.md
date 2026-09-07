@@ -188,6 +188,64 @@ state changes on small elements (hover, cursor). Never: a full-panel overlay
 that blends or animates; animating box-shadow, background-position, filter,
 or SVG attributes; view-transition names on dock tabs or station content.
 
+## Shipped 2026-09-07 (evening): THE FOUR, measured before and after
+Baseline captured first with a headless rig over the sealed build: 17 stations
+x 2 viewports x 2 grounds, zero overflow, 61 fps, but 4.9 MB over 250
+requests at boot, 8 of 17 stations visible in a scrollbar-less dock, and the
+sealed lane at gate-b-measurement 9464ff7 (register 0.2.23, no Result AO).
+- **THE DOCK, MEASURED** (`src/components/Dock.tsx`): stations carry a rail
+  (engine / measurement / audit, `src/lib/camera.ts`); a hairline opens each
+  rail; overflow is measured (ResizeObserver + scroll) and shown as edge
+  fades plus a pinned tab with the exact count out of view ("+11 more" on
+  desktop, "+16" on the phone); the tab opens THE FIELD INDEX, all stations in
+  three rails, one opaque card (card law), layer bus, Escape. The pressed
+  station always scrolls into view. The legacy world-space camera hook is
+  removed with its row/col grid.
+- **THE LANE FROM ONE COMMIT** (`tools/lane-files.mjs`, shared by the sealer,
+  the server and the publisher): the Gate B lane is read with `git show` from
+  GATEB_REF (default `research/2026-09-07-physical-reference-transfer`, the
+  tip of Codex's linear research chain), so the sealed bytes and the identity
+  beside them are one immutable object; the worktree remains a fallback.
+  212 lane files sealed (was 120): result_ao.json, the research-board,
+  reference-study and developer-value aggregates, the newest register 0.2.24
+  (48 claims), the study protocol/freeze/reviewer instructions, the narratives.
+  Sibling ledgers are excluded on purpose.
+- **EVERY LANE BYTE VERIFIED BEFORE PARSING** (`fetchLaneText`): byte length
+  and SHA-256 are checked against the manifest row before any parser runs;
+  UTF-8 decoding is fatal. This answers F01 of the engine's interface-evidence
+  review (a parsed body and its receipt could name different versions). Also
+  from that review: Measurement and SameHazard now read the newest register
+  (F05); the Monitor's missing comparison reads "comparison not present"
+  instead of 0.000 (F06); `parseConvergence` returns an explicit `terminal`
+  (L5 only when L0..L5 are all present) and every parsed number must be
+  finite; `parseH4` returns null without its header (F07). F02 to F04 remain
+  open and are named in that review.
+- **ST-17 THE REFERENCE** (`src/stations/Reference.tsx`, rail: audit): the
+  two horizons. Near, the filtered cache the ghost label was measured against;
+  far, the complete annotation table. Filled lights between them are the flags
+  that came inside (3,151 camera, 5,728 lidar), hollow lights beyond are still
+  unmatched; the counts are the labels. Beside it, the prepared 240-case study:
+  four strata, 60 each, the confidence set drawn as a bracket that is a dashed
+  full-width empty mark until judgments exist (0 today). Register chips for
+  reference-error identification (unknown), ghost coincidence (narrowed) and
+  the AO audit (measured). Every figure from result_ao.json and the study
+  aggregates, digest-checked.
+- **LOAD ON DEMAND** (`src/lib/prefetch.ts`): every station but the Harbor is
+  a lazy chunk; a station fetches its own bytes; after it renders, only its
+  two dock neighbours and the Harbor are warmed in idle time (code, then
+  bytes). `warmSealedSurfaces` warms the catalog only; `warmLane` the manifest
+  only. Measured: boot 4.9 MB / 250 requests -> 1.6 MB / 30 requests; main
+  bundle 136 KB gz -> 91 KB gz; heap 18 MB -> 6 MB; 60 fps, no long tasks.
+- **Words**: the Windshield tile no longer says "the human silent miss" (the
+  lane removed the word: no warning path was observed); the Harbor law gauge
+  reads "human and machine near independence", the register's own reading.
+- **THE REAL CASE** (Encounter): a line under the transport reads the study
+  aggregates: 0 independent judgments, 240 cases across 93 scenes, the film
+  stays the synthetic fixture until two blinded reviews exist; digest chip.
+  Desktop frame: horizon 0.42 -> 0.38, object radius up to 24 px.
+- Rig: shots at 1280x820 and 390x660 for all 18 stations, both grounds, zero
+  overflow; probe for boot transfer, fps, dock, field index, receipt, palette.
+
 ## Shipped 2026-09-08 (night, later): THE RECEIPT HOST
 - User: a receipt opened from a derivation sat under it. Root cause: the
   receipt overlay was rendered by the chip inside the derivation, so the

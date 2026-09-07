@@ -1,3 +1,97 @@
+# Current developer-value and research continuation, 2026-09-07
+
+Latest checkpoint: `research/2026-09-07-physical-reference-transfer`, extending
+`ed10cff36d48b30dfddab9484de1da8b289444ae`. Read the
+[sampling and RSS interpretation findings](RSS_TRANSFER_AND_RARE_EVENT_LIMITS_2026-09-07.md),
+[physical-reference assessment](PHYSICAL_REFERENCE_OPTIONS_2026-09-07.md), and
+[closeout](PHYSICAL_REFERENCE_TRANSFER_CLOSEOUT_2026-09-07.md). Eleven new tests pass;
+the exact synthetic sampling limits also pass a separately written numerical check.
+No physical failure rate, reduced safety budget or new dataset is inferred. The NPL
+portal's public client was inspected; protected data and application terms remain
+unaccessed. Independent judgments for the frozen 240-case study are still pending.
+
+The preceding interface checkpoint is `ed10cff36d48b30dfddab9484de1da8b289444ae`, extending
+`9aceb3d1d39b27b54d1fdfe6f91a3828b2cb50c5`. Read the
+[interface findings](INTERFACE_EVIDENCE_REVIEW_2026-09-07.md) and
+[closeout](INTERFACE_EVIDENCE_CLOSEOUT_2026-09-07.md). Captured console consumers accept
+several mismatched or incomplete records; a private four-file repair closes the tested
+Gate B digest, register-selection and unknown-comparison paths. Report, path-addressed
+record and receipt-version failures remain explicit. The separate owner worktrees are
+unchanged. No new measurement of physical truth or acceptance is implied.
+
+The [reference-identification checkpoint](REFERENCE_IDENTIFICATION_CLOSEOUT_2026-09-07.md)
+still supplies exact ambiguity witnesses and the metadata clock census. Its proposed
+opportunity pilot remains unselected, and the original 240-case detection study still
+awaits independent human judgments. All prior corrections and frozen studies remain intact.
+
+Read [the current task ledger and shutdown handoff](RESEARCH_CONTINUATION_2026-09-07.md)
+first. The local `research/2026-09-07-developer-value` candidate extends reference-study
+commit `9d8a18eab7144bd02b1f64c41bc8f179f32ee653`. It adds an offline portable reference
+auditor, selected sibling evidence recalculations and a current interface/value investigation.
+It does not add an MCP service, merge sibling code, run perception inference or produce human
+adjudication. The prepared reference study remains the scientific priority.
+
+The earlier continuation blocks below preserve their dated context. In particular, the board's
+original instruction to design the reference study is superseded by the completed preparation
+at `9d8a18e`; it is not an instruction to restart sampling. Use the current ledger to resolve
+what is completed, proposed, pending or deferred. Existing protocols and claim registers are
+unchanged, and no passing development check supplies independent acceptance.
+
+---
+
+# Research-board continuation, 2026-09-07
+
+## Reference-study continuation, 2026-09-07
+
+The isolated `research/2026-09-07-reference-study` revision extends research-board commit
+`4deb1d19ef1db6fa37fb6b20ca0b4ffda93c4bcc`. The concurrently active Gate A and Gate B worktrees
+were not edited or switched. Gate B tip `9464ff79a823a91037604bb8343e984b29c128a5` adds a
+historical replay capture over the board’s original `fd094c0` base; it is not silently merged.
+
+Read the [implemented study](REFERENCE_ADJUDICATION_STUDY_2026-09-07.md) and its
+[closeout](REFERENCE_STUDY_CLOSEOUT_2026-09-07.md). Protocol 0.1.0 failed a pre-label precision
+check and is retained. Protocol 0.2.0 selects 60 detections in each of four reference strata,
+240 cases across 93 scenes; the selection was reproduced exactly. The uncertainty estimator
+uses finite-population randomization, retains unresolved cases and makes no unseen-scene
+guarantee. Raw assets, opaque case mappings and selection keys remain in private custody.
+Independent human reviewers have not been supplied or impersonated.
+
+The next authorized action is independent assignment and blinded review of this frozen cohort,
+then analysis into a new output identity. Do not train on reference-relative flags as physical
+truth or relabel disagreements under the same protocol. Existing Gate A release bytes and
+operator acceptance remain unchanged; development checks do not create acceptance.
+
+
+The isolated research candidate follows exact Gate B commit
+`fd094c066437e67cefbb86f363dd1bef7ccf8e6e`; neither active worktree was edited or switched.
+Read [the board report](RESEARCH_BOARD_2026-09-07.md),
+[Result AO](RESULT_AO_REFERENCE_POPULATION_AUDIT.md), and
+[the closeout](RESEARCH_BOARD_CLOSEOUT_2026-09-07.md) before the inherited handoff below.
+
+Completed scope: independently reimplemented reference-population and scene-cluster sensitivity;
+corrected matcher failure/output behavior and replay exit checking; added executable regressions;
+retained aggregate results and primary-source retrieval metadata; replaced the universal-law
+synthesis with scoped findings; corrected the ghost-reference and E-value interpretations.
+The new register is `evidence/claim-status-register-2026-09-07.json`, version `0.2.24`, with exact
+predecessor binding. The replay manifest is version `0.1.14`; every inherited transcript is kept.
+The final validation record, not this prose, determines checker and replay results.
+
+The demonstrated reference defect applies to the ghost series' claimed annotation coverage.
+It does not invalidate miss coefficients on their declared filtered population. The fuller
+reference does not independently determine physical reality. The human belief/readiness constructs,
+causal policy benefits and universal transfer remain unestablished. The concurrent user-supplied
+Claude review agreed with the reference-first direction and supplied the useful scope correction;
+it does not provide independent numerical replication.
+
+Next action: design and preregister independent scene-stratified adjudication of the unmatched
+cases and controls, retaining unresolved labels. Integrate this research commit only from its
+exact branch/commit after reconciling the current engine and UI owners' changes. Do not switch
+branches or overwrite their worktrees. No cloud/model sweep, participant collection, product
+runtime, publication or operator acceptance is inferred. All code and documents remain proposals
+or exploratory measurements under the repository's authority boundaries.
+
+---
+
 # Gate B Session Handoff
 
 Read `AGENTS.md` first, then this. Resolve every state from the exact artifacts named here, never
@@ -214,7 +308,8 @@ object-level monitor transfers to a changed camera (loss 0.005 AUC) and not to a
 
 Similar channels share a substrate and share their blind spots; genuinely different ones do not. The
 independence assumption is a load-bearing fiction wherever redundancy is claimed, and it fails most
-for the systems that share the most.
+for the systems that share the most. The same-kind ordering holds when channels operate in
+comparable regimes; a near-blind channel reads as independent of everything (AJ, falsified at 0.50).
 
 ## 6. The unit and the estimand
 
@@ -301,8 +396,10 @@ with an engaged human; the LLM monitor is validated on two benchmarks and one ju
    under its retained CC BY 4.0 record and NOTICE attribution.
 2. **Retain an independent external review.** Operator action; cannot be self-performed. This is the
    real frontier.
-3. Retain the BDD-A terms once the portal is reachable; DCPT and 100-Car custody is retained and
-   verified (section 14), the leaderboard archive states no licence.
+3. Custody is closed for every source that states terms: DCPT and 100-Car from publisher records,
+   BDD-A from a retained archive snapshot of the licence page (the portal's certificate is invalid
+   as of 2026-09-06, confirmed from the operator's browser); the leaderboard archive states no
+   licence.
 4. Done this session: X, X2, Y, Z, AA, AB, AC, AD, AE, AF, AG, H7, the Gate B check, the red team
    for the newer threads. Open and
    scoped: a monitor on real driving channel outputs beyond the public benchmark; the H5 cross-agent
@@ -330,6 +427,8 @@ verifies every retained transcript against the SHA-256 recorded in
 `validation/gate-b-replay-manifest.json`, replays the transcripts of the classes named by
 `--replay` and requires byte identity, runs the register and reconciliation check, verifies the
 custody digests, and enforces the style rules (no em dash, document headers, resolving links). It
+runs the number-binding review (`tools/measure/review_number_binding.py`: every number in every
+result document must be bound to retained bytes, in one of five named states), and
 writes a machine-readable report with `--json`. Without `--replay` every transcript is reported as
 `not_replayed_here`, a distinct state never counted as replicated; rows of class
 `argv_unrecorded_historical` are digest-checked and never replayed. Run it before every closeout
@@ -414,6 +513,74 @@ was deleted and no check was weakened.
    differs, stated. A second detector pass on the accelerator path was byte-identical.
 20. **Result AH3 added** (register `0.2.12`): the ghost coefficient against the time-shift null is
    4.6 to 9.8 on a second camera, a second lidar and a second operating point, no band reaching 1.
+28. **Review instrument, part 4, and the correction pass it forced.** Four context-free readers
+   (model-assisted, advisory) read every result document against its transcript alone; record in
+   [`REVIEW_MODEL_ASSISTED_2026-09-06.md`](REVIEW_MODEL_ASSISTED_2026-09-06.md). Seven objections
+   changed the science: the Frechet ceiling on the human-machine cell (H6 narrowed, H5b carries it),
+   selection on the outcome in H3, the AJ falsification being broader than the near-blind camera,
+   the AH2 reference (fair reference measured, AH2b, and the reading stands), Result Q's omitted
+   strict-threshold rows, AE and X2 and U and AI sentences corrected in place, and the AD verdict
+   rule stated. Every document carries its own "Adversarial reading, 2026-09-06" section. Register
+   `0.2.18`.
+33. **Result AN, the fourth preregistered test** (register `0.2.23`): interpolation forecasts held
+   twelve of twelve; the ordering forecasts failed at 0.20 (camera pair below a cross pair) and
+   0.40 (bands touch; a three-channel reversal). The sensor arm is restated: the two-lidar pair is
+   the most coupled pair at all five operating points, the two-camera pair reliably above cross
+   pairs only at 0.30.
+32. **H6b**: the H6 edge detector's blindness verified genuine and size-driven (register `0.2.21`);
+   the Frechet ceiling caveat on H6 stands.
+   The H6b commit `1d20d40` was made while two Gate B checks failed (two unbound frame-size numbers
+   and the document not yet named by a claim), because the closeout chained the check's output
+   instead of its exit code; corrected in the next commit, and the closeout now gates on the exit
+   code. Recorded as a process defect.
+31. **Result AL**: difficulty measured by the independent jury; jury A's residual and lineage
+   excess survive (1.094; 0.098 [0.089, 0.108]) and jury B's residual falls to 1.016. Answers T's
+   strongest objection with a measurement. Register `0.2.20`.
+30. **Result AM (exploratory)**: the AJ falsification split into a summary-statistic artifact (the
+   lidar pair keeps its rank in the inflation quantity in every range band at 0.50) and a
+   measurement fact (the camera pair collapses with the second camera 89 to 100 percent blind).
+   Register `0.2.19`. Next step named: a preregistration of the ordering in the inflation quantity.
+29. **Result AK, the third preregistered test** (numeric ranges): two of six supported, four
+   falsified. The ghost finding is operating-point dependent (not at 0.10) and is qualified so
+   everywhere, including the note recommended for the public post.
+27. **A live contradiction found and corrected.** The threats document's section 2 stated that the
+   benchmark filter biases the coefficient toward independence, making it a lower bound. Result D's
+   retained transcript shows the opposite at every operating point (official 1.630 against full
+   1.587 at 0.30), which the 2026-08-29 correction table had already recorded. The section now
+   carries the correction first; "lower bound" may not be said of the sensor coefficient on that
+   ground; registered as `benchmark-filter-direction`, rejected (register `0.2.17`). Found while
+   auditing a public comment that repeated the wrong direction.
+26. **Result AJ, the second preregistered test** (register `0.2.16`): four of five predictions
+   supported, including the first mechanism-based forecast (Result P's deflation, on every pair at
+   both new operating points) and the first numerical-range forecast; AJ-2, the same-kind ordering,
+   falsified at 0.50 where one camera misses 94 percent of objects, recorded as falsified and the
+   law's second arm narrowed to comparable regimes.
+25. **Review instrument, part 3, the attack suite** (`tools/measure/review_attacks.py`, run by the
+   Gate B check with `--attacks`): label permutation for the sensor and LLM monitors, leave-one-model-out
+   for the MMLU jury, leave-one-class-out for the camera x lidar inflation, seed sensitivity for the
+   AF band, each with its criterion written first. The first draft of the permutation attacks was
+   itself defective (within-scene permutation scored against true labels; the invariant is named in
+   the tool) and was corrected; after correction all five attacks fail to break their results
+   (permuted AUCs 0.49 to 0.51 against true 0.79 and 0.85; every leave-one-out jury and class keeps
+   the law's direction; every seed reproduces the band). Transcript retained under `evidence/`.
+24. **Result AI, the first preregistered test** (register `0.2.15`): eight falsifiable predictions
+   of the LLM law committed before any run on Winogrande, eight supported by the retained
+   transcript. Four procedural deviations, each about the archive's file formats and each
+   committed before its rerun, are recorded in the preregistration. Preregistrations live under
+   `docs/preregistrations/`.
+23. **Review instrument, part 2.** The register and the documents must describe the same program:
+   every claim points to an existing path and, unless its status is unknown or not_established, a
+   transcript; every result document is named by a claim; lifecycle lines agree with statuses;
+   every withdrawn value has lineage. First run found five result documents not named explicitly
+   by any claim; the register now names them (`0.2.14`). Integrated into the Gate B check.
+22. **Review instrument, part 1.** Every number in every result document is now classified as
+   bound to its own transcript, bound elsewhere, derived by one arithmetic step, exempt with a
+   reason, or unbound; 1,751 numbers across 33 documents, two findings on first run (a rounded
+   count in H5, corrected; a tokenizer defect on unit suffixes, corrected), zero unbound after.
+   Integrated into the Gate B check; report retained under `evidence/`.
+21. **BDD-A terms retained** from an Internet Archive snapshot of the BDD100K licence page after
+   the operator's browser confirmed the portal's certificate is invalid; custody closed for every
+   source that states terms (register `0.2.13`).
 2. **The statement that no model is executed in the analysis lane was false.** H5 and H6 execute
    pretrained torchvision detectors on BDD-A frames; Result V fits a logistic-regression monitor.
    Section 1 and the thread READMEs now say exactly what runs.

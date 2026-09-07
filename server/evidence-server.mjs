@@ -12,6 +12,7 @@ import { createHash } from "node:crypto";
 import { execFileSync } from "node:child_process";
 import fs from "node:fs";
 import path from "node:path";
+import { LANE_NONCLAIMS, laneId, openLane, sha256 as laneSha } from "../tools/lane-files.mjs";
 
 const REPO = process.env.REIYAH_ROOT ?? "/Users/danielwahnich/workspace/reiyah";
 const PORT = Number(process.env.PORT ?? 4600);
@@ -201,42 +202,18 @@ const server = http.createServer((req, res) => {
       });
     }
     if (p === "/api/gateb/manifest" || p.startsWith("/api/gateb/raw/")) {
-      const GATEB = process.env.GATEB_ROOT ?? "/Users/danielwahnich/workspace/reiyah-gate-b";
-      const laneGlob = (dir, re) => { try { return fs.readdirSync(path.join(GATEB, dir)).filter((f) => re.test(f)).sort().map((f) => `${dir}/${f}`); } catch { return []; } };
-      const FILES = [...new Set([
-        ...laneGlob("evidence", /^claim-status-register-\d{4}-\d{2}-\d{2}\.json$/),
-        ...laneGlob("evidence/measurement", /\.txt$/), ...laneGlob("human-channel/evidence", /\.txt$/), ...laneGlob("llm-generalization/evidence", /\.txt$/),
-        ...laneGlob("human-channel", /\.md$/), ...laneGlob("llm-generalization", /\.md$/), ...laneGlob("docs", /^(RESULT_|GATE_B_|GENERAL_SYNTHESIS).*\.md$/),
-        "evidence/claim-status-register-2026-08-29.json",
-        "evidence/measurement/result_l.txt", "evidence/measurement/result_m.txt", "evidence/measurement/result_n.txt",
-        "evidence/measurement/result_o.txt", "evidence/measurement/result_p.txt", "evidence/measurement/result_q.txt",
-  "evidence/measurement/result_i.txt", "evidence/measurement/result_j.txt", "evidence/measurement/result_s.txt",
-  "evidence/measurement/result_h_instance_unit.txt",
-  "human-channel/evidence/h1_driver_observation.txt", "human-channel/evidence/h2_glance_at_conflict.txt",
-  "human-channel/evidence/h3_observation_response_joint.txt", "human-channel/evidence/h4_dcpt_takeover.txt",
-  "human-channel/evidence/h5_cross_agent_joint.txt", "human-channel/H5_CROSS_AGENT_JOINT.md",
-  "human-channel/evidence/h6_total_both_miss.txt", "human-channel/H6_TOTAL_BOTH_MISS.md",
-  "llm-generalization/evidence/result_t.txt", "llm-generalization/evidence/result_u.txt", "llm-generalization/evidence/result_v.txt",
-  "llm-generalization/RESULT_V_DEPLOYED_MONITOR.md",
-  "llm-generalization/RESULT_T_LLM_INDEPENDENCE.md", "llm-generalization/RESULT_U_AGREEMENT_RELIABILITY.md", "llm-generalization/README.md",
-  "human-channel/README.md",
-        "evidence/measurement/joint-performance-nuscenes-val.excerpt.json",
-        "evidence/measurement/worst-group-records.jsonl",
-        "docs/gate_b_robustness_figure.svg",
-        "docs/GATE_B_MEASUREMENT_CONTRACT.md", "docs/GATE_B_FINDINGS_SYNTHESIS.md",
-      ])];
-      const g = (args) => execFileSync("git", ["-C", GATEB, ...args], { encoding: "utf8" }).trim();
+      /* the lane is read from one exact commit (GATEB_REF), the same way the
+         sealer reads it; live and sealed can never name different files */
+      let lane;
+      try { lane = openLane(); } catch (e) { return json(res, 200, { present: false, reason: String(e && e.message || e).slice(0, 120) }); }
       if (p === "/api/gateb/manifest") {
-        try {
-          const files = FILES.map((rel) => { try { const bytes = fs.readFileSync(path.join(GATEB, rel)); return { id: rel.replaceAll("/", "__"), path: rel, bytes: bytes.length, sha256: "sha256:" + createHash("sha256").update(bytes).digest("hex") }; } catch { return { id: rel.replaceAll("/", "__"), path: rel, state: "absent" }; } });
-          return json(res, 200, { present: true, identity: { state: "observed", head: g(["rev-parse", "HEAD"]), branch: g(["branch", "--show-current"]), worktree_clean: g(["status", "--porcelain=v1"]) === "", commit_count: Number(g(["rev-list", "--count", "HEAD"])), root: GATEB }, sealedAt: new Date().toISOString(), files,
-            lane_nonclaims: { operator_accepted: false, scientific_support_claimed: false, externally_audited: false, lifecycle: "proposed", model_executed_by_this_lane: false } });
-        } catch (e) { return json(res, 200, { present: false, reason: String(e && e.message || e).slice(0, 120) }); }
+        const files = lane.files.map((rel) => { try { const bytes = lane.read(rel); return { id: laneId(rel), path: rel, bytes: bytes.length, sha256: laneSha(bytes) }; } catch { return { id: laneId(rel), path: rel, state: "absent" }; } });
+        return json(res, 200, { present: true, identity: lane.identity, sealedAt: new Date().toISOString(), files, lane_nonclaims: LANE_NONCLAIMS });
       }
       const id = decodeURIComponent(p.slice("/api/gateb/raw/".length));
-      const rel = FILES.find((f) => f.replaceAll("/", "__") === id);
+      const rel = lane.files.find((f) => laneId(f) === id);
       if (!rel) return json(res, 404, { state: "blocked", reason: "unknown_gateb_surface" });
-      try { const bytes = fs.readFileSync(path.join(GATEB, rel)); res.writeHead(200, { "Content-Type": "application/octet-stream", "X-Source-Path": rel, "X-Source-Sha256": "sha256:" + createHash("sha256").update(bytes).digest("hex") }); return res.end(bytes); }
+      try { const bytes = lane.read(rel); res.writeHead(200, { "Content-Type": "application/octet-stream", "X-Source-Path": rel, "X-Source-Sha256": laneSha(bytes) }); return res.end(bytes); }
       catch { return json(res, 404, { state: "blocked", reason: "gateb_file_absent" }); }
     }
     if (p === "/api/schemas") {

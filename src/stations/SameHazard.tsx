@@ -129,7 +129,7 @@ export function SameHazard() {
   const state = useSurfaceState(async () => {
     const lane = await fetchLane();
     if (!lane.present) return { lane, d: null };
-    const [H5, MD, H3, P, R, H6] = await Promise.all([F.H5, F.MD, F.H3, F.P, F.R, F.H6].map((p) => fetchLaneText(p).catch(() => null)));
+    const [H5, MD, H3, P, R, H6] = await Promise.all([F.H5, F.MD, F.H3, F.P, await registerPath(), F.H6].map((p) => fetchLaneText(p).catch(() => null)));
     const h5 = H5 ? parseH5(H5.text) : null;
     return {
       lane,

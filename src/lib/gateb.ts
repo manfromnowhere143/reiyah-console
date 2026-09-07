@@ -36,16 +36,39 @@ export async function fetchLaneText(pathRel: string): Promise<{ text: string; fi
     if (!m.present || !file || file.state === "absent") throw new Error(`lane_file_absent:${pathRel}`);
     const r = await fetch(getMode() === "sealed" ? snap(`/snapshot/gateb/raw/${id}`) : `/api/gateb/raw/${id}`);
     if (!r.ok) throw new Error(`lane_raw_http_${r.status}`);
-    return { text: await r.text(), file };
+    const bytes = await r.arrayBuffer();
+    /* the bytes a station parses are the bytes the manifest names: length and
+       SHA-256 are checked here, before any parser runs, so a figure and the
+       receipt beside it can never describe two different versions */
+    if (typeof file.bytes === "number" && bytes.byteLength !== file.bytes) throw new Error(`lane_length_mismatch:${pathRel}`);
+    if (!/^sha256:[0-9a-f]{64}$/.test(file.sha256 ?? "")) throw new Error(`lane_digest_unbound:${pathRel}`);
+    const digest = await crypto.subtle.digest("SHA-256", bytes);
+    const hex = "sha256:" + Array.from(new Uint8Array(digest)).map((b) => b.toString(16).padStart(2, "0")).join("");
+    if (hex !== file.sha256) throw new Error(`lane_digest_mismatch:${pathRel}`);
+    return { text: new TextDecoder("utf-8", { fatal: true }).decode(bytes), file };
   })();
   rawMemo.set(id, job);
   job.catch(() => rawMemo.delete(id));
   return job;
 }
 
+/* a lane JSON record, digest-checked like every other lane byte, parsed once */
+export async function fetchLaneJson<T = unknown>(pathRel: string): Promise<{ data: T; file: LaneFile }> {
+  const { text, file } = await fetchLaneText(pathRel);
+  return { data: JSON.parse(text) as T, file };
+}
+
+/* a number a parser read from a transcript must be a finite number: a
+   malformed field is a blocked panel, never NaN drawn as a point */
+export function num(s: string, what = "value"): number {
+  const v = Number(s.replace(/,/g, ""));
+  if (!Number.isFinite(v)) throw new Error(`lane_parse_not_a_number:${what}`);
+  return v;
+}
+
 /* ---------- strict transcript parsers ---------- */
 export interface Row { level: string; label: string; strata: number; n: number; c: number; lo: number; hi: number }
-export function parseConvergence(text: string): { rows: Row[]; mediator: { c: number; lo: number; hi: number } | null } {
+export function parseConvergence(text: string): { rows: Row[]; terminal: Row | null; mediator: { c: number; lo: number; hi: number } | null } {
   const i = text.indexOf("COMMON SUPPORT");
   const body = i >= 0 ? text.slice(i) : "";
   const rows: Row[] = [];
@@ -53,10 +76,15 @@ export function parseConvergence(text: string): { rows: Row[]; mediator: { c: nu
   let m: RegExpExecArray | null;
   while ((m = re.exec(body))) {
     if (rows.some((r) => r.level === m![1])) continue;
-    rows.push({ level: m[1], label: m[2].trim(), strata: Number(m[3]), n: Number(m[4].replace(/,/g, "")), c: Number(m[6]), lo: Number(m[7]), hi: Number(m[8]) });
+    rows.push({ level: m[1], label: m[2].trim(), strata: num(m[3], "strata"), n: num(m[4], "n"), c: num(m[6], "c"), lo: num(m[7], "lo"), hi: num(m[8], "hi") });
   }
+  for (const r of rows) if (!(r.lo <= r.c && r.c <= r.hi)) throw new Error(`lane_parse_interval_excludes_point:${r.level}`);
+  /* the terminal coefficient is the deepest declared level with every level
+     before it present; a transcript missing a level yields no terminal, not
+     a shallower row promoted to the headline */
+  const terminal = ["L0", "L1", "L2", "L3", "L4", "L5"].every((lv) => rows.some((r) => r.level === lv)) ? rows.find((r) => r.level === "L5")! : null;
   const md = /L6 \+ lidar point count \(INADMISSIBLE\)[\s\S]*?c = ([\d.]+)\s+95% CI \[([\d.]+), ([\d.]+)\]/.exec(text);
-  return { rows, mediator: md ? { c: Number(md[1]), lo: Number(md[2]), hi: Number(md[3]) } : null };
+  return { rows, terminal, mediator: md ? { c: num(md[1], "L6 c"), lo: num(md[2], "L6 lo"), hi: num(md[3], "L6 hi") } : null };
 }
 
 export interface SweepRow { thr: number; mc: number; mlo: number; mhi: number; c: number; lo: number; hi: number; excl: boolean }
@@ -177,8 +205,9 @@ export function parseH3(text: string): H3 {
   return { groups, nonclaims: nonclaims(text) };
 }
 export interface H4 { trials: number; participants: number; tasks: Array<{ id: string; name: string; n: number; mean: number; median: number; sd: number }>; grouped: Array<{ name: string; n: number; mean: number; median: number; sd: number }>; nonclaims: string }
-export function parseH4(text: string): H4 {
+export function parseH4(text: string): H4 | null {
   const t = /trials (\d+), participants (\d+)/.exec(text);
+  if (!t) return null;
   const tasks: H4["tasks"] = [];
   const re = /^\s*(\d) ([a-z ]+?)\s+n=\s*(\d+)\s+mean ([\d.]+)s\s+median ([\d.]+)s\s+sd ([\d.]+)/gm;
   let m: RegExpExecArray | null;
@@ -186,7 +215,7 @@ export function parseH4(text: string): H4 {
   const grouped: H4["grouped"] = [];
   const rg = /^\s*(no task \(baseline\)|cognitive-only \([\d,]+\)|visual-manual \([\d,]+\))\s+n=\s*(\d+)\s+mean ([\d.]+)s\s+median ([\d.]+)s\s+sd ([\d.]+)/gm;
   while ((m = rg.exec(text))) grouped.push({ name: m[1].replace(/ \([\d,]+\)| \(baseline\)/, ""), n: Number(m[2]), mean: Number(m[3]), median: Number(m[4]), sd: Number(m[5]) });
-  return { trials: t ? Number(t[1]) : 0, participants: t ? Number(t[2]) : 0, tasks, grouped, nonclaims: nonclaims(text) };
+  return { trials: Number(t[1]), participants: Number(t[2]), tasks, grouped, nonclaims: nonclaims(text) };
 }
 void pct;
 
@@ -323,13 +352,10 @@ export function parseV(text: string): ResultV | null {
 /* after boot, in idle time, every lane byte a station may read is fetched
    once, so the lane stations render in the frame they mount */
 export function warmLane() {
-  const idle = (cb: () => void) => ((window as any).requestIdleCallback ? (window as any).requestIdleCallback(cb, { timeout: 5000 }) : setTimeout(cb, 1200));
-  idle(async () => {
-    try {
-      const lane = await fetchLane();
-      for (const f of lane.files ?? []) { try { await fetchLaneText(f.path); } catch { /* the station will report it */ } }
-    } catch { /* the station will report it */ }
-  });
+  /* the manifest only: which files the lane holds and their digests. The
+     bytes themselves are fetched by the station that reads them, or by the
+     neighbour prefetch, never all at once on boot. */
+  fetchLane().catch(() => { /* the stations report an absent lane */ });
 }
 
 /* ---------- H7: intervals for the human-channel coefficients ---------- */

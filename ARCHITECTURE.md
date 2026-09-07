@@ -21,7 +21,9 @@ Client (Vite + React 19 + TS strict, 72 KB gz)
   src/boot/ProofBoot    WebCrypto verification before first render
   src/lib/camera.ts     damped rAF camera; URL = camera position
   src/components        EpistemicValue · Digest (press-to-prove) · TruthPill · Station
-  src/stations          nine instruments, each bound to committed JSON
+  src/stations          eighteen instruments in three rails, each bound to committed JSON
+  src/lib/prefetch.ts   what each station reads; neighbours warmed in idle time
+  tools/lane-files.mjs  the Gate B lane read from one exact Git ref, shared by sealer and server
 ```
 
 Two deployment modes, both truthful about what they are:
@@ -70,8 +72,13 @@ state. Modes are displayed, never blended.
   `@supports (backdrop-filter: url(#harborLens))` (Chromium); rung 2
   `blur(20px) saturate(1.18)`; rung 3 opaque under
   `prefers-reduced-transparency` and `prefers-contrast: more`.
-- Budgets: ≤ 80 KB gz JS (actual 72), ≤ 3 concurrent glass surfaces, one
-  canvas, zero third-party runtime deps beyond React.
+- Budgets: main bundle ≤ 100 KB gz (actual 91; the Harbor and its worker ship
+  first, every other station is its own chunk of 2 to 7 KB gz, fetched when
+  pressed or a moment earlier by the neighbour prefetch), ≤ 3 concurrent glass
+  surfaces, one canvas, zero third-party runtime deps beyond React.
+- Boot transfer: about 1.6 MB over about 30 requests (the 505 KB index whose
+  digest the boot proves, the 426 KB fixture catalog the Harbor and the wall
+  read, the bundle, the fonts). Nothing else is fetched until a station asks.
 
 ## 4. Data surfaces
 

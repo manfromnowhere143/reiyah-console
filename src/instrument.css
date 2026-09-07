@@ -2033,3 +2033,92 @@ html[data-ground="dark"] .derive, html[data-ground="dark"] .provecard, html[data
 
 /* the shortest phones keep the wall and the rules; the ledger returns on any taller screen */
 @media (max-width: 760px) and (max-height: 700px) { .wsreg.replayrow { display: none; } }
+
+/* ============================================================
+   THE DOCK, MEASURED. The rails, the fades where more exists, the pinned
+   count of cards out of view, and THE FIELD INDEX. Fades are static masks on
+   a wrapper (no paint animation); the wrapper flips two data attributes. */
+.dockwrap { position: relative; flex: none; display: flex; align-items: stretch; gap: 0.5rem; min-width: 0; }
+.dockwrap > .dock { flex: 1; min-width: 0; }
+.dockwrap[data-right="true"] > .dock { -webkit-mask-image: linear-gradient(90deg, #000 0, #000 calc(100% - 4.5rem), transparent 100%); mask-image: linear-gradient(90deg, #000 0, #000 calc(100% - 4.5rem), transparent 100%); }
+.dockwrap[data-left="true"] > .dock { -webkit-mask-image: linear-gradient(90deg, transparent 0, #000 3rem, #000 100%); mask-image: linear-gradient(90deg, transparent 0, #000 3rem, #000 100%); }
+.dockwrap[data-left="true"][data-right="true"] > .dock { -webkit-mask-image: linear-gradient(90deg, transparent 0, #000 3rem, #000 calc(100% - 4.5rem), transparent 100%); mask-image: linear-gradient(90deg, transparent 0, #000 3rem, #000 calc(100% - 4.5rem), transparent 100%); }
+.navcard .nrail { color: var(--ink-ghost); letter-spacing: 0.1em; }
+.navcard[data-rail="measurement"] .nrail, .navcard[data-rail="audit"] .nrail { color: var(--ok); }
+/* a rail begins: a hairline stands before its first card */
+.navcard[data-first="true"]:not([data-station="harbor"]) { margin-left: 0.55rem; }
+.navcard[data-first="true"]:not([data-station="harbor"])::before { content: ""; position: absolute; left: -0.55rem; top: 18%; height: 64%; width: 1px; background: var(--line); }
+.dockall {
+  flex: none; width: 3.9rem; border-radius: 10px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 0.1rem;
+  color: var(--ink); transition: border-color 0.25s var(--ease);
+}
+.dockall:hover { border-color: var(--glass-rim); }
+.dockall .dan { font-family: var(--display); font-weight: 600; font-size: 1.15rem; letter-spacing: 0.02em; line-height: 1; }
+.dockall .dal { font-family: var(--mono); font-size: 0.5rem; letter-spacing: 0.18em; text-transform: uppercase; color: var(--ink-faint); }
+.fieldindex {
+  width: min(58rem, 100%); max-height: min(78vh, 40rem); border-radius: 14px; padding: 1rem 1.1rem 0.9rem;
+  background: var(--panel); box-shadow: 0 0 0 1px var(--line), 0 30px 80px -30px var(--shadow); /* the card law: opaque */
+  display: flex; flex-direction: column; gap: 0.7rem; min-height: 0; animation: proveIn 0.3s var(--ease) both;
+}
+.fixhead { display: flex; justify-content: space-between; align-items: baseline; gap: 1rem; }
+.fixk { font-family: var(--display); text-transform: uppercase; font-weight: 600; font-size: 1.2rem; letter-spacing: 0.04em; }
+.fixn { font-family: var(--mono); font-size: 0.5rem; letter-spacing: 0.14em; text-transform: uppercase; color: var(--ink-faint); }
+.fixrails { display: grid; grid-template-columns: 1.6fr 1fr 0.8fr; gap: 0.9rem; min-height: 0; overflow: auto; scrollbar-width: thin; }
+.fixrail { display: flex; flex-direction: column; gap: 0.15rem; min-width: 0; }
+.fixrk { font-family: var(--mono); font-size: 0.5rem; letter-spacing: 0.18em; text-transform: uppercase; color: var(--ink-faint); padding: 0.2rem 0.5rem 0.45rem; display: flex; flex-direction: column; gap: 0.15rem; }
+.fixrk i { font-style: normal; letter-spacing: 0.06em; text-transform: none; color: var(--ink-ghost); }
+.fixrail[data-rail="measurement"] .fixrk, .fixrail[data-rail="audit"] .fixrk { color: var(--ok); }
+.fixrow { display: grid; grid-template-columns: 3.4rem minmax(0, 1fr); grid-template-areas: "id nm" "id ds"; column-gap: 0.6rem; align-items: baseline; text-align: left; padding: 0.42rem 0.5rem; border-radius: 8px; min-width: 0; }
+.fixrow:hover, .fixrow:focus-visible { background: color-mix(in srgb, var(--ink) 6%, transparent); }
+.fixrow[data-active="true"] { background: color-mix(in srgb, var(--ink) 9%, transparent); }
+.fixrow[data-active="true"] .fixid::after { content: " ●"; color: var(--accent); }
+.fixid { grid-area: id; font-family: var(--mono); font-size: 0.52rem; letter-spacing: 0.14em; color: var(--ink-faint); }
+.fixrow[data-red="true"] .fixid { color: var(--ink); }
+.fixnm { grid-area: nm; font-family: var(--display); text-transform: uppercase; font-weight: 600; font-size: 0.98rem; letter-spacing: 0.04em; line-height: 1.1; }
+.fixds { grid-area: ds; font-size: 0.62rem; color: var(--ink-faint); line-height: 1.3; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+@media (max-width: 760px) {
+  .dockall { width: 3.2rem; border-radius: 8px; }
+  .dockall .dan { font-size: 1rem; }
+  .navcard .nrail { display: none; }
+  .fieldindex { max-height: calc(100% - 1rem); padding: 0.8rem 0.7rem 0.6rem; }
+  .fixrails { grid-template-columns: 1fr; gap: 0.5rem; }
+  .fixrow { padding: 0.32rem 0.4rem; }
+  .fixnm { font-size: 0.9rem; }
+  .fixds { display: none; }
+  .fixn { display: none; }
+}
+
+/* ============================================================
+   ST-17 THE REFERENCE: the two horizons and the four strata */
+.refgrid { flex: 1; min-height: 0; display: grid; grid-template-columns: minmax(0, 1.45fr) minmax(17rem, 1fr); gap: 0.6rem; }
+.refstrata { flex: 1; min-height: 0; display: flex; flex-direction: column; justify-content: space-evenly; gap: 0.3rem; }
+.refrow { display: grid; grid-template-columns: minmax(0, 1fr); grid-template-areas: "k" "n" "b" "j"; gap: 0.15rem; min-width: 0; padding: 0.25rem 0; border-bottom: 1px solid var(--line-soft); }
+.refrow:last-child { border-bottom: none; }
+.refk { grid-area: k; font-family: var(--mono); font-size: 0.56rem; color: var(--ink); letter-spacing: 0.02em; }
+.refn { grid-area: n; font-family: var(--mono); font-size: 0.78rem; font-weight: 600; color: var(--ink); font-variant-numeric: tabular-nums; }
+.refn em { font-style: normal; font-weight: 400; font-size: 0.52rem; color: var(--ink-faint); }
+.refband { grid-area: b; position: relative; height: 10px; margin: 0.15rem 0.6rem 0.1rem 0.2rem; }
+.refband::before { content: ""; position: absolute; left: 0; right: 0; top: 4px; height: 1px; background: var(--line); }
+.refset { position: absolute; top: 1px; height: 7px; border-radius: 2px; background: color-mix(in srgb, var(--ok) 35%, transparent); box-shadow: inset 0 0 0 1px var(--ok); }
+/* a full-width set is the honest empty bracket: dashed, the EpistemicValue mark */
+.refset[data-full="true"] { background: transparent; box-shadow: none; border: 1px dashed var(--ink-ghost); border-radius: 2px; }
+.reftick { position: absolute; top: 9px; transform: translateX(-50%); font-family: var(--mono); font-size: 0.42rem; color: var(--ink-ghost); font-weight: 400; }
+.refj { grid-area: j; font-family: var(--mono); font-size: 0.5rem; color: var(--ink-faint); }
+.refreg { flex: none; display: flex; flex-wrap: wrap; gap: 0.3rem 0.45rem; margin-top: 0.5rem; padding-top: 0.45rem; border-top: 1px solid var(--line-soft); }
+.regchip[data-status="unknown"] b, .regchip[data-status="narrowed"] b { color: var(--ink-soft); }
+@media (max-width: 760px) {
+  .refgrid { grid-template-columns: 1fr; grid-template-rows: minmax(9rem, 1.1fr) minmax(0, 1fr); gap: 0.4rem; }
+  .refstrata { gap: 0.15rem; }
+  .refrow { padding: 0.15rem 0; }
+  .refn { font-size: 0.68rem; }
+  .refn em { display: none; }
+  .refj { display: none; }
+  .refreg { display: none; }
+}
+
+/* the Encounter's real-case slot: one line under the transport */
+.encReal { flex: none; display: flex; gap: 0.7rem; align-items: baseline; padding: 0 clamp(1rem, 4vw, 3rem) calc(0.55rem + var(--safe-b)); margin-top: -0.35rem; min-width: 0; }
+.encRealK { font-family: var(--mono); font-size: 0.5rem; letter-spacing: 0.16em; text-transform: uppercase; color: var(--ok); white-space: nowrap; }
+.encRealV { font-family: var(--mono); font-size: 0.54rem; color: var(--ink-faint); line-height: 1.5; min-width: 0; }
+.encRealV b { color: var(--ink); font-weight: 600; }
+@media (max-width: 760px) { .encReal { padding-bottom: calc(0.35rem + var(--safe-b)); } .encRealV { font-size: 0.48rem; line-height: 1.35; } .encRealV .digest { display: none; } }

@@ -14,22 +14,15 @@ import { GroundToggle } from "./components/GroundToggle";
 import { Palette } from "./components/Palette";
 import { ReceiptHost } from "./components/primitives";
 import { Harbor } from "./stations/Harbor";
-import { Ledger } from "./stations/Ledger";
-import { Lineage } from "./stations/Lineage";
-import { Encounter } from "./stations/Encounter";
-import { Controls } from "./stations/Controls";
-import { Estimands } from "./stations/Estimands";
-import { Adversaries } from "./stations/Adversaries";
-import { Chair } from "./stations/Chair";
-import { Frontier } from "./stations/Frontier";
-import { SystemAtlas } from "./stations/SystemAtlas";
-import { Contract } from "./stations/Contract";
-import { Measurement } from "./stations/Measurement";
-import { WorstGroup } from "./stations/WorstGroup";
-import { Windshield } from "./stations/Windshield";
-import { SameHazard } from "./stations/SameHazard";
-import { Law } from "./stations/Law";
-import { Monitor } from "./stations/Monitor";
+import { Dock } from "./components/Dock";
+import { STATION_CODE, prefetchNeighbours } from "./lib/prefetch";
+import { Suspense, lazy } from "react";
+
+/* every station but the Harbor is its own code chunk, fetched when first
+   pressed (or a moment earlier, by the neighbour prefetch); the Harbor is the
+   first screen and ships in the main bundle */
+const lazyStation = (id: string) => lazy(() => STATION_CODE[id]().then((m: any) => ({ default: Object.values(m).find((v) => typeof v === "function") as React.ComponentType<any> })));
+const LAZY: Record<string, React.LazyExoticComponent<React.ComponentType<any>>> = Object.fromEntries(Object.keys(STATION_CODE).map((id) => [id, lazyStation(id)]));
 
 export default function App() {
   const [evidence, setEvidence] = useState<VerifiedEvidence | null>(null);
@@ -119,27 +112,15 @@ function Stage({ ev, onEvidence }: { ev: VerifiedEvidence; onEvidence: (e: Verif
 
   const idn = ev.summary.identity;
   const render = (id: string) => {
-    switch (id) {
-      case "harbor": return <Harbor ev={ev} go={go} pulse={gen} />;
-      case "ledger": return <Ledger ev={ev} />;
-      case "lineage": return <Lineage summary={ev.summary} />;
-      case "encounter": return <Encounter />;
-      case "controls": return <Controls ev={ev} />;
-      case "estimands": return <Estimands />;
-      case "adversaries": return <Adversaries />;
-      case "chair": return <Chair />;
-      case "frontier": return <Frontier />;
-      case "system": return <SystemAtlas ev={ev} />;
-      case "contract": return <Contract />;
-      case "measurement": return <Measurement />;
-      case "worstgroup": return <WorstGroup />;
-      case "windshield": return <Windshield />;
-      case "samehazard": return <SameHazard />;
-      case "law": return <Law />;
-      case "monitor": return <Monitor />;
-      default: return null;
-    }
+    if (id === "harbor") return <Harbor ev={ev} go={go} pulse={gen} />;
+    const C = LAZY[id];
+    if (!C) return null;
+    const props: Record<string, unknown> = id === "ledger" || id === "controls" || id === "system" ? { ev } : id === "lineage" ? { summary: ev.summary } : {};
+    return <Suspense fallback={null}><C {...props} /></Suspense>;
   };
+
+  /* after each station renders: warm its two dock neighbours in idle time */
+  useEffect(() => { prefetchNeighbours(active); }, [active]);
 
   return (
     <div className="viewport stage">
@@ -192,23 +173,7 @@ function Stage({ ev, onEvidence }: { ev: VerifiedEvidence; onEvidence: (e: Verif
         <div className="grain" aria-hidden="true" />
       </main>
 
-      <nav className="dock" aria-label="Stations">
-        {STATIONS.map((s) => (
-          <button
-            key={s.id}
-            className="navcard glass"
-            data-station={s.id}
-            data-red={String(!!s.red)}
-            data-active={String(s.id === active)}
-            aria-current={s.id === active ? "page" : undefined}
-            onClick={() => go(s.id)}
-          >
-            <span className="nid">{s.num}</span>
-            <span className="nnm">{s.name}</span>
-            <span className="nds">{s.desc}</span>
-          </button>
-        ))}
-      </nav>
+      <Dock active={active} go={go} />
     </div>
   );
 }

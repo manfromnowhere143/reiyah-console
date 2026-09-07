@@ -1,38 +1,44 @@
-/* The camera. One world, nine cells, damped flight.
-   Motion law: damped for mass (critically-damped rAF interpolation, the
-   Jarvis manner — state is interpolated in the render loop, never toggled).
-   The scale dips with remaining distance, giving the zoom-out-and-land arc
-   of a ZUI without any timeline. Reduced motion: jump cuts. */
-import { useEffect, useRef, useState } from "react";
+/* The stations: the instrument's map. Three rails, one order. The stage
+   cross-fades in place (App.tsx); the dock and the field index read this list.
+   The earlier world-space damped camera is retired with its row/col grid. */
+
+export type Rail = "engine" | "measurement" | "audit";
+export const RAILS: Array<{ id: Rail; name: string; kicker: string }> = [
+  { id: "engine", name: "The Engine", kicker: "gate a · the sealed architecture" },
+  { id: "measurement", name: "The Measurement", kicker: "gate b · public data, proposed" },
+  { id: "audit", name: "The Audit", kicker: "the reference examined" },
+];
 
 export interface StationDef {
   id: string;
   num: string;
   name: string;
   desc: string;
-  row: number;
-  col: number;
+  rail: Rail;
   red?: boolean;
 }
 
+/* the dock's order is the rails' order: the engine, then what was measured
+   with it, then the audit of the measurement's own reference */
 export const STATIONS: StationDef[] = [
-  { id: "harbor", num: "ST–00", name: "Harbor", desc: "the living engine", row: 1, col: 1 },
-  { id: "system", num: "ST–09", name: "The Seeing", desc: "the whole of Reiyah, one mandala", row: 0, col: 0 },
-  { id: "ledger", num: "ST–01", name: "Ledger", desc: "every artifact digest-bound", row: 0, col: 0 },
-  { id: "lineage", num: "ST–02", name: "Lineage", desc: "releases as chain of custody", row: 0, col: 1 },
-  { id: "encounter", num: "ST–03", name: "Encounter", desc: "the six-kind chain, alive", row: 0, col: 2 },
-  { id: "controls", num: "ST–04", name: "Controls", desc: "controls, twin evaluations", row: 1, col: 0 },
-  { id: "estimands", num: "ST–05", name: "Estimands", desc: "instruments awaiting first light", row: 1, col: 2 },
-  { id: "adversaries", num: "ST–06", name: "Adversaries", desc: "the known-bad wall", row: 2, col: 0 },
-  { id: "chair", num: "ST–07", name: "The Chair", desc: "the correction engine · the seat", row: 2, col: 1, red: true },
-  { id: "frontier", num: "ST–08", name: "Frontier", desc: "pointers, honestly ineligible", row: 2, col: 2 },
-  { id: "contract", num: "ST–10", name: "The Contract", desc: "schemas, coverage, what is not claimed", row: 2, col: 3 },
-  { id: "measurement", num: "ST–11", name: "The Measurement", desc: "gate b · camera and lidar fail together", row: 3, col: 0 },
-  { id: "worstgroup", num: "ST–12", name: "The Worst Group", desc: "gate b · where redundancy is weakest", row: 3, col: 1 },
-  { id: "windshield", num: "ST–13", name: "The Windshield", desc: "both sides · the human channel", row: 3, col: 2 },
-  { id: "samehazard", num: "ST–14", name: "The Same Hazard", desc: "gate b · human and automation on one object", row: 3, col: 3 },
-  { id: "law", num: "ST–15", name: "The Law", desc: "gate b · one estimand, three domains", row: 4, col: 2 },
-  { id: "monitor", num: "ST–16", name: "The Monitor", desc: "gate b · joint failure, read live", row: 4, col: 3 },
+  { id: "harbor", num: "ST–00", name: "Harbor", desc: "the living engine", rail: "engine" },
+  { id: "system", num: "ST–09", name: "The Seeing", desc: "the whole of Reiyah, one mandala", rail: "engine" },
+  { id: "ledger", num: "ST–01", name: "Ledger", desc: "every artifact digest-bound", rail: "engine" },
+  { id: "lineage", num: "ST–02", name: "Lineage", desc: "releases as chain of custody", rail: "engine" },
+  { id: "encounter", num: "ST–03", name: "Encounter", desc: "the six-kind chain, alive", rail: "engine" },
+  { id: "controls", num: "ST–04", name: "Controls", desc: "controls, twin evaluations", rail: "engine" },
+  { id: "estimands", num: "ST–05", name: "Estimands", desc: "instruments awaiting first light", rail: "engine" },
+  { id: "adversaries", num: "ST–06", name: "Adversaries", desc: "the known-bad wall", rail: "engine" },
+  { id: "contract", num: "ST–10", name: "The Contract", desc: "schemas, coverage, what is not claimed", rail: "engine" },
+  { id: "chair", num: "ST–07", name: "The Chair", desc: "the correction engine · the seat", rail: "engine", red: true },
+  { id: "frontier", num: "ST–08", name: "Frontier", desc: "pointers, honestly ineligible", rail: "engine" },
+  { id: "measurement", num: "ST–11", name: "The Measurement", desc: "camera and lidar fail together", rail: "measurement" },
+  { id: "worstgroup", num: "ST–12", name: "The Worst Group", desc: "where redundancy is weakest", rail: "measurement" },
+  { id: "windshield", num: "ST–13", name: "The Windshield", desc: "both sides · the human channel", rail: "measurement" },
+  { id: "samehazard", num: "ST–14", name: "The Same Hazard", desc: "human and automation on one object", rail: "measurement" },
+  { id: "law", num: "ST–15", name: "The Law", desc: "one estimand, three domains", rail: "measurement" },
+  { id: "monitor", num: "ST–16", name: "The Monitor", desc: "joint failure, read live", rail: "measurement" },
+  { id: "reference", num: "ST–17", name: "The Reference", desc: "the two horizons · the ghost re-examined", rail: "audit" },
 ];
 
 export function stationById(id: string | null): StationDef {
@@ -41,79 +47,4 @@ export function stationById(id: string | null): StationDef {
 
 function urlStation(): string {
   return new URLSearchParams(location.search).get("st") ?? "harbor";
-}
-
-export function useCamera(worldRef: React.RefObject<HTMLDivElement | null>) {
-  const [active, setActive] = useState<string>(urlStation());
-  const target = useRef(stationById(urlStation()));
-  const pos = useRef({ x: 0, y: 0, initialized: false });
-  const raf = useRef(0);
-
-  const go = (id: string, push = true) => {
-    const st = stationById(id);
-    target.current = st;
-    setActive(st.id);
-    if (push) {
-      const q = st.id === "harbor" ? location.pathname : `?st=${st.id}`;
-      history.pushState({ st: st.id }, "", q);
-    }
-  };
-
-  useEffect(() => {
-    const onPop = () => go(urlStation(), false);
-    const onKey = (e: KeyboardEvent) => {
-      if (e.key === "Escape") go("harbor");
-      const cur = stationById(target.current.id);
-      const move: Record<string, [number, number]> = {
-        ArrowUp: [-1, 0], ArrowDown: [1, 0], ArrowLeft: [0, -1], ArrowRight: [0, 1],
-      };
-      const d = move[e.key];
-      if (d) {
-        const next = STATIONS.find((s) => s.row === cur.row + d[0] && s.col === cur.col + d[1]);
-        if (next) go(next.id);
-      }
-    };
-    window.addEventListener("popstate", onPop);
-    window.addEventListener("keydown", onKey);
-    return () => {
-      window.removeEventListener("popstate", onPop);
-      window.removeEventListener("keydown", onKey);
-    };
-  }, []);
-
-  useEffect(() => {
-    const reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
-    let last = performance.now();
-    const tick = (now: number) => {
-      const dt = Math.min(0.05, (now - last) / 1000);
-      last = now;
-      const W = window.innerWidth;
-      const H = window.innerHeight;
-      const t = target.current;
-      const tx = t.col * W + W / 2;
-      const ty = t.row * H + H / 2;
-      if (!pos.current.initialized || reduced) {
-        pos.current = { x: tx, y: ty, initialized: true };
-      } else {
-        const k = Math.min(1, dt * 5.2);
-        pos.current.x += (tx - pos.current.x) * k;
-        pos.current.y += (ty - pos.current.y) * k;
-      }
-      const dist = Math.hypot(tx - pos.current.x, ty - pos.current.y);
-      const norm = Math.min(1, dist / Math.max(W, H));
-      const scale = reduced ? 1 : 1 / (1 + 0.55 * norm); // the dip of the flight arc
-      const el = worldRef.current;
-      if (el) {
-        el.style.transform =
-          `translate3d(${W / 2}px, ${H / 2}px, 0) scale(${scale.toFixed(4)}) ` +
-          `translate3d(${(-pos.current.x).toFixed(2)}px, ${(-pos.current.y).toFixed(2)}px, 0)`;
-        el.style.transformOrigin = "0 0";
-      }
-      raf.current = requestAnimationFrame(tick);
-    };
-    raf.current = requestAnimationFrame(tick);
-    return () => cancelAnimationFrame(raf.current);
-  }, [worldRef]);
-
-  return { active, go };
 }

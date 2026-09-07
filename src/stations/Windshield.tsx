@@ -137,7 +137,7 @@ export function Windshield() {
         h1: H1 ? { ...parseH1(H1.text), file: H1.file } : null,
         h2: H2 ? { ...parseH2(H2.text), file: H2.file } : null,
         h3: H3 ? { ...parseH3(H3.text), file: H3.file } : null,
-        h4: H4 ? { ...parseH4(H4.text), file: H4.file } : null,
+        h4: H4 ? (() => { const v = parseH4(H4.text); return v ? { ...v, file: H4.file } : null; })() : null,
         h5: H5 ? (() => { const v = parseH5(H5.text); return v ? { ...v, file: H5.file } : null; })() : null,
         h6: H6 ? (() => { const v = parseH6(H6.text); return v ? { ...v, file: H6.file } : null; })() : null,
         h7: H7 ? (() => { const v = parseH7(H7.text); return v ? { ...v, file: H7.file } : null; })() : null,
@@ -153,7 +153,7 @@ export function Windshield() {
   const { lane, d } = state.data;
   if (!lane.present || !d) return <Station id="ST–13" name="The Windshield"><Blocked reason={`the Gate B lane is not present in this source: ${lane.reason ?? "unknown"}`} /></Station>;
 
-  const autoT = d.auto && d.auto.rows.length ? d.auto.rows[d.auto.rows.length - 1] : null;
+  const autoT = d.auto?.terminal ?? null;
   const h3 = d.h3 && d.h3.groups.length ? d.h3 : null;
   const h3all = h3?.groups.find((g) => g.name === "all events") ?? null;
   const h3cr = h3?.groups.find((g) => g.name === "crashes") ?? null;
@@ -217,7 +217,7 @@ export function Windshield() {
             rule="the terminal conditional coefficient of Result L: joint-miss rate over independence within strata of class, range, visibility, weather and motion" from={d.auto ? [src(d.auto.file)] : []} />
           <Stat label="human · c" value={h3all ? fmt(h3all.c, 2) : "∅"} sub={h3all ? (h7all ? `looking × acting · ${h3all.n} conflicts · [${fmt(h7all.lo, 2)}, ${fmt(h7all.hi, 2)}] · H7` : `looking × acting · ${h3all.n} conflicts · no interval`) : "transcript absent"}
             rule="H3: P(both fail) over P(obs fail) × P(resp fail) across all events with known gaze and known reaction; obs fail = gaze not forward at the conflict instant, resp fail = no reaction; H7 adds an event-resampled bootstrap interval, not driver-clustered" from={[...(h3 ? [src(h3.file)] : []), ...(h7 ? [src(h7.file)] : [])]} />
-          <Stat label="looked forward, did nothing" value={h3cr ? `${fmt(h3cr.forwardNoReact, 1)}%` : "∅"} sub={h3cr ? (h7cr ? `of crashes · n ${h3cr.forwardNoReactN} · [${fmt(h7cr.fnrLo, 1)}, ${fmt(h7cr.fnrHi, 1)}]% · the human silent miss` : `of crashes · n ${h3cr.forwardNoReactN} · the human silent miss`) : "transcript absent"}
+          <Stat label="looked forward, did nothing" value={h3cr ? `${fmt(h3cr.forwardNoReact, 1)}%` : "∅"} sub={h3cr ? (h7cr ? `of crashes · n ${h3cr.forwardNoReactN} · [${fmt(h7cr.fnrLo, 1)}, ${fmt(h7cr.fnrHi, 1)}]% · forward yet no reaction · not called silent: no warning path was observed` : `of crashes · n ${h3cr.forwardNoReactN} · forward yet no reaction · not called silent: no warning path was observed`) : "transcript absent"}
             rule="H3, crashes: share of events where the gaze was forward at the conflict instant and the reaction was none" from={h3 ? [src(h3.file)] : []} />
           <Stat label="eyes forward, entire window" value={h1 ? <>{fmt(g1("crashes")?.forwardEntire, 1)}%<em> ← {fmt(h1.baseline!.forwardEntire, 1)}%</em></> : "∅"} sub={h1 ? `crashes ← normal driving · n ${g1("crashes")?.n} vs ${h1.baseline!.n} epochs` : "transcript absent"}
             rule="H1, strict Forward: share of events whose observed window is forward throughout, crashes versus the normal-driving baseline epochs" from={h1 ? [src(h1.file)] : []} />

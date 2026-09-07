@@ -202,7 +202,7 @@ export function Harbor({ ev, go, pulse }: { ev: VerifiedEvidence; go: (id: strin
   const I = inst.phase === "ready" ? inst.data : null;
   const sealed = getSealedInfo();
   const src = (f: { id: string; path: string; sha256?: string }) => ({ id: `gateb/${f.id}`, path: `gate-b · ${f.path}`, sha256: f.sha256 ?? "" });
-  const autoT = I?.auto && I.auto.rows.length ? I.auto.rows[I.auto.rows.length - 1] : null;
+  const autoT = I?.auto?.terminal ?? null;
   const h3all = I?.h3?.groups.find((g) => g.name === "all events") ?? null;
   const mmlu = I?.ac?.benches.find((b) => b.name === "mmlu")?.q.get("marginal c, mean") ?? null;
   const marks: Array<{ c: number; cross: boolean; name: string }> = [
@@ -251,7 +251,7 @@ export function Harbor({ ev, go, pulse }: { ev: VerifiedEvidence; go: (id: strin
               {marks.map((m) => { const x = ((Math.min(2.5, m.c) - 0.9) / 1.6) * 200; return <g key={m.name} className={m.cross ? "cross" : "same"}><line x1={((1 - 0.9) / 1.6) * 200} x2={x} y1="17" y2="17" /><circle cx={x} cy="17" r="4" /></g>; })}
               <text x="0" y="31" textAnchor="start">1.0</text><text x="200" y="31" textAnchor="end">2.5</text>
             </svg>
-            <span className="gs">{marks.length ? "same kind fails together · a human and a machine hold" : "lane transcripts not present"}</span>
+            <span className="gs">{marks.length ? "same kind fails together · human and machine near independence" : "lane transcripts not present"}</span>
           </button>
           <button className="gauge" onClick={() => go("law")}>
             <span className="gk">the register</span>

@@ -11,6 +11,8 @@
    watch drivers. */
 import { useEffect, useRef, useState } from "react";
 import { fetchSurface } from "../lib/evidence";
+import { fetchLane, fetchLaneJson, type LaneFile } from "../lib/gateb";
+import { Digest } from "../components/primitives";
 import { drawCabin, drawWorld } from "../lib/roadScene";
 
 const TAU = Math.PI * 2;
@@ -55,6 +57,26 @@ export function Encounter() {
   const [playing, setPlaying] = useState(true);
   const [prog, setProg] = useState(0);
   const [chain, setChain] = useState<Chain>(FALLBACK);
+  /* the real case: the prepared reference study, read from its committed
+     aggregates. The film stays a synthetic fixture until independent human
+     judgments exist; this slot says so with the exact counts, never a stand-in. */
+  const [study, setStudy] = useState<{ cases: number; scenes: number; judgments: number; frozen: string; file: LaneFile } | { state: "absent"; reason: string } | null>(null);
+  useEffect(() => {
+    let alive = true;
+    (async () => {
+      try {
+        const lane = await fetchLane();
+        if (!lane.present) { if (alive) setStudy({ state: "absent", reason: "lane not present" }); return; }
+        const [sel, frz] = await Promise.all([
+          fetchLaneJson<{ selected_cases: number; sampled_scenes: number; independent_judgments: number }>("evidence/reference-study/selection-aggregate-0.2.0.json"),
+          fetchLaneJson<{ frozen_at_utc: string; independent_judgments_collected: number }>("research/reference-study/0.2.0/freeze.json").catch(() => null),
+        ]);
+        if (!alive) return;
+        setStudy({ cases: sel.data.selected_cases, scenes: sel.data.sampled_scenes, judgments: frz?.data.independent_judgments_collected ?? sel.data.independent_judgments, frozen: frz?.data.frozen_at_utc ?? "", file: sel.file });
+      } catch (e) { if (alive) setStudy({ state: "absent", reason: String((e as Error)?.message ?? e) }); }
+    })();
+    return () => { alive = false; };
+  }, []);
   const chainRef = useRef<Chain>(FALLBACK);
   useEffect(() => { chainRef.current = chain; }, [chain]);
 
@@ -159,7 +181,7 @@ export function Encounter() {
       /* the composition follows the frame: a portrait phone keeps the horizon
          high, a real dashboard low, and the object large between them */
       const portrait = h > w * 1.05;
-      const horizon = portrait ? h * 0.3 : h * 0.42;
+      const horizon = portrait ? h * 0.3 : h * 0.38;
       const dash = portrait ? h * 0.25 : mobile ? h * 0.12 : 0;
       const floor = h - dash;
       const cx = w / 2;
@@ -168,7 +190,7 @@ export function Encounter() {
 
       /* ---- the object: holds station (relative speed observed 0) ---- */
       const objY = horizon + (floor - horizon) * (portrait ? 0.4 : 0.34);
-      const r = Math.round(Math.max(9, Math.min(17, w * (portrait ? 0.036 : 0.012))));
+      const r = Math.round(Math.max(9, Math.min(24, w * (portrait ? 0.036 : 0.017))));
       const seen = smooth(-0.2, 0.15, t);               // detected at t=0
       ctx.restore();
 
@@ -461,6 +483,14 @@ export function Encounter() {
           <div className="encHead" style={{ left: `${prog * 100}%` }} />
         </div>
         <div className="encClock">t {tNow < 0 ? "−" : ""}{Math.abs(tNow).toFixed(1)}s</div>
+      </div>
+      <div className="encReal" aria-label="the real case">
+        <span className="encRealK">the real case</span>
+        {study && !("state" in study) ? (
+          <span className="encRealV">
+            <b>{study.judgments.toLocaleString("en-US")}</b> independent judgments · {study.cases.toLocaleString("en-US")} cases prepared across {study.scenes} scenes · this film stays the synthetic fixture until two blinded reviews exist · <Digest id={`gateb/${study.file.id}`} sha={study.file.sha256 ?? ""} path={`gate-b · ${study.file.path}`} />
+          </span>
+        ) : study ? <span className="encRealV">reference study aggregates not present in this source · {study.reason}</span> : <span className="encRealV">reading the study…</span>}
       </div>
     </div>
   );

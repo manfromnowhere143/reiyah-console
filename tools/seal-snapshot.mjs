@@ -8,6 +8,7 @@ import { createHash } from "node:crypto";
 import { execFileSync } from "node:child_process";
 import fs from "node:fs";
 import path from "node:path";
+import { LANE_NONCLAIMS, laneId, openLane, sha256 } from "./lane-files.mjs";
 
 const REPO = process.env.REIYAH_ROOT ?? "/Users/danielwahnich/workspace/reiyah";
 const OUT = new URL("../public/snapshot", import.meta.url).pathname;
@@ -124,60 +125,25 @@ fs.writeFileSync(path.join(OUT, "schemas-index.json"), JSON.stringify({ kind: "s
 console.log(`[seal] ${schemaRows.length} schemas indexed`);
 
 /* ---- the Gate B measurement lane: a second source, sealed separately ----
-   It lives in its own worktree on its own branch. It is sealed into
-   snapshot/gateb with its own identity and its own digests, and never mixed
-   with the Gate A packet. Absent worktree = absent lane, recorded as such. */
-const GATEB = process.env.GATEB_ROOT ?? "/Users/danielwahnich/workspace/reiyah-gate-b";
-/* every transcript and narrative the lane retains, found by directory so a
-   new result is sealed the moment it is committed; the explicit list below
-   carries the fixed artifacts */
-const laneGlob = (root, dir, re) => { try { return fs.readdirSync(path.join(root, dir)).filter((f) => re.test(f)).sort().map((f) => `${dir}/${f}`); } catch { return []; } };
-const GATEB_FILES = [
-  "evidence/claim-status-register-2026-08-29.json",
-  "evidence/measurement/result_l.txt", "evidence/measurement/result_m.txt", "evidence/measurement/result_n.txt",
-  "evidence/measurement/result_o.txt", "evidence/measurement/result_p.txt", "evidence/measurement/result_q.txt",
-  "evidence/measurement/result_i.txt", "evidence/measurement/result_j.txt", "evidence/measurement/result_s.txt",
-  "evidence/measurement/result_h_instance_unit.txt",
-  "human-channel/evidence/h1_driver_observation.txt", "human-channel/evidence/h2_glance_at_conflict.txt",
-  "human-channel/evidence/h3_observation_response_joint.txt", "human-channel/evidence/h4_dcpt_takeover.txt",
-  "human-channel/evidence/h5_cross_agent_joint.txt", "human-channel/H5_CROSS_AGENT_JOINT.md",
-  "human-channel/evidence/h6_total_both_miss.txt", "human-channel/H6_TOTAL_BOTH_MISS.md",
-  "llm-generalization/evidence/result_t.txt", "llm-generalization/evidence/result_u.txt", "llm-generalization/evidence/result_v.txt",
-  "llm-generalization/RESULT_V_DEPLOYED_MONITOR.md",
-  "llm-generalization/RESULT_T_LLM_INDEPENDENCE.md", "llm-generalization/RESULT_U_AGREEMENT_RELIABILITY.md", "llm-generalization/README.md",
-  "human-channel/README.md",
-  "evidence/measurement/joint-performance-nuscenes-val.excerpt.json",
-  "evidence/measurement/worst-group-records.jsonl",
-  "docs/gate_b_robustness_figure.svg",
-  "docs/GATE_B_MEASUREMENT_CONTRACT.md", "docs/GATE_B_FINDINGS_SYNTHESIS.md",
-  ...laneGlob(GATEB, "evidence", /^claim-status-register-\d{4}-\d{2}-\d{2}\.json$/),
-  ...laneGlob(GATEB, "evidence/measurement", /\.txt$/),
-  ...laneGlob(GATEB, "human-channel/evidence", /\.txt$/),
-  ...laneGlob(GATEB, "llm-generalization/evidence", /\.txt$/),
-  ...laneGlob(GATEB, "human-channel", /\.md$/),
-  ...laneGlob(GATEB, "llm-generalization", /\.md$/),
-  ...laneGlob(GATEB, "docs", /^(RESULT_|GATE_B_|GENERAL_SYNTHESIS).*\.md$/),
-];
+   Read from one exact Git commit of the engine repository (GATEB_REF), so the
+   sealed bytes and the identity beside them are the same immutable object;
+   a worktree is the fallback. Sealed into snapshot/gateb with its own identity
+   and digests, never mixed with the Gate A packet. Absent = recorded as such. */
 fs.mkdirSync(path.join(OUT, "gateb", "raw"), { recursive: true });
-let gateb = { present: false, reason: "gate-b worktree not present at seal time" };
+let gateb = { present: false, reason: "gate-b lane not readable at seal time" };
 try {
-  const gopt = { cwd: GATEB, encoding: "utf8" };
-  const head = execFileSync("git", ["rev-parse", "HEAD"], gopt).trim();
-  const branch = execFileSync("git", ["branch", "--show-current"], gopt).trim();
-  const clean = execFileSync("git", ["status", "--porcelain=v1"], gopt).trim() === "";
-  const commits = Number(execFileSync("git", ["rev-list", "--count", "HEAD"], gopt).trim());
+  const lane = openLane();
   const files = [];
-  for (const rel of [...new Set(GATEB_FILES)]) {
+  for (const rel of lane.files) {
     try {
-      const bytes = fs.readFileSync(path.join(GATEB, rel));
-      const id = rel.replaceAll("/", "__");
+      const bytes = lane.read(rel);
+      const id = laneId(rel);
       fs.writeFileSync(path.join(OUT, "gateb", "raw", id), bytes);
-      files.push({ id, path: rel, bytes: bytes.length, sha256: "sha256:" + createHash("sha256").update(bytes).digest("hex") });
-    } catch { files.push({ id: rel.replaceAll("/", "__"), path: rel, state: "absent" }); }
+      files.push({ id, path: rel, bytes: bytes.length, sha256: sha256(bytes) });
+    } catch { files.push({ id: laneId(rel), path: rel, state: "absent" }); }
   }
-  gateb = { present: true, identity: { state: "observed", head, branch, worktree_clean: clean, commit_count: commits, root: GATEB }, sealedAt: new Date().toISOString(), files,
-    lane_nonclaims: { operator_accepted: false, scientific_support_claimed: false, externally_audited: false, lifecycle: "proposed", model_executed_by_this_lane: false } };
-  console.log(`[seal] gate-b lane ${branch} ${head.slice(0, 12)} clean=${clean} · ${files.filter((f) => !f.state).length} files`);
+  gateb = { present: true, identity: lane.identity, sealedAt: new Date().toISOString(), files, lane_nonclaims: LANE_NONCLAIMS };
+  console.log(`[seal] gate-b lane ${lane.kind} ${lane.identity.branch} ${lane.identity.head.slice(0, 12)} · ${files.filter((f) => !f.state).length} files`);
 } catch (e) { console.log(`[seal] gate-b lane absent: ${String(e && e.message || e).slice(0, 80)}`); }
 fs.writeFileSync(path.join(OUT, "gateb", "manifest.json"), JSON.stringify(gateb, null, 1));
 

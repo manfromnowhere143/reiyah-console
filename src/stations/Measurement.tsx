@@ -36,7 +36,7 @@ export function Measurement() {
   const state = useSurfaceState(async () => {
     const lane = await fetchLane();
     if (!lane.present) return { lane, data: null };
-    const [L, N, O, Pp, Q, R] = await Promise.all([P.L, P.N, P.O, P.P, P.Q, P.R].map((p) => fetchLaneText(p).catch(() => null)));
+    const [L, N, O, Pp, Q, R] = await Promise.all([P.L, P.N, P.O, P.P, P.Q, await registerPath()].map((p) => fetchLaneText(p).catch(() => null)));
     return {
       lane,
       data: {
@@ -58,7 +58,7 @@ export function Measurement() {
 
   const id = lane.identity!;
   const conv = data.conv && data.conv.rows.length >= 2 ? data.conv : null;
-  const terminal = conv ? conv.rows[conv.rows.length - 1] : null;
+  const terminal = conv ? conv.terminal : null;
   const sweep = data.sweep && data.sweep.pairs.length ? data.sweep : null;
   const sweepRows = sweep ? sweep.pairs.flatMap((p) => p.rows) : [];
   const exclN = sweepRows.filter((r) => r.excl).length;
