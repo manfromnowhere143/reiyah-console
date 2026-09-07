@@ -16,10 +16,11 @@ Reiyah repository (read-only ground truth)
         └── SEALED: tools/seal-snapshot.mjs ──► public/snapshot/ ──► the same client
                     (exact bytes + manifest at one commit)
 
-Client (Vite + React 19 + TS strict, 72 KB gz)
+Client (Vite + React 19 + TS strict)
   src/lib/evidence.ts   one client, two honest sources, no third option
   src/boot/ProofBoot    WebCrypto verification before first render
-  src/lib/camera.ts     damped rAF camera; URL = camera position
+  src/lib/camera.ts     station and rail definitions; URL = selected station
+  src/components/StationFrame  prepare one destination; reveal its settled DOM
   src/components        EpistemicValue · Digest (press-to-prove) · TruthPill · Station
   src/stations          eighteen instruments in three rails, each bound to committed JSON
   src/lib/prefetch.ts   what each station reads; neighbours warmed in idle time
@@ -65,20 +66,43 @@ state. Modes are displayed, never blended.
 
 - Compositor-only animation: `transform` and `opacity`. Blur radii are
   constants; blur is never animated.
-- Camera: critically-damped interpolation in one rAF loop
-  (`pos += (target-pos)·min(1, dt·5.2)`), scale dip `1/(1+0.55·d̂)` for the
-  ZUI flight arc. Reduced motion: jump cuts, static field, no pulse.
+- Navigation: one current page plus at most one hidden, inert destination.
+  Code, readers, measured chart sizes and first drawings settle before reveal.
+  Menus close in the destination's commit. Direct dock/history changes may use
+  a single 180ms panel crossfade. Reduced motion skips that animation.
+- Dock geometry is invariant during a request. Pending indicators are absolute;
+  they cannot wrap station names or resize the page. They appear only after 200ms
+  on a first visit; return visits do not show them. Only the rail scrolls.
+- Opening: one shared first-paint stylesheet, one centered mark and name. Only
+  REIYAH is visible as text during normal preparation; progress is available to
+  assistive technology. One light pass retains its position across React arrival.
+  After digest
+  verification the first station mounts beneath the opening, inert. Its readers
+  and first drawing report readiness before a single 360ms departure. There is
+  no completed-state pause or separate stage fade. Reduced motion reveals directly.
+- Unavailable surfaces preserve the actual source failure and provide expandable
+  details with a retry through the complete verification gate. Required Reference
+  records fail explicitly rather than entering the ready-data cache as null.
+- The field index has eighteen destinations grouped by their three declared rails.
+  Its centered, two-column dialog is at most 620px wide. At the supported phone
+  heights each target is at least 44px tall, without index scrolling. Smaller
+  windows may scroll the index to retain reachable controls.
 - Glass ladder: rung 1 `feDisplacementMap` lens behind
   `@supports (backdrop-filter: url(#harborLens))` (Chromium); rung 2
   `blur(20px) saturate(1.18)`; rung 3 opaque under
   `prefers-reduced-transparency` and `prefers-contrast: more`.
-- Budgets: main bundle ≤ 100 KB gz (actual 91; the Harbor and its worker ship
+- Budgets: main bundle ≤ 100 KB gz (approximately 93 KB gz as of 2026-09-07; the Harbor and its worker ship
   first, every other station is its own chunk of 2 to 7 KB gz, fetched when
   pressed or a moment earlier by the neighbour prefetch), ≤ 3 concurrent glass
   surfaces, one canvas, zero third-party runtime deps beyond React.
-- Boot transfer: about 1.6 MB over about 30 requests (the 505 KB index whose
-  digest the boot proves, the 426 KB fixture catalog the Harbor and the wall
-  read, the bundle, the fonts). Nothing else is fetched until a station asks.
+- Existing typefaces are served from `/fonts/` with content hashes, original
+  OFL licenses and source records. No external stylesheet or font host is needed
+  during startup. The boot reads the current index and report; the stage warms
+  station data after mounting. Transfer size depends on the committed snapshot.
+
+The readiness design follows React's [layout effect contract](https://react.dev/reference/react/useLayoutEffect)
+and the browser's [snapshot and size transition model](https://developer.chrome.com/docs/web-platform/view-transitions/same-document).
+Passing browser tests establishes observed UI behavior, not scientific validation.
 
 ## 4. Data surfaces
 

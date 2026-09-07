@@ -45,8 +45,9 @@ blocked state instead of a fabricated value.
 Harbor (epistemic field + authority wall) · Ledger · Lineage · Encounter ·
 Controls · Estimands · Adversaries · The Chair · Frontier.
 
-Navigation: press a station to fly the camera; Escape returns to Harbor; arrow
-keys move between neighbors; the URL (`?st=...`) is the camera position.
+Navigation: choose a station from the dock or field index. The current page
+stays in place until the destination is ready. Escape returns to Harbor; arrow
+keys move between neighbors; the URL (`?st=...`) identifies the station.
 
 ## Verification rigs
 
@@ -57,6 +58,7 @@ npm run build
 python3 -m http.server 4620 --bind 127.0.0.1 --directory dist
 # In another terminal:
 npm run test:navigation
+npm run test:opening
 ```
 
 This checks all eighteen stations through the field index, both grounds and three
@@ -64,7 +66,10 @@ viewport sizes, plus slow/failed loads, interrupted selections, history, keyboar
 focus and motion fallbacks. It requires installed Chrome. `NAV_BASE` changes the
 test URL and `NAV_OUT` the capture directory. `NAV_WEBKIT` optionally names an
 installed Playwright `index.mjs` to run the same checks in its WebKit browser.
-No evidence sealer or engine service is used by this test.
+The opening rig checks identical geometry before and after React loads, first
+drawing readiness, verification failures and retries, font failure, reduced motion,
+and all eighteen index targets at a minimum 44px height. `BOOT_OUT` selects its
+capture directory. No evidence sealer or engine service is used by these tests.
 
 ```sh
 node tools/shots.mjs out/ [--mobile]   # capture boot + all nine stations

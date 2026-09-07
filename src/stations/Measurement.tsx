@@ -6,6 +6,7 @@
    transcript's digest; the lane's own status register is rendered verbatim,
    withdrawn claims shown as withdrawn. Proposed, not externally audited,
    association after declared conditioning, never causation. */
+import { useStationLayout } from "../components/StationFrame";
 import { useLayoutEffect, useRef, useState } from "react";
 import { fetchLane, fetchLaneText, parseConvergence, parseEValues, parseGrid, parseOpposite, parseRegister, parseSweep, type LaneFile, registerPath } from "../lib/gateb";
 import { Blocked, Digest, FitList, Stat, Station, useSurfaceState } from "../components/primitives";
@@ -29,6 +30,7 @@ function useBox(key: unknown) {
     const m = () => { const r = el.getBoundingClientRect(); if (r.width > 0 && r.height > 0) setSz({ w: Math.round(r.width), h: Math.round(r.height) }); };
     m(); const ro = new ResizeObserver(m); ro.observe(el); return () => ro.disconnect();
   }, [key]);
+  useStationLayout(ref, sz.w, sz.h);
   return { ref, ...sz };
 }
 

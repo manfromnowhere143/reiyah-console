@@ -12,6 +12,7 @@
    each bracket. Every figure is a field of a committed record with its digest;
    the register's states are shown beside the numbers and neither is upgraded. */
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
+import { useStationLayout, useStationReadiness } from "../components/StationFrame";
 import { MONO, drawCabin, drawWorld, tones } from "../lib/roadScene";
 import { useGround } from "../lib/ground";
 import { fetchLane, fetchLaneJson, fetchLaneText, parseRegister, registerPath, type LaneFile } from "../lib/gateb";
@@ -60,6 +61,7 @@ function useBox(key: unknown) {
     const m = () => { const r = el.getBoundingClientRect(); if (r.width > 0 && r.height > 0) setSz({ w: Math.round(r.width), h: Math.round(r.height) }); };
     m(); const ro = new ResizeObserver(m); ro.observe(el); return () => ro.disconnect();
   }, [key]);
+  useStationLayout(ref, sz.w, sz.h);
   return { ref, ...sz };
 }
 
@@ -68,9 +70,11 @@ function HorizonScene({ w, h, ao }: { w: number; h: number; ao: AO }) {
   const ref = useRef<HTMLCanvasElement>(null);
   const dark = useGround();
   const [ready, setReady] = useState(false);
+  const [unavailable, setUnavailable] = useState(false);
+  useStationReadiness(unavailable ? "blocked" : ready || w === 0 || h === 0 ? "ready" : "loading");
   useEffect(() => {
     const cv = ref.current; if (!cv || w === 0 || h === 0) return;
-    const ctx = cv.getContext("2d"); if (!ctx) return;
+    const ctx = cv.getContext("2d"); if (!ctx) { setUnavailable(true); return; }
     let alive = true;
     document.fonts.ready.then(() => {
       if (!alive) return;
@@ -159,6 +163,7 @@ function HorizonScene({ w, h, ao }: { w: number; h: number; ao: AO }) {
     });
     return () => { alive = false; };
   }, [w, h, ao, dark]);
+  if (unavailable) return <div className="chart-unavailable" role="alert">Chart unavailable in this browser.</div>;
   return <canvas ref={ref} className="wscene" data-ready={String(ready)} style={{ width: w, height: h }} aria-label="Two horizons: the filtered reference cache near, the complete annotation table far; reclassified detections as lights between them, unmatched detections hollow beyond" />;
 }
 
@@ -167,16 +172,17 @@ export function Reference() {
     const lane = await fetchLane();
     if (!lane.present) return { lane, d: null };
     const [ao, sel, rdy, frz, R] = await Promise.all([
-      fetchLaneJson<unknown>(F.AO).catch(() => null),
+      fetchLaneJson<unknown>(F.AO),
       fetchLaneJson<Sel>(F.SEL).catch(() => null),
       fetchLaneJson<Rdy>(F.RDY).catch(() => null),
       fetchLaneJson<Frz>(F.FRZ).catch(() => null),
       registerPath().then((p) => fetchLaneText(p)).catch(() => null),
     ]);
+    if (!isAO(ao.data)) throw new Error(`reference_record_shape_unrecognized:${F.AO}`);
     return {
       lane,
       d: {
-        ao: ao && isAO(ao.data) ? { data: ao.data, file: ao.file } : null,
+        ao: { data: ao.data, file: ao.file },
         sel: sel && sel.data?.groups ? sel : null,
         rdy: rdy && rdy.data?.estimates ? rdy : null,
         frz: frz && typeof frz.data?.independent_judgments_collected === "number" ? frz : null,
@@ -189,7 +195,6 @@ export function Reference() {
   if (state.phase === "blocked") return <Station id="ST–17" name="The Reference"><Blocked reason={state.reason} /></Station>;
   const { lane, d } = state.data;
   if (!lane.present || !d) return <Station id="ST–17" name="The Reference"><Blocked reason={`the Gate B lane is not present in this source: ${lane.reason ?? "unknown"}`} /></Station>;
-  if (!d.ao) return <Station id="ST–17" name="The Reference"><Blocked reason="Result AO (evidence/measurement/result_ao.json) is not present in the sealed lane or not in its known shape; the sealed lane may predate the reference audit" /></Station>;
 
   const ao = d.ao.data;
   const cam = ao.ghost_reference_population.camera, lid = ao.ghost_reference_population.lidar;

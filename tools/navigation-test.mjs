@@ -58,7 +58,7 @@ async function open({ width = 390, height = 660, ground = "dark", reduced = fals
     }
   }
   await page.goto(base, { waitUntil: "load" });
-  await until(page, () => !!document.querySelector(".stage .harbor canvas"));
+  await until(page, () => !!document.querySelector(".stage .harbor canvas") && !document.querySelector(".boot"));
   await until(page, () => Number(getComputedStyle(document.querySelector(".stage")).opacity) === 1);
   if (await page.evaluate(() => document.documentElement.dataset.ground) !== ground) await page.click(".groundtoggle");
   return { page, context, errors };
@@ -72,6 +72,7 @@ async function startSampling(page) {
       const all = [...document.querySelectorAll(".panelcontent")];
       const visible = all.filter((el) => getComputedStyle(el).visibility !== "hidden");
       const el = visible[0];
+      const dock = document.querySelector(".dockwrap").getBoundingClientRect();
       data.frames.push({
         at: time - data.started,
         visible: visible.length,
@@ -79,6 +80,9 @@ async function startSampling(page) {
         station: el?.dataset.station,
         opacity: el ? Number(getComputedStyle(el).opacity) : 0,
         empty: !el?.innerText.trim(),
+        dockTop: dock.top, dockHeight: dock.height,
+        unfinishedDrawings: el ? [...el.querySelectorAll(".wscene")].filter((c) => c.clientWidth && c.clientHeight &&
+          (c.dataset.ready !== "true" || Number(getComputedStyle(c).opacity) < 0.99)).length : 0,
         loading: !!el && [...el.querySelectorAll(".note")].some((n) => /reading.*…/i.test(n.textContent)),
         hiddenIsInert: all.filter((n) => n.dataset.preparing === "true").every((n) => n.inert && n.getAttribute("aria-hidden") === "true"),
       });
@@ -91,7 +95,8 @@ async function startSampling(page) {
 async function stopSampling(page, label) {
   const frames = await page.evaluate(() => { window.__navigationSamples.running = false; return window.__navigationSamples.frames; });
   assert.ok(frames.length > 0, `${label}: no sampled frames`);
-  const bad = frames.filter((f) => f.visible !== 1 || f.framesMounted > 2 || f.opacity < 0.99 || f.empty || f.loading || !f.hiddenIsInert);
+  const bad = frames.filter((f) => f.visible !== 1 || f.framesMounted > 2 || f.opacity < 0.99 || f.empty || f.loading || !f.hiddenIsInert
+    || f.unfinishedDrawings || Math.abs(f.dockTop - frames[0].dockTop) > 0.5 || Math.abs(f.dockHeight - frames[0].dockHeight) > 0.5);
   assert.deepEqual(bad, [], `${label}: content continuity failed`);
   return { frames: frames.length, maxGapMs: Math.round(Math.max(0, ...frames.slice(1).map((f, i) => f.at - frames[i].at))), blankFrames: 0 };
 }
@@ -238,6 +243,111 @@ try {
     report.controls.push({ label: reduced ? "reduced-motion" : "without-view-transitions", ...await stopSampling(page, "fallback") });
     assert.deepEqual(errors, []);
     await context.close();
+  }
+
+  // The operator's second recording: long dock labels must not change dock
+  // height, and a chart must retain its first visible geometry throughout arrival.
+  for (const [width, height] of quick ? [[390, 660], [1728, 960]] : [[1280, 820], [430, 745], [390, 660], [1728, 960]]) {
+    const { page, context, errors } = await open({ width, height });
+    for (const id of ["windshield", "measurement", "samehazard", "measurement", "samehazard", "reference", "samehazard", "reference"]) {
+      await page.evaluate((id) => {
+        const rail = document.querySelector(".dock"), card = rail.querySelector(`[data-station="${id}"]`);
+        rail.scrollLeft += card.getBoundingClientRect().left - rail.getBoundingClientRect().left;
+      }, id);
+      await startSampling(page);
+      await page.evaluate((id) => {
+        const run = window.chartArrival = { running: true, frames: [] };
+        function sample() {
+          if (!run.running) return;
+          const panel = document.querySelector('.panelcontent[data-preparing="false"]');
+          if (panel?.dataset.station === id) run.frames.push([...panel.querySelectorAll(".mchart, .wscene")].filter((c) => c.getBoundingClientRect().width && c.getBoundingClientRect().height).map((c) => {
+            const r = c.getBoundingClientRect();
+            return { x: r.x, y: r.y, width: c.getAttribute("width"), height: c.getAttribute("height"), opacity: Number(getComputedStyle(c).opacity) };
+          }));
+          requestAnimationFrame(sample);
+        }
+        requestAnimationFrame(sample);
+      }, id);
+      await page.click(`.navcard[data-station="${id}"]`);
+      await arrived(page, id);
+      await sleep(500);
+      const frames = await page.evaluate(() => { window.chartArrival.running = false; return window.chartArrival.frames; });
+      assert.ok(frames.length > 10 && frames[0].length > 0, `${id}: no chart frames`);
+      assert.ok(frames.every((f) => JSON.stringify(f) === JSON.stringify(frames[0])), `${width} ${id}: chart shifted or faded after arrival`);
+      assert.ok(frames[0].every((c) => c.opacity === 1), `${id}: chart initially transparent`);
+      report.controls.push({ label: `${width}x${height}-${id}-dock-chart-stability`, ...await stopSampling(page, id), chartFrames: frames.length });
+    }
+    assert.deepEqual(errors, []);
+    await context.close();
+  }
+
+  // A deferred first canvas drawing also holds the menu, even with warm data.
+  {
+    const { page, context, errors } = await open();
+    await page.evaluate(() => {
+      const ready = new Promise((resolve) => { window.releaseDrawing = resolve; });
+      Object.defineProperty(document.fonts, "ready", { configurable: true, get: () => ready });
+    });
+    await startSampling(page);
+    await select(page, "samehazard");
+    await sleep(250);
+    assert.ok(await page.$(".fieldindex"));
+    assert.ok(await page.$('.fixrow[data-station="samehazard"][data-pending="true"]'), "slow first load should offer feedback");
+    assert.equal(await page.$eval('.panelcontent[data-preparing="false"]', (e) => e.dataset.station), "harbor");
+    await page.evaluate(() => window.releaseDrawing());
+    await arrived(page, "samehazard");
+    report.controls.push({ label: "canvas-first-drawing-readiness", ...await stopSampling(page, "canvas-ready") });
+    await select(page, "harbor"); await arrived(page, "harbor");
+    await page.evaluate(() => {
+      const ready = new Promise((resolve) => { window.releaseDrawing = resolve; });
+      Object.defineProperty(document.fonts, "ready", { configurable: true, get: () => ready });
+    });
+    await startSampling(page);
+    await select(page, "samehazard");
+    await sleep(320);
+    assert.equal(await page.$('.navcard[data-pending="true"], .fixrow[data-pending="true"]'), null, "return visit must never show a loading circle");
+    assert.match(await page.$eval(".fixfootstatus", (e) => e.textContent), /18 stations/);
+    await page.evaluate(() => window.releaseDrawing());
+    await arrived(page, "samehazard");
+    report.controls.push({ label: "revisits-without-loading-indicators", ...await stopSampling(page, "quiet-revisit") });
+    assert.deepEqual(errors, []);
+    await context.close();
+  }
+  {
+    const { page, context, errors } = await open();
+    await page.evaluate(() => {
+      const get = HTMLCanvasElement.prototype.getContext;
+      HTMLCanvasElement.prototype.getContext = function (...args) { return this.classList.contains("wscene") ? null : get.apply(this, args); };
+    });
+    await select(page, "samehazard");
+    await arrived(page, "samehazard");
+    assert.match(await page.$eval('.panelcontent[data-preparing="false"]', (e) => e.innerText), /Chart unavailable/);
+    await select(page, "harbor"); await arrived(page, "harbor");
+    report.controls.push({ label: "canvas-unavailable-keeps-navigation-usable", passed: true });
+    assert.deepEqual(errors, []); await context.close();
+  }
+  // A missing transfer must stay explicit, retain its reason, and recover
+  // through a fresh verification after the operator chooses Try again.
+  {
+    let fail = true;
+    const { page, context, errors } = await open({ intercept: async (url) => {
+      if (fail && url.includes("evidence__measurement__result_ao.json")) return "abort";
+    } });
+    await select(page, "reference"); await arrived(page, "reference");
+    assert.ok(await page.$('.panelcontent[data-preparing="false"] .blocked'));
+    assert.equal(await page.$('.panelcontent[data-preparing="false"] .refgrid'), null);
+    const shape = await geometry(page);
+    assert.ok(shape.overflow.every((n) => n <= 2));
+    assert.ok(await page.$eval(".blocked-retry", (e) => e.getBoundingClientRect().height >= 44));
+    await page.screenshot({ path: path.join(out, "reference-interrupted.png") });
+    await page.click(".blocked-details summary");
+    assert.match(await page.$eval(".blocked-details code", (e) => e.textContent), /fetch|network|abort/i);
+    fail = false;
+    await Promise.all([page.waitForNavigation({ waitUntil: "load" }), page.click(".blocked-retry")]);
+    await until(page, () => !document.querySelector(".boot") && !!document.querySelector('.refgrid .wscene[data-ready="true"]'));
+    assert.equal(await page.$('.panelcontent[data-preparing="false"] .blocked'), null);
+    report.controls.push({ label: "reference-transfer-failure-and-verified-retry", passed: true });
+    assert.deepEqual(errors, []); await context.close();
   }
   console.log(`${report.controls.length} navigation, failure and accessibility controls passed`);
   report.status = "pass";

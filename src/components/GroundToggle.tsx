@@ -1,7 +1,7 @@
 /* The ground toggle. Obsidian by default; paper for daylight reading.
    Persisted per operator, restored before first paint by the inline script
    in index.html, committed through a View Transition where available. */
-import { useState } from "react";
+import { useGround } from "../lib/ground";
 
 type Ground = "light" | "dark";
 
@@ -13,12 +13,12 @@ function apply(g: Ground) {
 }
 
 export function GroundToggle() {
-  const [ground, setGround] = useState<Ground>(() =>
-    document.documentElement.dataset.ground === "dark" ? "dark" : "light"
-  );
+  // During opening, both this control and the covered HUD can be mounted.
+  // Observe the shared preference so the revealed control cannot be stale.
+  const ground: Ground = useGround() ? "dark" : "light";
   const flip = () => {
     const next: Ground = ground === "dark" ? "light" : "dark";
-    const commit = () => { apply(next); setGround(next); };
+    const commit = () => apply(next);
     const reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
     const svt = (document as any).startViewTransition?.bind(document);
     if (!reduced && svt) {

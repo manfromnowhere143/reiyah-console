@@ -11,6 +11,7 @@
    for the joint-silent-miss claim is shown beside the number and neither is
    upgraded. The exhibit frames the design calls for are not committed by the
    lane, so the hero stays an explicit wait, never a stand-in. */
+import { useStationLayout, useStationReadiness } from "../components/StationFrame";
 import { useLayoutEffect, useRef, useState } from "react";
 import { useEffect } from "react";
 import { fetchLane, fetchLaneText, parseH3, parseH5, parseH5Bounds, parseH6, parsePairRow, parseRegister, type LaneFile, registerPath } from "../lib/gateb";
@@ -36,6 +37,7 @@ function useBox(key: unknown) {
     const m = () => { const r = el.getBoundingClientRect(); if (r.width > 0 && r.height > 0) setSz({ w: Math.round(r.width), h: Math.round(r.height) }); };
     m(); const ro = new ResizeObserver(m); ro.observe(el); return () => ro.disconnect();
   }, [key]);
+  useStationLayout(ref, sz.w, sz.h);
   return { ref, ...sz };
 }
 
@@ -49,9 +51,11 @@ function SquaresScene({ w, h, squares }: { w: number; h: number; squares: Sq[] }
   const ref = useRef<HTMLCanvasElement>(null);
   const dark = useGround();
   const [ready, setReady] = useState(false);
+  const [unavailable, setUnavailable] = useState(false);
+  useStationReadiness(unavailable ? "blocked" : ready || w === 0 || h === 0 ? "ready" : "loading");
   useEffect(() => {
     const cv = ref.current; if (!cv || w === 0 || h === 0 || !squares.length) return;
-    const ctx = cv.getContext("2d"); if (!ctx) return;
+    const ctx = cv.getContext("2d"); if (!ctx) { setUnavailable(true); return; }
     let alive = true;
     document.fonts.ready.then(() => {
       if (!alive) return;
@@ -122,6 +126,7 @@ function SquaresScene({ w, h, squares }: { w: number; h: number; squares: Sq[] }
     });
     return () => { alive = false; };
   }, [w, h, squares, dark]);
+  if (unavailable) return <div className="chart-unavailable" role="alert">Chart unavailable in this browser.</div>;
   return <canvas ref={ref} className="wscene" data-ready={String(ready)} style={{ width: w, height: h }} aria-label="Squares of objects: the both-miss cell against the outline independence predicts, one point per object where counts exist" />;
 }
 

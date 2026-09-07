@@ -4,6 +4,82 @@ Living handoff for the next session. This repo is **reiyah-console** (the Harbor
 Instrument UI), separate from the Reiyah **engine** repo (`~/workspace/reiyah`,
 which has the Gate-A baton/denylist — none of that applies here; normal git).
 
+## Opening, index and chart follow-up, 2026-09-07
+
+The operator rejected the oversized opening wordmark, then specified that the
+name should be the only visible text. The opening now centers the original Reiyah
+mark above a small Instrument Sans name (18px on phones, 20px on desktop).
+A single subtle reflection crosses the mark; its animation position carries
+across the inline-to-React handoff. Progress remains accessible to screen readers.
+Do not restore surrounding rings, captions, progress bars, decorative diagrams,
+large titles or an artificial pause. Verification failures still show a clear
+reason and retry action.
+The operator also rejected recurring loading circles when revisiting a station.
+Feedback now appears only after 200ms on a first visit; a return visit never
+shows a spinner. The feedback timer does not delay navigation.
+
+The operator approved the simpler, centered index direction. The dialog is at
+most 620px wide, with quiet sentence-case Instrument Sans labels and two columns:
+eleven engine stations on the left, six measurement stations and the audit on the
+right. Every target is at least 44px tall at the supported sizes. It retains focus,
+Escape cancellation and atomic menu/page handoff. Do not restore the rejected
+map, preview pane, side alignment or oversized condensed headings.
+
+The final tab-light request was explicitly a small refinement: its brightest
+point is reduced by 10%, retaining the existing sweep shape and timing. This is
+scoped to navigation cards; the shared light token and other surfaces are unchanged.
+
+The follow-up desktop recording exposed a defect in the first fix's pending
+indicator: as inline content, it wrapped the longer Measurement and Same Hazard
+dock labels. This increased dock height by about 24px during a request, shrank the
+prepared page, then resized its charts after commit. The indicator is now absolute
+and cannot affect layout. Dock selection scrolls only the rail, not its ancestors.
+
+The shared chart canvas also had a second 700ms entrance fade. That fade is removed.
+Measured chart boxes report readiness; the hazard, windshield and reference canvases report
+first drawing or an explicit unavailable state. The measured repeated dock visits
+now keep chart dimensions and opacity stable from the first visible frame.
+
+The opening mounts the verified first station underneath itself, inert, then waits
+for readers, chart layout and Harbor's worker first-drawing acknowledgement. It
+leaves with one 360ms opacity transition; reduced motion reveals immediately.
+The stage no longer has its own entrance fade. Browser history can change the
+initial destination while the opening is present, and both theme controls observe
+the same ground. Verification failures still block and retry through the digest gate.
+
+The inline and React openings share CSS in `index.html`. The original typefaces
+are self-hosted with content-hashed WOFF2 files, original OFL licenses and
+`public/fonts/SOURCES.json`. No font provider request is needed on startup.
+No engine, evidence snapshot, sealer, protocol, or scientific computation changed.
+
+The Reference screenshot was traced to the local UI adapter, which was still
+running the previous server module and reading lane `9464ff7` on
+`gate-b-measurement`. That lane has no Result AO. The committed production snapshot
+reads `6925e7e` on `research/2026-09-07-physical-reference-transfer` and contains AO.
+The local UI adapter was restarted with the current console module. Production
+evidence bytes were preserved. Reference now retains required-record failures
+instead of swallowing them into a cached ready result with a missing AO.
+
+Blocked surfaces use a compact centered message, a small status indicator, a
+44px retry action and expandable technical details. Retry reloads the current
+station through the complete source-verification gate. Missing records, transport
+failures and verification failures stay distinct; no substitute data is rendered.
+
+Current rigs: `npm run test:navigation` checks all 18 stations at the three supported
+sizes in both grounds, per-frame dock geometry and drawing opacity, plus focused
+dock/chart checks at 1728x960 and slow/failing/return-visit cases. `npm run test:opening`
+checks shared opening geometry, centered placement, 44px index targets and keyboard focus, worker readiness,
+blocked verification/retry, history during opening, reduced motion and missing fonts.
+Final local checks: the production build passes; the navigation rig passes all
+108 station/viewport/ground combinations and 44 focused controls, including
+repeated Reference drawings and an interrupted Reference transfer followed by a
+verified retry. The opening rig passes 12 checks, including name-only visible
+text at all six viewport/ground combinations. Browser captures and machine reports
+are under `/tmp/reiyah-navigation-review.RX24Kd/navigation-release/` and
+`/tmp/reiyah-navigation-review.RX24Kd/opening-signature/`. These are Chromium
+observations at desktop and phone viewport sizes, not physical iPhone validation.
+Production readback is recorded below after publication.
+
 ## Current navigation contract, 2026-09-07
 
 The operator's 13.75-second iPhone recording showed the field index disappearing,
@@ -57,8 +133,8 @@ to the absolute top level; analyse → plan → implement; do not assume — **m
   (soft fills + inset sheen + shadow). No page titles (identity is on the dock
   tab). No decorative red — red only signals genuine alarm / digest-mismatch /
   blocked / rejected / the joint-silent-miss concept mark.
-- **Forge navigation** — pressing a dock station morphs (shared-element expand,
-  View Transitions API) from that tab into the panel; see `go()` in `App.tsx`.
+- **Stable navigation** — prepare the destination before reveal; the dock and
+  panel geometry stay fixed. See `go()` in `App.tsx` and the current contracts above.
 - **Honesty is the luxury** — renders only digest-verified committed machine
   records; the six epistemic states never collapse to zero/false; no fabricated
   metrics; retained history is shown but never counted as current replay
@@ -66,7 +142,7 @@ to the absolute top level; analyse → plan → implement; do not assume — **m
   claim could be implied. Not a driver-monitoring system.
 
 ### Design system ("Liquid Obsidian", tokens in `src/instrument.css`)
-Two grounds: paper `#f4f3ee` (default) / obsidian `#050507` (toggle top-left).
+Two grounds: paper `#f4f3ee` / obsidian `#050507` (default) (toggle top-left).
 One red accent (`#E31937` dark / `#D61732` light). Fonts: **Big Shoulders**
 (display), **Instrument Sans** (body), **B612 Mono** (data). Operator's law: on
 obsidian all text is white and visible — hierarchy via size/weight, never by

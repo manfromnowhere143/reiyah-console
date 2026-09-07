@@ -7,6 +7,7 @@
    Every figure is parsed from a retained transcript by a strict pattern and
    carries its digest; the lane's non-claims are rendered verbatim: descriptive,
    proposed, not causal, not a safety determination, not driver-clustered. */
+import { useStationLayout, useStationReadiness } from "../components/StationFrame";
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { MONO, drawCabin, drawWorld, tones } from "../lib/roadScene";
 import { useGround } from "../lib/ground";
@@ -31,6 +32,7 @@ function useBox(key: unknown) {
     const m = () => { const r = el.getBoundingClientRect(); if (r.width > 0 && r.height > 0) setSz({ w: Math.round(r.width), h: Math.round(r.height) }); };
     m(); const ro = new ResizeObserver(m); ro.observe(el); return () => ro.disconnect();
   }, [key]);
+  useStationLayout(ref, sz.w, sz.h);
   return { ref, ...sz };
 }
 
@@ -44,9 +46,11 @@ function WindshieldScene({ w, h, marks, header }: { w: number; h: number; marks:
   const ref = useRef<HTMLCanvasElement>(null);
   const dark = useGround();
   const [ready, setReady] = useState(false);
+  const [unavailable, setUnavailable] = useState(false);
+  useStationReadiness(unavailable ? "blocked" : ready || w === 0 || h === 0 ? "ready" : "loading");
   useEffect(() => {
     const cv = ref.current; if (!cv || w === 0 || h === 0) return;
-    const ctx = cv.getContext("2d"); if (!ctx) return;
+    const ctx = cv.getContext("2d"); if (!ctx) { setUnavailable(true); return; }
     let alive = true;
     document.fonts.ready.then(() => {
       if (!alive) return;
@@ -122,6 +126,7 @@ function WindshieldScene({ w, h, marks, header }: { w: number; h: number; marks:
     });
     return () => { alive = false; };
   }, [w, h, marks, header, dark]);
+  if (unavailable) return <div className="chart-unavailable" role="alert">Chart unavailable in this browser.</div>;
   return <canvas ref={ref} className="wscene" data-ready={String(ready)} style={{ width: w, height: h }} aria-label="Three coefficients above the same independence line drawn as the horizon of a night road: automation, human, and the two together" />;
 }
 

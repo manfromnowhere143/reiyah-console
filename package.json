@@ -13,7 +13,8 @@
     "live": "node tools/watch-and-publish.mjs",
     "shots": "node tools/shots.mjs",
     "test:hangar": "node tools/hangar-test.mjs",
-    "test:navigation": "node tools/navigation-test.mjs"
+    "test:navigation": "node tools/navigation-test.mjs",
+    "test:opening": "node tools/boot-test.mjs"
   },
   "dependencies": {
     "react": "^19.0.0",

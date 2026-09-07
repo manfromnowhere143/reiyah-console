@@ -26,12 +26,14 @@ const LAZY: Record<string, React.LazyExoticComponent<React.ComponentType<any>>> 
 
 export default function App() {
   const [evidence, setEvidence] = useState<VerifiedEvidence | null>(null);
+  const [stageReady, setStageReady] = useState(false);
+  const [opened, setOpened] = useState(false);
+  const ready = useCallback(() => setStageReady(true), []);
+  const open = useCallback(() => setOpened(true), []);
   return (
     <>
-      {!evidence && <GroundToggle />}
-      {!evidence
-        ? <ProofBoot onReady={setEvidence} />
-        : <Stage ev={evidence} onEvidence={setEvidence} />}
+      {evidence && <Stage ev={evidence} onEvidence={setEvidence} covered={!opened} onInitialReady={ready} />}
+      {!opened && <ProofBoot onReady={setEvidence} stageReady={stageReady} onExit={open} />}
     </>
   );
 }
@@ -44,8 +46,12 @@ interface Frame { id: string; key: number }
 interface NavigationRequest { frame: Frame; options: NavigationOptions }
 interface PanelTransition { skipTransition(): void; ready: Promise<void>; finished: Promise<void> }
 
-function Stage({ ev, onEvidence }: { ev: VerifiedEvidence; onEvidence: (e: VerifiedEvidence) => void }) {
+function Stage({ ev, onEvidence, covered, onInitialReady }: {
+  ev: VerifiedEvidence; onEvidence: (e: VerifiedEvidence) => void;
+  covered: boolean; onInitialReady: () => void;
+}) {
   const [current, setCurrent] = useState<Frame>(() => ({ id: urlStation(), key: 0 }));
+  const [currentReady, setCurrentReady] = useState(false);
   const [pending, setPending] = useState<Frame | null>(null);
   const active = current.id;
   const currentRef = useRef(current);
@@ -59,6 +65,10 @@ function Stage({ ev, onEvidence }: { ev: VerifiedEvidence; onEvidence: (e: Verif
   const [violated, setViolated] = useState(false);
   const sealed = getSealedInfo();
   const reverifying = useRef(false);
+
+  useEffect(() => {
+    if (currentReady && !pending) onInitialReady();
+  }, [currentReady, pending, onInitialReady]);
 
   /* Keep the current DOM alive while one destination loads and lays out.
      Only the latest request may commit; a slow earlier request cannot take
@@ -78,6 +88,7 @@ function Stage({ ev, onEvidence }: { ev: VerifiedEvidence; onEvidence: (e: Verif
   }, []);
 
   const reveal = useCallback((key: number) => {
+    if (key === currentRef.current.key) { setCurrentReady(true); return; }
     const next = request.current;
     if (!next || next.frame.key !== key) return;
     const commit = () => {
@@ -93,6 +104,7 @@ function Stage({ ev, onEvidence }: { ev: VerifiedEvidence; onEvidence: (e: Verif
       currentRef.current = next.frame;
       flushSync(() => {
         setCurrent(next.frame);
+        setCurrentReady(true);
         setPending(null);
         next.options.onCommit?.();
       });
@@ -115,6 +127,7 @@ function Stage({ ev, onEvidence }: { ev: VerifiedEvidence; onEvidence: (e: Verif
   useEffect(() => {
     const onPop = () => go(urlStation(), { push: false });
     const onKey = (e: KeyboardEvent) => {
+      if (covered) return;
       if (e.defaultPrevented || (e.target instanceof Element && e.target.closest("input, textarea, select, [contenteditable='true'], [role='dialog']"))) return;
       if (!["Escape", "ArrowRight", "ArrowLeft"].includes(e.key)) return;
       e.preventDefault();
@@ -129,7 +142,7 @@ function Stage({ ev, onEvidence }: { ev: VerifiedEvidence; onEvidence: (e: Verif
       window.removeEventListener("popstate", onPop);
       window.removeEventListener("keydown", onKey);
     };
-  }, [go]);
+  }, [go, covered]);
 
   /* after boot, in idle time, warm every station's bytes. Sealed bytes are
      content-addressed and immutable within a snapshot, so this is honest
@@ -167,7 +180,7 @@ function Stage({ ev, onEvidence }: { ev: VerifiedEvidence; onEvidence: (e: Verif
   useEffect(() => { prefetchNeighbours(active); }, [active]);
 
   return (
-    <div className="viewport stage">
+    <div className="viewport stage" aria-hidden={covered || undefined} inert={covered}>
       {/* liquid-glass refraction filters — real, defined once, Chromium-only
           (graceful blur fallback elsewhere). harborGlass splits light per
           channel at the edge: true chromatic dispersion, Apple's technique. */}

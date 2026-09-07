@@ -5,7 +5,8 @@
    as a byte-identical fallback. The two canvases are created imperatively so
    each mount owns fresh, transferable elements (transferControlToOffscreen may
    run only once per element, and React StrictMode double-invokes effects). */
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
+import { useStationReadiness } from "../components/StationFrame";
 import { claimShort, fetchLane, fetchLaneText, parseAC, parseConvergence, parseH3, parseH6, parseRegister, parseV, registerPath } from "../lib/gateb";
 import { fetchCatalog, getSealedInfo } from "../lib/evidence";
 import type { VerifiedEvidence } from "../boot/ProofBoot";
@@ -13,8 +14,8 @@ import { Digest, useSurfaceState } from "../components/primitives";
 import { fetchSurface } from "../lib/evidence";
 import { createHarborEngine, type ArtifactRow, type HarborEngine, type HarborEnv } from "./harborEngine";
 
-/* the instruments' data: every number from committed bytes; primed during boot
-   so the first screen mounts with its numbers in hand, and re-read on every
+/* the instruments' data: every number from committed bytes; read under the
+   opening before the first screen is revealed, and re-read on every
    re-verification (the station keys this loader on the pulse) */
 export async function loadHarborInstruments() {
   const lane = await fetchLane();
@@ -40,6 +41,8 @@ export function Harbor({ ev, go, pulse }: { ev: VerifiedEvidence; go: (id: strin
   const ruleSink = useRef<(m: Record<string, string>) => void>(() => {});
 
   const artifacts: ArtifactRow[] = ev.index?.artifacts ?? [];
+  const [sceneReady, setSceneReady] = useState(false);
+  useStationReadiness(sceneReady || artifacts.length === 0 ? "ready" : "loading");
   const auth = ev.index?.authority ?? {};
   const proj = ev.index?.candidate_projection ?? {};
   const badTotal = artifacts.filter((a) => a.role === "known_bad_fixture").length;
@@ -117,6 +120,7 @@ export function Harbor({ ev, go, pulse }: { ev: VerifiedEvidence; go: (id: strin
         if (!env.reduced) raf = requestAnimationFrame(tick);
       };
       engine.frame(performance.now(), readEnv(cv)); // synchronous first frame
+      setSceneReady(true);
       if (!reducedMq.matches) raf = requestAnimationFrame(tick);
       teardown.push(() => {
         cancelAnimationFrame(raf);
@@ -135,7 +139,7 @@ export function Harbor({ ev, go, pulse }: { ev: VerifiedEvidence; go: (id: strin
       const w = worker;
       workerRef.current = w;
       const cv = makeVisibleCanvas();
-      wrap.dataset.live = "false"; // fade in when the worker's first frame lands
+      wrap.dataset.live = "false"; // the opening waits for the worker's first frame
       const off = (cv as unknown as { transferControlToOffscreen(): OffscreenCanvas }).transferControlToOffscreen();
       w.postMessage({ type: "init", canvas: off, artifacts, badTotal, env: readEnv(cv) }, [off]);
       ruleSink.current = (m) => w.postMessage({ type: "ruleMap", map: m });
@@ -152,7 +156,7 @@ export function Harbor({ ev, go, pulse }: { ev: VerifiedEvidence; go: (id: strin
 
       w.onmessage = (e: MessageEvent) => {
         const d = e.data as { type?: string; mode?: string; where?: string; message?: string };
-        if (d?.type === "ready") { ready = true; clearTimeout(wd); wrap.dataset.live = "true"; if (d.mode) wrap.dataset.render = d.mode; }
+        if (d?.type === "ready") { ready = true; clearTimeout(wd); wrap.dataset.live = "true"; if (d.mode) wrap.dataset.render = d.mode; setSceneReady(true); }
         else if (d?.type === "needfallback") { failover(); }
         else if (d?.type === "error") { console.error(`[harbor.worker:${d.where}]`, d.message); wrap.dataset.live = "true"; }
       };

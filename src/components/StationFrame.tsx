@@ -1,4 +1,4 @@
-import { Component, createContext, Suspense, useContext, useLayoutEffect, useRef, type ReactNode } from "react";
+import { Component, createContext, Suspense, useContext, useLayoutEffect, useRef, type ReactNode, type RefObject } from "react";
 
 export interface NavigationOptions {
   push?: boolean;
@@ -13,6 +13,7 @@ export type Navigate = (id: string, options?: NavigationOptions) => void;
    get a frame before it can replace the current station. */
 function createReadiness() {
   const loads = new Map<symbol, boolean>();
+  const layouts = new Map<symbol, () => boolean>();
   let frame = 0;
   const gate = {
     mounted: false,
@@ -23,18 +24,40 @@ function createReadiness() {
     schedule() {
       gate.cancel();
       if (!gate.alive || !gate.mounted || gate.notified || [...loads.values()].some(Boolean)) return;
-      frame = requestAnimationFrame(() => {
-        frame = requestAnimationFrame(() => {
-          if (!gate.alive || !gate.mounted || gate.notified || [...loads.values()].some(Boolean)) return;
-          gate.notified = true;
-          gate.onReady();
-        });
-      });
+      let settled = 0;
+      const check = () => {
+        if (!gate.alive || !gate.mounted || gate.notified || [...loads.values()].some(Boolean)) return;
+        // ResizeObserver delivers after rAF. Check the actual chart boxes
+        // here as well, so an older SVG size cannot slip into the snapshot.
+        settled = [...layouts.values()].every((valid) => valid()) ? settled + 1 : 0;
+        if (settled < 2) { frame = requestAnimationFrame(check); return; }
+        gate.notified = true;
+        gate.onReady();
+      };
+      frame = requestAnimationFrame(check);
     },
     track(token: symbol, loading: boolean) { loads.set(token, loading); gate.schedule(); },
     release(token: symbol) { loads.delete(token); gate.schedule(); },
+    layout(token: symbol, check: () => boolean) { layouts.set(token, check); gate.schedule(); },
+    unlayout(token: symbol) { layouts.delete(token); gate.schedule(); },
   };
   return gate;
+}
+
+/* A measured SVG/canvas must describe the box that will actually be shown.
+   An absent/hidden box has no visible drawing to wait for. */
+export function useStationLayout(ref: RefObject<HTMLElement | null>, w: number, h: number) {
+  const gate = useContext(StationReadiness);
+  const token = useRef(Symbol());
+  useLayoutEffect(() => {
+    gate?.layout(token.current, () => {
+      const el = ref.current;
+      if (!el) return true;
+      const box = el.getBoundingClientRect();
+      return box.width === 0 || box.height === 0 || (Math.round(box.width) === w && Math.round(box.height) === h);
+    });
+    return () => gate?.unlayout(token.current);
+  }, [gate, ref, w, h]);
 }
 
 type Readiness = ReturnType<typeof createReadiness>;

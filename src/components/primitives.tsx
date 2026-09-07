@@ -336,14 +336,15 @@ export function Stat({ label, value, sub, rule, from, wide, small, children }: {
 
 /* ---------- blocked panel (fail-closed rendering) ---------- */
 export function Blocked({ reason }: { reason: string }) {
+  const absent = /absent|not present|unknown_gateb_surface/i.test(reason);
+  const transport = /fetch|network|http_|aborted|timeout/i.test(reason);
   return (
-    <div className="ipanel blocked">
-      <h2>Blocked</h2>
-      <p>
-        This surface could not be verified, so nothing is rendered in its place.{" "}
-        <b style={{ color: "var(--ink)" }}>A blocked result is preferable to a plausible default.</b>
-      </p>
-      <p style={{ fontFamily: "var(--mono)", fontSize: "0.66rem" }}>{reason}</p>
+    <div className="blocked" role="alert">
+      <span className="blocked-state"><i aria-hidden="true" />Blocked</span>
+      <h2>{absent ? "Source unavailable" : transport ? "Connection interrupted" : "Verification incomplete"}</h2>
+      <p>{absent ? "The required record is not available from this source." : transport ? "The source could not be reached. You can try again." : "The source did not pass verification."}</p>
+      <button className="blocked-retry" onClick={() => location.reload()}>Try again<svg viewBox="0 0 16 16" aria-hidden="true"><path d="M12.5 5.5A5 5 0 1 0 13 9M9 5.5h4V1.5" /></svg></button>
+      <details className="blocked-details"><summary>Details</summary><code>{reason}</code></details>
     </div>
   );
 }
