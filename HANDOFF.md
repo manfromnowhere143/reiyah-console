@@ -78,7 +78,28 @@ text at all six viewport/ground combinations. Browser captures and machine repor
 are under `/tmp/reiyah-navigation-review.RX24Kd/navigation-release/` and
 `/tmp/reiyah-navigation-review.RX24Kd/opening-signature/`. These are Chromium
 observations at desktop and phone viewport sizes, not physical iPhone validation.
-Production readback is recorded below after publication.
+Published UI commit: `9cdf772d406cb6dcd453872124ce65a878f2d5f2`.
+Production deployment:
+`https://reiyah-fla8dljho-daniels-projects-ca65133a.vercel.app`, Vercel receipt
+`HPfw7LpPKmLgQztShRrMyNj8x1LD`. Both `reiyah.danielwahnich.dev` and
+`reiyah.vercel.app` returned the current HTML and 29 byte-identical files each:
+all built JS/CSS assets, four fonts, both source manifests and Result AO.
+The main assets are `index-CElprnLr.js` (SHA-256
+`d2d1eddb42cbf49efe7216eb0b2c445764805c1602d53a27e8d06e6a881d61d6`) and
+`index-CHVaA2Vr.css` (SHA-256
+`4bbd6b3c94eaa8f57f55755e86b7645bc222635b653759c53e3b0d8ee618550f`).
+
+Production browser checks passed: 12 opening/index checks, all 18 destinations,
+and 28 navigation/failure/accessibility controls. Captures and reports are in
+`opening-production/` and `navigation-production-final/` under the session
+scratch directory; `production-final-readback.json` records file hashes for both
+domains. A fresh localhost Reference load also returned a ready canvas with no
+blocked panel after the local adapter restart. No UI task remains pending.
+
+All authored changes pass the whitespace check. The three retained upstream OFL
+license payloads intentionally preserve their original bytes, including upstream
+trailing spaces and B612's CRLF line endings; all font and license hashes match
+`public/fonts/SOURCES.json`.
 
 ## Current navigation contract, 2026-09-07
 
