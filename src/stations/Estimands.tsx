@@ -62,7 +62,7 @@ export function Estimands() {
     return () => ro.disconnect();
   }, [n]);
 
-  if (state.phase === "loading") return <Station id="ST–05" name="Estimands"><div className="note">reading protocol…</div></Station>;
+  if (state.phase === "loading") return <Station id="ST–05" name="Estimands"><div className="note" data-loading="true">reading protocol…</div></Station>;
   if (state.phase === "blocked" || state.data.state !== "observed")
     return <Station id="ST–05" name="Estimands"><Blocked reason={state.phase === "blocked" ? state.reason : (state.data as any).reason} /></Station>;
 

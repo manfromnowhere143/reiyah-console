@@ -24,7 +24,7 @@ export function Lineage({ summary }: { summary: Summary }) {
     return { reports, recoveries, stages, now: ftm.current_authorized_stage ?? null, stop: ftm.current_hard_stop_before ?? null, corrPath: corr ?? null };
   }, [reportIds.join(","), recoveryIds.join(",")]);
 
-  if (state.phase === "loading") return <Station id="ST–02" name="Lineage"><div className="note">reading custody chain…</div></Station>;
+  if (state.phase === "loading") return <Station id="ST–02" name="Lineage"><div className="note" data-loading="true">reading custody chain…</div></Station>;
   if (state.phase === "blocked") return <Station id="ST–02" name="Lineage"><Blocked reason={state.reason} /></Station>;
 
   const { reports, recoveries, stages, now, stop, corrPath } = state.data;

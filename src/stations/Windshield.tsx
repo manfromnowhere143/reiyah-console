@@ -148,7 +148,7 @@ export function Windshield() {
   });
   const wbox = useBox(state.phase);
   const tbox = useBox(state.phase);
-  if (state.phase === "loading") return <Station id="ST–13" name="The Windshield"><div className="note">reading both sides…</div></Station>;
+  if (state.phase === "loading") return <Station id="ST–13" name="The Windshield"><div className="note" data-loading="true">reading both sides…</div></Station>;
   if (state.phase === "blocked") return <Station id="ST–13" name="The Windshield"><Blocked reason={state.reason} /></Station>;
   const { lane, d } = state.data;
   if (!lane.present || !d) return <Station id="ST–13" name="The Windshield"><Blocked reason={`the Gate B lane is not present in this source: ${lane.reason ?? "unknown"}`} /></Station>;

@@ -15,14 +15,29 @@ import { Palette } from "./components/Palette";
 import { ReceiptHost } from "./components/primitives";
 import { Harbor } from "./stations/Harbor";
 import { Dock } from "./components/Dock";
-import { STATION_CODE, prefetchNeighbours } from "./lib/prefetch";
-import { Suspense, lazy } from "react";
+import { STATION_CODE, prefetchNeighbours, prefetchStation } from "./lib/prefetch";
 
 /* every station but the Harbor is its own code chunk, fetched when first
    pressed (or a moment earlier, by the neighbour prefetch); the Harbor is the
-   first screen and ships in the main bundle */
-const lazyStation = (id: string) => lazy(() => STATION_CODE[id]().then((m: any) => ({ default: Object.values(m).find((v) => typeof v === "function") as React.ComponentType<any> })));
-const LAZY: Record<string, React.LazyExoticComponent<React.ComponentType<any>>> = Object.fromEntries(Object.keys(STATION_CODE).map((id) => [id, lazyStation(id)]));
+   first screen and ships in the main bundle. The chunks are held in a plain
+   registry rather than React.lazy: a component that suspends during the
+   navigation commit would show its fallback and React would then hold the
+   reveal for its 300 ms throttle, which is exactly the flash being removed.
+   Here the module is awaited before the commit, so the station renders
+   complete on its first frame. */
+const stationModules = new Map<string, React.ComponentType<any>>();
+const stationLoads = new Map<string, Promise<void>>();
+function ensureStation(id: string): Promise<void> {
+  if (stationModules.has(id)) return Promise.resolve();
+  if (!STATION_CODE[id]) return Promise.resolve();
+  if (!stationLoads.has(id)) {
+    stationLoads.set(id, STATION_CODE[id]().then((m: any) => {
+      const C = Object.values(m).find((v) => typeof v === "function") as React.ComponentType<any> | undefined;
+      if (C) stationModules.set(id, C);
+    }).catch(() => { stationLoads.delete(id); }));
+  }
+  return stationLoads.get(id)!;
+}
 
 export default function App() {
   const [evidence, setEvidence] = useState<VerifiedEvidence | null>(null);
@@ -44,6 +59,7 @@ function Stage({ ev, onEvidence }: { ev: VerifiedEvidence; onEvidence: (e: Verif
   const [connected, setConnected] = useState(true);
   const [gen, setGen] = useState(0);
   const [violated, setViolated] = useState(false);
+  const [, setCodeGen] = useState(0);
   const sealed = getSealedInfo();
   const reverifying = useRef(false);
 
@@ -52,16 +68,44 @@ function Stage({ ev, onEvidence }: { ev: VerifiedEvidence; onEvidence: (e: Verif
      The earlier shared-element "forge" morph is gone: WebKit snapshots only
      the composited parts of a named element, so mid-morph the new station
      appeared torn, a canvas and a chip floating with the rest missing. */
-  const go = (id: string, push = true) => {
-    if (id === active) return;
+  /* navigation, in one motion. Before anything changes on screen the
+     destination is prepared: its code chunk and the bytes it declares are
+     fetched (both memoised; a neighbour is already warm). Then one view
+     transition runs: the commit swaps the station and, before the browser
+     snapshots the new state, waits until the station reports itself ready
+     (no loading note, no canvas still at opacity 0, the Harbor's field live).
+     A cap keeps a slow network from ever stalling the press: after it, the
+     transition proceeds and the content arrives as it can. The old panel and
+     the new are blended additively (instrument.css), so the crossfade never
+     dips through darkness. Reduced motion: a jump cut, after the same wait. */
+  const navSeq = useRef(0);
+  const settle = (panel: Element | null, cap: number) => new Promise<void>((res) => {
+    const t0 = performance.now();
+    const pending = () => !!panel && panel.querySelector('[data-loading="true"], [data-ready="false"], [data-live="false"]') !== null;
+    /* polled with a timer, not requestAnimationFrame: inside a view
+       transition's callback rendering is paused and animation frames do not
+       fire, while scripts, fetches and React commits keep running */
+    const tick = () => { if (!pending() || performance.now() - t0 > cap) res(); else setTimeout(tick, 12); };
+    tick();
+  });
+  const go = async (id: string, push = true, before?: () => void) => {
+    if (id === active) { before?.(); return; }
+    const seq = ++navSeq.current;
+    /* prepare: code and bytes, capped so the press never waits on the network */
+    await Promise.race([
+      Promise.all([ensureStation(id), prefetchStation(id).catch(() => null)]),
+      new Promise((r) => setTimeout(r, 350)),
+    ]);
+    if (seq !== navSeq.current) return; // a later press superseded this one
     const commit = () => {
-      flushSync(() => setActive(id));
+      flushSync(() => { before?.(); setActive(id); });
       if (push) history.pushState({ st: id }, "", id === "harbor" ? location.pathname : `?st=${id}`);
     };
     const reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
     const svt = (document as any).startViewTransition?.bind(document);
+    const panel = () => document.querySelector(".panelcontent");
     if (reduced || !svt) { commit(); return; }
-    svt(commit);
+    svt(async () => { commit(); await settle(panel(), 520); });
   };
 
   useEffect(() => {
@@ -70,7 +114,7 @@ function Stage({ ev, onEvidence }: { ev: VerifiedEvidence; onEvidence: (e: Verif
       const reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
       const svt = (document as any).startViewTransition?.bind(document);
       const commit = () => flushSync(() => setActive(id));
-      if (!reduced && svt) svt(commit); else commit();
+      if (!reduced && svt) svt(async () => { commit(); await settle(document.querySelector(".panelcontent"), 520); }); else commit();
     };
     const onKey = (e: KeyboardEvent) => {
       if (e.key === "Escape") go("harbor");
@@ -113,10 +157,15 @@ function Stage({ ev, onEvidence }: { ev: VerifiedEvidence; onEvidence: (e: Verif
   const idn = ev.summary.identity;
   const render = (id: string) => {
     if (id === "harbor") return <Harbor ev={ev} go={go} pulse={gen} />;
-    const C = LAZY[id];
-    if (!C) return null;
+    const C = stationModules.get(id);
     const props: Record<string, unknown> = id === "ledger" || id === "controls" || id === "system" ? { ev } : id === "lineage" ? { summary: ev.summary } : {};
-    return <Suspense fallback={null}><C {...props} /></Suspense>;
+    if (!C) {
+      /* the chunk is still arriving (the prepare cap passed): carry the
+         loading marker so the transition waits for it, then re-render */
+      ensureStation(id).then(() => setCodeGen((g) => g + 1));
+      return <div data-loading="true" aria-hidden="true" />;
+    }
+    return <C {...props} />;
   };
 
   /* after each station renders: warm its two dock neighbours in idle time */

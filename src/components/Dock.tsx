@@ -12,7 +12,7 @@ import { createPortal } from "react-dom";
 import { RAILS, STATIONS } from "../lib/camera";
 import { claimLayer, newLayerToken, onLayerClaim } from "../lib/layers";
 
-export function Dock({ active, go }: { active: string; go: (id: string) => void }) {
+export function Dock({ active, go }: { active: string; go: (id: string, push?: boolean, before?: () => void) => void }) {
   const ref = useRef<HTMLElement>(null);
   const [edge, setEdge] = useState({ left: false, right: false, beyond: 0 });
   const [open, setOpen] = useState(false);
@@ -25,8 +25,11 @@ export function Dock({ active, go }: { active: string; go: (id: string) => void 
     const measure = () => {
       const r = el.getBoundingClientRect();
       const cards = [...el.querySelectorAll<HTMLElement>(".navcard")];
-      const beyond = cards.filter((c) => c.getBoundingClientRect().right > r.right + 1).length;
-      const before = cards.filter((c) => c.getBoundingClientRect().left < r.left - 1).length;
+      /* a card counts as out of view when its centre is past an edge, so the
+         number holds steady while the dock glides and half a card crosses */
+      const mid = (c: HTMLElement) => { const b = c.getBoundingClientRect(); return (b.left + b.right) / 2; };
+      const beyond = cards.filter((c) => mid(c) > r.right).length;
+      const before = cards.filter((c) => mid(c) < r.left).length;
       setEdge({ left: before > 0, right: beyond > 0, beyond: beyond + before });
     };
     measure();
@@ -88,7 +91,7 @@ export function Dock({ active, go }: { active: string; go: (id: string) => void 
                 <section key={r.id} className="fixrail" data-rail={r.id} aria-label={r.name}>
                   <div className="fixrk">{r.name}<i>{r.kicker}</i></div>
                   {STATIONS.filter((s) => s.rail === r.id).map((s) => (
-                    <button key={s.id} className="fixrow" data-active={String(s.id === active)} data-red={String(!!s.red)} onClick={() => { setOpen(false); go(s.id); }}>
+                    <button key={s.id} className="fixrow" data-active={String(s.id === active)} data-red={String(!!s.red)} onClick={() => go(s.id, true, () => setOpen(false))}>
                       <span className="fixid">{s.num}</span>
                       <span className="fixnm">{s.name}</span>
                       <span className="fixds">{s.desc}</span>

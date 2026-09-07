@@ -144,7 +144,7 @@ export function SameHazard() {
     };
   });
   const box = useBox(state.phase);
-  if (state.phase === "loading") return <Station id="ST–14" name="The Same Hazard"><div className="note">reading the cross-agent joint…</div></Station>;
+  if (state.phase === "loading") return <Station id="ST–14" name="The Same Hazard"><div className="note" data-loading="true">reading the cross-agent joint…</div></Station>;
   if (state.phase === "blocked") return <Station id="ST–14" name="The Same Hazard"><Blocked reason={state.reason} /></Station>;
   const { lane, d } = state.data;
   if (!lane.present || !d) return <Station id="ST–14" name="The Same Hazard"><Blocked reason={`the Gate B lane is not present in this source: ${lane.reason ?? "unknown"}`} /></Station>;
