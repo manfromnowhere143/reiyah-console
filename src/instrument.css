@@ -209,15 +209,14 @@ button:focus-visible, a:focus-visible { outline: 2px solid var(--ink-soft); outl
    the GPU thread, so it stays smooth even entering the canvas stations. */
 ::view-transition-group(stage-panel) { animation-timing-function: var(--ease); }
 ::view-transition-old(root), ::view-transition-new(root) { animation: none; }
-/* the two panels are blended additively inside an isolated pair: at every
-   instant their opacities sum to one, so the crossfade holds its brightness
-   and never dips through the ground colour. Equal durations, one settle. */
+/* a cover fade: the old panel stays fully opaque underneath while the new one
+   fades in over it. Brightness cannot dip, no blend mode is relied upon, and
+   the result is identical on every compositor. Old and new are the same
+   size and place, so the cover reads as one panel becoming the next. */
 ::view-transition-image-pair(stage-panel) { isolation: isolate; }
-::view-transition-old(stage-panel), ::view-transition-new(stage-panel) { mix-blend-mode: plus-lighter; will-change: opacity, transform; }
-::view-transition-old(stage-panel) { animation: panelOut 0.3s var(--ease) both; }
-::view-transition-new(stage-panel) { animation: panelIn 0.3s var(--ease) both; }
-@keyframes panelOut { to { opacity: 0; } }
-@keyframes panelIn { from { opacity: 0; transform: scale(1.006); } to { opacity: 1; transform: none; } }
+::view-transition-old(stage-panel) { animation: none; opacity: 1; mix-blend-mode: normal; }
+::view-transition-new(stage-panel) { animation: panelIn 0.28s var(--ease) both; mix-blend-mode: normal; will-change: opacity; }
+@keyframes panelIn { from { opacity: 0; } to { opacity: 1; } }
 
 /* the dock: persistent station cards */
 .dock {
@@ -2048,6 +2047,9 @@ html[data-ground="dark"] .derive, html[data-ground="dark"] .provecard, html[data
 .dockwrap[data-right="true"] > .dock { -webkit-mask-image: linear-gradient(90deg, #000 0, #000 calc(100% - 4.5rem), transparent 100%); mask-image: linear-gradient(90deg, #000 0, #000 calc(100% - 4.5rem), transparent 100%); }
 .dockwrap[data-left="true"] > .dock { -webkit-mask-image: linear-gradient(90deg, transparent 0, #000 3rem, #000 100%); mask-image: linear-gradient(90deg, transparent 0, #000 3rem, #000 100%); }
 .dockwrap[data-left="true"][data-right="true"] > .dock { -webkit-mask-image: linear-gradient(90deg, transparent 0, #000 3rem, #000 calc(100% - 4.5rem), transparent 100%); mask-image: linear-gradient(90deg, transparent 0, #000 3rem, #000 calc(100% - 4.5rem), transparent 100%); }
+/* the pressed card answers at once, before the station has arrived */
+.navcard[data-pending="true"] { background: color-mix(in srgb, var(--glass) 55%, var(--ink) 9%); border-color: var(--glass-rim); }
+.navcard[data-pending="true"] .nid { color: var(--ink); }
 .navcard .nrail { color: var(--ink-ghost); letter-spacing: 0.1em; }
 .navcard[data-rail="measurement"] .nrail, .navcard[data-rail="audit"] .nrail { color: var(--ok); }
 /* a rail begins: a hairline stands before its first card */
