@@ -209,15 +209,10 @@ button:focus-visible, a:focus-visible { outline: 2px solid var(--ink-soft); outl
    the GPU thread, so it stays smooth even entering the canvas stations. */
 ::view-transition-group(stage-panel) { animation-timing-function: var(--ease); }
 ::view-transition-old(root), ::view-transition-new(root) { animation: none; }
-/* the two panels are blended additively inside an isolated pair: at every
-   instant their opacities sum to one, so the crossfade holds its brightness
-   and never dips through the ground colour. Equal durations, one settle. */
-::view-transition-image-pair(stage-panel) { isolation: isolate; }
-::view-transition-old(stage-panel), ::view-transition-new(stage-panel) { mix-blend-mode: plus-lighter; will-change: opacity, transform; }
-::view-transition-old(stage-panel) { animation: panelOut 0.3s var(--ease) both; }
-::view-transition-new(stage-panel) { animation: panelIn 0.3s var(--ease) both; }
-@keyframes panelOut { to { opacity: 0; } }
-@keyframes panelIn { from { opacity: 0; transform: scale(1.006); } to { opacity: 1; transform: none; } }
+::view-transition-old(stage-panel) { animation: panelOut 0.22s var(--damped) both; will-change: opacity, transform; }
+::view-transition-new(stage-panel) { animation: panelIn 0.34s var(--ease) both; will-change: opacity, transform; }
+@keyframes panelOut { to { opacity: 0; transform: scale(0.992); } }
+@keyframes panelIn { from { opacity: 0; transform: scale(1.008); } }
 
 /* the dock: persistent station cards */
 .dock {
@@ -670,7 +665,7 @@ button:focus-visible, a:focus-visible { outline: 2px solid var(--ink-soft); outl
 /* harbor */
 .harbor { display: grid; grid-template-rows: 1fr; height: 100%; min-height: 0; }
 .fieldwrap { position: relative; overflow: hidden; background: transparent; min-height: 0; margin: -1.1rem -1.3rem -0.9rem; }
-.fieldwrap canvas { position: absolute; inset: 0; width: 100%; height: 100%; transition: opacity 180ms var(--ease); }
+.fieldwrap canvas { position: absolute; inset: 0; width: 100%; height: 100%; transition: opacity 0.5s var(--ease); }
 /* worker path: hidden until the worker's first frame lands, then fades in.
    the main-thread fallback never sets data-live, so its synchronous first
    frame is visible immediately (and lands in the view-transition snapshot). */
@@ -1857,7 +1852,7 @@ button:focus-visible, a:focus-visible { outline: 2px solid var(--ink-soft); outl
 }
 
 /* the windshield scene: a still canvas, revealed once (opacity only) */
-.wscene { position: absolute; inset: 0; display: block; opacity: 0; transition: opacity 180ms ease; }
+.wscene { position: absolute; inset: 0; display: block; opacity: 0; transition: opacity 700ms ease; }
 .wscene[data-ready="true"] { opacity: 1; }
 @media (prefers-reduced-motion: reduce) { .wscene { transition: none; } }
 
@@ -2013,7 +2008,7 @@ button:focus-visible, a:focus-visible { outline: 2px solid var(--ink-soft); outl
   box-shadow: inset 0 1px 0 color-mix(in srgb, var(--sheen) 60%, transparent), 0 0 0 1px color-mix(in srgb, var(--ink) 12%, transparent), 0 30px 70px -24px rgba(0, 0, 0, 0.7), 0 10px 24px -12px rgba(0, 0, 0, 0.5);
 }
 html[data-ground="dark"] .derive, html[data-ground="dark"] .provecard, html[data-ground="dark"] .palette { background: #101318; }
-.dash { opacity: 0; transition: opacity 180ms var(--ease); }
+.dash { opacity: 0; transition: opacity 0.6s var(--ease); }
 .dash[data-ready="true"] { opacity: 1; }
 @media (prefers-reduced-motion: reduce) { .dash { transition: none; } }
 

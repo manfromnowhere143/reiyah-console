@@ -51,7 +51,7 @@ export function Measurement() {
   });
   const cbox = useBox(state.phase);
   const sbox = useBox(state.phase);
-  if (state.phase === "loading") return <Station id="ST–11" name="The Measurement"><div className="note" data-loading="true">reading the measurement lane…</div></Station>;
+  if (state.phase === "loading") return <Station id="ST–11" name="The Measurement"><div className="note">reading the measurement lane…</div></Station>;
   if (state.phase === "blocked") return <Station id="ST–11" name="The Measurement"><Blocked reason={state.reason} /></Station>;
   const { lane, data } = state.data;
   if (!lane.present || !data) return <Station id="ST–11" name="The Measurement"><Blocked reason={`the Gate B measurement lane is not present in this source: ${lane.reason ?? "unknown"}`} /></Station>;

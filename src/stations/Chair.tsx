@@ -104,7 +104,7 @@ export function Chair() {
   const [sel, setSelRaw] = useState<string | null>(() => getAt());
   const setSel = (v: string | null) => { setSelRaw(v); setAt(v); };
 
-  if (state.phase === "loading") return <Station id="ST–07" name="The Chair"><div className="note" data-loading="true">discovering the correction saga…</div></Station>;
+  if (state.phase === "loading") return <Station id="ST–07" name="The Chair"><div className="note">discovering the correction saga…</div></Station>;
   if (state.phase === "blocked") return <Station id="ST–07" name="The Chair"><Blocked reason={state.reason} /></Station>;
 
   const { versions, odi } = state.data;

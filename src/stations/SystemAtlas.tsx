@@ -187,7 +187,7 @@ export function SystemAtlas({ ev }: { ev: VerifiedEvidence }) {
     return () => { cancelAnimationFrame(raf); cv.removeEventListener("pointermove", onMove); cv.removeEventListener("pointerleave", onLeave); cv.removeEventListener("pointerdown", onClick); };
   }, [state, dark]);
 
-  if (state.phase === "loading") return <Station id="ST–09" name="The Seeing"><div className="note" data-loading="true">composing the field…</div></Station>;
+  if (state.phase === "loading") return <Station id="ST–09" name="The Seeing"><div className="note">composing the field…</div></Station>;
   if (state.phase === "blocked") return <Station id="ST–09" name="The Seeing"><Blocked reason={state.reason} /></Station>;
   const { proto, diVersions, arts } = state.data;
   const bad = arts.filter((a) => a.bad).length, good = arts.filter((a) => a.role === "known_good_fixture").length;
