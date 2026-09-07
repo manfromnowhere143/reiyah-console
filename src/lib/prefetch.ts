@@ -5,6 +5,7 @@
    Every fetch here goes through the same memoised, digest-checked readers the
    stations use: prefetching is a head start, never a second source. */
 import { STATIONS } from "./camera";
+import type { ComponentType } from "react";
 import { fetchCatalog, fetchSchemaIndex, fetchSurface } from "./evidence";
 import { fetchLane, fetchLaneText, registerPath } from "./gateb";
 
@@ -76,7 +77,7 @@ export async function prefetchStation(id: string): Promise<void> {
 
 /* the station's code, split per station by the bundler; imported here so the
    neighbours' chunks are in the HTTP cache before they are pressed */
-export const STATION_CODE: Record<string, () => Promise<unknown>> = {
+const imports: Record<string, () => Promise<unknown>> = {
   system: () => import("../stations/SystemAtlas"),
   ledger: () => import("../stations/Ledger"),
   lineage: () => import("../stations/Lineage"),
@@ -95,6 +96,26 @@ export const STATION_CODE: Record<string, () => Promise<unknown>> = {
   monitor: () => import("../stations/Monitor"),
   reference: () => import("../stations/Reference"),
 };
+
+export type StationComponent = ComponentType<any>;
+const components = new Map<string, StationComponent>();
+export const cachedStation = (id: string) => components.get(id);
+
+/* Intent prefetch and rendering share one import and its resolved component.
+   React.lazy would still suspend on its first render of an already imported
+   module. A new hidden Suspense fallback then incurs React's reveal throttle,
+   even though our station frame already protects the visible page. */
+export const STATION_CODE: Record<string, () => Promise<StationComponent>> = Object.fromEntries(
+  Object.entries(imports).map(([id, load]) => {
+    let pending: Promise<StationComponent> | undefined;
+    return [id, () => pending ??= load().then((module) => {
+      const component = Object.values(module as Record<string, unknown>).find((value) => typeof value === "function") as StationComponent | undefined;
+      if (!component) throw new Error(`Station component missing: ${id}`);
+      components.set(id, component);
+      return component;
+    }).catch((error) => { pending = undefined; throw error; })];
+  }),
+);
 
 /* after a station has rendered: in idle time, warm its two dock neighbours
    (code first, then bytes), then the Harbor, and nothing else */

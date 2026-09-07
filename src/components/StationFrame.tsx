@@ -1,4 +1,4 @@
-import { Component, createContext, Suspense, useContext, useLayoutEffect, useRef, type ReactNode, type RefObject } from "react";
+import { Component, createContext, useContext, useLayoutEffect, useRef, type ReactNode, type RefObject } from "react";
 
 export interface NavigationOptions {
   push?: boolean;
@@ -119,10 +119,8 @@ export function StationFrame({ id, frameKey, preparing, onReady, children }: {
     aria-hidden={preparing || undefined} inert={preparing}>
     <StationReadiness.Provider value={gate}>
       <StationErrorBoundary gate={gate}>
-        <Suspense fallback={null}>
-          {children}
-          <LayoutReady gate={gate} />
-        </Suspense>
+        {children}
+        <LayoutReady gate={gate} />
       </StationErrorBoundary>
     </StationReadiness.Provider>
   </div>;

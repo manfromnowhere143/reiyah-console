@@ -3,7 +3,7 @@
    morphs the panel's content in place through the View Transitions API
    (compositor-speed cross-morph; jump cut under reduced motion). The dock
    and HUD never move. The URL is the panel state. Escape returns home. */
-import { lazy, useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { flushSync } from "react-dom";
 import { ProofBoot, verifyEvidenceOnce, type VerifiedEvidence } from "./boot/ProofBoot";
 import { STATIONS } from "./lib/camera";
@@ -15,14 +15,27 @@ import { Palette } from "./components/Palette";
 import { ReceiptHost } from "./components/primitives";
 import { Harbor } from "./stations/Harbor";
 import { Dock } from "./components/Dock";
-import { STATION_CODE, prefetchNeighbours } from "./lib/prefetch";
-import { StationFrame, type Navigate, type NavigationOptions } from "./components/StationFrame";
+import { STATION_CODE, cachedStation, prefetchNeighbours, type StationComponent } from "./lib/prefetch";
+import { StationFrame, useStationReadiness, type Navigate, type NavigationOptions } from "./components/StationFrame";
 
 /* every station but the Harbor is its own code chunk, fetched when first
    pressed (or a moment earlier, by the neighbour prefetch); the Harbor is the
    first screen and ships in the main bundle */
-const lazyStation = (id: string) => lazy(() => STATION_CODE[id]().then((m: any) => ({ default: Object.values(m).find((v) => typeof v === "function") as React.ComponentType<any> })));
-const LAZY: Record<string, React.LazyExoticComponent<React.ComponentType<any>>> = Object.fromEntries(Object.keys(STATION_CODE).map((id) => [id, lazyStation(id)]));
+function LoadedStation({ id, stationProps }: { id: string; stationProps: Record<string, unknown> }) {
+  const [code, setCode] = useState<{ component?: StationComponent; error?: Error }>(() => ({ component: cachedStation(id) }));
+  useStationReadiness(code.error ? "blocked" : code.component ? "ready" : "loading");
+  useEffect(() => {
+    if (code.component) return;
+    let alive = true;
+    STATION_CODE[id]()
+      .then((component) => { if (alive) setCode({ component }); })
+      .catch((error: unknown) => { if (alive) setCode({ error: error instanceof Error ? error : new Error(String(error)) }); });
+    return () => { alive = false; };
+  }, [id, code.component]);
+  if (code.error) throw code.error;
+  const C = code.component;
+  return C ? <C {...stationProps} /> : null;
+}
 
 export default function App() {
   const [evidence, setEvidence] = useState<VerifiedEvidence | null>(null);
@@ -170,10 +183,9 @@ function Stage({ ev, onEvidence, covered, onInitialReady }: {
   const idn = ev.summary.identity;
   const render = (id: string) => {
     if (id === "harbor") return <Harbor ev={ev} go={go} pulse={gen} />;
-    const C = LAZY[id];
-    if (!C) return null;
+    if (!STATION_CODE[id]) return null;
     const props: Record<string, unknown> = id === "ledger" || id === "controls" || id === "system" ? { ev } : id === "lineage" ? { summary: ev.summary } : {};
-    return <C {...props} />;
+    return <LoadedStation id={id} stationProps={props} />;
   };
 
   /* after each station renders: warm its two dock neighbours in idle time */

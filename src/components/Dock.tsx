@@ -21,6 +21,7 @@ export function Dock({ active, pending, go }: { active: string; pending: string 
   const ref = useRef<HTMLElement>(null);
   const [edge, setEdge] = useState({ left: false, right: false, beyond: 0 });
   const [open, setOpen] = useState(false);
+  const [indexKeyboard, setIndexKeyboard] = useState(false);
   const visited = useRef(new Set([active]));
   const [indicatorFor, setIndicatorFor] = useState<string | null>(null);
   useEffect(() => { visited.current.add(active); }, [active]);
@@ -65,7 +66,12 @@ export function Dock({ active, pending, go }: { active: string; pending: string 
     if (shift) rail.scrollTo({ left: rail.scrollLeft + shift, behavior: "instant" });
   }, [active]);
 
-  const openIndex = () => { claimLayer(token.current); setOpen(true); };
+  const openIndex = (e: React.MouseEvent) => {
+    // Clicking an already focused trigger can retain :focus-visible when
+    // focus moves into the dialog. Track this dialog's actual input method.
+    setIndexKeyboard(e.detail === 0);
+    claimLayer(token.current); setOpen(true);
+  };
   const closeIndex = () => { if (pending) go(active); setOpen(false); };
   useLayoutEffect(() => {
     if (!open) return;
@@ -81,6 +87,7 @@ export function Dock({ active, pending, go }: { active: string; pending: string 
   }, [open, pending, active, go]);
 
   const onIndexKey = (e: React.KeyboardEvent) => {
+    setIndexKeyboard(true);
     const rows = [...(indexRef.current?.querySelectorAll<HTMLButtonElement>(".fixrow") ?? [])];
     const index = rows.indexOf(document.activeElement as HTMLButtonElement);
     let next: number | undefined;
@@ -136,7 +143,9 @@ export function Dock({ active, pending, go }: { active: string; pending: string 
       </button>
       {open && createPortal(
         <div className="overlay fieldover" onClick={closeIndex}>
-          <div className="fieldindex" ref={indexRef} role="dialog" aria-modal="true" aria-label="The field index: every station" onClick={(e) => e.stopPropagation()} onKeyDown={onIndexKey}>
+          <div className="fieldindex" ref={indexRef} role="dialog" aria-modal="true" aria-label="The field index: every station"
+            data-keyboard={String(indexKeyboard)} onPointerDownCapture={() => setIndexKeyboard(false)}
+            onClick={(e) => e.stopPropagation()} onKeyDown={onIndexKey}>
             <div className="fixnav">
             <div className="fixhead">
               <div className="fixidentity"><Mark size={17} /><h2 className="fixk">Field index</h2></div>

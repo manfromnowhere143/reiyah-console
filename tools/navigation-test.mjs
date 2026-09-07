@@ -32,7 +32,7 @@ async function until(page, predicate, arg, timeout = 20000) {
   throw new Error(`Condition timed out for ${JSON.stringify(arg)}: ${JSON.stringify(state)}\n${predicate}`);
 }
 
-async function open({ width = 390, height = 660, ground = "dark", reduced = false, intercept } = {}) {
+async function open({ width = 390, height = 660, ground = "dark", reduced = false, touch = false, intercept } = {}) {
   const context = webkitModule
     ? await browser.newContext({ viewport: { width, height }, deviceScaleFactor: 1, reducedMotion: reduced ? "reduce" : "no-preference", serviceWorkers: "block" })
     : await browser.createBrowserContext();
@@ -40,7 +40,7 @@ async function open({ width = 390, height = 660, ground = "dark", reduced = fals
   const errors = [];
   page.on("pageerror", (error) => errors.push(String(error)));
   if (!webkitModule) {
-    await page.setViewport({ width, height, deviceScaleFactor: 1 });
+    await page.setViewport({ width, height, deviceScaleFactor: 1, isMobile: touch, hasTouch: touch });
     await page.setBypassServiceWorker(true);
     await page.emulateMediaFeatures([{ name: "prefers-reduced-motion", value: reduced ? "reduce" : "no-preference" }]);
   }
@@ -143,6 +143,69 @@ try {
     assert.deepEqual(errors, [], "uncaught page errors");
     await context.close();
     console.log(`${width}x${height} ${ground}: ${ids.length} stations, no blank frames, no overflow`);
+  }
+
+  // A prefetched first visit must not acquire a fallback's artificial wait.
+  // Ledger uses already verified boot data, isolating code/reveal scheduling
+  // from network speed. The previous lazy/Suspense path took about 333ms.
+  {
+    const { page, context, errors } = await open();
+    await page.click(".dockall");
+    await page.hover('.fixrow[data-station="ledger"]');
+    await until(page, () => performance.getEntriesByType("resource").some((e) => /\/Ledger-[^/]+\.js/.test(e.name) && e.responseEnd > 0));
+    await sleep(100); // let the prefetched module evaluate, without mounting it
+    await page.evaluate(() => {
+      const row = document.querySelector('.fixrow[data-station="ledger"]');
+      row.addEventListener("click", () => {
+        const run = window.firstVisit = { started: performance.now(), spinner: false };
+        const watch = new MutationObserver(() => {
+          run.spinner ||= !!document.querySelector('[data-pending="true"]');
+          if (document.querySelector('.panelcontent[data-preparing="false"]')?.dataset.station === "ledger") {
+            run.commitMs = performance.now() - run.started;
+            watch.disconnect();
+          }
+        });
+        watch.observe(document.body, { childList: true, subtree: true, attributes: true, attributeFilter: ["data-preparing", "data-pending"] });
+      }, { once: true });
+    });
+    await startSampling(page);
+    await page.click('.fixrow[data-station="ledger"]');
+    await arrived(page, "ledger");
+    const timing = await page.evaluate(() => window.firstVisit);
+    assert.ok(timing.commitMs < 200, `prefetched first visit waited ${timing.commitMs}ms`);
+    assert.equal(timing.spinner, false, "prefetched content showed a loading indicator");
+    report.controls.push({ label: "prefetched-first-visit-without-fallback-delay", commitMs: timing.commitMs, ...await stopSampling(page, "first-visit") });
+    assert.deepEqual(errors, []); await context.close();
+  }
+
+  // Pointer and touch selection must not leave a focus border behind; moving
+  // to the keyboard must still expose focus and support Enter/Escape normally.
+  for (const touch of [false, true]) for (const ground of ["dark", "light"]) {
+    const { page, context, errors } = await open({ width: touch ? 390 : 1280, height: touch ? 660 : 820, touch, ground });
+    const press = (selector) => touch ? page.tap(selector) : page.click(selector);
+    const label = `${touch ? "touch" : "pointer"}-${ground}-index-focus`;
+    const pointerFocus = async () => {
+      assert.ok(await page.evaluate(() => document.activeElement.matches('.fixrow[data-active="true"]')));
+      assert.equal(await page.evaluate(() => getComputedStyle(document.activeElement).outlineStyle), "none", `${label}: pointer focus stayed outlined`);
+    };
+    await press(".dockall"); await sleep(180); await pointerFocus();
+    await press('.fixrow[data-station="measurement"]'); await arrived(page, "measurement");
+    await press(".dockall"); await sleep(180); await pointerFocus();
+    await page.screenshot({ path: path.join(out, `${label}.png`) });
+    await page.keyboard.press("ArrowDown");
+    const keyboard = await page.evaluate(() => {
+      const el = document.activeElement, css = getComputedStyle(el);
+      return { station: el.dataset.station, visible: el.matches(":focus-visible"), outline: css.outlineStyle, color: css.outlineColor, ink: css.color };
+    });
+    assert.equal(keyboard.station, "worstgroup"); assert.ok(keyboard.visible && keyboard.outline !== "none");
+    assert.equal(keyboard.color, keyboard.ink, `${label}: focus should use neutral ink`);
+    await page.keyboard.press("Enter"); await arrived(page, "worstgroup");
+    assert.ok(await page.evaluate(() => document.activeElement.classList.contains("dockall")));
+    await press(".dockall"); await sleep(180); await pointerFocus();
+    await page.keyboard.press("Escape");
+    assert.ok(await page.evaluate(() => document.activeElement.classList.contains("dockall")));
+    report.controls.push({ label, passed: true });
+    assert.deepEqual(errors, []); await context.close();
   }
 
   // Native panel transitions, browser history, and keyboard focus continuity.

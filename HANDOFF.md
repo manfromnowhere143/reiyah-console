@@ -4,6 +4,59 @@ Living handoff for the next session. This repo is **reiyah-console** (the Harbor
 Instrument UI), separate from the Reiyah **engine** repo (`~/workspace/reiyah`,
 which has the Gate-A baton/denylist — none of that applies here; normal git).
 
+## Index focus and navigation latency, 2026-09-07
+
+The operator reported a blue border persisting on index names and requested an
+investigation of whether the loading circle concealed an unnecessary delay.
+Reproduction found a blue selected-row accent, a blue focus outline, and the
+browser's touch highlight. More specifically, after a keyboard selection restores
+focus to Index, clicking that already focused trigger can propagate
+`:focus-visible` into the reopened dialog. The dialog now tracks pointer versus
+keyboard interaction: pointer selection has no outline; keyboard focus uses
+neutral ink. The selected row retains its quiet fill and CURRENT label. The blue
+accent and native tap highlight are removed. Focus trapping, Enter and Escape
+remain functional. This is a scoped dialog change, not global focus suppression.
+
+There was also a real scheduling defect. `React.lazy` suspended on each station's
+first mount even when intent prefetch had already imported its module. The fresh
+hidden `Suspense` fallback invoked the installed React DOM 19.2.8 reveal throttle,
+adding about 300ms before the station DOM mounted. That delay triggered the
+200ms loading-feedback timer. Import prefetch and rendering now share the resolved
+component directly, and code loading reports to the existing `StationFrame`
+readiness gate. The redundant Suspense boundary is removed. Pending imports are
+shared; canceled frames ignore late resolution; failures retain the explicit
+station-unavailable state. No runtime dependency or eager all-station mount added.
+
+The circle itself never gates navigation and has no minimum display time. It
+remains feedback only for a first visit still pending after 200ms; return visits
+never show it. Actual code, readers, layout and first drawing must still settle.
+The two frame layout check remains because cached modules/data do not preserve
+the station's unmounted DOM or canvas. Only the current frame and one hidden,
+inert destination are mounted. Index selection commits directly. Dock/history
+retain their 180ms optional crossfade; its group now also lasts 180ms, removing
+the browser's extra 70ms default duration. The opening's verification is separate
+and does not rerun on station navigation.
+
+Before/after profiling used installed Chrome 152.0.7977.76, the same committed
+snapshot served locally, desktop 1280x820 and phone viewport 390x660. Timing starts
+at the click event and ends at the ready-page DOM commit, not the end of animation.
+Across twelve first selections, the old path took 332.3–346.4ms; the direct import
+path took 32.4–50.3ms. Forty-eight return selections took 31.9–37.8ms before and
+31.7–36.5ms after. All twelve old first selections showed feedback; none of the
+sixty new selections did. These are local browser observations, not physical
+iPhone measurements or promises about cold network latency.
+
+Local build and checks pass: 108 station/viewport/ground combinations, 49
+navigation/failure/accessibility controls, and 12 opening/index checks. Navigation
+recorded 2,261 sampled frames with zero blank frames. The new regression isolates
+a prefetched first Ledger visit from network loading; it commits in 33.7ms,
+below the feedback threshold. Slow code/data/drawing, return visits, cancellation,
+latest-request wins, chart geometry, keyboard/touch focus and failures are covered.
+Reports and captures: `/tmp/reiyah-focus-latency.AYgdR2/`, including `baseline/`,
+`direct-import/`, `navigation-release/` and `opening-release/`.
+Engine and snapshot bytes are unchanged. Production publication/readback follows
+the completed local checks; its receipt will be retained here.
+
 ## Opening, index and chart follow-up, 2026-09-07
 
 The operator rejected the oversized opening wordmark, then specified that the

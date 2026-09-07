@@ -213,7 +213,9 @@ button:focus-visible, a:focus-visible { outline: 2px solid var(--ink-soft); outl
 /* Only the ready panel participates; glass chrome and menus stay live. */
 :root { view-transition-name: none; }
 ::view-transition { pointer-events: none; }
-::view-transition-group(stage-panel) { animation-timing-function: var(--ease); }
+/* Match the group to the fade; the browser's 250ms default otherwise keeps
+   the transition alive after our 180ms panel animation has finished. */
+::view-transition-group(stage-panel) { animation-duration: 0.18s; animation-timing-function: var(--ease); }
 ::view-transition-old(root), ::view-transition-new(root) { animation: none; }
 ::view-transition-old(stage-panel) { animation: panelOut 0.18s var(--ease) both; }
 ::view-transition-new(stage-panel) { animation: panelIn 0.18s var(--ease) both; }
@@ -1994,10 +1996,11 @@ html[data-ground="dark"] .derive, html[data-ground="dark"] .provecard, html[data
   position: relative; display: flex; flex-direction: column; justify-content: center; align-items: stretch;
   width: 100%; min-height: 44px; text-align: left; padding: 6px 24px 6px 9px; border-radius: 7px; gap: 4px;
 }
+.fixrow, .fixclose { -webkit-tap-highlight-color: transparent; }
 .fixrow:hover, .fixrow:focus-visible { background: color-mix(in srgb, var(--ink) 5%, transparent); }
-.fixrow:focus-visible, .fixclose:focus-visible { outline: 1px solid var(--ok); outline-offset: 1px; }
+.fixrow:focus-visible, .fixclose:focus-visible { outline: 1px solid var(--ink); outline-offset: 1px; }
+.fieldindex[data-keyboard="false"] :is(.fixrow, .fixclose):focus-visible { outline: none; }
 .fixrow[data-active="true"] { background: color-mix(in srgb, var(--ink) 7%, transparent); }
-.fixrow[data-active="true"]::before { content: ""; position: absolute; left: 0; top: calc(50% - 8px); height: 16px; width: 2px; border-radius: 1px; background: var(--ok); }
 .fixid { display: flex; align-items: baseline; gap: 8px; font: 7px/1 var(--mono); letter-spacing: 0.07em; }
 .fixcurrent { visibility: hidden; font-size: 6px; text-transform: uppercase; letter-spacing: 0.08em; }
 .fixrow[data-active="true"] .fixcurrent { visibility: visible; }
