@@ -15,7 +15,7 @@ import { Palette } from "./components/Palette";
 import { ReceiptHost } from "./components/primitives";
 import { Harbor } from "./stations/Harbor";
 import { Dock } from "./components/Dock";
-import { STATION_CODE, prefetchNeighbours, prefetchStation, warmFieldGently } from "./lib/prefetch";
+import { STATION_CODE, prefetchNeighbours, prefetchStation } from "./lib/prefetch";
 
 /* every station but the Harbor is its own code chunk, fetched when first
    pressed (or a moment earlier, by the neighbour prefetch); the Harbor is the
@@ -88,21 +88,15 @@ function Stage({ ev, onEvidence }: { ev: VerifiedEvidence; onEvidence: (e: Verif
     const tick = () => { if (!pending() || performance.now() - t0 > cap) res(); else setTimeout(tick, 12); };
     tick();
   });
-  const [pending, setPending] = useState<string | null>(null);
   const go = async (id: string, push = true, before?: () => void) => {
     if (id === active) { before?.(); return; }
     const seq = ++navSeq.current;
-    /* the press answers at once: the card lights while the destination
-       prepares (code and bytes). Warm, this takes a few milliseconds; cold,
-       on a phone network, up to the cap, and the lit card is the feedback */
-    setPending(id);
-    const t0 = performance.now();
+    /* prepare: code and bytes, capped so the press never waits on the network */
     await Promise.race([
       Promise.all([ensureStation(id), prefetchStation(id).catch(() => null)]),
-      new Promise((r) => setTimeout(r, 260)),
+      new Promise((r) => setTimeout(r, 350)),
     ]);
     if (seq !== navSeq.current) return; // a later press superseded this one
-    setPending(null);
     const commit = () => {
       flushSync(() => { before?.(); setActive(id); });
       if (push) history.pushState({ st: id }, "", id === "harbor" ? location.pathname : `?st=${id}`);
@@ -111,11 +105,7 @@ function Stage({ ev, onEvidence }: { ev: VerifiedEvidence; onEvidence: (e: Verif
     const svt = (document as any).startViewTransition?.bind(document);
     const panel = () => document.querySelector(".panelcontent");
     if (reduced || !svt) { commit(); return; }
-    /* the remaining budget: a warm station settles in a few milliseconds; a
-       cold one is given at most what is left of 380 ms in total, then the
-       transition runs and its content arrives as it can. The screen is never
-       held long enough to read as a stall. */
-    svt(async () => { commit(); await settle(panel(), Math.max(60, 380 - (performance.now() - t0))); });
+    svt(async () => { commit(); await settle(panel(), 520); });
   };
 
   useEffect(() => {
@@ -124,7 +114,7 @@ function Stage({ ev, onEvidence }: { ev: VerifiedEvidence; onEvidence: (e: Verif
       const reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
       const svt = (document as any).startViewTransition?.bind(document);
       const commit = () => flushSync(() => setActive(id));
-      if (!reduced && svt) svt(async () => { commit(); await settle(document.querySelector(".panelcontent"), 300); }); else commit();
+      if (!reduced && svt) svt(async () => { commit(); await settle(document.querySelector(".panelcontent"), 520); }); else commit();
     };
     const onKey = (e: KeyboardEvent) => {
       if (e.key === "Escape") go("harbor");
@@ -180,8 +170,6 @@ function Stage({ ev, onEvidence }: { ev: VerifiedEvidence; onEvidence: (e: Verif
 
   /* after each station renders: warm its two dock neighbours in idle time */
   useEffect(() => { prefetchNeighbours(active); }, [active]);
-  /* once, after the first screen: the rest of the field, one station at a time */
-  useEffect(() => { warmFieldGently(active); }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   return (
     <div className="viewport stage">
@@ -234,7 +222,7 @@ function Stage({ ev, onEvidence }: { ev: VerifiedEvidence; onEvidence: (e: Verif
         <div className="grain" aria-hidden="true" />
       </main>
 
-      <Dock active={active} pending={pending} go={go} />
+      <Dock active={active} go={go} />
     </div>
   );
 }

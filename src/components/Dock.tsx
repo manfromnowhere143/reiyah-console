@@ -12,7 +12,7 @@ import { createPortal } from "react-dom";
 import { RAILS, STATIONS } from "../lib/camera";
 import { claimLayer, newLayerToken, onLayerClaim } from "../lib/layers";
 
-export function Dock({ active, pending, go }: { active: string; pending?: string | null; go: (id: string, push?: boolean, before?: () => void) => void }) {
+export function Dock({ active, go }: { active: string; go: (id: string, push?: boolean, before?: () => void) => void }) {
   const ref = useRef<HTMLElement>(null);
   const [edge, setEdge] = useState({ left: false, right: false, beyond: 0 });
   const [open, setOpen] = useState(false);
@@ -68,7 +68,6 @@ export function Dock({ active, pending, go }: { active: string; pending?: string
               data-first={String(first)}
               data-red={String(!!s.red)}
               data-active={String(s.id === active)}
-              data-pending={String(s.id === pending)}
               aria-current={s.id === active ? "page" : undefined}
               onClick={() => go(s.id)}
             >
