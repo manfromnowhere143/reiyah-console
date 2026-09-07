@@ -54,8 +54,25 @@ below the feedback threshold. Slow code/data/drawing, return visits, cancellatio
 latest-request wins, chart geometry, keyboard/touch focus and failures are covered.
 Reports and captures: `/tmp/reiyah-focus-latency.AYgdR2/`, including `baseline/`,
 `direct-import/`, `navigation-release/` and `opening-release/`.
-Engine and snapshot bytes are unchanged. Production publication/readback follows
-the completed local checks; its receipt will be retained here.
+The final profile (`profile-release/`) confirms all three transition animations
+last 180ms; the observed ready-to-finished lifetime is 188.8–195.4ms including
+frame scheduling. Its 28 selections show no circles.
+
+Published UI commit: `16c1174418fbf0b528775b6ed83fb104e61c11f2`.
+Production deployment:
+`https://reiyah-5aqw3v465-daniels-projects-ca65133a.vercel.app`, Vercel receipt
+`9ohhqdUXa6fsALnybUmkFdkr1pg6`. Both production domains returned the current HTML
+and 29 byte-identical assets/snapshot files each. The main assets are
+`index-CH1LilT4.js` (SHA-256
+`8332a3859f7dd972bcfa9d4f395e2d0b4a0d30e0a69b5b3ea7f70e65f2adb160`) and
+`index-DRucsfez.css` (SHA-256
+`f94277e38103c93ae0027ef6dcc47a601204aa547d3dbeeea89d1472b47962d5`).
+Live checks pass: all 18 destinations, 33 navigation/failure/accessibility
+controls and 12 opening/index cases. The isolated prefetched first visit commits
+in 33.2ms on production. Reports: `production-readback.json`,
+`navigation-production/` and `opening-production/` under the same scratch directory.
+Engine and snapshot bytes are unchanged. This UI task is complete; browser
+observations still do not establish physical iPhone/Safari performance.
 
 ## Opening, index and chart follow-up, 2026-09-07
 
