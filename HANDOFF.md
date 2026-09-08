@@ -4,6 +4,39 @@ Living handoff for the next session. This repo is **reiyah-console** (the Harbor
 Instrument UI), separate from the Reiyah **engine** repo (`~/workspace/reiyah`,
 which has the Gate-A baton/denylist — none of that applies here; normal git).
 
+## Repository routing and commit attribution, 2026-09-08
+
+Daniel explicitly authorizes Console work from the existing session rooted at
+`/Users/danielwahnich/workspace/reiyah`. Use this Console repository's explicit
+working directory, Git root, remote and instructions. Do not demand a relaunch
+or repeated permission merely because of the session's startup path. This is a
+specific operator exception to the global directory gate; engine instructions
+continue to apply to engine work. Read `AGENTS.md` for the retained rule.
+
+Rule number one: Console commits must not credit Claude/Anthropic as author,
+committer, contributor or co-author, or append generated-by/session notices.
+Claude's project attribution is disabled in `.claude/settings.json`. The installed
+`.githooks/commit-msg` rejects prohibited credits and identities; its ten checks
+accept ordinary/human credits and reject model credits, session trailers and
+model author/committer identities. Global Codex and Claude instructions and the
+Reiyah session memories retain the same routing and attribution requirements.
+
+The operator authorized an entire-history cleanup. The 114 original commits all
+already named Daniel as author and committer. A verified isolated rewrite removes
+105 co-author credits and 105 session trailers. Every original file tree, author,
+committer, timestamp and mapped parent relationship is identical. Substantive
+commit text is preserved. There is one published branch (`main`) and no tags or
+pull-request refs. No application, engine or snapshot bytes change in this task.
+
+The original history, full local Git metadata, changed instruction-file backups,
+old/new commit mapping and verification records are retained outside the repo in
+`~/.codex/backups/reiyah-console-authorship-20260908-74piy0ej/`.
+The original tip `4a9cf9c81a5115054df7bb7d1c4ab51fef14e06a` maps to
+`e3153cc0586cf26f78cc4fce33d006c29523d9ec`; the instruction/guard commit follows it.
+Earlier deployment records below retain their historical, pre-rewrite commit IDs.
+The deployed application bytes remain identical; these documentation/settings
+changes do not require resealing evidence or redeploying the UI.
+
 ## Index focus and navigation latency, 2026-09-07
 
 The operator reported a blue border persisting on index names and requested an

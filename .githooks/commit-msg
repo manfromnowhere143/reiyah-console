@@ -1,0 +1,15 @@
+#!/usr/bin/env python3
+"""Keep the operator's Console commit-attribution rule enforceable locally."""
+import pathlib
+import re
+import subprocess
+import sys
+
+message = pathlib.Path(sys.argv[1]).read_bytes()
+credit = re.compile(
+    rb"(?im)^[ \t]*(?:(?:co-authored-by|authored-by|signed-off-by|generated-by):[^\r\n]*(?:\bclaude\b|anthropic)|claude-session:|[^\r\n]*generated with[^\r\n]*(?:\bclaude\b|anthropic))"
+)
+identities = b"\n".join(subprocess.check_output(["git", "var", name]) for name in
+                         ["GIT_AUTHOR_IDENT", "GIT_COMMITTER_IDENT"])
+if credit.search(message) or re.search(rb"(?i)\bclaude\b|@anthropic\.com", identities):
+    sys.exit("Reiyah Console commits must preserve human attribution. Remove automated author/co-author credits and session trailers.")
