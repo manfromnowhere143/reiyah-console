@@ -12,19 +12,20 @@ complete team work are not established.
 
 ## Current edition
 
-Engine commit `5be5c3dc5444ccfe98cd5a203a74d5d7d4834561`, as of 11 October 2026.
-197 local authored/public records include every one of the 52 continuation-bound
-artifacts. The wider catalog has 1,238 source paths; records marked **Source link**
+Engine commit `152b53a9b3bc3118128d474484ee8fea855cddde`, as of 12 October 2026.
+212 local authored/public records include every one of the 67 continuation-bound
+artifacts. The wider catalog has 1,252 source paths; records marked **Source link**
 open the exact engine commit and are not locally verified by the Console.
 
-- **Harbor:** the original animated road, cabin, evidence objects and GPU finish,
-  with current findings in the instruments. The reference comparison opens in its
+- **Harbor:** the animated road and cabin fill the instrument, with procedural
+  terrain, road materials, shaded evidence objects and a compact current finding.
+  The reference comparison opens in its
   own inspector; motion illustrates the historical index, not a running evaluator.
 - **Findings:** batching, empty outputs, motion consistency, review procedure,
   reference sensitivity, resolution limits, equal-information comparison and corrections.
 - **The Comparison:** actual locally reproduced engine packets for the published
   synthetic example. Sufficiency and a counterexample are rendered differently.
-- **Research:** a selectable map of the 197 local records, a searchable library,
+- **Research:** a selectable map of the 212 local records, a searchable library,
   readable source text and explicit local/source-link coverage.
 - The eighteen existing route identities remain available. The former “Law” route
   is labeled **The Contrasts**, with the withdrawn interpretation explicitly corrected.
@@ -83,8 +84,9 @@ text equivalent. The cabin is an illustrative setting; the objects identify
 records from the historical index. Receipts and the Harbor inspector use native
 modal dialogs. The scene supports pause, reduced motion and hidden-page rest.
 The Encounter fixture blocks on missing source records, supports keyboard seeking
-and stops scheduling frames while idle. These implementation properties still
-require the release browser checks described below.
+and stops scheduling frames while idle. Its stage controls select the exact
+fixture clock and show the selected record fully. A joint silent miss is explicitly
+an unmeasured research concept in this fixture.
 
 ## Update an edition
 
@@ -109,12 +111,20 @@ its authored fixture arithmetic. `test:evidence` exercises the actual readers
 under altered data, altered manifests, live generation changes and receipt races.
 These are source/byte checks, not browser or scientific validation.
 
+`test:design`, `test:readings` and `test:scenes` exercise the built application in
+isolated Chrome profiles. Set `DESIGN_BASE` to the local preview URL and
+`DESIGN_OUT` to the desired report directory. They cover station geometry,
+Findings states, dialogs, keyboard focus, scene controls and motion preferences.
+The scene harness also covers forced 2D fallback and fractional pixel ratios.
+Screenshots and measured reports supplement the controlled renderer tests.
+See the [12 October design record](docs/reviews/2026-10-12-spatial-instrument.md).
+
 Before production, inspect desktop and compact phone layouts on both grounds,
 keyboard navigation, Index, deep links/history, all eight findings, the example,
 source receipts, unavailable data and the legacy stations. Test 320px reflow and
 reduced motion. Physical Safari and VoiceOver require their own observations.
 
-The older Puppeteer rigs remain historical test infrastructure; their eighteen-
+The other older Puppeteer rigs remain historical test infrastructure; their eighteen-
 station, worker and no-scroll assumptions predate this redesign and must be
 updated before being used as release evidence. Do not report an old passing
 browser record as validation of this edition. In Codex, browser operation follows

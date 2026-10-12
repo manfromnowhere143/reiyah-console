@@ -51,6 +51,17 @@ const correctionCopy = (claim: any) =>
     claim.refutation.statement,
   ];
 
+const FINDING_TITLES: Record<string, string> = {
+  batching: "Fixed predictions. Reversed ranking.",
+  empty: "Empty is an observation.",
+  motion: "Two metrics. Opposite rankings.",
+  review: "The procedure changes the decision.",
+  reference: "One file. Two threshold preferences.",
+  resolution: "Can this channel resolve the choice?",
+  value: "Equal evidence. Equal selection.",
+  corrections: "Keep the result. Correct the claim.",
+};
+
 function Composition({
   visual,
   children,
@@ -115,6 +126,7 @@ function EvidenceReader({
             Back to finding
           </button>
         </header>
+        <div className="finding-reader-body" tabIndex={0} role="region" aria-label="Evidence and method">
         <EditionLabel />
         {claim && (
           <section className="selected-correction">
@@ -130,6 +142,7 @@ function EvidenceReader({
           <SourceLine key={file.path} path={file.path} sha={file.sha256} />
         ))}
         <DocumentReader path={path} />
+        </div>
       </div>
     </dialog>,
     document.body,
@@ -269,16 +282,12 @@ export function Findings() {
                 { id: "corrected", label: "Complete roster" },
               ]}
             />
-            <div
-              className="empty-observation"
-              role="img"
-              aria-label="A successful run with zero detections remains an observed opportunity."
-            >
-              <span>∅</span>
-              <div>
-                <b>Observed empty</b>
-                <small>Successful run · zero detections</small>
-              </div>
+            <div className="opportunity-diagram" data-complete={corrected}
+              role="img" aria-label={`A successful run with zero detections is an observed opportunity. ${corrected ? "It remains in the denominator." : "The native evaluator omits it from the denominator."} A missing or failed run has no observed output.`}>
+              <div className="opportunity-observed"><span className="opportunity-node">∅</span><div><b>Run succeeded</b><small>Zero detections</small></div></div>
+              <div className="opportunity-route"><i /><span>{corrected ? "retained" : "omitted"}</span><i /></div>
+              <div className="opportunity-denominator"><span>{corrected ? "+1" : "—"}</span><small>Observed opportunity</small></div>
+              <div className="opportunity-missing"><span>?</span><b>Missing / failed</b><small>No observation to infer</small></div>
             </div>
             <p className="finding-caption">
               An empty output is distinct from a missing or failed run.
@@ -607,7 +616,7 @@ export function Findings() {
             <span className="study-number">
               {String(i + 1).padStart(2, "0")}
             </span>
-            {s.label}
+            <span className="study-label">{s.label}</span>
           </button>
         ))}
       </nav>
@@ -615,7 +624,7 @@ export function Findings() {
         <header className="finding-heading">
           <div>
             <div className="eyebrow">{study.kind}</div>
-            <h1>{study.title}</h1>
+            <h1>{FINDING_TITLES[study.id]}</h1>
           </div>
           <p className="research-deck">{study.subtitle}</p>
         </header>

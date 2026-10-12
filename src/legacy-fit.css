@@ -1,0 +1,237 @@
+/* Legacy evidence views share the station's remaining height. Keep the dock
+   and correction banner fixed; let a long evidence pane scroll on a phone.
+   No record is removed, and chart coordinates retain a readable minimum. */
+
+.panelcontent[data-station="controls"] .lockrow > * { min-width: 0; max-width: 100%; overflow-wrap: anywhere; }
+.panelcontent[data-station="controls"] .capgrid { grid-template-columns: repeat(auto-fit, minmax(min(15rem, 100%), 1fr)); }
+.panelcontent[data-station="controls"] .statwide { min-width: 0; }
+.panelcontent[data-station="controls"] .caprow { grid-template-columns: minmax(0, auto) minmax(0, 1fr) auto; }
+.panelcontent[data-station="controls"] .capname { white-space: normal; overflow-wrap: anywhere; }
+
+@container station (width < 760px) {
+  .panelcontent[data-station="samehazard"] .shzgrid {
+    flex: 1 1 0; min-height: 0; overflow: auto;
+    grid-template-rows: minmax(190px, 1.2fr) minmax(130px, 1fr);
+    overscroll-behavior: contain; scrollbar-width: thin;
+  }
+  .panelcontent[data-station="samehazard"] .shzhero .mbox { min-height: 0; }
+  .panelcontent[data-station="samehazard"] .shzbounds .wsrows { overflow: auto; }
+  .panelcontent[data-station="samehazard"] :is(.shzwait, .mnon) {
+    flex: none; max-height: 64px; overflow: auto;
+    overscroll-behavior: contain; scrollbar-width: thin;
+  }
+  .panelcontent[data-station="samehazard"] .shzwait .wsregv { display: block; }
+}
+@container station (width < 390px) {
+  .panelcontent[data-station="samehazard"] .shzgrid { grid-template-rows: minmax(310px, 1.2fr) minmax(130px, 1fr); }
+}
+
+.panelcontent:is([data-station="lineage"], [data-station="adversaries"],
+  [data-station="measurement"], [data-station="windshield"],
+  [data-station="law"], [data-station="monitor"]) .onepage > * {
+  min-width: 0;
+}
+
+/* An indivisible claim or replay row must not widen the entire station. */
+.panelcontent:is([data-station="law"], [data-station="monitor"]) .regchips {
+  min-width: 0;
+  max-width: 100%;
+}
+.panelcontent:is([data-station="law"], [data-station="monitor"]) .regchip {
+  min-width: 0;
+  max-width: 100%;
+  white-space: normal;
+  flex-wrap: wrap;
+  overflow-wrap: anywhere;
+}
+.panelcontent[data-station="adversaries"] .replayrow .wsregv,
+.panelcontent[data-station="adversaries"] .replay {
+  min-width: 0;
+  max-width: 100%;
+  flex-wrap: wrap;
+  white-space: normal;
+  overflow-wrap: anywhere;
+}
+.monitor-caption {
+  flex: none;
+  margin: 6px 0 0;
+  font: .64rem/1.45 var(--mono);
+  color: var(--ink-faint);
+  overflow-wrap: anywhere;
+}
+
+@container station (width < 760px) {
+  /* Undo the old 220px minimum on every individual mobile chart. The
+     surrounding panel, rather than each chart, owns its explicit budget. */
+  .panelcontent:is([data-station="adversaries"], [data-station="measurement"],
+    [data-station="windshield"], [data-station="law"],
+    [data-station="monitor"]) .stbody .mbox {
+    min-height: 0;
+  }
+
+  /* The claim register and non-claims stay present in bounded reading panes.
+     Their exact text can expand without displacing a graph or the dock. */
+  .panelcontent:is([data-station="measurement"], [data-station="windshield"],
+    [data-station="law"], [data-station="monitor"]) .stbody .mnon {
+    max-height: clamp(42px, 9cqh, 64px);
+    overflow: auto;
+    overscroll-behavior: contain;
+    scrollbar-width: thin;
+    overflow-wrap: anywhere;
+  }
+  .panelcontent:is([data-station="windshield"], [data-station="law"],
+    [data-station="monitor"]) .stbody .wsreg {
+    display: grid !important;
+    grid-template-columns: minmax(0, 1fr) auto;
+    grid-template-areas: "k d" "v v" "c c";
+    gap: 4px 8px;
+    align-items: start;
+    align-content: start;
+    max-height: clamp(62px, 13cqh, 100px);
+    padding: 6px 8px;
+    overflow: auto;
+    overscroll-behavior: contain;
+    scrollbar-width: thin;
+  }
+  .panelcontent:is([data-station="windshield"], [data-station="law"],
+    [data-station="monitor"]) .wsreg > .cvl { grid-area: k; }
+  .panelcontent:is([data-station="windshield"], [data-station="law"],
+    [data-station="monitor"]) .wsreg > .wsregv {
+    grid-area: v;
+    min-width: 0;
+    overflow-wrap: anywhere;
+  }
+  .panelcontent:is([data-station="windshield"], [data-station="law"],
+    [data-station="monitor"]) .wsreg > .digest { grid-area: d; }
+
+  /* A centered tall custody rail used to extend above its assigned box.
+     Start the scrollable history at its heading and retain the full break. */
+  .panelcontent[data-station="lineage"] .graph {
+    flex: 1 1 0;
+    justify-content: flex-start;
+    overflow: auto;
+    overscroll-behavior: contain;
+    scrollbar-width: thin;
+    padding: 1px 2px 4px;
+  }
+  .panelcontent[data-station="lineage"] .graph > * { flex: none; }
+  .panelcontent[data-station="lineage"] .rail {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 8px;
+  }
+  .panelcontent[data-station="lineage"] .rrec > span:not(.rbreak) {
+    display: block;
+    white-space: normal;
+    overflow: visible;
+    -webkit-line-clamp: unset;
+  }
+  .panelcontent[data-station="lineage"] .rbreak { display: flex; }
+  .panelcontent[data-station="lineage"] .rbreak em {
+    display: block;
+    white-space: normal;
+    overflow: visible;
+  }
+  .panelcontent[data-station="lineage"] .subrailk {
+    display: block;
+    overflow: visible;
+    -webkit-line-clamp: unset;
+  }
+
+  .panelcontent[data-station="adversaries"] .wallgrid {
+    flex: 1 1 0;
+    grid-template-rows: minmax(0, 1.6fr) minmax(0, 1fr);
+    min-width: 0;
+  }
+  .panelcontent[data-station="adversaries"] .wallgrid > * { min-width: 0; }
+  .panelcontent[data-station="adversaries"] .stbody .wsreg.replayrow {
+    display: grid !important;
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-areas: "k" "v" "d";
+    max-height: clamp(86px, 19cqh, 142px);
+    overflow: auto;
+    overscroll-behavior: contain;
+    scrollbar-width: thin;
+  }
+  .panelcontent[data-station="adversaries"] .replayrow .wsregv.dim {
+    display: block;
+  }
+
+  /* Plots cannot be compressed into overlapping labels. On short phones
+     these are local reading panes; a tall station displays more at once. */
+  .panelcontent:is([data-station="measurement"], [data-station="windshield"],
+    [data-station="law"], [data-station="monitor"])
+    .onepage > :is(.mgrid, .wsgrid, .lawgrid, .mongrid) {
+    flex: 1 1 0;
+    min-height: 0;
+    min-width: 0;
+    overflow: auto;
+    overscroll-behavior: contain;
+    scrollbar-width: thin;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 6px;
+  }
+
+  .panelcontent[data-station="measurement"] .mgrid {
+    grid-template-rows: minmax(148px, 1.1fr) minmax(236px, 1.5fr) minmax(120px, .8fr);
+  }
+  .panelcontent[data-station="measurement"] .mcol {
+    display: grid;
+    grid-template-rows: minmax(130px, 1.3fr) minmax(100px, 1fr);
+    gap: 6px;
+  }
+  .panelcontent[data-station="measurement"] .mcol .mpanel {
+    flex: 1 1 0;
+    min-width: 0;
+  }
+  .panelcontent[data-station="measurement"] .mcol .mpanel:first-child .mbox {
+    height: auto;
+    flex: 1 1 0;
+  }
+  .panelcontent[data-station="measurement"] .mcells {
+    grid-auto-rows: minmax(30px, 1fr);
+  }
+  .panelcontent[data-station="measurement"] .mcell2 span { display: block; }
+  .panelcontent[data-station="measurement"] .mpanel > .ilabel {
+    display: block;
+    overflow: visible;
+    -webkit-line-clamp: unset;
+  }
+
+  .panelcontent[data-station="windshield"] .wsgrid {
+    grid-template-rows: minmax(160px, .8fr) minmax(220px, 1fr) minmax(150px, .7fr);
+  }
+  .panelcontent[data-station="windshield"] .wsside { display: contents; }
+  .panelcontent[data-station="windshield"] .wsgrid > .wspanel:first-child {
+    min-height: 0;
+    padding: 0;
+  }
+  .panelcontent[data-station="windshield"] .wsrow:nth-child(n) { display: grid; }
+  .panelcontent[data-station="windshield"] .wsside > .wspanel:first-child {
+    overflow: auto;
+    overscroll-behavior: contain;
+    scrollbar-width: thin;
+  }
+
+  .panelcontent[data-station="law"] .onepage > .lawgrid {
+    grid-template-rows: minmax(240px, 1.2fr) minmax(214px, 1fr);
+  }
+  .panelcontent[data-station="law"] .lawside > .fillpanel { flex: 1 1 0; }
+  .panelcontent[data-station="law"] .lawrow { display: block; }
+  .panelcontent[data-station="law"] .lawside .lawu { display: flex; }
+  .panelcontent[data-station="law"] .ucells { grid-template-columns: repeat(25, 1fr); }
+
+  .panelcontent[data-station="monitor"] .mongrid {
+    grid-template-rows: minmax(220px, 1fr) minmax(280px, 1.3fr);
+  }
+  .panelcontent[data-station="monitor"] .monside > .fillpanel {
+    flex: 1 1 0;
+    overflow: auto;
+    overscroll-behavior: contain;
+    scrollbar-width: thin;
+  }
+  .panelcontent[data-station="monitor"] .monrow {
+    grid-template-columns: minmax(0, 1.1fr) minmax(24px, .65fr) minmax(0, 1fr);
+    gap: 6px;
+  }
+  .panelcontent[data-station="monitor"] .monrow .bn { white-space: normal; }
+}

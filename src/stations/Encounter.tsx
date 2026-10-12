@@ -15,6 +15,7 @@ import { fetchLane, fetchLaneJson, type LaneFile } from "../lib/gateb";
 import { Digest, Blocked } from "../components/primitives";
 import { useStationReadiness } from "../components/StationFrame";
 import { drawCabin, drawWorld } from "../lib/roadScene";
+import "../encounter.css";
 
 const TAU = Math.PI * 2;
 const clamp01 = (x: number) => Math.max(0, Math.min(1, x));
@@ -150,20 +151,26 @@ export function Encounter() {
     let sync = 0;
     const MONO = '"B612 Mono", Menlo, monospace';
 
-    const wake = () => { if (!raf) raf = requestAnimationFrame(draw); };
+    const wake = () => { if (!raf) { lastT = performance.now(); raf = requestAnimationFrame(draw); } };
     requestDraw.current = wake;
     const draw = () => {
       raf = 0;
       const now = performance.now();
       const dt = Math.min(0.05, (now - lastT) / 1000);
       lastT = now;
+      if (document.hidden) return;
       if (playingRef.current && !draggingRef.current) {
         progRef.current += dt / DURATION;
         if (progRef.current >= 1) { progRef.current = 1; playingRef.current = false; setPlaying(false); }
       }
-      easedRef.current += (progRef.current - easedRef.current) * (reduced ? 1 : 0.14);
+      easedRef.current += (progRef.current - easedRef.current) * (reduced || !playingRef.current ? 1 : 1 - Math.exp(-dt * 9));
       const t = tOf(easedRef.current);
       const c = chainRef.current;
+      // A selected, paused stage is a reading state, not a frozen fraction of
+      // the transition from the previous record. Playback retains soft fades.
+      const reading = reduced || !playingRef.current;
+      const currentBeat = beatFor(t);
+      const reveal = (beat: number, animated: number) => reading ? Number(currentBeat === beat) : animated;
 
       const bi = beatFor(tOf(progRef.current));
       if (bi !== lastBeat.current) { lastBeat.current = bi; setBeatIdx(bi); }
@@ -171,8 +178,10 @@ export function Encounter() {
 
       const dpr = Math.min(2, window.devicePixelRatio || 1);
       const w = canvas.clientWidth, h = canvas.clientHeight;
-      if (canvas.width !== w * dpr || canvas.height !== h * dpr) { canvas.width = w * dpr; canvas.height = h * dpr; }
-      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      const wDev = Math.max(1, Math.round(w * dpr)), hDev = Math.max(1, Math.round(h * dpr));
+      if (canvas.width !== wDev) canvas.width = wDev;
+      if (canvas.height !== hDev) canvas.height = hDev;
+      ctx.setTransform(wDev / Math.max(1, w), 0, 0, hDev / Math.max(1, h), 0, 0);
       ctx.clearRect(0, 0, w, h);
 
       const dark = document.documentElement.dataset.ground === "dark";
@@ -180,7 +189,9 @@ export function Encounter() {
       const RED = dark ? "227,25,55" : "214,23,50";
       const OK = dark ? "126,166,255" : "47,102,214";
       const VOID = dark ? "5,5,7" : "244,243,238";
-      const s = now / 1000;
+      // All illustration motion belongs to this encounter clock. A paused
+      // frame must not change on theme/viewport redraw or after a hidden tab.
+      const s = easedRef.current * DURATION;
       const mobile = w < 560;
       const fs = mobile ? 8 : 9;
 
@@ -193,27 +204,48 @@ export function Encounter() {
          high, a real dashboard low, and the object large between them */
       const portrait = h > w * 1.05;
       const horizon = portrait ? h * 0.3 : h * 0.38;
-      const dash = portrait ? h * 0.25 : mobile ? h * 0.12 : 0;
+      const dash = portrait ? h * 0.20 : h * 0.15;
       const floor = h - dash;
       const cx = w / 2;
       /* the shared world: sky, wet road, edge lines, dashes flowing toward the cabin */
-      drawWorld(ctx, { w, h, dark, horizon, phase: reduced ? 0 : (s * 0.32) % 1, headlight: true });
+      const travel = reduced ? 0 : s * 0.32;
+      drawWorld(ctx, { w, h, dark, horizon, phase: travel % 1, travel, headlight: true, detail: "harbor" });
+
+      // Six depth planes show the record sequence, not six physical distances.
+      // Their activation comes only from the fixture clock; unknowns stay in
+      // the individual readings below, never converted into a success color.
+      const stages: Array<[string, number]> = [["OBS", 0], ["BEL", 1], ["DEC", 2], ["INT", 3], ["OUT", c.window[0]], ["EVD", c.window[1]]];
+      let activeStage = -1;
+      for (let i = 0; i < stages.length; i++) if (t >= stages[i][1]) activeStage = i;
+      ctx.font = `${fs}px ${MONO}`; ctx.textAlign = "left";
+      for (let i = 0; i < stages.length; i++) {
+        const p = 0.16 + i * 0.14, y = horizon + (floor - horizon) * p * p;
+        const f = (y - horizon) / (h - horizon), half = w * 0.64 * f * 0.82;
+        const active = i === activeStage;
+        ctx.strokeStyle = `rgba(${active ? OK : INK},${active ? 0.46 : dark ? 0.08 : 0.12})`;
+        ctx.lineWidth = active ? 1.3 : 0.7;
+        ctx.beginPath(); ctx.moveTo(cx - half, y); ctx.lineTo(cx + half, y); ctx.stroke();
+        const tx = i % 2 === 0 ? Math.min(w * 0.89 - 24, cx + half + 7) : Math.max(w * 0.11, cx - half - 31);
+        if (!dark) { ctx.fillStyle = "rgba(244,245,236,0.78)"; ctx.fillRect(tx - 3, y - 6, 27, fs + 4); }
+        ctx.fillStyle = `rgba(${active ? OK : INK},${dark ? active ? 0.94 : 0.50 : 0.94})`;
+        ctx.fillText(stages[i][0], tx, y + 2);
+      }
 
       /* ---- the object: holds station (relative speed observed 0) ---- */
       const objY = horizon + (floor - horizon) * (portrait ? 0.4 : 0.34);
-      const r = Math.round(Math.max(9, Math.min(24, w * (portrait ? 0.036 : 0.017))));
-      const seen = smooth(-0.2, 0.15, t);               // detected at t=0
+      const r = Math.round(Math.max(12, Math.min(30, w * (portrait ? 0.047 : 0.023))));
+      const seen = 0.28 + 0.72 * (reading ? Number(t >= 0) : smooth(-0.2, 0.15, t)); // fixture object exists in the prelude; channel lock begins at t=0
       ctx.restore();
 
       /* the cabin never sways: the camera sits in it */
-      drawCabin(ctx, w, h, dark, w * (portrait ? 0.11 : 0.075), dash);
+      drawCabin(ctx, w, h, dark, w * (portrait ? 0.075 : 0.06), dash, true);
 
       /* ---- the two channels, in the language of the field: the human's
          attention is a soft field of light resting on the scene; the
          automation's detection is the lock on the object; the joint miss is
          one red ring, when the field has drifted and the lock has dropped ---- */
-      const coneOn = smooth(-0.4, 0.4, t);
-      const jsm = smooth(6.3, 6.9, t) * (1 - smooth(9.0, 9.6, t)); // both leave the object at once
+      const coneOn = reading ? Number(t >= 0) : smooth(-0.4, 0.4, t);
+      const jsm = reveal(6, smooth(6.3, 6.9, t) * (1 - smooth(9.0, 9.6, t))); // both leave the object at once
       const wander = reduced ? 0 : Math.sin(s * 0.55) * w * 0.03;
       const wanderY = reduced ? 0 : Math.sin(s * 0.9 + 1) * h * 0.015;
       const gazeX = cx + wander + (-w * (portrait ? 0.24 : 0.3) - wander) * jsm;
@@ -261,23 +293,36 @@ export function Encounter() {
         }
         ctx.globalAlpha = seen;
         /* its shadow and its reflection on the wet road: it has weight */
-        const sg = ctx.createRadialGradient(cx, objY + r * 1.1, 0, cx, objY + r * 1.1, r * 2.6);
+        ctx.save(); ctx.translate(cx, objY + r * 1.1); ctx.scale(1, 0.32);
+        const sg = ctx.createRadialGradient(0, 0, 0, 0, 0, r * 2.6);
         sg.addColorStop(0, `rgba(${dark ? "0,0,0" : "16,18,21"},${dark ? 0.55 : 0.18})`); sg.addColorStop(1, `rgba(0,0,0,0)`);
-        ctx.fillStyle = sg; ctx.save(); ctx.scale(1, 0.32); ctx.beginPath(); ctx.arc(cx, (objY + r * 1.1) / 0.32, r * 2.6, 0, TAU); ctx.fill(); ctx.restore();
-        const rg = ctx.createLinearGradient(0, objY + r, 0, objY + r * 4);
-        rg.addColorStop(0, `rgba(${INK},${dark ? 0.16 : 0.08})`); rg.addColorStop(1, `rgba(${INK},0)`);
-        ctx.fillStyle = rg; ctx.fillRect(cx - r * 0.9, objY + r, r * 1.8, r * 3);
-        /* a wire cuboid, its back face drawn toward the vanishing point */
+        ctx.fillStyle = sg; ctx.fillRect(-r * 2.6, -r * 2.6, r * 5.2, r * 5.2); ctx.restore();
+        for (let band = 0; band < 7; band++) {
+          const rw = r * (1.7 - band * 0.12);
+          ctx.fillStyle = `rgba(${INK},${(dark ? 0.085 : 0.045) * (1 - band / 7)})`;
+          ctx.fillRect(cx - rw / 2 + Math.sin(band * 2.3) * r * 0.12, objY + r * (1.3 + band * 0.34), rw, Math.max(0.5, r * 0.06));
+        }
+        /* A dimensional abstract cuboid, never a guessed car or pedestrian.
+           Its neutral material is presentation; fixture color is unmeasured. */
         const fw = r * 1.15, fh = r * 0.95, kq = 0.72;
-        const bx = cx, by = objY - (objY - horizon) * (1 - kq) * 0.5;
+        const bx = cx + fw * 0.46, by = objY - (objY - horizon) * (1 - kq) * 0.5;
         const F = [[cx - fw, objY - fh], [cx + fw, objY - fh], [cx + fw, objY + fh], [cx - fw, objY + fh]];
         const B = [[bx - fw * kq, by - fh * kq], [bx + fw * kq, by - fh * kq], [bx + fw * kq, by + fh * kq], [bx - fw * kq, by + fh * kq]];
-        ctx.strokeStyle = `rgba(${INK},0.42)`; ctx.lineWidth = 1;
+        const face = (points: number[][], color: string | CanvasGradient) => {
+          ctx.fillStyle = color; ctx.beginPath(); ctx.moveTo(points[0][0], points[0][1]);
+          for (const p of points.slice(1)) ctx.lineTo(p[0], p[1]); ctx.closePath(); ctx.fill();
+        };
+        const topMaterial = ctx.createLinearGradient(cx - fw, by - fh, cx + fw, objY);
+        topMaterial.addColorStop(0, dark ? "#9baeb7" : "#edf1ed"); topMaterial.addColorStop(1, dark ? "#3c5665" : "#a8babd");
+        face([B[0], B[1], F[1], F[0]], topMaterial);
+        face([B[1], B[2], F[2], F[1]], dark ? "#253744" : "#84999e");
+        const frontMaterial = ctx.createLinearGradient(cx - fw, objY - fh, cx + fw, objY + fh);
+        frontMaterial.addColorStop(0, dark ? "#506a7b" : "#d7e1de"); frontMaterial.addColorStop(1, dark ? "#15242e" : "#99aeaf");
+        face(F, frontMaterial);
+        ctx.strokeStyle = `rgba(${INK},0.42)`; ctx.lineWidth = 0.8;
         ctx.beginPath();
         for (let i = 0; i < 4; i++) { ctx.moveTo(B[i][0], B[i][1]); ctx.lineTo(B[(i + 1) % 4][0], B[(i + 1) % 4][1]); ctx.moveTo(F[i][0], F[i][1]); ctx.lineTo(B[i][0], B[i][1]); }
         ctx.stroke();
-        ctx.fillStyle = `rgba(${VOID},0.55)`;
-        ctx.beginPath(); ctx.rect(cx - fw, objY - fh, fw * 2, fh * 2); ctx.fill();
         ctx.strokeStyle = `rgba(${INK},0.9)`; ctx.lineWidth = 1.5;
         ctx.beginPath(); ctx.rect(cx - fw, objY - fh, fw * 2, fh * 2); ctx.stroke();
         ctx.fillStyle = `rgba(${INK},0.75)`; ctx.beginPath(); ctx.arc(cx, objY, 1.8, 0, TAU); ctx.fill();
@@ -298,9 +343,6 @@ export function Encounter() {
       const tag = (ax: number, ay: number, tx: number, ty: number, lines: Array<[string, string]>, alpha: number, align: CanvasTextAlign = "left") => {
         if (alpha <= 0.02) return;
         ctx.save(); ctx.globalAlpha = alpha;
-        ctx.strokeStyle = `rgba(${INK},0.35)`; ctx.lineWidth = 1;
-        ctx.beginPath(); ctx.moveTo(ax, ay); ctx.lineTo(tx, ty); ctx.stroke();
-        ctx.fillStyle = `rgba(${INK},0.6)`; ctx.beginPath(); ctx.arc(ax, ay, 1.6, 0, TAU); ctx.fill();
         ctx.font = `${fs}px ${MONO}`; ctx.textAlign = align;
         const lh = fs + 4;
         const off = align === "left" ? 6 : align === "right" ? -6 : 0;
@@ -309,6 +351,10 @@ export function Encounter() {
         /* the tag stays inside the frame whatever the phone's width */
         if (align === "left") tx = Math.min(tx, w - 10 - wid - off);
         if (align === "right") tx = Math.max(tx, 10 + wid - off);
+        ty = Math.max(fs + 12, Math.min(ty, h - 12 - lines.length * lh));
+        ctx.strokeStyle = `rgba(${INK},0.35)`; ctx.lineWidth = 1;
+        ctx.beginPath(); ctx.moveTo(ax, ay); ctx.lineTo(tx, ty); ctx.stroke();
+        ctx.fillStyle = `rgba(${INK},0.6)`; ctx.beginPath(); ctx.arc(ax, ay, 1.6, 0, TAU); ctx.fill();
         const px0 = align === "left" ? tx + off - 4 : align === "right" ? tx + off - wid - 4 : tx - wid / 2 - 4;
         ctx.fillStyle = `rgba(${VOID},0.78)`;
         ctx.beginPath(); ctx.roundRect(px0, ty - fs + 1, wid + 8, lines.length * lh + 4, 3); ctx.fill();
@@ -320,7 +366,7 @@ export function Encounter() {
       const rightX = Math.min(w - (mobile ? 118 : 200), cx + r + 34), leftX = Math.max(mobile ? 120 : 200, cx - r - 34);
 
       /* OBSERVATION t=0 */
-      const obsA = smooth(-0.05, 0.35, t) * (1 - smooth(0.85, 1.15, t));
+      const obsA = reveal(1, smooth(-0.05, 0.35, t) * (1 - smooth(0.85, 1.15, t)));
       tag(cx + r, objY - 2, rightX, objY - 22, [
         ["OBSERVATION · t 0", ink(0.55)],
         [`rel speed ${evTxt(c.speed)} · ${c.speed.state}`, ink(0.95)],
@@ -328,7 +374,7 @@ export function Encounter() {
       ], obsA);
 
       /* BELIEF t=1: the quantile dot plot, countable probability */
-      const belA = smooth(0.95, 1.35, t) * (1 - smooth(1.9, 2.2, t));
+      const belA = reveal(2, smooth(0.95, 1.35, t) * (1 - smooth(1.9, 2.2, t)));
       if (belA > 0.02) {
         const filled = Math.round(c.p1 * 20);
         const dot = 5.5, gap = 4.2, cols = 4;
@@ -344,13 +390,14 @@ export function Encounter() {
           else { ctx.strokeStyle = `rgba(${INK},0.4)`; ctx.stroke(); }
         }
         ctx.fillStyle = `rgba(${INK},0.6)`; ctx.font = `${fs}px ${MONO}`; ctx.textAlign = "left";
-        ctx.fillText(`BELIEF · t 1 · relevant ${c.p1.toFixed(2)}`, ox, oy + 5 * (dot + gap) + 2);
-        ctx.fillText(`${filled} of 20 · not relevant ${c.p2.toFixed(2)}`, ox, oy + 5 * (dot + gap) + 2 + fs + 4);
+        const beliefLabels = [`BELIEF · t 1 · relevant ${c.p1.toFixed(2)}`, `${filled} of 20 · not relevant ${c.p2.toFixed(2)}`];
+        const labelX = Math.min(ox, w - 12 - Math.max(...beliefLabels.map(txt => ctx.measureText(txt).width)));
+        beliefLabels.forEach((txt, i) => ctx.fillText(txt, labelX, oy + 5 * (dot + gap) + 2 + i * (fs + 4)));
         ctx.restore();
       }
 
       /* DECISION t=2 */
-      const decA = smooth(1.95, 2.35, t) * (1 - smooth(2.9, 3.2, t));
+      const decA = reveal(3, smooth(1.95, 2.35, t) * (1 - smooth(2.9, 3.2, t)));
       tag(cx, objY + r, cx + 40, objY + (floor - objY) * 0.36, [
         ["DECISION · t 2", ink(0.55)],
         [c.action, ink(0.95)],
@@ -358,7 +405,7 @@ export function Encounter() {
       ], decA);
 
       /* INTERVENTION t=3: assignment is not delivery */
-      const intA = smooth(2.95, 3.35, t) * (1 - smooth(3.9, 4.2, t));
+      const intA = reveal(4, smooth(2.95, 3.35, t) * (1 - smooth(3.9, 4.2, t)));
       tag(mobile ? cx : cx - r, mobile ? objY + r : objY, mobile ? cx : leftX, mobile ? objY + r + 26 : objY - 30, [
         ["INTERVENTION · t 3", ink(0.55)],
         [`assigned ${evTxt(c.assigned)}`, okc],
@@ -370,7 +417,7 @@ export function Encounter() {
 
       /* OUTCOME window 4-10 */
       const [w0, w1] = c.window;
-      const outA = smooth(w0 - 0.05, w0 + 0.35, t) * (1 - smooth(w1 + 0.05, w1 + 0.3, t)) * (1 - jsm);
+      const outA = reveal(5, smooth(w0 - 0.05, w0 + 0.35, t) * (1 - smooth(w1 + 0.05, w1 + 0.3, t)) * (1 - jsm));
       if (outA > 0.02) {
         const prog = clamp01((t - w0) / (w1 - w0));
         tag(cx + r, objY + 2, rightX, objY + 6, [
@@ -386,7 +433,7 @@ export function Encounter() {
       }
 
       /* EVIDENCE after the window */
-      const evdA = smooth(w1 + 0.35, w1 + 0.7, t);
+      const evdA = reveal(7, smooth(w1 + 0.35, w1 + 0.7, t));
       tag(cx, objY + r, cx + 40, objY + (floor - objY) * 0.36, [
         ["EVIDENCE · after t 10", ink(0.55)],
         [`basis ${c.basis.replace(/_/g, " ")} · validity ${c.validity}`, ink(0.95)],
@@ -410,6 +457,7 @@ export function Encounter() {
     if (!el) return;
     const rct = el.getBoundingClientRect();
     progRef.current = clamp01((clientX - rct.left) / rct.width);
+    easedRef.current = progRef.current;
     setProg(progRef.current);requestDraw.current();
   };
   const onDown = (e: React.PointerEvent) => {
@@ -422,10 +470,12 @@ export function Encounter() {
   const onUp = () => { draggingRef.current = false; };
   const togglePlay = () => {
     if (progRef.current >= 0.999) progRef.current = 0;
+    else if (playingRef.current) progRef.current = easedRef.current;
+    easedRef.current = progRef.current;
     playingRef.current = !playingRef.current;
-    setPlaying(playingRef.current);requestDraw.current();
+    setPlaying(playingRef.current);setProg(progRef.current);requestDraw.current();
   };
-  const jumpTo = (p: number) => { progRef.current = p; setProg(p); playingRef.current = false; setPlaying(false); requestDraw.current(); };
+  const jumpTo = (p: number) => { progRef.current = p; easedRef.current = p; setProg(p); playingRef.current = false; setPlaying(false); requestDraw.current(); };
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => { if (e.key === " " && !(e.target as HTMLElement)?.closest?.("input,textarea,button,[role=slider]")) { e.preventDefault(); togglePlay(); } };
     window.addEventListener("keydown", onKey);
@@ -449,7 +499,7 @@ export function Encounter() {
     { t: w0, label: `t ${w0}-${w1}`, k: "OUTCOME WINDOW", kind: "OUT",
       body: <>Where recoverability, readiness, and the miss that hides all live. Count <b>{chain.count.state === "observed" ? String(chain.count.value) : evTxt(chain.count)}</b>, {chain.censoring.replace(/_/g, " ")}.</> },
     { t: 6.5, label: "the measure", k: "THE JOINT SILENT MISS", jsm: true,
-      body: <>Both sightlines leave the <i>same</i> object in the <i>same</i> window, unwarned. Two marginal rates hide it; their dependence reveals it. The one thing Reiyah exists to measure.</> },
+      body: <>Both sightlines leave the <i>same</i> object in the <i>same</i> window. This illustrates a research target; a joint silent miss was <b>not measured in this fixture</b>.</> },
     { t: w1, label: `after t ${w1}`, k: "EVIDENCE", kind: "EVD",
       body: <>Basis <b>{chain.basis.replace(/_/g, " ")}</b>, validity <b>{chain.validity}</b>. A gap stays a gap until a gate accepts a result.</> },
   ];
@@ -477,8 +527,8 @@ export function Encounter() {
       </div>
 
       <div className="encScrub">
-        <button className="encPlay" onClick={togglePlay} aria-label={playing ? "pause" : "play"} title="space">
-          {playing ? "❚❚" : progRef.current >= 0.999 ? "↺" : "▶"}
+        <button className="encPlay" onClick={togglePlay} aria-label={playing ? "Pause encounter" : progRef.current >= 0.999 ? "Replay encounter" : "Play encounter"} aria-pressed={playing} title="Space · play or pause">
+          <svg viewBox="0 0 24 24" aria-hidden="true">{playing ? <><path d="M7 5h3v14H7zM14 5h3v14h-3z" /></> : progRef.current >= 0.999 ? <path d="M6.8 6.8A7.3 7.3 0 1 1 5 14H3a9.3 9.3 0 1 0 2.4-8.6L2 2v8h8z" /> : <path d="m8 5 11 7-11 7z" />}</svg>
         </button>
         <div
           className="encTrack" ref={trackRef}
@@ -488,19 +538,14 @@ export function Encounter() {
         >
           <div className="encTrackFill" style={{ transform: `scaleX(${prog})` }} />
           <div className="encSpan" data-on={String(tNow >= w0)} style={{ left: `${pOf(w0) * 100}%`, width: `${(pOf(w1) - pOf(w0)) * 100}%` }} title={`outcome window ${w0}-${w1} s`} />
-          {beats.slice(1).map((b, i) => (
-            <button
-              key={i} className="encMark" data-on={String(tNow >= b.t - 1e-4)} data-jsm={String(!!b.jsm)}
-              style={{ left: `${pOf(b.t) * 100}%` }} title={b.k}
-              onPointerDown={(e) => { e.stopPropagation(); jumpTo(pOf(b.t)); }} onClick={()=>jumpTo(pOf(b.t))}
-            >
-              <span className="encMarkL">{b.kind ?? "JSM"}</span>
-            </button>
-          ))}
+          {beats.slice(1).map((b, i) => <span key={i} className="encMark" data-on={String(tNow >= b.t - 1e-4)} data-jsm={String(!!b.jsm)} style={{ left: `${pOf(b.t) * 100}%` }} aria-hidden="true" />)}
           <div className="encHead" style={{ left: `${prog * 100}%` }} />
         </div>
         <div className="encClock">t {tNow < 0 ? "−" : ""}{Math.abs(tNow).toFixed(1)}s</div>
       </div>
+      <nav className="encJourney" aria-label="Encounter stages">
+        {beats.slice(1).map((b, i) => <button key={b.k} onClick={() => jumpTo(pOf(b.t))} aria-label={`${b.k} · ${b.label}`} aria-current={beatIdx === i + 1 ? "step" : undefined} data-jsm={String(!!b.jsm)}><span>{b.kind ?? "JSM"}</span><small>{b.label}</small></button>)}
+      </nav>
       <div className="encReal" aria-label="the real case">
         <span className="encRealK">the real case</span>
         {study && !("state" in study) ? (

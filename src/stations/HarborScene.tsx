@@ -24,7 +24,7 @@ export function HarborScene({
   const ruleSink = useRef<(m: Record<string, string>) => void>(() => {});
 
   const artifacts: ArtifactRow[] = ev.index?.artifacts ?? [];
-  const [paused, setPaused] = useState(false);
+  const [paused, setPaused] = useState(() => matchMedia("(prefers-reduced-motion: reduce)").matches);
   const [error, setError] = useState<string | null>(null);
   const pausedRef = useRef(paused);
   pausedRef.current = paused;
@@ -68,6 +68,8 @@ export function HarborScene({
     let disposed = false;
 
     const reducedMq = matchMedia("(prefers-reduced-motion: reduce)");
+    const onMotionPreference = () => setPaused(reducedMq.matches);
+    reducedMq.addEventListener("change", onMotionPreference);
     const domMakeCanvas = (w: number, h: number) => {
       const c = document.createElement("canvas");
       c.width = w;
@@ -93,7 +95,7 @@ export function HarborScene({
       h: cv.clientHeight,
       dpr: Math.min(2, window.devicePixelRatio || 1),
       dark: document.documentElement.dataset.ground === "dark",
-      reduced: reducedMq.matches || pausedRef.current || document.hidden,
+      reduced: pausedRef.current || document.hidden,
       dash: Math.round(cv.clientHeight * 0.12),
     });
     const rectMouse = (cv: HTMLCanvasElement, e: PointerEvent) => {
@@ -299,6 +301,7 @@ export function HarborScene({
 
     return () => {
       disposed = true;
+      reducedMq.removeEventListener("change", onMotionPreference);
       runTeardown();
       for (const c of canvases) c.remove();
     };
@@ -309,13 +312,16 @@ export function HarborScene({
     <div className="harbor-scene">
       <div className="fieldwrap" ref={wrapRef} />
       <div className="scene-caption">
-        <span>Driving perspective · conceptual evidence flow</span>
         <button
           className="scene-pause"
           onClick={() => setPaused((p) => !p)}
           aria-pressed={paused}
+          aria-label={paused ? "Play motion" : "Stop motion"}
+          title={paused ? "Play motion" : "Stop motion"}
         >
-          {paused ? "Resume motion" : "Pause motion"}
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            {paused ? <path d="M8 5.5 19 12 8 18.5Z" /> : <rect x="7" y="7" width="10" height="10" rx="0.6" />}
+          </svg>
         </button>
       </div>
       {error && (

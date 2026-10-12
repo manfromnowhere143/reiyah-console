@@ -1,0 +1,169 @@
+/* Encounter keeps a measured scene and a compact, complete clock. The field
+   is illustrative; exact readings and the reference-study receipt stay DOM. */
+.panelcontent[data-station="encounter"] { padding: 0; }
+.encounter2 { border-radius: 6px; }
+.encStage { min-height: 180px; overflow: hidden; }
+.encTag {
+  inset: 18px auto auto 22px;
+  font-size: .54rem;
+  letter-spacing: .12em;
+  color: var(--ink-soft);
+}
+.encNonclaim {
+  inset: 18px 22px auto auto;
+  font-size: .46rem;
+  letter-spacing: .05em;
+  color: var(--ink-faint);
+}
+.encCaption {
+  left: clamp(20px, 3cqw, 42px);
+  bottom: clamp(13px, 2cqh, 22px);
+  width: min(390px, calc(100% - 40px));
+  max-width: none;
+  animation-duration: .24s;
+}
+.encBeatT { font-size: .5rem; letter-spacing: .12em; }
+.encBeatK {
+  font: 500 clamp(1rem, 1.6cqw, 1.2rem)/1.2 var(--sans);
+  letter-spacing: -.035em;
+  text-transform: none;
+  margin: 5px 0 6px;
+}
+.encBeatBody { font-size: .7rem; line-height: 1.5; }
+.encScrub {
+  display: grid;
+  grid-template-columns: 44px minmax(0, 1fr) 58px;
+  gap: 10px;
+  padding: 2px clamp(14px, 2cqw, 28px) 0;
+  background: var(--void);
+}
+.encPlay,
+.encPlay:hover {
+  width: 44px;
+  height: 44px;
+  min-width: 44px;
+  min-height: 44px;
+  border: 0;
+  border-radius: 0;
+  box-shadow: none;
+  background: transparent;
+  color: var(--ink);
+}
+.encPlay { opacity: .68; transition: opacity .16s; }
+.encPlay:hover, .encPlay:focus-visible { opacity: 1; }
+.encPlay svg { width: 19px; height: 19px; fill: currentColor; }
+.encTrack { height: 44px; min-width: 0; }
+.encClock { font-size: .54rem; min-width: 0; }
+.encTrackFill { background: var(--ink-soft); }
+.encSpan[data-on="true"] { background: color-mix(in srgb, var(--ok) 25%, transparent); }
+.encMark[data-on="true"] { background: var(--ok); }
+.encMark[data-jsm="true"][data-on="true"] { background: var(--accent); }
+.encJourney {
+  flex: none;
+  display: grid;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  padding: 0 clamp(14px, 2cqw, 28px);
+  background: var(--void);
+}
+.encJourney button {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 3px;
+  min-width: 0;
+  min-height: 44px;
+  padding: 4px 0;
+  border: 0;
+  background: none;
+  color: var(--ink-faint);
+  font: .53rem/1.15 var(--mono);
+  letter-spacing: .08em;
+}
+.encJourney small { font-size: .42rem; letter-spacing: 0; opacity: .74; }
+.encJourney button[aria-current="step"] { color: var(--ink); }
+.encJourney button[aria-current="step"] > span { text-decoration: underline; text-underline-offset: 5px; text-decoration-thickness: 1px; }
+.encJourney button[data-jsm="true"] > span { color: var(--accent); }
+.encJourney button:hover { color: var(--ink); }
+.encounter2 .encReal {
+  flex: none;
+  max-height: 62px;
+  padding: 7px 22px 10px;
+  overflow: auto;
+  overscroll-behavior: contain;
+  scrollbar-width: thin;
+  background: var(--void);
+  font-size: .5rem;
+  line-height: 1.5;
+}
+.encRealK { font-size: .47rem; }
+.encRealV { min-width: 0; overflow-wrap: anywhere; }
+@container station (width < 760px) {
+  .encTag { inset: 14px auto auto 16px; font-size: .46rem; max-width: calc(100% - 32px); }
+  .encNonclaim { display: block; inset: 32px auto auto 16px; max-width: calc(100% - 32px); font-size: .4rem; text-align: left; letter-spacing: .02em; }
+  .encCaption { left: 18px; bottom: 13px; width: calc(100% - 36px); }
+  .encBeatK { font-size: 1rem; margin: 4px 0 5px; }
+  .encBeatBody { font-size: .68rem; line-height: 1.45; }
+  .encScrub { padding-inline: 10px; gap: 7px; grid-template-columns: 44px minmax(0, 1fr) 50px; }
+  .encJourney { padding-inline: 12px; }
+  .encJourney small { font-size: .38rem; }
+  .encounter2 .encReal { padding: 7px 14px 9px; max-height: 64px; }
+}
+@container station (height < 500px) {
+  .encStage { min-height: 150px; }
+  .encCaption { bottom: 10px; width: min(370px, calc(100% - 36px)); }
+  .encBeatBody { font-size: .64rem; line-height: 1.4; }
+  .encBeatK { font-size: .92rem; margin: 3px 0; }
+  .encounter2 .encReal { max-height: 44px; }
+}
+/* A short landscape view has room beside the road, not below it. Keep the
+   scene's full height and give its caption and controls a separate column. */
+@container station (width > 660px) and (height < 350px) {
+  .encounter2 {
+    display: grid;
+    grid-template-columns: minmax(0, 1.1fr) minmax(300px, 1fr);
+    grid-template-rows: minmax(0, 1fr) 44px 44px 44px;
+  }
+  .encStage { display: contents; }
+  .encStage canvas {
+    position: relative;
+    inset: auto;
+    grid-area: 1 / 1 / 5 / 2;
+    width: 100%;
+    height: 100%;
+    min-height: 0;
+  }
+  .encTag { inset: 10px auto auto 14px; max-width: calc(52% - 28px); font-size: .46rem; }
+  .encNonclaim {
+    display: block;
+    inset: 27px auto auto 14px;
+    max-width: calc(52% - 28px);
+    font-size: .4rem;
+    text-align: left;
+  }
+  .encCaption {
+    position: static;
+    grid-area: 1 / 2;
+    align-self: center;
+    width: auto;
+    max-width: none;
+    padding: 5px 14px;
+    min-height: 0;
+    overflow: auto;
+  }
+  .encBeatT { font-size: .47rem; }
+  .encBeatK { font-size: .92rem; margin: 3px 0 4px; }
+  .encBeatBody { font-size: .68rem; line-height: 1.4; }
+  .encScrub { grid-area: 2 / 2; padding: 0 10px; gap: 7px; grid-template-columns: 44px minmax(0, 1fr) 50px; }
+  .encJourney { grid-area: 3 / 2; padding: 0 10px; }
+  .encounter2 .encReal {
+    grid-area: 4 / 2;
+    display: block;
+    min-height: 0;
+    max-height: none;
+    margin: 0;
+    padding: 4px 14px;
+  }
+  .encRealK { margin-right: 8px; }
+}
+@media (prefers-reduced-motion: reduce) { .encCaption { animation: none; } }

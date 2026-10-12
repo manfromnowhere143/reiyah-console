@@ -13,7 +13,7 @@ function test(name, run) {
 }
 function moduleAt(file, globals = {}) {
   const source = ts.transpileModule(fs.readFileSync(file, "utf8"), {
-    compilerOptions: { target: ts.ScriptTarget.ES2022, module: ts.ModuleKind.CommonJS },
+    compilerOptions: { target: ts.ScriptTarget.ES2022, module: ts.ModuleKind.CommonJS, jsx: ts.JsxEmit.ReactJSX },
   }).outputText;
   const exports = {};
   vm.runInNewContext(source, { exports, console, ...globals });
@@ -47,7 +47,7 @@ function recordedGL() {
   return { renderer, shaders, uploads, uniforms };
 }
 const options = { dark: true, bloom: 0.32, dispersion: 0.00035, vignette: 0.42, grain: 0.022, time: 0 };
-const near = (a, b) => assert.ok(Math.abs(a - b) < 1e-12, `${a} != ${b}`);
+const near = (a, b, tolerance = 1e-12) => assert.ok(Math.abs(a - b) < tolerance, `${a} != ${b}`);
 
 test("Translucent headlight pixels obey source-over in dark and paper themes", () => {
   const x = recordedGL();
@@ -106,11 +106,14 @@ class RecordedPath {}
 for (const key of ["moveTo", "lineTo", "closePath", "quadraticCurveTo"]) RecordedPath.prototype[key] = () => {};
 function recordedCanvas(w = 2, h = 2) {
   let width = w, height = h;
-  const counts = { width: 0, height: 0 }, calls = [];
-  const context = new Proxy({}, {
-    get(_target, name) {
+  const counts = { width: 0, height: 0 }, calls = [], state = { globalCompositeOperation: "source-over" }, stack = [];
+  const context = new Proxy(state, {
+    get(target, name) {
+      if (name in target) return target[name];
       return (...args) => {
-        calls.push({ name, args });
+        calls.push({ name, args, state: { ...state } });
+        if (name === "save") stack.push({ ...state });
+        if (name === "restore") { for (const key of Object.keys(state)) delete state[key]; Object.assign(state, stack.pop()); }
         if (name === "createLinearGradient" || name === "createRadialGradient") return { addColorStop() {} };
         if (name === "measureText") return { width: 100 };
       };
@@ -169,8 +172,161 @@ test("The 2D engine redraws a paused scene after theme and viewport changes", ()
     assert.equal(canvas.height, Math.round(391 * 1.25));
     assert.deepEqual(canvas.counts, { width: 2, height: 2 });
   }
-  assert.equal(canvases[0].calls.filter(c => c.name === "drawImage").length, 6);
+  // One assembled presentation per frame; trails are painted inside the
+  // material scene, after its background and before record identities.
+  assert.equal(canvases[0].calls.filter(c => c.name === "drawImage").length, 3);
+  assert.equal(canvases[2].calls.filter(c => c.name === "drawImage" && c.args[0] === canvases[1]).length, 3);
   assert.ok(canvases[1].calls.some(c => c.name === "clearRect"));
+});
+
+test("Harbor road projection shares a vanishing point and reciprocal depth scale", () => {
+  const { harborRoadPoint } = moduleAt("src/lib/roadScene.ts", { Path2D: RecordedPath });
+  for (const [w, h] of [[320, 568], [390, 844], [1440, 900], [1920, 1080]]) {
+    const horizon = h * 0.38;
+    let previousY = Infinity;
+    for (const z of [1, 2, 4, 8, 16, 1000]) {
+      const left = harborRoadPoint(w, h, horizon, z, -1), right = harborRoadPoint(w, h, horizon, z, 1);
+      near(left.x + right.x, w);
+      near(left.y, right.y);
+      // Subtracting screen origins then rescaling distant points loses a few
+      // double-precision ULPs; 1e-9 CSS px remains far below raster precision.
+      near((left.y - horizon) * z, h - horizon, 1e-9);
+      near((right.x - w / 2) * z, w * 0.64, 1e-9);
+      assert.ok(left.y <= previousY);
+      previousY = left.y;
+    }
+  }
+});
+
+test("Harbor detail emits finite geometry on both grounds and remains an explicit opt-in", () => {
+  const { drawWorld } = moduleAt("src/lib/roadScene.ts", { Path2D: RecordedPath });
+  for (const [w, h] of [[320, 420], [390, 844], [1440, 720]]) {
+    for (const dark of [true, false]) {
+      for (const phase of [0, 0.5, 0.999]) {
+        const canvas = recordedCanvas();
+        drawWorld(canvas.getContext(), { w, h, horizon: h * 0.38, dark, phase, travel: 10 + phase, detail: "harbor" });
+        for (const call of canvas.calls) {
+          for (const arg of call.args) if (typeof arg === "number") assert.ok(Number.isFinite(arg), `${call.name}: ${arg}`);
+        }
+        assert.equal(canvas.calls.filter(c => c.name === "save").length, canvas.calls.filter(c => c.name === "restore").length);
+        assert.ok(canvas.calls.some(c => c.name === "fillRect" && c.args[1] === 0 && c.args[3] === h * 0.38 + 1));
+      }
+    }
+  }
+  const legacy = recordedCanvas();
+  drawWorld(legacy.getContext(), { w: 390, h: 660, horizon: 250, dark: true });
+  assert.ok(!legacy.calls.some(c => c.name === "scale"));
+});
+
+test("Pause preserves the trail layer without opaque fade or fresh streaks", () => {
+  const { engine, canvases } = recordedEngine();
+  const env = { w: 390, h: 660, dpr: 2, dark: true, reduced: false };
+  engine.frame(5000, env); engine.frame(5016, env);
+  const trail = canvases[1], before = trail.calls.length;
+  engine.frame(5032, { ...env, reduced: true });
+  const pausedCalls = trail.calls.slice(before);
+  assert.ok(!pausedCalls.some(c => ["fillRect", "clearRect", "stroke"].includes(c.name)));
+  const decays = trail.calls.filter(c => c.name === "fillRect");
+  assert.ok(decays.length > 0);
+  assert.ok(decays.every(c => c.state.globalCompositeOperation === "destination-out"));
+  const main = canvases[2].calls;
+  const firstTrail = main.findIndex(c => c.name === "drawImage" && c.args[0] === trail);
+  assert.ok(firstTrail > main.findIndex(c => c.name === "fillRect"));
+  assert.ok(firstTrail < main.findIndex(c => c.name === "fillText"));
+});
+
+test("A new illustration does not announce a rejection before one has occurred", () => {
+  const { engine, canvases } = recordedEngine();
+  engine.frame(0, { w: 390, h: 660, dpr: 2, dark: true, reduced: true });
+  assert.ok(!canvases[2].calls.some(c => c.name === "fillText" && String(c.args[0]).includes("expected rejection")));
+});
+
+function recordedEncounter(reduced, width = 391, height = 667) {
+  const canvas = recordedCanvas(), queue = new Map(), effects = [], resize = [];
+  Object.assign(canvas, { clientWidth: width, clientHeight: height });
+  let stateIndex = 0, refIndex = 0, serial = 0, now = 1000;
+  const react = {
+    useState(initial) { const i = stateIndex++; return [i === 3 ? "ready" : initial, () => {}]; },
+    useRef(initial) { return { current: refIndex++ === 0 ? canvas : initial }; },
+    useEffect(effect) { effects.push(effect); },
+  };
+  const jsx = (type, props) => ({ type, props });
+  const road = moduleAt("src/lib/roadScene.ts", { Path2D: RecordedPath });
+  const document = { hidden: false, documentElement: { dataset: { ground: "dark" } }, addEventListener() {}, removeEventListener() {} };
+  const { Encounter } = moduleAt("src/stations/Encounter.tsx", {
+    require: name => name === "react" ? react : name === "react/jsx-runtime" ? { jsx, jsxs: jsx, Fragment: "fragment" } : name === "../lib/roadScene" ? road : name.endsWith("StationFrame") ? { useStationReadiness() {} } : {},
+    Path2D: RecordedPath, document,
+    window: { devicePixelRatio: 1.25, addEventListener() {}, removeEventListener() {} },
+    performance: { now: () => now },
+    requestAnimationFrame: fn => { queue.set(++serial, fn); return serial; },
+    cancelAnimationFrame: id => queue.delete(id),
+    matchMedia: () => ({ matches: reduced, addEventListener() {}, removeEventListener() {} }),
+    ResizeObserver: class { constructor(fn) { resize.push(fn); } observe() {} disconnect() {} },
+    MutationObserver: class { observe() {} disconnect() {} },
+  });
+  const tree = Encounter();
+  const descendants = (node) => !node || typeof node !== "object" ? [] : [node, ...[node.props?.children].flat(Infinity).flatMap(descendants)];
+  const nodes = descendants(tree);
+  // Run only the real scene effect. Network-read effects remain outside this
+  // controlled rendering test; their actual-byte checks have a separate suite.
+  const cleanup = effects[3]();
+  const tick = () => { now += 16; const [id, fn] = queue.entries().next().value; queue.delete(id); fn(); };
+  return { canvas, nodes, tick, cleanup, redrawLater() { now += 30000; resize[0](); tick(); } };
+}
+
+test("Encounter pause fixes the entire scene clock and avoids fractional-DPR resets", () => {
+  for (const reduced of [false, true]) {
+    const x = recordedEncounter(reduced);
+    const stage = x.nodes.find(n => n.type === "button" && n.props["aria-label"]?.startsWith("BELIEF ·"));
+    assert.ok(stage);
+    stage.props.onClick(); x.tick();
+    const geometry = calls => calls.filter(c => ["fillText", "moveTo", "lineTo", "arc", "translate", "scale", "fillRect", "rect"].includes(c.name)).map(c => [c.name, c.args]);
+    let start = x.canvas.calls.length;
+    x.redrawLater();
+    const first = geometry(x.canvas.calls.slice(start));
+    start = x.canvas.calls.length;
+    x.redrawLater();
+    assert.deepEqual(geometry(x.canvas.calls.slice(start)), first);
+    assert.deepEqual(x.canvas.counts, { width: 1, height: 1 });
+    assert.equal(x.canvas.width, 489); assert.equal(x.canvas.height, 834);
+    x.cleanup();
+  }
+});
+
+test("Encounter stage controls remain separate from its accessible clock slider", () => {
+  const x = recordedEncounter(true);
+  const slider = x.nodes.find(n => n.props?.role === "slider");
+  assert.ok(slider);
+  assert.ok(![slider.props.children].flat(Infinity).some(n => n?.type === "button"));
+  const journey = x.nodes.find(n => n.type === "nav" && n.props["aria-label"] === "Encounter stages");
+  assert.equal(journey.props.children.length, 7);
+  const joint = journey.props.children.find(n => n.props["data-jsm"] === "true");
+  joint.props.onClick(); x.tick();
+  // The synthetic joint-miss illustration never silently becomes measurement.
+  assert.ok(x.canvas.calls.some(c => c.name === "fillText" && String(c.args[0]).includes("not measured in this fixture")));
+  x.cleanup();
+});
+
+test("Every paused Encounter boundary displays its selected record instead of a partial previous transition", () => {
+  const titles = [/^OBSERVATION ·/, /^BELIEF ·/, /^DECISION ·/, /^INTERVENTION ·/, /^OUTCOME WINDOW ·/, /^JOINT BLIND$/, /^EVIDENCE ·/];
+  for (const reduced of [false, true]) for (const [width, height] of [[375, 410], [420, 227]]) {
+    const x = recordedEncounter(reduced, width, height);
+    const journey = x.nodes.find(n => n.type === "nav" && n.props["aria-label"] === "Encounter stages");
+    journey.props.children.forEach((stage, i) => {
+      const start = x.canvas.calls.length;
+      stage.props.onClick(); x.tick();
+      const labels = x.canvas.calls.slice(start).filter(c => c.name === "fillText");
+      const headings = labels.filter(c => titles.some(p => p.test(String(c.args[0]))));
+      assert.equal(headings.length, 1, `stage ${i + 1} must have one current disclosure`);
+      assert.match(headings[0].args[0], titles[i]);
+      near(headings[0].state.globalAlpha ?? 1, 1);
+      for (const c of labels) assert.ok(c.args[2] >= 0 && c.args[2] <= height, `text ${c.args[0]} leaves the scene vertically`);
+      if (i === 3) for (const field of ["assigned ", "delivered ", "received ", "adherence ", "physical control "]) {
+        assert.ok(labels.some(c => String(c.args[0]).startsWith(field)), `intervention retains ${field}`);
+      }
+    });
+    x.cleanup();
+  }
 });
 
 test("Both worker modes stop after pause and redraw once on a paused environment change", () => {

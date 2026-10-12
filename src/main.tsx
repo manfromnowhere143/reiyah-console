@@ -5,6 +5,8 @@ import "./instrument.css";
 import "./research.css";
 import "./cinematic.css";
 import "./findings.css";
+import "./surface.css";
+import "./legacy-fit.css";
 import "./interaction.css";
 import { installInputModality } from "./lib/inputModality";
 

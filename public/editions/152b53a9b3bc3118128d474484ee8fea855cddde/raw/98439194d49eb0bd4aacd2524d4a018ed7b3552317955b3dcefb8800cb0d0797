@@ -1,0 +1,529 @@
+{
+  "artifact_id": "reiyah.continuation",
+  "version": "0.1.12",
+  "as_of": "2026-10-12",
+  "lifecycle_status": "proposed",
+  "authority": "Navigation and retained evidence bindings only; verify latest operator instruction, repository rules and live Git state",
+  "editorial_base": "40bd025e1c4704ada4ff411cddf76edbcc57fed8",
+  "release": {
+    "tag": "research-2026-10-11",
+    "commit": "5de377af25a4c6882096ebbc91808b19feafb628"
+  },
+  "mission": {
+    "program": "HARBOR",
+    "scope": "Object-level driver-vehicle belief, readiness, recoverability, joint silent misses, causal policy effects, explicit unknowns, transfer and worst-group validation",
+    "implemented_slice": "Conditional perception-revision evidence engine",
+    "ambition": "Defensible value for advanced autonomy teams and a viable technology business; commercial outcomes remain unestablished"
+  },
+  "read_first": [
+    "AGENTS.md",
+    "docs/SESSION_HANDOFF.md",
+    "docs/NEXT_SESSION.md",
+    "docs/EDITORIAL_POLICY.md"
+  ],
+  "decision": "bounded_scientific_investigation_only",
+  "product_expansion": "stopped_pending_demonstrated_value",
+  "case_admitted": false,
+  "next_action": "Qualify a fresh consequential paired decision and real observation/cost process. A finite shared-label AUGRC baseline is now independently implemented and checked within one investigation; use only under compatible assumptions. Keep hindsight certificate size, feasible acquisition and complete work separate. This finite qualification is complete; do not expand the synthetic grid or reopen closed inputs. No full-work value packet is admitted.",
+  "required_case_fields": [
+    "decision",
+    "metric",
+    "complete_paired_inputs",
+    "reference_resolution",
+    "equal_information_comparator",
+    "exposure",
+    "complete_work",
+    "reproduction_and_terms",
+    "resources",
+    "falsification_and_stopping"
+  ],
+  "proposed_limits": {
+    "discovery_engineering_days_total": 2,
+    "discovery_window_days_when_active": 14,
+    "admitted_CPU_screen_engineering_days": 5,
+    "elapsed_engineering_effort": "Partial timestamp reconstruction across eleven prior owners; active effort and remaining balance unknown, not reset",
+    "reset_on_new_session": false
+  },
+  "proposed_hurdles": {
+    "complete_active_work_ratio_at_most": 0.5,
+    "expensive_observation_ratio_at_most_secondary": "1/3",
+    "equal_decision_obligations": true,
+    "no_observed_false_assurance": true,
+    "statistical_or_safety_guarantee": false,
+    "targets_achieved": false
+  },
+  "closed_inputs": {
+    "reserved_images": 1433,
+    "exposed_COCO_pair_selector_tuning": false,
+    "threshold_reference_pair_selector_tuning": false,
+    "rechecked_release": {
+      "commit": "1321946698296416d0495999d000dec2deea5e4d",
+      "tree": "71ef214fcdcc9350138e18b63171d7b14a7bcebf",
+      "prior_study": "docs/PERCEPTION_REFERENCE_CORRECTIONS_2026-09-17.md",
+      "formerly_reserved_images": 1433,
+      "fresh_case": false,
+      "selector_tuning_reopened": false
+    }
+  },
+  "Gate_A_accepted": false,
+  "production_ready": false,
+  "new_spend_or_outreach_authorized_by_document": false,
+  "scientific_novelty_established": false,
+  "work_saving_established": false,
+  "evidence": [
+    {
+      "path": "research/releases/2026-10-11/evidence.json",
+      "sha256": "e89498f7753adf1e5daeac394def6312201bd0b1599ba6d5cfc850392d8f2e9b"
+    },
+    {
+      "path": "research/releases/2026-10-11/verification.json",
+      "sha256": "75446f3729a5714d88eec28a25d920752e16cc0f10cb7a02c0f7381fa4210d5c"
+    },
+    {
+      "path": "research/releases/2026-10-11/verification-note-0.1.0.json",
+      "sha256": "bd52bdd2c83a0f1fe50907c116d0bd07aaef634849198b3abf5d359f5140fb18"
+    },
+    {
+      "path": "research/reference-revision/0.1.0/reproduction.json",
+      "sha256": "778f4458d7cf4926a77db5547188c0d5914c8b927063aad9d62cdc0f64de175f"
+    },
+    {
+      "path": "research/value-disproof/0.1.0/results.json",
+      "sha256": "85e7c7de7ca8d110c236cc51cb96e1fb13900b07450f7168b931f6ffba5de460"
+    },
+    {
+      "path": "research/matching-bound-control/0.1.0/PAIRWISE_BOUND_SCREEN_PLAN.json",
+      "sha256": "fd5a6d693378153f3d444506f609bebe7e1d6ce4876971204a2a8122edddc79a"
+    },
+    {
+      "path": "research/matching-bound-control/0.1.0/PAIRWISE_BOUND_SCREEN_RESULT.json",
+      "sha256": "9d36b8e1896686079bff09af2ee291eeaf7a34b6a6f704067496e44a7cb6220d"
+    },
+    {
+      "path": "evidence/claim-status-register-2026-10-10.json",
+      "sha256": "76a4a9237c40a8e679d5e88f3b0c1bbe20dc82c0874508997296bc20ffffb0bf"
+    },
+    {
+      "path": "research/reviewer-identity-sensitivity/0.1.0/protocol.json",
+      "sha256": "11aff798a1981553bd439884a0895dc09a3de1730f24276e2fff6d8aa17f0062"
+    },
+    {
+      "path": "research/reviewer-identity-sensitivity/0.1.0/result.json",
+      "sha256": "dc113e5791328042c6add11a8075987f04784e1490985dd63f72b86b8964a312"
+    },
+    {
+      "path": "research/reviewer-identity-sensitivity/0.1.0/verification.json",
+      "sha256": "e0b4a845fff04b79f9ab27206353df418ad2c2dca8dad0849f53567b21eea164"
+    },
+    {
+      "path": "research/reviewer-identity-sensitivity/0.1.0/provenance.json",
+      "sha256": "51ed507ec4ad003207a510ded8888216d32743687841ecc21215a1bc6e830322"
+    },
+    {
+      "path": "research/threshold-reference-screen/0.1.0/protocol.json",
+      "sha256": "2bf078e1367db4783f09c809730047d05ea5f4e740418e7072b853d8be2ee472"
+    },
+    {
+      "path": "research/threshold-reference-screen/0.1.0/result.json",
+      "sha256": "2247adde7644f8abb58b36e9eaf109ddfe9be3809a249a6ef6322bde15afeb95"
+    },
+    {
+      "path": "research/threshold-reference-screen/0.1.0/conventional-protocol.json",
+      "sha256": "d84a6310b040b76ebb511389ee6bc8d16cb6c6db6808eba3d493ba47a2c04164"
+    },
+    {
+      "path": "research/threshold-reference-screen/0.1.0/conventional-result.json",
+      "sha256": "1f9ba1ae145d70318ac3145deef6020c7222994dc40d1c64a6b739f3f29f98f1"
+    },
+    {
+      "path": "research/threshold-reference-screen/0.1.0/verification.json",
+      "sha256": "8a2f36b2d7d2ee5b73c50b10e4e84497f8f85dd6084f4c26cde6222ae715dc41"
+    },
+    {
+      "path": "research/threshold-reference-screen/0.1.0/provenance.json",
+      "sha256": "6c8144c6aa37e4b8661a58b3e8ca7e5fc6b0fac152697898eb7482fcbfe61197"
+    },
+    {
+      "path": "research/empty-output-score-control/0.1.0/protocol.json",
+      "sha256": "bc54b787a9a2b437524ac7630ed6cb02ab61232e82d37ade63eb27a6a299a527"
+    },
+    {
+      "path": "research/empty-output-score-control/0.1.0/result.json",
+      "sha256": "dcf42b0a5f33a4504a95c264717b4ff1d11a342969b8ed397184f94f1fe3e54e"
+    },
+    {
+      "path": "research/empty-output-score-control/0.1.0/verification.json",
+      "sha256": "e4e4e71fb7d62e652ece60c3c1df9146db8aacb2a5b5b2a8f7078eccd49de4ce"
+    },
+    {
+      "path": "research/empty-output-score-control/0.1.0/negative-controls.json",
+      "sha256": "9e30bcf9542f9c7e4b49dc56c422d31d35166a188e1cc1b97ad6c3602fd91334"
+    },
+    {
+      "path": "research/empty-output-score-control/0.1.0/provenance.json",
+      "sha256": "7f101b777caad9d74fc3850246930770ffb9dbe1d64c416f4c1fe9828bf5c251"
+    },
+    {
+      "path": "research/metric-aggregation-control/0.1.0/protocol.json",
+      "sha256": "714d92e8c329d3c05b6655d74d1df6c3aebba40133df6a221a1f580d301ba92d"
+    },
+    {
+      "path": "research/metric-aggregation-control/0.1.0/fixtures.json",
+      "sha256": "5841f71c43a5dbdc805affd33fcaeb043095a06d67a5db2369ccaece9a1a45fe"
+    },
+    {
+      "path": "research/metric-aggregation-control/0.1.0/result.json",
+      "sha256": "06c62d41f7797be527adb0789c68255573920a7743d88fe8d251bad2df1230b1"
+    },
+    {
+      "path": "research/metric-aggregation-control/0.1.0/verification.json",
+      "sha256": "bd1c1b4b32dc888382a2813fa15b3898ab41f7b09de404c1946715d3926b65a2"
+    },
+    {
+      "path": "research/metric-aggregation-control/0.1.0/negative-controls.json",
+      "sha256": "154a9cd7f5e19312b78a6b9ae7a195c2c9a2ef0002c5a138b41efa5547c7fcc2"
+    },
+    {
+      "path": "research/metric-aggregation-control/0.1.0/provenance.json",
+      "sha256": "c8cdb4cb9064729ab62642fc95dd38524a67b966da1b002e93112f0ac986e7bc"
+    },
+    {
+      "path": "docs/maintainer-reports/evaluator-populations-2026-10-11.md",
+      "sha256": "c04985e2bf4dbc53b1f1b6471d780db1e5a92f12148a5fd9b5ad7ea90fbe0c1b"
+    },
+    {
+      "path": "evidence/upstream-evaluator-report-2026-10-11.json",
+      "sha256": "59e3c5ccefd541e6daa36a225109041104eabb155463dc70157153fbf8bc609c"
+    },
+    {
+      "path": "research/resolution-identifiability/0.1.0/protocol.json",
+      "sha256": "8e3959940810370e72264f870f1ddf8bcf5ff5e77a7bc791ee9833d02d7c92f4"
+    },
+    {
+      "path": "research/resolution-identifiability/0.1.0/cases.json",
+      "sha256": "5fbcc7d37c24c728428557267db7fdc89ff32a9e4876883548ee2e2cc3e72cea"
+    },
+    {
+      "path": "research/resolution-identifiability/0.1.0/result.json",
+      "sha256": "60681d4b97e673b1caa7e5d8518f6aee397af3b6129f896da49893ef4688349b"
+    },
+    {
+      "path": "research/resolution-identifiability/0.1.0/verification.json",
+      "sha256": "ef067bce35d4d71809d74c956ee473839c2e73f544704f327af248c6eb44fed3"
+    },
+    {
+      "path": "research/resolution-identifiability/0.1.0/challenge.json",
+      "sha256": "201e6f831d68cf51aa8371c5ff4b5105d33ee64718b4a940f54188d8735e3f92"
+    },
+    {
+      "path": "research/resolution-identifiability/0.1.0/provenance.json",
+      "sha256": "1f12fe1593f0bb906fe63672200e10a4e5cc71285ed6125fedf72b354d774c23"
+    },
+    {
+      "path": "evidence/next-evidence-admission-2026-10-11.json",
+      "sha256": "1da50b106cef37f73e83cbfdf5c11441f645acb523cfd556a619dfa17c3c8cc4"
+    },
+    {
+      "path": "docs/SHARE_A_COMPARISON.md",
+      "sha256": "6f26a0e214a948d6dcf69b35783ab2517699029f29b835de1135ddac3993baaa"
+    },
+    {
+      "path": ".github/ISSUE_TEMPLATE/comparison.yml",
+      "sha256": "2a3f1089c86b9278d21bfbd484eaa89476195448fba6f6d8b859064608c266f7"
+    },
+    {
+      "path": "research/review-procedure-sensitivity/0.1.0/protocol.json",
+      "sha256": "2b084dcf491bedafd79ee9133b27823b3cd0839d31416a4333c9ecd3c62dd895"
+    },
+    {
+      "path": "research/review-procedure-sensitivity/0.1.0/result.json",
+      "sha256": "9a7981ba7b7b38fdc752debbaf088e030969f3d4bea95a52e6960d9c817bbb39"
+    },
+    {
+      "path": "research/review-procedure-sensitivity/0.1.0/controls.json",
+      "sha256": "834fa662bb30f4cea84a873f773a38cc9d06d54b73c071ffa2024e3e49f29c69"
+    },
+    {
+      "path": "research/review-procedure-sensitivity/0.1.0/verification.json",
+      "sha256": "c9d9b06a94258bc13504f0b9094eefbcede1d70fa2c06e3be9f2dfac2b75832f"
+    },
+    {
+      "path": "research/review-procedure-sensitivity/0.1.0/provenance.json",
+      "sha256": "055c78dd86583fb1cb17c272719169a4f1edcfd6d1cadffd421fbf121adcf369"
+    },
+    {
+      "path": "research/motion-consistency-audit/0.1.0/protocol.json",
+      "sha256": "5310a0d30a763d7cb2ee8de11befe0d993dd4a4773fc56da3051d28ed711d18e"
+    },
+    {
+      "path": "research/motion-consistency-audit/0.1.0/inputs.json",
+      "sha256": "094894fd47aed0ba47baf302b4d5e5c8479cf78e5857f77773f61434cf7643fe"
+    },
+    {
+      "path": "research/motion-consistency-audit/0.1.0/result.json",
+      "sha256": "a19db8f3988017121d01b433f65fac3892fee6f3d6fa5426c52b5f5ef4059fd1"
+    },
+    {
+      "path": "research/motion-consistency-audit/0.1.0/controls.json",
+      "sha256": "3b3cb8c552848d351762f73fe4b873bddffc28d94bbcbab1257f43ccb4d61dc6"
+    },
+    {
+      "path": "research/motion-consistency-audit/0.1.0/sources.json",
+      "sha256": "3ca5c0bd753b3e64eb6eba8860463313e46d889c8b68d46d40c6861cd174a112"
+    },
+    {
+      "path": "research/motion-consistency-audit/0.1.0/provenance.json",
+      "sha256": "3c9c307ba028007565d183aafc2cb66db3c59dc2937a1bbf6da226dcdd301b95"
+    },
+    {
+      "path": "research/motion-consistency-audit/0.1.0/verification.json",
+      "sha256": "35a3d3f900c1d5516aca65d91cfbfb5ef37eec35658fedbd5dd27826e4ed4a4f"
+    },
+    {
+      "path": "docs/research-decisions/frontier-2026-10-12.md",
+      "sha256": "cbcd780ad74f48ca8d41357566a0caeee4d61c3735a3ddd4799f855d3ab9f0b7"
+    },
+    {
+      "path": "docs/research-decisions/next-comparison-2026-10-12.json",
+      "sha256": "288cff81585059b8830c415679cc65e5a500cf26b3cf5d47620006cff1b21658"
+    },
+    {
+      "path": "evidence/frontier-review-2026-10-12.json",
+      "sha256": "6b24aac222b065779643e288cdc84d668753effcb30899ae6d933ccf119787d9"
+    },
+    {
+      "path": "research/exact-choice-baseline/0.1.0/README.md",
+      "sha256": "027337f58bc5cab513ff341c871aaea2582be21e00050015241549350139cf6b"
+    },
+    {
+      "path": "research/exact-choice-baseline/0.1.0/controls.json",
+      "sha256": "f6d930b60b4cfcc10d00255d207300fcec9b85bd6f410d4e26a410f4f9077c86"
+    },
+    {
+      "path": "research/exact-choice-baseline/0.1.0/controls.py",
+      "sha256": "f9c08ecd14f71bea68a4d6dcd8729c4f982f300f22a19a4138fc3ba03b90835b"
+    },
+    {
+      "path": "research/exact-choice-baseline/0.1.0/execution.json",
+      "sha256": "af8b621d5062fbfde12452274c9b63c70445fc8963781c7411c86a04e6fd94e4"
+    },
+    {
+      "path": "research/exact-choice-baseline/0.1.0/protocol.json",
+      "sha256": "e3e134d7423a721fd673ee021cd5404f6b32cee7d0cefad322179a33899afd0d"
+    },
+    {
+      "path": "research/exact-choice-baseline/0.1.0/provenance.json",
+      "sha256": "ab81d1533911ce70f4553a7554da5227349d43fa715049f00ec0cc90c96082df"
+    },
+    {
+      "path": "research/exact-choice-baseline/0.1.0/reproduce.py",
+      "sha256": "9fb994f5cf7b99ea8172412ab3ef397cfb1ded3f70d1bcc888e5bf7d91b4eb82"
+    },
+    {
+      "path": "research/exact-choice-baseline/0.1.0/result.json",
+      "sha256": "5fd7d350394706853068a81866981e4e2a4981e5f4b463f2fbeaac0e513c8df5"
+    },
+    {
+      "path": "research/exact-choice-baseline/0.1.0/sources.json",
+      "sha256": "a215ea6e3049592a9c2104d3498e8ad214cd13bfc5d3c00387165758d36a1335"
+    },
+    {
+      "path": "research/exact-choice-baseline/0.1.0/trace-format.json",
+      "sha256": "33987a8caef0fec4c181ffecd37574a0700020549ae148893d6b907aeac0da21"
+    },
+    {
+      "path": "research/exact-choice-baseline/0.1.0/verification.json",
+      "sha256": "c7f8dc2cc8b49c819bdfc77327af4868608443924084bfa75ded64605b1e6edf"
+    },
+    {
+      "path": "research/exact-choice-baseline/0.1.0/verify.py",
+      "sha256": "e76d55e2d9e856ef9de8c2b61ed5a6b553d061f3b6256fc7f3f483998c0b8ea4"
+    }
+  ],
+  "presentation_verification": {
+    "root_diagrams": 7,
+    "related_study_diagrams": 2,
+    "local_render_and_visual_review": true,
+    "live_GitHub_visual_render": "not_independently_verified",
+    "consistency_checks_passed": 9,
+    "historical_experiments_replayed": 0,
+    "optional_attack_suite": "not_run",
+    "small_auditor_matches": true,
+    "authored_control_non_timing_result_matches": true,
+    "Gate_A_release_validation": "not_run",
+    "evidence_commit": "bde5796d6268d051a862db16e6ebda1e4413d61a",
+    "scope": "Inherited diagram/control verification; current increment changes no Mermaid blocks. Do not count the inherited control as rerun."
+  },
+  "continuation_base": "5be5c3dc5444ccfe98cd5a203a74d5d7d4834561",
+  "observation_qualification": {
+    "study": "research/reviewer-identity-sensitivity/0.1.0/README.md",
+    "raw_majority_invariant": {
+      "proposed": 996,
+      "no_proposal": 988
+    },
+    "objects_per_procedure": 1000,
+    "ordinary_class_switch_possible": 0,
+    "scope": "Conditional one-observed-response-per-recorded-ID sensitivity; not independent voters, physical truth or detector work-saving evidence",
+    "complete_detector_case_admitted": false
+  },
+  "case_admission_scope": "Prospective product-value case; separate retrospective configuration case below",
+  "threshold_reference_screen": {
+    "study": "research/threshold-reference-screen/0.1.0/README.md",
+    "retrospective_configuration_case_admitted": true,
+    "prospective_value_case_admitted": false,
+    "images": 5000,
+    "thresholds": [
+      "0.25",
+      "0.50"
+    ],
+    "loss": "FP+FN",
+    "delta_original": 148,
+    "delta_revised": -288,
+    "sharp_family_interval": [
+      -572,
+      432
+    ],
+    "simulated_conventional_reveals": 204,
+    "hindsight_minimum_reveals": 148,
+    "maximum_count_saving_factor": "51/37",
+    "complete_work_saving_established": false
+  },
+  "empty_output_scoring_control": {
+    "study": "research/empty-output-score-control/0.1.0/README.md",
+    "source_commit": "f793379ad7a9760f71c18ba57b7ed71fa76a5e6c",
+    "authored_native_AUSRC": {
+      "A": "1",
+      "B": "4/5"
+    },
+    "authored_corrected_AUSRC": {
+      "A": "51/101",
+      "B": "4/5"
+    },
+    "independent_arithmetic_scores_checked": 51,
+    "alterations_rejected": 7,
+    "upstream_fix_applied": false,
+    "published_empirical_impact": "unknown",
+    "product_value_case_admitted": false
+  },
+  "metric_aggregation_control": {
+    "study": "research/metric-aggregation-control/0.1.0/README.md",
+    "native_primary_TVD": {
+      "chunk_1": {
+        "A": "1/4",
+        "B": "3/8"
+      },
+      "chunk_2_or_64_order_1_2": {
+        "A": "1/2",
+        "B": "3/8"
+      }
+    },
+    "corrected_primary_TVD": {
+      "A": "1/4",
+      "B": "3/8"
+    },
+    "configurations": 90,
+    "numeric_means_verified": 1656,
+    "undefined_fields_verified": 504,
+    "alterations_rejected": 10,
+    "AUSRC_equal_pairs": 90,
+    "published_empirical_impact": "unknown",
+    "local_audit_status": "completed",
+    "product_value_case_admitted": false
+  },
+  "upstream_evaluator_contact": {
+    "status": "posted_and_exact_readback_verified",
+    "issue": "https://github.com/JonathanKlees/Uncertainty-aware-Object-Detection/issues/1",
+    "report": "docs/maintainer-reports/evaluator-populations-2026-10-11.md",
+    "receipt": "evidence/upstream-evaluator-report-2026-10-11.json",
+    "maintainer_confirmation": false,
+    "original_packet_received": false,
+    "comments_at_recorded_readback": 0,
+    "background_monitor_running": false,
+    "authority": "Specific operator reply authorizing the prepared issue; no blanket message authority inferred"
+  },
+  "resolution_identifiability": {
+    "study": "research/resolution-identifiability/0.1.0/README.md",
+    "status": "completed_authored_control",
+    "model": "finite_complete_read_only_joint_outcomes",
+    "named_cases": 8,
+    "terminal_cells_checked": 16,
+    "exhaustive_models": 31213,
+    "rejection_controls": 28,
+    "initial_checker_gap_repaired": "Empty-world input could produce vacuous support; independent checker input validation added, complete suite rerun",
+    "physical_channel_qualified": false,
+    "product_value_case_admitted": false
+  },
+  "public_case_proposal": {
+    "guide": "docs/SHARE_A_COMPARISON.md",
+    "form": ".github/ISSUE_TEMPLATE/comparison.yml",
+    "url": "https://github.com/manfromnowhere143/reiyah/issues/new?template=comparison.yml",
+    "automatic_ingestion": false,
+    "partial_records_welcome": true,
+    "submission_confers_evidence_authority": false
+  },
+  "review_procedure_sensitivity": {
+    "study": "research/review-procedure-sensitivity/0.1.0/README.md",
+    "status": "completed_exploratory_recorded_sample",
+    "objects": 1000,
+    "guaranteed_same": 865,
+    "forced_difference": 133,
+    "ambiguous": 2,
+    "forced_ordinary_class_switches": 17,
+    "source_previously_exposed": true,
+    "future_physical_channel_qualified": false,
+    "causal_effect_identified": false,
+    "product_value_case_admitted": false
+  },
+  "motion_consistency_audit": {
+    "study": "research/motion-consistency-audit/0.1.0/README.md",
+    "status": "completed_exploratory_saved_file_audit",
+    "benchmark": "EgoDyn-Bench",
+    "source_commit": "a0c9c01a424cbeb5aa5471a6156354f21111436d",
+    "dataset_commit": "70032aa156d06c5bff24e0f1a4532973ca09ee0d",
+    "clips": 1000,
+    "opportunities_per_file": 14000,
+    "native_accuracy": {
+      "vision": 0.4978,
+      "trajectory": 0.6361
+    },
+    "native_WPCR": {
+      "vision": 0.9787,
+      "trajectory": 0.8966
+    },
+    "primary_disagreements": {
+      "vision": "791/828",
+      "trajectory": "686/815"
+    },
+    "published_metric_fields_per_file_verified": 234,
+    "paired_packet_admitted_for_retrospective_audit": true,
+    "product_value_case_admitted": false,
+    "causal_or_physical_safety_claim": false,
+    "pair_exposed_and_study_closed": true
+  },
+  "frontier_review": {
+    "report": "docs/research-decisions/frontier-2026-10-12.md",
+    "sources": "evidence/frontier-review-2026-10-12.json",
+    "comparison_design": "docs/research-decisions/next-comparison-2026-10-12.json",
+    "status": "completed_targeted_review_no_new_case",
+    "closest_new_comparator": "arXiv2609.18622v1",
+    "model_runs": 0,
+    "physical_channel_qualified": false,
+    "complete_work_advantage": false,
+    "delegated_internal_review": true
+  },
+  "exact_choice_baseline": {
+    "study": "research/exact-choice-baseline/0.1.0/README.md",
+    "lifecycle_status": "exploratory",
+    "finite_qualification_complete": true,
+    "candidate_tuples": 12700,
+    "partial_histories": 308916,
+    "complete_labelings": 94040,
+    "fixed_order_paths": 534168,
+    "named_cases": 4,
+    "controls": 40,
+    "independent_scientific_replication": false,
+    "physical_observation_channel_qualified": false,
+    "full_work_advantage_measured": false,
+    "scope": "Authored exact shared-label AUGRC bounds and covering certificate compared with direct Fraction risk curves and complete worlds; finite decision-tree oracle, no LP/asymptotic/author-code reproduction."
+  }
+}

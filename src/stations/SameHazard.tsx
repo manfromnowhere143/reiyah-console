@@ -63,15 +63,16 @@ function SquaresScene({ w, h, squares }: { w: number; h: number; squares: Sq[] }
       cv.width = w * dpr; cv.height = h * dpr; ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ctx.clearRect(0, 0, w, h);
       const { INK, OK, RED } = tones(dark);
       const mobile = w < 560, n = squares.length;
-      const cols = n, rows = 1;
-      const gapX = mobile ? 8 : 26, gapY = 0, padX = mobile ? 4 : 14, headH = mobile ? 26 : 40, capH = mobile ? 30 : 50;
-      const s = Math.max(40, Math.floor(Math.min((w - padX * 2 - gapX * (cols - 1)) / cols, (h - rows * (headH + capH) - gapY * (rows - 1)) / rows)));
-      const totalW = cols * s + gapX * (cols - 1), totalH = rows * (s + headH + capH) + gapY * (rows - 1);
+      const cols = w < 340 ? Math.min(2, n) : n, rows = Math.ceil(n / cols);
+      const gapX = mobile ? 8 : 26, gapY = rows > 1 ? 12 : 0, padX = mobile ? 4 : 14, headH = mobile ? 26 : 40, capH = mobile ? 30 : 50;
+      const slotW = (w - padX * 2 - gapX * (cols - 1)) / cols;
+      const s = Math.max(28, Math.floor(Math.min(slotW, (h - rows * (headH + capH) - gapY * (rows - 1)) / rows)));
+      const totalW = cols * slotW + gapX * (cols - 1), totalH = rows * (s + headH + capH) + gapY * (rows - 1);
       const x00 = (w - totalW) / 2, y00 = Math.max(0, (h - totalH) / 2);
       let seed = 11; const rnd = () => { seed = (seed * 16807) % 2147483647; return seed / 2147483647; };
       squares.forEach((q, i) => {
         const col = i % cols, row = Math.floor(i / cols);
-        const x0 = x00 + col * (s + gapX), y0 = y00 + row * (s + headH + capH + gapY) + headH;
+        const x0 = x00 + col * (slotW + gapX) + (slotW - s) / 2, y0 = y00 + row * (s + headH + capH + gapY) + headH;
         const wa = q.pA * s, hb = q.pB * s, hboth = (q.pBoth / q.pA) * s;
         const hold = Math.abs(q.c - 1) < 0.05;
         /* the frame and the two bands */
@@ -127,7 +128,7 @@ function SquaresScene({ w, h, squares }: { w: number; h: number; squares: Sq[] }
     return () => { alive = false; };
   }, [w, h, squares, dark]);
   if (unavailable) return <div className="chart-unavailable" role="alert">Chart unavailable in this browser.</div>;
-  return <canvas ref={ref} className="wscene" data-ready={String(ready)} style={{ width: w, height: h }} aria-label="Squares of objects: the both-miss cell against the outline independence predicts, one point per object where counts exist" />;
+  return <canvas ref={ref} className="wscene" data-ready={String(ready)} style={{ width: w, height: h }} aria-label={`Saved conditional contrasts; no general independence conclusion. ${squares.map(q => `${q.name}: coefficient ${q.c}, both-miss ${(q.pBoth * 100).toFixed(1)}%, independence prediction ${(q.pA * q.pB * 100).toFixed(1)}%.`).join(' ')}`} />;
 }
 
 export function SameHazard() {

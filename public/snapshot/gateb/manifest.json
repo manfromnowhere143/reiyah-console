@@ -1291,7 +1291,7 @@
    "path": "evidence/claim-status-register-2026-10-10.json",
    "bytes": 100607,
    "sha256": "sha256:76a4a9237c40a8e679d5e88f3b0c1bbe20dc82c0874508997296bc20ffffb0bf",
-   "source_commit": "5be5c3dc5444ccfe98cd5a203a74d5d7d4834561"
+   "source_commit": "152b53a9b3bc3118128d474484ee8fea855cddde"
   }
  ],
  "lane_nonclaims": {
@@ -1302,8 +1302,8 @@
   "model_executed_by_this_lane": false
  },
  "interpretation_overlay": {
-  "commit": "5be5c3dc5444ccfe98cd5a203a74d5d7d4834561",
+  "commit": "152b53a9b3bc3118128d474484ee8fea855cddde",
   "path": "evidence/claim-status-register-2026-10-10.json",
-  "as_of": "2026-10-11"
+  "as_of": "2026-10-12"
  }
 }
