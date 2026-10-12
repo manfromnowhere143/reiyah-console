@@ -2,7 +2,7 @@
   "artifact_id": "reiyah.console.mobile-harbor-qa",
   "version": "0.1.0",
   "date": "2026-10-12",
-  "status": "validated_pending_release_browser_review_outstanding",
+  "status": "production_released_browser_review_outstanding",
   "source_base": "ce79867f9f0cdc9d17fe95ed38d496debb2a2859",
   "scope": [
     "mobile_receipt_containment",
@@ -23,5 +23,36 @@
   "new_dependencies": 0,
   "new_GPU_passes": 0,
   "major_visual_redesign": false,
-  "rollback_deployment_id": "dpl_7TtVGEvUooic6LoB8KEJXTW2yFrg"
+  "rollback_deployment_id": "dpl_7TtVGEvUooic6LoB8KEJXTW2yFrg",
+  "production": {
+    "application_commit": "dd65166882a098e5a3c64ce9351a5263f8768261",
+    "deployment_id": "dpl_F9c4vmA8eUBoZ3y8p2oS1pg9LhrJ",
+    "deployment_url": "https://reiyah-75nfk3go5-daniels-projects-ca65133a.vercel.app",
+    "url": "https://reiyah.danielwahnich.dev",
+    "files_matched": 605,
+    "entry_urls_matched": 16,
+    "kind": "publisher_http_byte_comparison",
+    "at": "2026-10-12T11:00:11.248578+00:00",
+    "build_marker": "08fc25a8ef",
+    "worker_stamp": "bd094ab370564346",
+    "browser_visual_review": false,
+    "physical_mobile_review": false,
+    "release_headers": [
+      {
+        "route": "/",
+        "status": 200,
+        "cache_control": "no-cache"
+      },
+      {
+        "route": "/build.json",
+        "status": 200,
+        "cache_control": "no-cache"
+      },
+      {
+        "route": "/sw.js",
+        "status": 200,
+        "cache_control": "no-cache"
+      }
+    ]
+  }
 }

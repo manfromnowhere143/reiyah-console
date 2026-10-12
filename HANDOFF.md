@@ -41,9 +41,19 @@ a captured reproduction of Daniel's device.
 Owned candidate: `~/.codex/reports/reiyah/console-mobile-harbor-2026-10-12-9m3f9k_w/candidate`.
 Its parent retains `mobile-receipt-review.json`, `harbor-rendering-review.json`,
 the baseline rejection record and integration logs. Base:
-`ce79867f9f0cdc9d17fe95ed38d496debb2a2859`. Publish under the standing release
-order, verify exact source/deployment identity and served bytes, then record
-production receipt. Keep `dpl_7TtVGEvUooic6LoB8KEJXTW2yFrg` as rollback.
+`ce79867f9f0cdc9d17fe95ed38d496debb2a2859`. Published application commit: `dd65166882a098e5a3c64ce9351a5263f8768261`.
+Production deployment `dpl_F9c4vmA8eUBoZ3y8p2oS1pg9LhrJ`
+(`https://reiyah-75nfk3go5-daniels-projects-ca65133a.vercel.app`) serves all three
+existing Reiyah aliases. The deployment was READY with matching source metadata;
+authenticated readback matched four entry files before explicit alias changes.
+Public readback at 11:00:11 UTC matched 605/605 files and all 16 Findings entry
+URLs. HTML, build marker and worker headers retain no-cache. Marker `08fc25a8ef`;
+worker stamp `bd094ab370564346`. This is publisher byte comparison, not browser
+visual verification. Keep `dpl_7TtVGEvUooic6LoB8KEJXTW2yFrg` as rollback.
+`production-readback.json` and `CLOSEOUT.json` in the owner retain release details.
+Existing tabs need one ordinary refresh; the guarded update recovery also remains.
+Next: check the actual phone in portrait/landscape and enlarged text, plus paused
+Harbor on both grounds, when the official Browser connection is available.
 
 ## Production closeout, 12 October 2026
 
