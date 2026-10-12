@@ -15,12 +15,13 @@ function sourceId(): string {
       if (e.isDirectory()) walk(q); else { h.update(q); h.update(fs.readFileSync(q)); }
     }
   };
+  h.update(fs.readFileSync("public/snapshot/manifest.json"));
   walk("src"); h.update(fs.readFileSync("index.html")); h.update(fs.readFileSync("package-lock.json"));
   return h.digest("hex").slice(0, 10);
 }
 
 export default defineConfig({
-  define: { __BUILD_ID__: JSON.stringify(sourceId()) },
+  define: { __BUILD_ID__: JSON.stringify(sourceId()), __SNAPSHOT_SHA__: JSON.stringify("sha256:" + createHash("sha256").update(fs.readFileSync("public/snapshot/manifest.json")).digest("hex")) },
   plugins: [react()],
   server: {
     port: 4610,

@@ -1,0 +1,95 @@
+{
+  "status": "candidate_pending_browser_review",
+  "source_checks": {
+    "kind": "console_reader_regression",
+    "browser_testing": false,
+    "passed": 14,
+    "total": 14,
+    "results": [
+      {
+        "name": "Valid sealed bytes load and receipts match displayed digest",
+        "passed": true
+      },
+      {
+        "name": "Equal-length non-index alteration blocks before parsing",
+        "passed": true
+      },
+      {
+        "name": "Path records use expected catalog digests and support receipts",
+        "passed": true
+      },
+      {
+        "name": "Altered path bytes and catalog index both fail closed",
+        "passed": true
+      },
+      {
+        "name": "Altered root manifest cannot establish a sealed source",
+        "passed": true
+      },
+      {
+        "name": "Altered lane and schema manifests reject their root bindings",
+        "passed": true
+      },
+      {
+        "name": "Measurement reader retains equal-length tamper rejection",
+        "passed": true
+      },
+      {
+        "name": "Live measurement and catalog readers observe new generations",
+        "passed": true
+      },
+      {
+        "name": "Receipt retains the exact displayed generation after live change",
+        "passed": true
+      },
+      {
+        "name": "A receipt cannot certify newer unseen bytes for an old displayed digest",
+        "passed": true
+      },
+      {
+        "name": "Current edition matches all 52 continuation bindings and the source receipt",
+        "passed": true
+      },
+      {
+        "name": "Altered edition manifest and record are rejected",
+        "passed": true
+      },
+      {
+        "name": "Synthetic packets preserve sufficiency versus counterexample-only scope",
+        "passed": true
+      },
+      {
+        "name": "Live-to-sealed fallback discards live manifest and catalog caches",
+        "passed": true
+      }
+    ]
+  },
+  "edition_checks": {
+    "kind": "console_edition_integrity",
+    "checked_files": 552,
+    "local_research_records": 197,
+    "continuation_bindings": 52,
+    "claim_count": 60,
+    "batch_figure_arithmetic": "matches_authored_fixtures",
+    "historical_experiments_replayed": false,
+    "browser_review": false,
+    "passed": true
+  },
+  "build": "passed",
+  "browser": {
+    "connection": "No browser is available; discovery list empty",
+    "fresh_visual_review": false,
+    "navigation": false,
+    "physical_Safari": false,
+    "VoiceOver": false
+  },
+  "production_released": false,
+  "engine_commit": "5be5c3dc5444ccfe98cd5a203a74d5d7d4834561",
+  "whitespace": {
+    "authored_changes": "passed",
+    "byte_preserved_source_EOF_exceptions": [
+      "research/decision-value/0.1.0/README.md",
+      "research/grid-fidelity/0.1.0/README.md"
+    ]
+  }
+}

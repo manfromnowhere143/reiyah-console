@@ -11,6 +11,8 @@ import type { VerifiedEvidence } from "../boot/ProofBoot";
 import { STATIONS } from "../lib/camera";
 import { fetchSchemaIndex, fetchSurface, getMode } from "../lib/evidence";
 import { Digest } from "./primitives";
+import { editionManifest } from "../lib/edition";
+import { setAt } from "../lib/urlstate";
 import type { Navigate } from "./StationFrame";
 
 interface Item { kind: string; label: string; sub: string; station: string; sha?: string; path?: string; id?: string }
@@ -51,6 +53,7 @@ export function Palette({ ev, go }: { ev: VerifiedEvidence; go: Navigate }) {
     if (!open || extra.length) return;
     (async () => {
       const out: Item[] = [];
+      try { const m=await editionManifest(); for(const f of m.files) out.push({kind:"research",label:f.title??f.path,sub:f.path,station:"research",path:f.path,sha:f.sha256,id:`edition/${f.path}`}); } catch {}
       try {
         const fx = await fetchSurface<any>("fixtures");
         if (fx.state === "observed") {
@@ -89,7 +92,7 @@ export function Palette({ ev, go }: { ev: VerifiedEvidence; go: Navigate }) {
   }, [items, q]);
   useEffect(() => { setSel(0); }, [q]);
 
-  const choose = (it: Item) => go(it.station, { animate: false, onCommit: () => setOpen(false) });
+  const choose = (it: Item) => go(it.station, { animate: false, onCommit: () => { if(it.kind==="research"&&it.path)setAt(it.path); setOpen(false); } });
   const onKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === "ArrowDown") { e.preventDefault(); setSel((s) => Math.min(results.length - 1, s + 1)); }
     if (e.key === "ArrowUp") { e.preventDefault(); setSel((s) => Math.max(0, s - 1)); }

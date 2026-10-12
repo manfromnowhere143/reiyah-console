@@ -1,0 +1,26 @@
+{
+  "base": "/examples/replacement-2026-10-12",
+  "manifest_sha256": "sha256:f2832870c8b8ab5ddf634ab59ae1708610383279704b47ed48d9c0ce7a346e7b",
+  "files": [
+    {
+      "name": "confirmed-verification.json",
+      "bytes": 562,
+      "sha256": "sha256:ece0a0f7d5bdc3604763fbe86b63a6d4a1029bfb43654ef3b80382fc0319d6d2"
+    },
+    {
+      "name": "confirmed.json",
+      "bytes": 1342,
+      "sha256": "sha256:9f24953d2a4de83b0d651a82af72a4d32f99b0991cb6238c4008ef049ff1ef1c"
+    },
+    {
+      "name": "insufficient-verification.json",
+      "bytes": 500,
+      "sha256": "sha256:8e957846300c64f9fa5fedd4b2df82535aa2eec4ac53fb21d6d507b2ca13c90a"
+    },
+    {
+      "name": "insufficient.json",
+      "bytes": 1268,
+      "sha256": "sha256:d1ccdcd43941c286fa903e6f2ba7b24e5b5926084d8f9db96aa00a51e97ead51"
+    }
+  ]
+}

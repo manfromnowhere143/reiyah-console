@@ -50,16 +50,20 @@ export type SourceMode = "live" | "sealed";
 export interface SealedInfo { sealedAt: string; head: string; branch: string }
 
 let mode: SourceMode = "live";
+let sourceGeneration = 0;
 /* a retry after a transport failure bypasses every cache in the path (HTTP
    cache and the service worker's stored copies), so a partial or stale body
    can never be re-served as if it were the network's answer */
 let bypass = false;
 export function setBypassCache(on: boolean) { bypass = on; }
+export function isBypassCache() { return bypass; }
+export function getEvidenceGeneration() { return `${sourceGeneration}|${mode}|${sealedManifest?.sealedAt ?? ""}|${lastSurfaces.map(s=>s.sha256).join("|")}|${bypass}`; }
 const opts = (): RequestInit | undefined => (bypass ? { cache: "reload" } : undefined);
 let sealedManifest: {
   sealedAt: string;
   identity: Summary["identity"];
   surfaces: SurfaceRow[];
+  bindings?: Record<string, string>;
 } | null = null;
 
 export function getMode(): SourceMode { return mode; }
@@ -76,9 +80,13 @@ async function loadSealed(): Promise<boolean> {
   try {
     const r = await fetch(snap("/snapshot/manifest.json"), opts());
     if (!r.ok) return false;
-    const m = await r.json();
+    const bytes = await r.arrayBuffer();
+    if (await sha256Hex(bytes) !== __SNAPSHOT_SHA__) throw new Error("snapshot_manifest_mismatch");
+    const m = JSON.parse(new TextDecoder().decode(bytes));
     if (m?.kind !== "sealed_snapshot") return false;
     sealedManifest = m;
+    catalogCache=null;schemaMemo=null;rawMemo.clear();pathMemo.clear();
+    sourceGeneration++;
     mode = "sealed";
     return true;
   } catch {
@@ -87,16 +95,14 @@ async function loadSealed(): Promise<boolean> {
 }
 
 /* ---- dynamic catalog: every committed evidence file, path-addressed ---- */
-export interface CatalogEntry { path: string; bytes: number }
+export interface CatalogEntry { path: string; bytes: number; sha256?: string }
 let catalogCache: CatalogEntry[] | null = null;
 
 export async function fetchCatalog(): Promise<CatalogEntry[]> {
-  if (catalogCache) return catalogCache;
+  if (mode === "sealed" && catalogCache && !bypass) return catalogCache;
   try {
     if (mode === "sealed") {
-      const r = await fetch(snap("/snapshot/catalog.json"));
-      if (r.ok) { catalogCache = (await r.json()).entries ?? []; return catalogCache!; }
-      return [];
+      catalogCache = (await fetchSnapshotJson<{ entries: CatalogEntry[] }>("catalog.json")).entries; return catalogCache!;
     }
     const r = await fetch("/api/catalog");
     if (!r.ok) return [];
@@ -127,20 +133,8 @@ export function warmSealedSurfaces() {
 }
 
 async function fetchSurfaceByPathUncached<T = unknown>(rel: string): Promise<SurfaceState<T>> {
-  if (mode === "sealed") {
-    try {
-      const r = await fetch(snap(`/snapshot/p/${rel.replaceAll("/", "__")}`));
-      if (!r.ok) return { state: "blocked", reason: `sealed_missing_${r.status}` };
-      const bytes = await r.arrayBuffer();
-      const text = new TextDecoder().decode(bytes);
-      const data = (rel.endsWith(".json") ? JSON.parse(text) : text) as T;
-      const sha256 = await sha256Hex(bytes);
-      return { state: "observed", meta: { id: `p/${rel}`, path: rel, sha256, bytes: bytes.byteLength, readAt: sealedManifest?.sealedAt ?? "" }, data };
-    } catch (e) {
-      return { state: "blocked", reason: String((e as Error)?.message ?? e) };
-    }
-  }
-  return fetchSurface<T>(`p/${encodeURIComponent(rel)}` as string);
+  return fetchSurface<T>(`p/${rel}`);
+
 }
 
 let lastSurfaces: SurfaceRow[] = [];
@@ -150,8 +144,9 @@ export async function fetchSummary(): Promise<Summary> {
   try {
     const r = await fetch("/api/summary", opts());
     if (r.ok) {
-      mode = "live";
+      mode = "live";sourceGeneration++;
       const s: Summary = await r.json();
+      if (JSON.stringify(s.surfaces) !== JSON.stringify(lastSurfaces)) { rawMemo.clear(); pathMemo.clear(); catalogCache = null; schemaMemo = null; }
       lastSurfaces = s.surfaces ?? [];
       return s;
     }
@@ -175,9 +170,10 @@ export interface SchemaRow {
 }
 let schemaMemo: Promise<SchemaRow[]> | null = null;
 export function fetchSchemaIndex(): Promise<SchemaRow[]> {
-  if (schemaMemo && !bypass) return schemaMemo;
+  if (mode === "sealed" && schemaMemo && !bypass) return schemaMemo;
   schemaMemo = (async () => {
-    const r = await fetch(mode === "sealed" ? snap("/snapshot/schemas-index.json") : "/api/schemas", opts());
+    if (mode === "sealed") return (await fetchSnapshotJson<{ rows: SchemaRow[] }>("schemas-index.json")).rows;
+    const r = await fetch("/api/schemas", opts());
     if (!r.ok) throw new Error(`schema_index_http_${r.status}`);
     const j = await r.json();
     return (j.rows ?? []) as SchemaRow[];
@@ -231,25 +227,24 @@ export interface RawResult {
 const rawMemo = new Map<string, Promise<RawResult>>();
 const pathMemo = new Map<string, Promise<SurfaceState<unknown>>>();
 export async function fetchRaw(id: string): Promise<RawResult> {
+  if (id.startsWith("example/")) return (await import("./example")).exampleRaw(id.slice(8));
+  if (id.startsWith("edition/")) return (await import("./edition")).editionRaw(id.slice(8));
   if (id.startsWith("gateb/")) {
-    /* the Gate B lane: a second source with its own digests, never mixed */
-    const fid = id.slice("gateb/".length);
-    const r = await fetch(mode === "sealed" ? snap(`/snapshot/gateb/raw/${fid}`) : `/api/gateb/raw/${fid}`, opts());
-    if (!r.ok) throw new Error(`gateb_raw_http_${r.status}`);
-    const bytes = await r.arrayBuffer();
-    const m = await fetch(mode === "sealed" ? snap("/snapshot/gateb/manifest.json") : "/api/gateb/manifest", opts()).then((x) => x.json()).catch(() => null);
-    const row = m?.files?.find((f: any) => f.id === fid);
-    return { bytes, path: row?.path ?? fid, serverSha256: row?.sha256 ?? "unknown", byteLength: bytes.byteLength };
+    const { fetchLaneText } = await import("./gateb");
+    const { text, file } = await fetchLaneText(id.slice(6).replaceAll("__", "/"));
+    return { bytes: new TextEncoder().encode(text).buffer as ArrayBuffer, path: file.path, serverSha256: file.sha256!, byteLength: new TextEncoder().encode(text).length };
   }
   if (mode === "sealed") {
-    const row = sealedManifest?.surfaces.find((s) => s.id === id);
+    const rel = id.startsWith("p/") ? decodeURIComponent(id.slice(2)) : null;
+    const row = rel ? (await fetchCatalog()).find(s => s.path === rel) : sealedManifest?.surfaces.find((s) => s.id === id);
     if (!row) throw new Error("unknown_sealed_surface");
     if (!bypass && rawMemo.has(id)) return rawMemo.get(id)!;
     const job = (async () => {
-      const r = await fetch(snap(`/snapshot/raw/${id}`), opts());
+      const r = await fetch(snap(rel ? `/snapshot/p/${rel.replaceAll("/", "__")}` : `/snapshot/raw/${id}`), opts());
       if (!r.ok) throw new Error(`sealed_raw_http_${r.status}`);
       const bytes = await r.arrayBuffer();
-      return { bytes, path: row.path, serverSha256: row.sha256 ?? "unknown", byteLength: bytes.byteLength };
+      if (bytes.byteLength !== row.bytes || await sha256Hex(bytes) !== row.sha256) throw new Error("surface_digest_mismatch");
+      return { bytes, path: row.path, serverSha256: row.sha256!, byteLength: bytes.byteLength };
     })();
     rawMemo.set(id, job);
     job.catch(() => rawMemo.delete(id));
@@ -268,22 +263,13 @@ export async function fetchRaw(id: string): Promise<RawResult> {
 
 export async function fetchSurface<T = unknown>(id: string): Promise<SurfaceState<T>> {
   try {
-    if (mode === "sealed") {
-      const raw = await fetchRaw(id);
-      const text = new TextDecoder().decode(raw.bytes);
-      const data = (raw.path.endsWith(".json") ? JSON.parse(text) : text) as T;
-      return {
-        state: "observed",
-        meta: { id, path: raw.path, sha256: raw.serverSha256, bytes: raw.byteLength, readAt: sealedManifest!.sealedAt },
-        data,
-      };
-    }
-    const r = await fetch(`/api/surface/${id}`);
-    const body = await r.json();
-    if (!r.ok || body.state !== "observed") {
-      return { state: "blocked", reason: body?.reason ?? `http_${r.status}` };
-    }
-    return { state: "observed", meta: body.meta, data: body.data as T };
+    const raw = await fetchRaw(id);
+    const digest = await sha256Hex(raw.bytes);
+    if (digest !== raw.serverSha256) throw new Error("surface_digest_mismatch");
+    retainVerifiedRaw(id, raw);
+    const text = new TextDecoder("utf-8", { fatal: true }).decode(raw.bytes);
+    const data = (raw.path.endsWith(".json") ? JSON.parse(text) : text) as T;
+    return { state: "observed", meta: { id, path: raw.path, sha256: digest, bytes: raw.byteLength, readAt: mode === "sealed" ? sealedManifest!.sealedAt : new Date().toISOString() }, data };
   } catch (e) {
     return { state: "blocked", reason: String((e as Error)?.message ?? e) };
   }
@@ -309,15 +295,25 @@ export interface Proof {
 }
 
 /** Press to prove: refetch the exact bytes and recompute their digest here. */
-export async function prove(id: string): Promise<Proof> {
-  const raw = await fetchRaw(id);
+const displayedBytes = new Map<string, RawResult>();
+export function retainVerifiedRaw(id: string, raw: RawResult) { displayedBytes.set(`${id}|${raw.serverSha256}`, raw); }
+export async function fetchSnapshotJson<T>(rel: string): Promise<T> {
+  const r = await fetch(snap(`/snapshot/${rel}`), opts());
+  if (!r.ok) throw new Error(`snapshot_http_${r.status}`);
+  const bytes = await r.arrayBuffer();
+  if (await sha256Hex(bytes) !== sealedManifest?.bindings?.[rel]) throw new Error(`snapshot_binding_mismatch:${rel}`);
+  return JSON.parse(new TextDecoder().decode(bytes));
+}
+export async function prove(id: string, expectedSha256: string): Promise<Proof> {
+  if (!/^sha256:[a-f0-9]{64}$/.test(expectedSha256)) throw new Error("displayed_digest_required");
+  const raw = displayedBytes.get(`${id}|${expectedSha256}`) ?? await fetchRaw(id);
   const clientSha256 = await sha256Hex(raw.bytes);
   return {
     path: raw.path,
     byteLength: raw.byteLength,
-    serverSha256: raw.serverSha256,
+    serverSha256: expectedSha256,
     clientSha256,
-    equal: clientSha256 === raw.serverSha256,
+    equal: clientSha256 === expectedSha256,
     provedAt: new Date().toISOString(),
   };
 }

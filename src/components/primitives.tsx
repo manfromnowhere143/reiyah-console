@@ -4,7 +4,7 @@
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import { claimLayer, newLayerToken, onLayerClaim } from "../lib/layers";
-import { getMerkle, prove, proveInclusion, type Proof, type LiveState, type InclusionProof } from "../lib/evidence";
+import { getMerkle, prove, proveInclusion, type Proof, type LiveState, type InclusionProof, getEvidenceGeneration } from "../lib/evidence";
 import type { MerkleTree } from "../lib/merkle";
 import { Fold } from "./Fold";
 import { useStationReadiness } from "./StationFrame";
@@ -22,41 +22,7 @@ export function FitList<T>({ items, render, row = 24, more, className, style }: 
   className?: string;
   style?: React.CSSProperties;
 }) {
-  const ref = useRef<HTMLDivElement>(null);
-  const [n, setN] = useState(items.length);
-  useLayoutEffect(() => {
-    const el = ref.current;
-    if (!el) return;
-    const measure = () => {
-      const h = el.clientHeight;
-      if (h <= 0) return;
-      const first = el.firstElementChild as HTMLElement | null;
-      const cs = getComputedStyle(el);
-      const gap = parseFloat(cs.rowGap) || 0;
-      const rowH = Math.max(1, (first?.offsetHeight || row) + gap);
-      const reserve = more ? rowH : 0;
-      /* a grid list holds several items per row */
-      const cols = cs.display === "grid" ? Math.max(1, cs.gridTemplateColumns.split(" ").filter(Boolean).length) : 1;
-      const overflowing = el.scrollHeight > h + 1;
-      const fits = Math.max(1, Math.min(items.length, cols * Math.floor((h - reserve) / rowH)));
-      /* shrink only when rows actually overflow; otherwise only grow. In a box
-         whose height is its own content this keeps the list stable instead of
-         eating itself one row per measurement. */
-      setN((cur) => (overflowing ? Math.min(cur, fits) : Math.max(cur, fits)));
-    };
-    measure();
-    const ro = new ResizeObserver(measure);
-    ro.observe(el);
-    return () => ro.disconnect();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [items.length, row, !!more]);
-  const shown = items.slice(0, n);
-  return (
-    <div ref={ref} className={`fitlist${className ? ` ${className}` : ""}`} style={style}>
-      {shown.map(render)}
-      {n < items.length && more && <div className="fitmore">{more(items.length - n)}</div>}
-    </div>
-  );
+  return <div className={`fitlist complete-list${className ? ` ${className}` : ""}`} style={style} tabIndex={0} aria-label="Complete record list">{items.map(render)}</div>;
 }
 
 /* ---------- The mark: the aware iris ---------- */
@@ -114,7 +80,7 @@ export function Digest({ id, sha, path }: { id: string; sha: string; path: strin
   const [, force] = useState(0);
   useEffect(() => { const h = () => force((n) => n + 1); receiptBus.addEventListener("result", h); return () => receiptBus.removeEventListener("result", h); }, []);
   const short = sha.replace("sha256:", "").slice(0, 8);
-  const pv = proven.get(id);
+  const pv = proven.get(`${id}|${sha}`);
   return (
     <button className="digest" data-proven={pv === undefined ? undefined : String(pv)} onClick={(e) => { e.stopPropagation(); openReceipt({ id, sha, path }); }} title={`prove ${path}`}>
       <span className="mark">{pv === undefined ? "◇" : pv ? "◆" : "✕"}</span>
@@ -125,85 +91,42 @@ export function Digest({ id, sha, path }: { id: string; sha: string; path: strin
 
 export function ReceiptHost() {
   const [req, setReq] = useState<ReceiptReq | null>(null);
+  const [proof, setProof] = useState<Proof | { reason: string } | null>(null);
+  const [incl, setIncl] = useState<InclusionProof | null | undefined>(undefined);
+  const dialog = useRef<HTMLDialogElement>(null);
   const token = useRef(newLayerToken());
-  const [proof, setProof] = useState<Proof | { state: "blocked"; reason: string } | null>(null);
-  const [incl, setIncl] = useState<InclusionProof | null>(null);
-  const [tree, setTree] = useState<MerkleTree | null>(null);
-  useEffect(() => onLayerClaim((t) => { if (t !== token.current) setReq(null); }), []);
+  const seq = useRef(0);
+  const close = () => { seq.current++; setReq(null); };
+  useEffect(() => onLayerClaim(t => { if (t !== token.current) close(); }), []);
   useEffect(() => {
     const onOpen = (e: Event) => {
-      const r = (e as CustomEvent<ReceiptReq>).detail;
-      claimLayer(token.current);
-      setReq(r); setProof(null); setIncl(null); setTree(null);
+      const r = (e as CustomEvent<ReceiptReq>).detail, generation = ++seq.current;
+      claimLayer(token.current); setReq(r); setProof(null); setIncl(undefined);
       (async () => {
         try {
-          const pr = await prove(r.id);
-          setProof(pr);
-          if ("equal" in pr) { proven.set(r.id, pr.equal); receiptBus.dispatchEvent(new CustomEvent("result", { detail: r.id })); }
-          if ("equal" in pr && pr.equal) {
-            proveInclusion(r.id, pr.clientSha256).then((i) => i && setIncl(i)).catch(() => {});
-            getMerkle().then((t) => t && t.leafIndex.has(r.id) && setTree(t)).catch(() => {});
-          }
-        } catch (err) { setProof({ state: "blocked", reason: String((err as Error)?.message ?? err) }); }
+          const pr = await prove(r.id, r.sha);
+          if (generation !== seq.current) return;
+          setProof(pr); proven.set(`${r.id}|${r.sha}`, pr.equal); receiptBus.dispatchEvent(new Event("result"));
+          const inclusion = pr.equal ? await proveInclusion(r.id, pr.clientSha256) : null;
+          if (generation === seq.current) setIncl(inclusion);
+        } catch (e) { if (generation === seq.current) setProof({reason:String((e as Error).message)}); }
       })();
     };
-    const onKey = (e: KeyboardEvent) => { if (e.key === "Escape") setReq(null); };
-    receiptBus.addEventListener("open", onOpen); window.addEventListener("keydown", onKey);
-    return () => { receiptBus.removeEventListener("open", onOpen); window.removeEventListener("keydown", onKey); };
+    receiptBus.addEventListener("open", onOpen);
+    return () => { seq.current++; receiptBus.removeEventListener("open", onOpen); };
   }, []);
+  useEffect(() => { if (req && dialog.current && !dialog.current.open) dialog.current.showModal(); }, [req]);
   if (!req) return null;
-  const { id, sha, path } = req;
-  const done = !!(proof && "equal" in proof);
-  const blocked = !!(proof && "reason" in proof);
-  const p = proof as Proof;
-  return createPortal(
-    <div className="overlay" onClick={() => setReq(null)}>
-      {/* Opens at final size with every field present, then the values
-          compute in place: no resize, one clean entrance. */}
-      <div className="provecard glass" onClick={(e) => e.stopPropagation()} role="dialog" aria-label="Press to prove">
-        <h3>Press to Prove</h3>
-        {done ? (
-          <>
-            <div className="proverow"><span className="k">source</span><span className="v">{p.path}</span></div>
-            <div className="proverow"><span className="k">bytes</span><span className="v">{p.byteLength.toLocaleString()}</span></div>
-            <div className="proverow"><span className="k">server</span><span className="v">{p.serverSha256}</span></div>
-            <div className="proverow"><span className="k">this browser</span><span className={`v ${p.equal ? "eq" : "neq"}`}>{p.clientSha256}</span></div>
-            <div className="proverow"><span className="k">verdict</span><span className={`v ${p.equal ? "eq" : "neq"}`}>{p.equal ? "BYTE-IDENTICAL" : "MISMATCH — do not trust this surface"}</span></div>
-            {p.equal && tree && <div className="foldwrap"><Fold tree={tree} leafId={id} verified={incl ? incl.verified : null} /></div>}
-            {p.equal && (
-              <>
-                <div className="proverow" style={{ borderTop: "1px solid var(--line)", paddingTop: "0.7rem", marginTop: "0.3rem" }}>
-                  <span className="k">seal root</span>
-                  <span className="v">{incl ? `sha256:${incl.rootHex.slice(0, 40)}…` : "folding the sealed set…"}</span>
-                </div>
-                <div className="proverow">
-                  <span className="k">inclusion</span>
-                  <span className={`v ${incl ? (incl.verified ? "eq" : "neq") : "compute"}`}>
-                    {incl ? incl.verified ? `PROVEN · this record folds into the root over ${incl.leafCount} surfaces in ${incl.steps} hops` : "NOT INCLUDED — this record is not part of the sealed root" : "computing the audit path…"}
-                  </span>
-                </div>
-              </>
-            )}
-          </>
-        ) : blocked ? (
-          <>
-            <div className="proverow"><span className="k">source</span><span className="v">{path}</span></div>
-            <div className="proverow"><span className="k">blocked</span><span className="v neq">{(proof as { reason: string }).reason}</span></div>
-          </>
-        ) : (
-          <>
-            <div className="proverow"><span className="k">source</span><span className="v">{path}</span></div>
-            <div className="proverow"><span className="k">bytes</span><span className="v compute">measuring…</span></div>
-            <div className="proverow"><span className="k">server</span><span className="v">{sha}</span></div>
-            <div className="proverow"><span className="k">this browser</span><span className="v compute">recomputing SHA-256 in this browser…</span></div>
-            <div className="proverow"><span className="k">verdict</span><span className="v compute">…</span></div>
-          </>
-        )}
-        <button className="close" onClick={() => setReq(null)}>CLOSE</button>
-      </div>
-    </div>,
-    document.body
-  );
+  return createPortal(<dialog ref={dialog} className="receipt-dialog" aria-label="Evidence receipt" onCancel={e=>{e.preventDefault();close();}} onClick={e=>{if(e.target===e.currentTarget)close();}}>
+    <div className="receipt-content">
+      <div className="eyebrow">Evidence receipt</div><h2>The bytes behind this reading.</h2>
+      <p className="receipt-path">{req.path}</p>
+      <dl><dt>Displayed digest</dt><dd>{req.sha}</dd>
+      {proof && "equal" in proof ? <><dt>Recomputed digest</dt><dd>{proof.clientSha256}</dd><dt>Result</dt><dd className={proof.equal?'ok':'red'}>{proof.equal?'Matches the displayed record':'Mismatch · do not use this reading'}</dd><dt>Length</dt><dd>{proof.byteLength.toLocaleString()} bytes</dd><dt>Historical surface inclusion</dt><dd>{incl === undefined ? 'Checking…' : incl ? (incl.verified ? `Included among ${incl.leafCount} historical surfaces` : 'Not included') : 'Not applicable · record is bound by its own source manifest'}</dd></> : <><dt>Status</dt><dd>{proof ? proof.reason : 'Recomputing SHA-256…'}</dd></>}
+      </dl><p className="research-limit">Integrity identifies these bytes. It does not establish physical truth, independent replication or operator acceptance.</p>
+      <button className="research-button" autoFocus onClick={close}>Close receipt</button>
+    </div>
+  </dialog>,document.body);
 }
 
 /* ---------- Truth pill ---------- */
@@ -230,7 +153,7 @@ export function TruthPill({ lastEventAt, connected, sealed, violated }: {
     return (
       <span className="pill" data-state="sealed">
         <span className="ind" />
-        SEALED · {sealed.head.slice(0, 8)}<span className="pilldate"> · {sealed.sealedAt.slice(0, 10)}</span>
+        ARCHIVE · {sealed.head.slice(0, 8)}<span className="pilldate"> · {sealed.sealedAt.slice(0, 10)}</span>
       </span>
     );
   }
@@ -240,7 +163,7 @@ export function TruthPill({ lastEventAt, connected, sealed, violated }: {
     const age = Date.now() - lastEventAt;
     if (age < 60_000) {
       state = "live";
-      label = `LIVE · verified ${Math.max(1, Math.round(age / 1000))}s ago`;
+      label = `LOCAL SOURCE · verified ${Math.max(1, Math.round(age / 1000))}s ago`;
     } else {
       state = "stale";
       label = `STALE · ${Math.round(age / 60_000)}m since last signal`;
@@ -262,7 +185,10 @@ export function Station({
   id, name, children,
 }: { id: string; name: string; sub?: string; children: React.ReactNode }) {
   return (
-    <section className="stbody" aria-label={`${id} ${name}`}>{children}</section>
+    <section className="stbody" aria-label={`${id} ${name}`}>
+      {["ST–13","ST–14","ST–15"].includes(id) && <div className="legacy-correction"><strong>Interpretation corrected · 10 October 2026.</strong> These historical, selected-sample contrasts do not establish a population lower bound, a universal kind-independence law or safety credit. <a href="?st=findings&at=corrections">Read the corrections →</a></div>}
+      {id === "ST–16" && <div className="legacy-correction"><strong>Saved research results.</strong> The in-domain monitor score does not establish task transfer or live deployment. Transfer failures and calibration limits remain part of this record. <a href="?st=research&at=evidence%2Fclaim-status-register-2026-10-10.json">Current claim register →</a></div>}
+      {children}</section>
   );
 }
 
@@ -326,7 +252,7 @@ export function Stat({ label, value, sub, rule, from, wide, small, children }: {
               <Digest id={f.id ?? `p/${f.path}`} sha={f.sha256} path={f.path} />
             </div>
           ))}
-          <div className="dvat">computed in this browser at {at.current} · nothing on this instrument is a placeholder</div>
+          <div className="dvat">read in this browser at {at.current} · inspect the source and its scope</div>
         </div>,
         document.body
       )}
@@ -358,12 +284,12 @@ const surfaceCache = new Map<string, unknown>();
 /* run a station's loader before the station mounts (during boot), so the
    first screen renders with its numbers already in hand */
 export async function primeSurface<T>(loader: () => Promise<T>, deps: unknown[] = []): Promise<void> {
-  const key = loader.toString() + "|" + JSON.stringify(deps);
+  const key = getEvidenceGeneration() + "|" + loader.toString() + "|" + JSON.stringify(deps);
   if (surfaceCache.has(key)) return;
   try { surfaceCache.set(key, await loader()); } catch { /* the station will report it */ }
 }
 export function useSurfaceState<T>(loader: () => Promise<T>, deps: unknown[] = []) {
-  const key = loader.toString() + "|" + JSON.stringify(deps);
+  const key = getEvidenceGeneration() + "|" + loader.toString() + "|" + JSON.stringify(deps);
   const [state, setState] = useState<{ phase: "loading" } | { phase: "ready"; data: T } | { phase: "blocked"; reason: string }>(() => surfaceCache.has(key) ? { phase: "ready", data: surfaceCache.get(key) as T } : { phase: "loading" });
   useEffect(() => {
     let alive = true;
@@ -373,7 +299,7 @@ export function useSurfaceState<T>(loader: () => Promise<T>, deps: unknown[] = [
       .catch((e) => alive && setState({ phase: "blocked", reason: String((e as Error)?.message ?? e) }));
     return () => { alive = false; };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, deps);
+  }, [key]);
   useStationReadiness(state.phase);
   return state;
 }

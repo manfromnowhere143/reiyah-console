@@ -1,102 +1,116 @@
 # Reiyah Console: Harbor Instrument
 
-The control panel of the Reiyah evidence engine. One page, one camera, no scrolling.
-Black glass, bone ink, one red. Nothing renders without its evidence digest.
+A visual reader for Reiyah’s evidence engine and HARBOR research program. The current
+edition exposes conditional comparisons, evaluator findings, corrections and the
+complete published research map. Obsidian and paper share the same meaning; a
+figure opens its explanation, source and receipt.
 
-This project is deliberately separate from the Reiyah repository. Gate A's denylist
-forbids network services and product runtime inside Reiyah; this console reads
-Reiyah's committed bytes and holds no authority over them. It is not a
-driver-monitoring system, creates no operator acceptance, and creates no
-scientific evidence. A blocked result is preferable to a plausible default.
+This is a separate repository from the engine. It creates no scientific evidence,
+operator acceptance or driving authority. Research results remain conditional on
+their stated inputs and models. Production readiness, physical safety and reduced
+complete team work are not established.
+
+## Current edition
+
+Engine commit `5be5c3dc5444ccfe98cd5a203a74d5d7d4834561`, as of 11 October 2026.
+197 local authored/public records include every one of the 52 continuation-bound
+artifacts. The wider catalog has 1,238 source paths; records marked **Source link**
+open the exact engine commit and are not locally verified by the Console.
+
+- **Harbor:** one cabin-framed loss enclosure, reference selection and evidence inspection.
+- **Findings:** batching, empty outputs, motion consistency, review procedure,
+  reference sensitivity, resolution limits, equal-information comparison and corrections.
+- **The Comparison:** actual locally reproduced engine packets for the published
+  synthetic example. Sufficiency and a counterexample are rendered differently.
+- **Research:** searchable study and artifact library, with explicit local/source-link coverage.
+- The eighteen existing route identities remain available. The former “Law” route
+  is labeled **The Contrasts**, with the withdrawn interpretation explicitly corrected.
+
+The historical Gate A snapshot and measurement transcripts retain their original
+identities. The current claim register is a separately identified interpretation
+overlay. The HUD labels the architecture source **ARCHIVE**; it does not imply a
+live vehicle or live inference. Source digests establish byte identity, not truth.
 
 ## Run
 
 ```sh
-npm install
-npm run build          # type-check + bundle to dist/
-npm run serve          # evidence server on http://localhost:4600 (serves dist/ + API)
-```
-
-Development with hot reload (two terminals):
-
-```sh
-npm run serve          # evidence server on :4600
-npm run dev            # vite on :4610, /api proxied to :4600
-```
-
-The evidence server reads `/Users/danielwahnich/workspace/reiyah` (override with
-`REIYAH_ROOT`). It is read-only and fail-closed: every response carries the source
-path and a SHA-256 recomputed at read time; on any error it emits an explicit
-blocked state instead of a fabricated value.
-
-## The honest pipeline
-
-1. **Proof Boot**: the app fetches the evidence index bytes, recomputes their
-   SHA-256 in the browser with WebCrypto, and requires equality with the committed
-   sidecar before rendering anything. A mismatch renders a blocked screen. There is
-   no demo mode.
-2. **Press to prove**: every digest chip refetches its exact bytes and recomputes
-   the digest in the browser on demand.
-3. **Live**: SSE from the evidence server; the truth pill turns STALE on silence
-   and OFFLINE on disconnect. Liveness is earned, never asserted.
-
-## Stations
-
-Harbor (epistemic field + authority wall) · Ledger · Lineage · Encounter ·
-Controls · Estimands · Adversaries · The Chair · Frontier.
-
-Navigation: choose a station from the dock or field index. The current page
-stays in place until the destination is ready. Escape returns to Harbor; arrow
-keys move between neighbors; the URL (`?st=...`) identifies the station.
-
-## Verification rigs
-
-For navigation regression, build and serve the existing snapshot locally:
-
-```sh
+npm ci
 npm run build
-python3 -m http.server 4620 --bind 127.0.0.1 --directory dist
-# In another terminal:
-npm run test:navigation
-npm run test:opening
+npm run preview -- --host 127.0.0.1 --port 4620
 ```
 
-This checks all eighteen stations through the field index, both grounds and three
-viewport sizes, plus slow/failed loads, interrupted selections, history, keyboard
-focus and motion fallbacks. It requires installed Chrome. `NAV_BASE` changes the
-test URL and `NAV_OUT` the capture directory. `NAV_WEBKIT` optionally names an
-installed Playwright `index.mjs` to run the same checks in its WebKit browser.
-The opening rig checks identical geometry before and after React loads, first
-drawing readiness, verification failures and retries, font failure, reduced motion,
-and all eighteen index targets at a minimum 44px height. `BOOT_OUT` selects its
-capture directory. No evidence sealer or engine service is used by these tests.
+The default static reader needs no engine service. Optional development service:
 
 ```sh
-node tools/shots.mjs out/ [--mobile]   # capture boot + all nine stations
-node tools/hangar-test.mjs             # offline proof: SW shell + cached evidence + honest OFFLINE pill
+npm run serve   # read-only legacy evidence adapter on :4600
+npm run dev     # Vite on :4610; /api forwarded to :4600
 ```
 
-The hangar test passes when, with the network cut, the instrument reboots from
-its service worker, re-verifies the cached evidence bytes, and the truth pill
-reads "OFFLINE · rendering last verified snapshot". No fabricated state exists:
-with nothing cached, the boot blocks instead.
+The local adapter defaults to `/Users/danielwahnich/workspace/reiyah`; override with
+`REIYAH_ROOT` only after checking the intended repository identity. The current
+research edition remains pinned independently of this legacy local source.
 
-## Sealed snapshot mode (static deploy)
+## Evidence and receipts
+
+The application build binds the historical snapshot manifest. That manifest binds
+its catalog, schema index and measurement manifest. Every displayed record passes
+its expected length/digest before parsing. The research edition has a separate
+build-bound manifest and content-addressed payloads.
+
+A receipt recomputes the digest of the bytes associated with the **displayed**
+reading. A later source version cannot certify an earlier displayed value. Receipt
+results are keyed by record and digest; a superseded request cannot update the
+current dialog. Merkle inclusion applies to historical named surfaces only. Other
+records explicitly report that this particular inclusion proof is not applicable.
+
+## Navigation and accessibility
+
+The dock and centered Index retain prepared navigation: one visible station plus
+at most one hidden, inert destination. The page commits only when its readers and
+layout settle. Reduced motion skips the optional transition. Escape returns home;
+Harbor inspection has its own Back/Escape/history behavior. Search is available
+with ⌘K. Reading links include the edition, selected study and figure state.
+
+Primary content reflows and details can scroll. Complete lists no longer withhold
+rows behind a noninteractive “+N.” Quantitative marks have readable labels and a
+text equivalent; the cabin is decorative. Receipts use a native modal dialog.
+The Encounter fixture blocks on missing source records, supports keyboard seeking
+and stops scheduling frames while idle. These implementation properties still
+require the release browser checks described below.
+
+## Update an edition
+
+Use an isolated Console checkout and an exact public engine commit:
 
 ```sh
-npm run seal && npm run build
+npm run publish:edition -- /path/to/verified/engine 40_CHARACTER_COMMIT
+npm run test:edition
+npm run test:evidence
+npm run build
 ```
 
-`npm run seal` copies the exact evidence bytes into `public/snapshot/` with a
-manifest recording the commit identity and per-file digests at seal time.
-`dist/` then works on any static host with no server: the client falls back
-from `/api` to `/snapshot`, the WebCrypto boot verification runs unchanged on
-the sealed bytes, and the truth pill reads `SEALED · <commit> · <date>` —
-never pretending to be live. Verified by `tools/sealed-test.mjs`.
+The publisher reads immutable Git objects, checks the continuation bindings and
+retains previous edition directories. It never switches or bootstraps the engine.
+The mutable-controller sealer and automatic legacy production publisher are
+retired. Updating a source bundle is not permission to alter scientific claims.
 
-## Deployment target
+## Verification and release
 
-Home: `reiyah.danielwahnich.dev` (following the danielwahnich.dev convention;
-the sealed `dist/` can also be mounted into the portfolio repo like the other
-system consoles). The live cockpit (`npm run serve`) needs read access to a
-Reiyah checkout. See `ARCHITECTURE.md` for the full engineering contract.
+`test:edition` checks all published byte bindings and the batching figure against
+its authored fixture arithmetic. `test:evidence` exercises the actual readers
+under altered data, altered manifests, live generation changes and receipt races.
+These are source/byte checks, not browser or scientific validation.
+
+Before production, inspect desktop and compact phone layouts on both grounds,
+keyboard navigation, Index, deep links/history, all eight findings, the example,
+source receipts, unavailable data and the legacy stations. Test 320px reflow and
+reduced motion. Physical Safari and VoiceOver require their own observations.
+
+The older Puppeteer rigs remain historical test infrastructure; their eighteen-
+station, worker and no-scroll assumptions predate this redesign and must be
+updated before being used as release evidence. Do not report an old passing
+browser record as validation of this edition. In Codex, browser operation follows
+the installed Browser skill and requires a connected browser.
+
+Production home: <https://reiyah.danielwahnich.dev>. See [HANDOFF.md](HANDOFF.md)
+for the candidate status, validation record and any remaining release work.

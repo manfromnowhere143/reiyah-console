@@ -14,7 +14,10 @@
     "shots": "node tools/shots.mjs",
     "test:hangar": "node tools/hangar-test.mjs",
     "test:navigation": "node tools/navigation-test.mjs",
-    "test:opening": "node tools/boot-test.mjs"
+    "test:opening": "node tools/boot-test.mjs",
+    "test:evidence": "node --experimental-vm-modules tests/evidence-reader.mjs",
+    "publish:edition": "node tools/publish-edition.mjs",
+    "test:edition": "node tools/check-edition.mjs"
   },
   "dependencies": {
     "react": "^19.0.0",

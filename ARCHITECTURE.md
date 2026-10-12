@@ -1,3 +1,41 @@
+# Current research edition contract — 12 October 2026
+
+This addendum governs the current candidate. The earlier architecture below is
+retained as history where it describes the former Harbor worker, eighteen-station
+index, no-scroll rule or refetch-only receipts.
+
+- `src/lib/edition-binding.json` binds one immutable engine commit and manifest.
+  `tools/publish-edition.mjs` publishes only selected public records from Git objects;
+  the continuation’s exact digests are required. The wider inventory distinguishes
+  locally bound documents from source links.
+- The historical snapshot remains separate. Its root manifest binds the catalog,
+  schema index and lane manifest; the application build binds that root. The current
+  claim register is an explicit correction overlay, not a relabeling of old experiments.
+- All readers check expected digests before parsing. Receipts take the displayed
+  digest and retain the exact bytes; live caches do not silently retain a prior generation.
+- Harbor uses the existing cabin drawing functions on a static canvas, redrawn on
+  resize/theme changes. The quantitative enclosure is an undistorted SVG plane.
+- There are 21 route identities in four Index groups. Current Research precedes
+  historical architecture, measurement and reference audit. The dock behavior is preserved.
+- Detail scrolling and 320px reflow replace clipping or inaccessible omitted rows.
+  A research document may be long; the primary figure remains the entry point.
+- `public/examples/replacement-2026-10-12` contains locally reproduced, checked
+  synthetic engine packets and provenance. No physical observations are implied.
+- `tools/check-edition.mjs` and `tests/evidence-reader.mjs` are offline checks.
+  Browser, physical device, assistive technology and usability evidence remain separate.
+
+Design references: [Apple Materials](https://developer.apple.com/design/human-interface-guidelines/materials)
+places translucent materials in the control/navigation layer;
+[W3C reflow guidance](https://www.w3.org/WAI/WCAG22/Understanding/reflow.html)
+supports readable content at 320 CSS pixels. The project keeps 44px primary targets,
+which is a design choice, not a claim that WCAG AA universally requires 44px.
+[WebKit’s Safari 26.4 release notes](https://webkit.org/blog/17862/webkit-features-for-safari-26-4/)
+were reviewed. New browser effects are optional; quantitative interpretation and
+reliable navigation do not depend on them. This is web implementation guidance,
+not a claim to use Apple’s native Liquid Glass framework or to have passed WCAG.
+
+---
+
 # Harbor Instrument: Architecture
 
 One page. One camera. Nothing on screen without its evidence digest.

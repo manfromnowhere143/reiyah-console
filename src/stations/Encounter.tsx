@@ -12,7 +12,8 @@
 import { useEffect, useRef, useState } from "react";
 import { fetchSurface } from "../lib/evidence";
 import { fetchLane, fetchLaneJson, type LaneFile } from "../lib/gateb";
-import { Digest } from "../components/primitives";
+import { Digest, Blocked } from "../components/primitives";
+import { useStationReadiness } from "../components/StationFrame";
 import { drawCabin, drawWorld } from "../lib/roadScene";
 
 const TAU = Math.PI * 2;
@@ -53,9 +54,13 @@ export function Encounter() {
   const playingRef = useRef(true);
   const draggingRef = useRef(false);
   const lastBeat = useRef(-1);
+  const requestDraw = useRef<()=>void>(()=>{});
   const [beatIdx, setBeatIdx] = useState(0);
   const [playing, setPlaying] = useState(true);
   const [prog, setProg] = useState(0);
+  const [chainStatus, setChainStatus] = useState<"loading"|"ready"|"blocked">("loading");
+  const [chainError, setChainError] = useState("");
+  useStationReadiness(chainStatus);
   const [chain, setChain] = useState<Chain>(FALLBACK);
   /* the real case: the prepared reference study, read from its committed
      aggregates. The film stays a synthetic fixture until independent human
@@ -87,7 +92,8 @@ export function Encounter() {
         ["observation", "belief", "decision", "intervention", "outcome", "evidence"].map((k) => fetchSurface<any>(`chain-${k}`))
       );
       if (!alive) return;
-      const c: Chain = { ...FALLBACK };
+      if ([obs,bel,dec,itv,out,evd].some(s=>s.state !== "observed")) { setChainError("encounter_fixture_unavailable");setChainStatus("blocked");return; }
+      const c: Chain = { ...FALLBACK, p1: NaN, p2: NaN, speed:{state:"missing"},count:{state:"missing"},action:"unavailable",window:[NaN,NaN] };
       if (obs.state === "observed") {
         const ms = obs.data.measurements ?? [];
         const sp = ms.find((m: any) => m.measurement_id?.includes("relative-speed")) ?? ms[0];
@@ -113,7 +119,7 @@ export function Encounter() {
       }
       if (out.state === "observed") {
         const w = out.data.measurement_window;
-        c.window = [w?.start?.offset?.value ?? 4, w?.end?.offset?.value ?? 10];
+        c.window = [w?.start?.offset?.value ?? NaN, w?.end?.offset?.value ?? NaN];
         const m = (out.data.measurements ?? [])[0];
         if (m?.value) c.count = m.value;
         c.censoring = String(out.data.censoring?.state ?? c.censoring);
@@ -123,7 +129,8 @@ export function Encounter() {
         c.gap = evd.data.basis?.gap_reason ?? c.gap;
         c.validity = evd.data.validity?.state ?? c.validity;
       }
-      setChain(c);
+      if (![c.p1,c.p2,...c.window].every(Number.isFinite) || c.speed.state==="missing" || c.count.state==="missing" || c.action==="unavailable") {setChainError("encounter_fixture_contract_incomplete");setChainStatus("blocked");return;}
+      setChain(c);setChainStatus("ready");
     })();
     return () => { alive = false; };
   }, []);
@@ -134,7 +141,8 @@ export function Encounter() {
     if (!canvas) return;
     const ctx = canvas.getContext("2d");
     if (!ctx) return;
-    const reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const motion = matchMedia("(prefers-reduced-motion: reduce)");
+    let reduced = motion.matches;
     if (reduced) { playingRef.current = false; setPlaying(false); }
 
     let raf = 0;
@@ -142,7 +150,10 @@ export function Encounter() {
     let sync = 0;
     const MONO = '"B612 Mono", Menlo, monospace';
 
+    const wake = () => { if (!raf) raf = requestAnimationFrame(draw); };
+    requestDraw.current = wake;
     const draw = () => {
+      raf = 0;
       const now = performance.now();
       const dt = Math.min(0.05, (now - lastT) / 1000);
       lastT = now;
@@ -382,12 +393,16 @@ export function Encounter() {
         ["a gap stays a gap", ink(0.6)],
       ], evdA);
 
-      raf = requestAnimationFrame(draw);
+      if (!document.hidden && (playingRef.current || draggingRef.current || Math.abs(progRef.current-easedRef.current)>0.0001)) wake();
     };
+    const motionChange=()=>{reduced=motion.matches;if(reduced){playingRef.current=false;setPlaying(false);}wake();};
+    const ro=new ResizeObserver(wake);ro.observe(canvas);
+    const mo=new MutationObserver(wake);mo.observe(document.documentElement,{attributes:true,attributeFilter:["data-ground"]});
+    document.addEventListener("visibilitychange",wake);motion.addEventListener("change",motionChange);
     draw();
-    return () => { cancelAnimationFrame(raf); };
+    return () => { cancelAnimationFrame(raf);requestDraw.current=()=>{};ro.disconnect();mo.disconnect();document.removeEventListener("visibilitychange",wake);motion.removeEventListener("change",motionChange); };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [chainStatus]);
 
   /* ---- transport ---- */
   const setFromClientX = (clientX: number) => {
@@ -395,7 +410,7 @@ export function Encounter() {
     if (!el) return;
     const rct = el.getBoundingClientRect();
     progRef.current = clamp01((clientX - rct.left) / rct.width);
-    setProg(progRef.current);
+    setProg(progRef.current);requestDraw.current();
   };
   const onDown = (e: React.PointerEvent) => {
     draggingRef.current = true;
@@ -408,11 +423,11 @@ export function Encounter() {
   const togglePlay = () => {
     if (progRef.current >= 0.999) progRef.current = 0;
     playingRef.current = !playingRef.current;
-    setPlaying(playingRef.current);
+    setPlaying(playingRef.current);requestDraw.current();
   };
-  const jumpTo = (p: number) => { progRef.current = p; setProg(p); playingRef.current = false; setPlaying(false); };
+  const jumpTo = (p: number) => { progRef.current = p; setProg(p); playingRef.current = false; setPlaying(false); requestDraw.current(); };
   useEffect(() => {
-    const onKey = (e: KeyboardEvent) => { if (e.key === " " && !(e.target as HTMLElement)?.closest?.("input,textarea")) { e.preventDefault(); togglePlay(); } };
+    const onKey = (e: KeyboardEvent) => { if (e.key === " " && !(e.target as HTMLElement)?.closest?.("input,textarea,button,[role=slider]")) { e.preventDefault(); togglePlay(); } };
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -446,6 +461,8 @@ export function Encounter() {
   const beat = beats[beatIdx];
   const tNow = tOf(prog);
 
+  if (chainStatus === "blocked") return <Blocked reason={chainError}/>;
+  if (chainStatus === "loading") return <p role="status">Reading the synthetic fixture…</p>;
   return (
     <div className="encounter2">
       <div className="encStage">
@@ -465,7 +482,7 @@ export function Encounter() {
         </button>
         <div
           className="encTrack" ref={trackRef}
-          role="slider" aria-label="encounter clock" aria-valuemin={T0} aria-valuemax={T1}
+          role="slider" tabIndex={0} onKeyDown={e=>{if(["ArrowLeft","ArrowRight","Home","End"].includes(e.key)){e.preventDefault();e.stopPropagation();jumpTo(e.key==="Home"?0:e.key==="End"?1:clamp01(progRef.current+(e.key==="ArrowRight"?.025:-.025)));}}} aria-label="encounter clock" aria-valuemin={T0} aria-valuemax={T1}
           aria-valuenow={Math.round(tNow * 10) / 10}
           onPointerDown={onDown} onPointerMove={onMove} onPointerUp={onUp} onPointerCancel={onUp}
         >
@@ -475,7 +492,7 @@ export function Encounter() {
             <button
               key={i} className="encMark" data-on={String(tNow >= b.t - 1e-4)} data-jsm={String(!!b.jsm)}
               style={{ left: `${pOf(b.t) * 100}%` }} title={b.k}
-              onPointerDown={(e) => { e.stopPropagation(); jumpTo(pOf(b.t)); }}
+              onPointerDown={(e) => { e.stopPropagation(); jumpTo(pOf(b.t)); }} onClick={()=>jumpTo(pOf(b.t))}
             >
               <span className="encMarkL">{b.kind ?? "JSM"}</span>
             </button>

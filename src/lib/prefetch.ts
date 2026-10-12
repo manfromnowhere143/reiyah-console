@@ -29,7 +29,7 @@ const L = {
 };
 
 export const NEEDS: Record<string, Needs> = {
-  harbor: { surfaces: ["fixtures"], catalog: true, register: true, lane: [L.L, L.H3, L.H6, L.AC, L.V] },
+  harbor: {}, findings: {}, comparison: {}, research: {},
   system: { surfaces: ["protocol"], catalog: true },
   ledger: {},
   lineage: { surfaces: ["odi"], catalog: true },
@@ -78,6 +78,9 @@ export async function prefetchStation(id: string): Promise<void> {
 /* the station's code, split per station by the bundler; imported here so the
    neighbours' chunks are in the HTTP cache before they are pressed */
 const imports: Record<string, () => Promise<unknown>> = {
+  findings: () => import("../stations/Findings"),
+  comparison: () => import("../stations/Comparison"),
+  research: () => import("../stations/ResearchLibrary"),
   system: () => import("../stations/SystemAtlas"),
   ledger: () => import("../stations/Ledger"),
   lineage: () => import("../stations/Lineage"),

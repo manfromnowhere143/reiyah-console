@@ -1,0 +1,53 @@
+{
+  "kind": "reiyah.console.example-replay",
+  "engine_commit": "5be5c3dc5444ccfe98cd5a203a74d5d7d4834561",
+  "scope": "Published synthetic example; hypothetical observations only. Local execution and checker, not independent replication.",
+  "cases": [
+    {
+      "case": "confirmed",
+      "input_sha256": "df5b8715898a4e6c7a3cdcbe7eaea9b993547a3c2ea535d189a9d43eec25ab0b",
+      "request_sha256": "e4417abee41a8b2378a82fab42fe63707fa3f6cabec68c466ee8193412f90965",
+      "packet_sha256": "9f24953d2a4de83b0d651a82af72a4d32f99b0991cb6238c4008ef049ff1ef1c",
+      "verification_sha256": "ece0a0f7d5bdc3604763fbe86b63a6d4a1029bfb43654ef3b80382fc0319d6d2",
+      "audit_exit": 0,
+      "verify_exit": 0
+    },
+    {
+      "case": "insufficient",
+      "input_sha256": "df5b8715898a4e6c7a3cdcbe7eaea9b993547a3c2ea535d189a9d43eec25ab0b",
+      "request_sha256": "35c8c0edf4d2e7b24a0a5613a0538f78eb99d9469306928328652c077557f33d",
+      "packet_sha256": "d1ccdcd43941c286fa903e6f2ba7b24e5b5926084d8f9db96aa00a51e97ead51",
+      "verification_sha256": "8e957846300c64f9fa5fedd4b2df82535aa2eec4ac53fb21d6d507b2ca13c90a",
+      "audit_exit": 0,
+      "verify_exit": 0
+    }
+  ],
+  "files": [
+    {
+      "name": "confirmed-verification.json",
+      "bytes": 562,
+      "sha256": "sha256:ece0a0f7d5bdc3604763fbe86b63a6d4a1029bfb43654ef3b80382fc0319d6d2"
+    },
+    {
+      "name": "confirmed.json",
+      "bytes": 1342,
+      "sha256": "sha256:9f24953d2a4de83b0d651a82af72a4d32f99b0991cb6238c4008ef049ff1ef1c"
+    },
+    {
+      "name": "insufficient-verification.json",
+      "bytes": 500,
+      "sha256": "sha256:8e957846300c64f9fa5fedd4b2df82535aa2eec4ac53fb21d6d507b2ca13c90a"
+    },
+    {
+      "name": "insufficient.json",
+      "bytes": 1268,
+      "sha256": "sha256:d1ccdcd43941c286fa903e6f2ba7b24e5b5926084d8f9db96aa00a51e97ead51"
+    }
+  ],
+  "reproduction": {
+    "producer": "python3 -B -m tools.perception_revision audit --input INPUT --input-sha256 INPUT_SHA --request REQUEST --request-sha256 REQUEST_SHA --output PACKET",
+    "checker": "python3 -B -m tools.perception_revision verify-audit --input INPUT --input-sha256 INPUT_SHA --request REQUEST --request-sha256 REQUEST_SHA --packet PACKET --packet-sha256 PACKET_SHA",
+    "input_path": "research/perception-revision/0.1.0/replacement-example.json",
+    "request_path_pattern": "research/perception-revision/0.1.0/audit-{case}-example.json"
+  }
+}

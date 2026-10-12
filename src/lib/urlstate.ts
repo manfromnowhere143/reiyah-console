@@ -9,5 +9,5 @@ export function setAt(value: string | null) {
   const u = new URL(location.href);
   if (value === null || value === "") u.searchParams.delete("at"); else u.searchParams.set("at", value);
   const next = u.pathname + (u.search ? u.search : "");
-  if (next !== location.pathname + location.search) history.replaceState(history.state, "", next);
+  if (next !== location.pathname + location.search) { history.replaceState(history.state, "", next); window.dispatchEvent(new Event("reiyah:reading")); }
 }

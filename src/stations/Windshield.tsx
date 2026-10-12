@@ -181,7 +181,7 @@ export function Windshield() {
     h6 ? { c: h6.c, lo: h6.lo, hi: h6.hi, label: "HUMAN × AUTOMATION", short: "HUMAN × AUTO", sub: "BDD-A · total miss · 95% CI", hold: true } : h5 ? { c: h5.c, label: "HUMAN × AUTOMATION", short: "HUMAN × AUTO", sub: "BDD-A · no interval", hold: true } : null,
   ];
   const wind = wbox.w > 0 && (autoT || h3all)
-    ? <WindshieldScene w={wbox.w} h={wbox.h} marks={marks} header={(h5 || h6) ? "same-kind redundancy fails together · different-kind roughly holds" : "the same signature on both sides · the meeting point still unmeasured"} />
+    ? <WindshieldScene w={wbox.w} h={wbox.h} marks={marks} header={(h5 || h6) ? "selected-sample contrasts · no universal independence law" : "the same signature on both sides · the meeting point still unmeasured"} />
     : null;
 
   /* ---- takeover by task: a dot-and-bar chart in pixels ---- */

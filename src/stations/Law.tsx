@@ -1,4 +1,4 @@
-/* ST-15 · THE LAW — one estimand, three domains.
+/* ST-15 · THE LAW — selected-sample contrasts; no universal law.
    The lane carried the same coefficient from two sensors to one human's two
    channels to a human and a machine, and then out of driving altogether: to
    seven language models answering the same questions. Every pairing sits on
@@ -177,12 +177,12 @@ export function Law() {
       <div className="onepage">
         <div className="statstrip">
           <Stat label="same kind · fails together" value={marks.filter((m) => m.kind === "same" && !/conditional$/.test(m.name)).length ? `${fmt(Math.min(...marks.filter((m) => m.kind === "same" && !/conditional$/.test(m.name)).map((m) => m.c)), 2)} to ${fmt(Math.max(...marks.filter((m) => m.kind === "same" && !/conditional$/.test(m.name)).map((m) => m.c)), 2)}` : "∅"} sub="two lidars · camera × lidar · eyes × hands · LLM juries on three benchmarks · every one above 1 · conditioned on difficulty the LLM residual nears 1" rule="the smallest and largest coefficient among the same-kind pairings on this line: two sensors (Result L, conditioned), one human's observation and response (H3), and LLM juries (T, marginal and conditional)" from={marks.filter((m) => m.kind === "same").map((m) => src(m.file)).filter((v, i, a) => a.findIndex((b) => b.id === v.id) === i)} />
-          <Stat label="different kinds · holds" value={h6 ? `${fmt(h6.c)}` : h5 ? fmt(h5.c) : "∅"} sub={h6 ? `human × machine · total miss · [${fmt(h6.lo)}, ${fmt(h6.hi)}] · ${h6.verdict}` : h5 ? "human × machine · detectable · no interval" : "transcript absent"} rule="H6: P(both miss) over P(automation totally misses) × P(human misses) on 7,735 reference objects with a clip-clustered bootstrap interval; the verdict line is the transcript's own" from={h6 ? [src(h6.file)] : h5 ? [src(h5.file)] : []} />
+          <Stat label="human × machine · selected sample" value={h6 ? `${fmt(h6.c)}` : h5 ? fmt(h5.c) : "∅"} sub={h6 ? `human × machine · total miss · [${fmt(h6.lo)}, ${fmt(h6.hi)}] · ${h6.verdict}` : h5 ? "human × machine · detectable · no interval" : "transcript absent"} rule="H6: P(both miss) over P(automation totally misses) × P(human misses) on 7,735 reference objects with a clip-clustered bootstrap interval; the verdict line is the transcript's own" from={h6 ? [src(h6.file)] : h5 ? [src(h5.file)] : []} />
           <Stat label="unanimous and wrong" value={u ? `${fmt(u.unanimousWrong, 1)}%` : "∅"} sub={u ? `of the ${fmt(u.unanimous, 1)}% unanimous verdicts · ${u.unanimousWrongN} questions · agree → correct ${fmt(u.avgCorrect, 1)}%` : "transcript absent"} rule="Result U: among questions where all seven models chose the same answer, the share where that answer was wrong; and the average over 21 pairs of P(correct | the two agree)" from={u ? [src(u.file)] : []} />
         </div>
         <div className="lawgrid">
           <div className="ipanel wspanel">
-            <div className="ilabel">one line · every pairing above one independence mark · ink is same kind, steel blue is different kinds · brackets are intervals, the thin one a range</div>
+            <div className="ilabel">historical contrasts · different populations and event definitions · ink is same kind, steel blue is different kinds · brackets are intervals, the thin one a range</div>
             <div className="mbox" ref={box.ref}>{line ?? <div className="note">transcripts not present or not in their known shape</div>}</div>
           </div>
           <div className="lawside">

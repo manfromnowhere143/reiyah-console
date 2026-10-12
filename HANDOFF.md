@@ -4,6 +4,60 @@ Living handoff for the next session. This repo is **reiyah-console** (the Harbor
 Instrument UI), separate from the Reiyah **engine** repo (`~/workspace/reiyah`,
 which has the Gate-A baton/denylist — none of that applies here; normal git).
 
+## Current research edition candidate, 12 October 2026
+
+The operator explicitly authorized implementing and publishing the UI upgrade.
+Work is isolated on `design/current-evidence-2026-10-12`, from Console main
+`1ca96a94f8a0da9abba1b4903eca1d6949595342`. The canonical Console's pre-existing
+uncommitted HANDOFF and design reviews are preserved. The engine controller was
+not switched, bootstrapped or changed.
+
+Implemented: full-surface Harbor comparison and source inspector; eight current
+visual findings; actual locally reproduced synthetic engine packets; searchable
+research library and palette entries; all 52 continuation bindings in a 197-record
+edition; the current 60-claim register; corrections beside historical contrasts;
+pre-parse digest enforcement, root/index bindings, displayed-byte receipts,
+generation-aware caches, native receipt modal, complete list access, responsive
+content, and explicit unavailable Encounter fixtures with idle/keyboard handling.
+
+The research source is exact engine main `5be5c3dc5444ccfe98cd5a203a74d5d7d4834561`,
+as of 11 October. Historical Gate A/measurement bytes keep their own identities.
+No scientific advance is claimed from the UI. Gate A remains unaccepted; no
+physical truth, production or complete-work advantage has been established.
+
+Validation: production build passes; 14 actual-reader regressions pass; 552
+published file bindings pass; the batching diagram matches the authored fixture
+arithmetic. Both synthetic audit examples were executed using the exact engine
+worktree and separately checked by its audit checker, with outputs only in this
+Console. The one-confirmation packet is counterexample-only, with `bounds: null`;
+it must never be drawn as a complete enclosure. Evidence is in
+[the QA record](docs/CONSOLE_EDITION_2026_10_12_QA.json).
+
+**Release work remains.** The Browser runtime initialized but reported no connected
+browser; discovery returned an empty list. The operator has been asked to connect
+it while independent work continues. No fresh browser captures, interaction test,
+physical Safari, VoiceOver or measured usability result is claimed. Preview
+publication may proceed for review; production promotion requires the visual and
+interaction pass. Existing historical Puppeteer rigs have old no-scroll,
+eighteen-station and worker assumptions; do not use their old reports as current
+release evidence or run a different browser backend to bypass the Browser skill.
+
+Next: open the candidate preview in the connected Browser; inspect 1280×820,
+430×745, 390×660 and 320px reflow on both grounds; exercise the 21 destinations,
+eight findings, comparison states, library/search, receipts, Back/Escape/history,
+reduced motion, unavailable/tampered data and offline recovery. Fix actual layout
+or interaction defects, rerun appropriate checks, inspect human-only commit
+metadata, then safely merge/deploy and compare the served bytes to the final build.
+Preserve the prepared navigation contract and all historical research explanations.
+
+Authored changes pass the whitespace check. Two copied engine README payloads
+retain their original extra EOF newline so their digests remain exact.
+
+The old mutable-worktree sealer and automatic legacy publisher fail closed. Use
+`npm run publish:edition -- ENGINE_REPO EXACT_COMMIT`, followed by the documented
+checks and a reviewed deployment. Previous edition directories remain available.
+
+
 ## Repository routing and commit attribution, 2026-09-08
 
 Daniel explicitly authorizes Console work from the existing session rooted at

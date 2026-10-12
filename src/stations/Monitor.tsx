@@ -1,4 +1,4 @@
-/* ST-16 · THE MONITOR — from measuring joint failure to reading it live.
+/* ST-16 · THE MONITOR — saved joint-failure measurements and transfer limits.
    The lane fitted an estimator that reads only the channels' outputs and
    returns a coupling-corrected risk of joint failure, then asked the hard
    questions: does it hold on held-out data (V), on juries and benchmarks it
@@ -84,7 +84,7 @@ export function Monitor() {
   ];
 
   return (
-    <Station id="ST–16" name="The Monitor" sub="from measuring joint failure to reading it live · every claim under the register's status · proposed">
+    <Station id="ST–16" name="The Monitor" sub="saved joint-failure measurements and transfer limits · every claim under the register's status · proposed">
       <div className="onepage">
         <div className="statstrip">
           <Stat label="in-domain monitor · AUC" value={v ? <>{fmt(v.monitor.auc)}<em> vs naive {fmt(v.naive.auc)}</em></> : "∅"} sub={v ? `Brier ${fmt(v.monitor.brier)} vs ${fmt(v.naive.brier)} · ECE ${fmt(v.monitor.ece)} vs ${fmt(v.naive.ece)} · held-out ${v.test.toLocaleString("en-US")} · register ${cV?.status ?? "∅"}, ${cV?.current_scientific_use ?? "∅"}` : "Result V absent"}

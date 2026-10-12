@@ -3,7 +3,7 @@
    Transcripts are parsed with strict patterns; a transcript that does not
    match its known shape yields a blocked panel, never a guessed number.
    Every parsed figure carries the transcript's path and digest. */
-import { getMode, setBypassCache, snap } from "./evidence";
+import { getMode, setBypassCache, snap, getEvidenceGeneration, isBypassCache, fetchSnapshotJson, retainVerifiedRaw } from "./evidence";
 void setBypassCache;
 
 export interface LaneFile { id: string; path: string; bytes?: number; sha256?: string; state?: string }
@@ -14,11 +14,15 @@ export interface LaneManifest {
   lane_nonclaims?: Record<string, unknown>;
 }
 let manifestMemo: Promise<LaneManifest> | null = null;
+let manifestGeneration = "";
 const rawMemo = new Map<string, Promise<{ text: string; file: LaneFile }>>();
 
 export function fetchLane(): Promise<LaneManifest> {
-  if (manifestMemo) return manifestMemo;
+  const generation=getEvidenceGeneration();
+  if (getMode() === "sealed" && !isBypassCache() && manifestMemo && manifestGeneration===generation) return manifestMemo;
+  manifestGeneration=generation;
   manifestMemo = (async () => {
+    if (getMode() === "sealed") return fetchSnapshotJson<LaneManifest>("gateb/manifest.json");
     const r = await fetch(getMode() === "sealed" ? snap("/snapshot/gateb/manifest.json") : "/api/gateb/manifest");
     if (!r.ok) return { present: false, reason: `lane_manifest_http_${r.status}` };
     return (await r.json()) as LaneManifest;
@@ -29,11 +33,12 @@ export function fetchLane(): Promise<LaneManifest> {
 
 export async function fetchLaneText(pathRel: string): Promise<{ text: string; file: LaneFile }> {
   const id = pathRel.replaceAll("/", "__");
-  if (rawMemo.has(id)) return rawMemo.get(id)!;
+  const m = await fetchLane();
+  const file = m.files?.find((f) => f.id === id);
+  if (!m.present || !file || file.state === "absent") throw new Error(`lane_file_absent:${pathRel}`);
+  const key=`${getMode()}|${id}|${file.sha256}`;
+  if (getMode() === "sealed" && !isBypassCache() && rawMemo.has(key)) return rawMemo.get(key)!;
   const job = (async () => {
-    const m = await fetchLane();
-    const file = m.files?.find((f) => f.id === id);
-    if (!m.present || !file || file.state === "absent") throw new Error(`lane_file_absent:${pathRel}`);
     const r = await fetch(getMode() === "sealed" ? snap(`/snapshot/gateb/raw/${id}`) : `/api/gateb/raw/${id}`);
     if (!r.ok) throw new Error(`lane_raw_http_${r.status}`);
     const bytes = await r.arrayBuffer();
@@ -45,10 +50,11 @@ export async function fetchLaneText(pathRel: string): Promise<{ text: string; fi
     const digest = await crypto.subtle.digest("SHA-256", bytes);
     const hex = "sha256:" + Array.from(new Uint8Array(digest)).map((b) => b.toString(16).padStart(2, "0")).join("");
     if (hex !== file.sha256) throw new Error(`lane_digest_mismatch:${pathRel}`);
+    retainVerifiedRaw(`gateb/${id}`, { bytes, path: file.path, serverSha256: hex, byteLength: bytes.byteLength });
     return { text: new TextDecoder("utf-8", { fatal: true }).decode(bytes), file };
   })();
-  rawMemo.set(id, job);
-  job.catch(() => rawMemo.delete(id));
+  rawMemo.set(key, job);
+  job.catch(() => rawMemo.delete(key));
   return job;
 }
 

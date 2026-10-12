@@ -171,7 +171,7 @@ export function SameHazard() {
   const art = box.w > 0 ? <SquaresScene w={box.w} h={box.h} squares={squares} /> : null;
 
   return (
-    <Station id="ST–14" name="The Same Hazard" sub="human × automation on one object · BDD-A · proposed · descriptive · a lower bound">
+    <Station id="ST–14" name="The Same Hazard" sub="human × automation on one object · BDD-A · descriptive · selected sample · population bound withdrawn">
       <div className="onepage">
         <div className="statstrip">
           <Stat label="total miss · c" value={d.h6 ? fmt(d.h6.c) : "∅"} sub={d.h6 ? `[${fmt(d.h6.lo)}, ${fmt(d.h6.hi)}] · ${thou(d.h6.objects)} reference objects · ${d.h6.verdict}` : "H6 not present"}
@@ -184,11 +184,11 @@ export function SameHazard() {
 
         <div className="shzgrid">
           <div className="ipanel wspanel shzhero">
-            <div className="ilabel">the squares · one point per object where the transcript counts them · red is the joint miss · the outline is what independence predicts · same-kind overflows, different-kind fits</div>
+            <div className="ilabel">the squares · one point per object where the transcript counts them · red is the joint miss · the outline is what independence predicts · conditional contrasts; no general independence conclusion</div>
             <div className="mbox" ref={box.ref}>{art}</div>
           </div>
           <div className="ipanel wspanel shzbounds">
-            <div className="ilabel">the bounds · load-bearing · in the lane's words</div>
+            <div className="ilabel">historical caveats · see the current correction above</div>
             <div className="wsrows">
               {d.bounds && d.bounds.items.length ? d.bounds.items.map((b, i) => (
                 <div key={i} className="shzb">

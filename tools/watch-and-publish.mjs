@@ -3,8 +3,7 @@
  *
  * Watches the Reiyah engine repository for new COMMITTED states and, after a
  * quiet debounce, re-seals a fresh digest-verified snapshot and redeploys to
- * production. Viewers auto-reload to the new build (service-worker
- * controllerchange). Publishes committed states only — never a dirty tree —
+ * production. New editions are visible on the next navigation; no forced reload. Publishes committed states only — never a dirty tree —
  * so every public snapshot is a stable, reproducible, sealed point in time.
  *
  * Run:  npm run live      (foreground, Ctrl-C to stop)
@@ -30,6 +29,8 @@ const git = (args) => execFileSync("git", ["-C", REPO, ...args], { encoding: "ut
 
 /* the published state is the pair of heads: the Gate A worktree and the Gate B
    lane, the latter read from the exact ref the sealer reads (GATEB_REF) */
+throw new Error("Automatic legacy resealing is disabled for pinned research editions. Publish a reviewed exact-commit edition with tools/publish-edition.mjs.");
+const GATEB = process.env.GATEB_ROOT ?? "/Users/danielwahnich/workspace/reiyah-gate-b";
 const GATEB_REF = process.env.GATEB_REF ?? "research/2026-09-07-physical-reference-transfer";
 function head() {
   try {

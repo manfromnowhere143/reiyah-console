@@ -11,3 +11,5 @@ boot-shots2/
 boot-check/
 harbor-probe/
 .live-state.json
+
+/node_modules

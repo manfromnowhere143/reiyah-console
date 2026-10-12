@@ -1285,6 +1285,13 @@
    "path": "research/reference-study/0.2.0/review.schema.json",
    "bytes": 1641,
    "sha256": "sha256:ec49c29d567b28accb2594352c7b0c0973ff1226688871fe1c8288fc2fc33e8a"
+  },
+  {
+   "id": "evidence__claim-status-register-2026-10-10.json",
+   "path": "evidence/claim-status-register-2026-10-10.json",
+   "bytes": 100607,
+   "sha256": "sha256:76a4a9237c40a8e679d5e88f3b0c1bbe20dc82c0874508997296bc20ffffb0bf",
+   "source_commit": "5be5c3dc5444ccfe98cd5a203a74d5d7d4834561"
   }
  ],
  "lane_nonclaims": {
@@ -1293,5 +1300,10 @@
   "externally_audited": false,
   "lifecycle": "proposed",
   "model_executed_by_this_lane": false
+ },
+ "interpretation_overlay": {
+  "commit": "5be5c3dc5444ccfe98cd5a203a74d5d7d4834561",
+  "path": "evidence/claim-status-register-2026-10-10.json",
+  "as_of": "2026-10-11"
  }
 }

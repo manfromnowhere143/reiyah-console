@@ -2,8 +2,9 @@
    cross-fades in place (App.tsx); the dock and the field index read this list.
    The earlier world-space damped camera is retired with its row/col grid. */
 
-export type Rail = "engine" | "measurement" | "audit";
+export type Rail = "research" | "engine" | "measurement" | "audit";
 export const RAILS: Array<{ id: Rail; name: string; kicker: string }> = [
+  { id: "research", name: "Current Research", kicker: "11 October 2026 · conditional results and limits" },
   { id: "engine", name: "The Engine", kicker: "gate a · the sealed architecture" },
   { id: "measurement", name: "The Measurement", kicker: "gate b · public data, proposed" },
   { id: "audit", name: "The Audit", kicker: "the reference examined" },
@@ -21,7 +22,10 @@ export interface StationDef {
 /* the dock's order is the rails' order: the engine, then what was measured
    with it, then the audit of the measurement's own reference */
 export const STATIONS: StationDef[] = [
-  { id: "harbor", num: "ST–00", name: "Harbor", desc: "the living engine", rail: "engine" },
+  { id: "harbor", num: "ST–00", name: "Harbor", desc: "the current research question", rail: "research" },
+  { id: "findings", num: "ST–18", name: "Findings", desc: "current results, corrections and limits", rail: "research" },
+  { id: "comparison", num: "ST–19", name: "The Comparison", desc: "conditional decisions and checked witnesses", rail: "research" },
+  { id: "research", num: "ST–20", name: "Research", desc: "the complete published research map", rail: "research" },
   { id: "system", num: "ST–09", name: "The Seeing", desc: "the whole of Reiyah, one mandala", rail: "engine" },
   { id: "ledger", num: "ST–01", name: "Ledger", desc: "every artifact digest-bound", rail: "engine" },
   { id: "lineage", num: "ST–02", name: "Lineage", desc: "releases as chain of custody", rail: "engine" },
@@ -36,13 +40,13 @@ export const STATIONS: StationDef[] = [
   { id: "worstgroup", num: "ST–12", name: "The Worst Group", desc: "where redundancy is weakest", rail: "measurement" },
   { id: "windshield", num: "ST–13", name: "The Windshield", desc: "both sides · the human channel", rail: "measurement" },
   { id: "samehazard", num: "ST–14", name: "The Same Hazard", desc: "human and automation on one object", rail: "measurement" },
-  { id: "law", num: "ST–15", name: "The Law", desc: "one estimand, three domains", rail: "measurement" },
-  { id: "monitor", num: "ST–16", name: "The Monitor", desc: "joint failure, read live", rail: "measurement" },
+  { id: "law", num: "ST–15", name: "The Contrasts", desc: "historical contrasts and corrected interpretations", rail: "measurement" },
+  { id: "monitor", num: "ST–16", name: "The Monitor", desc: "saved monitor results and transfer limits", rail: "measurement" },
   { id: "reference", num: "ST–17", name: "The Reference", desc: "the two horizons · the ghost re-examined", rail: "audit" },
 ];
 
 export function stationById(id: string | null): StationDef {
-  return STATIONS.find((s) => s.id === id) ?? STATIONS[4];
+  return STATIONS.find((s) => s.id === id) ?? STATIONS[0];
 }
 
 function urlStation(): string {

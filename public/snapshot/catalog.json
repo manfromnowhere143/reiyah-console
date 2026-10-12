@@ -2,419 +2,523 @@
  "entries": [
   {
    "path": "gate/operator-decision-interface-corrections/reiyah.operator-decision-interface-r1-continuity-correction-1.2.8.json",
-   "bytes": 9454
+   "bytes": 9454,
+   "sha256": "sha256:ec5b377f68633032c4b3807518d9e9a35fcab4252e347def0fb2e0a3494ab03d"
   },
   {
    "path": "gate/operator-decision-interface-corrections/reiyah.operator-decision-interface-readiness-correction-1.2.5.json",
-   "bytes": 20732
+   "bytes": 20732,
+   "sha256": "sha256:651a4780cdbedf0a055cbcf70ec31eb8184fcc70e88900069627c45a560ad104"
   },
   {
    "path": "gate/operator-decision-interface-corrections/reiyah.operator-decision-interface-readiness-input-seal-truth-correction-1.2.9.json",
-   "bytes": 28870
+   "bytes": 28870,
+   "sha256": "sha256:d88af4c8774cd2f3d50b97658547db2a0e7ecd300c055e082c006b6651538824"
   },
   {
    "path": "gate/operator-decision-interface-corrections/reiyah.operator-decision-interface-readiness-route-activation-1.2.6.json",
-   "bytes": 12412
+   "bytes": 12412,
+   "sha256": "sha256:0e4edbf2db169debebd7054184a978555f29ee6f70f635c8e1f15bdaad80d4e9"
   },
   {
    "path": "gate/operator-decision-interface-corrections/reiyah.operator-decision-interface-readiness-worker-liveness-correction-1.2.7.json",
-   "bytes": 10985
+   "bytes": 10985,
+   "sha256": "sha256:51c2f0d8e94129a7dde4822ed2597e3e0392a4cef51454e3e7a6751f9ec6dd04"
   },
   {
    "path": "gate/operator-decision-interface-incidents/reiyah.operator-decision-interface-r1-continuity-1.2.8.json",
-   "bytes": 9217
+   "bytes": 9217,
+   "sha256": "sha256:b5627e284d12b21409b65e01d7971147aa646152e90ea950c82aefc7741f7bee"
   },
   {
    "path": "gate/operator-decision-interface-incidents/reiyah.operator-decision-interface-readiness-input-seal-truth-1.2.9.json",
-   "bytes": 12367
+   "bytes": 12367,
+   "sha256": "sha256:0fa351fce2d92892406afbf7b2a62c224b64107d2da47cb2325416f5ee61e0d2"
   },
   {
    "path": "gate/operator-decision-interface-incidents/reiyah.operator-decision-interface-readiness-worker-liveness-1.2.7.json",
-   "bytes": 10479
+   "bytes": 10479,
+   "sha256": "sha256:ed05486d39a0fcf740a0c58266a773f53c8073b69cc3a88828d75881e3168cd2"
   },
   {
    "path": "gate/operator-decision-interface-reviews/reiyah.operator-decision-interface-contract-review-1.2.4.json",
-   "bytes": 20854
+   "bytes": 20854,
+   "sha256": "sha256:cc0a72b8db43034e52aa3c97c355c107c3f8df0385cdd361601750cd0628528a"
   },
   {
    "path": "gate/operator-decision-interface-reviews/reiyah.operator-decision-interface-implementation-review-1.2.6.json",
-   "bytes": 23786
+   "bytes": 23786,
+   "sha256": "sha256:cea3c297eff34bba8923b51ba56f19a637b10d2373514e0b53fbdd183b7df094"
   },
   {
    "path": "gate/operator-decision-interface-reviews/reiyah.operator-decision-interface-implementation-review-1.2.7.json",
-   "bytes": 12049
+   "bytes": 12049,
+   "sha256": "sha256:a2362a1250d5989675cd919e47f42400fc7175ce8eb43f4b812aaf60e40241b1"
   },
   {
    "path": "gate/operator-decision-interface-reviews/reiyah.operator-decision-interface-mapping-review-1.2.6.json",
-   "bytes": 6662
+   "bytes": 6662,
+   "sha256": "sha256:3c331bc90513cd3ca6ce8a6a1d083b6ce3d9154510b499a3ed926393084fb24b"
   },
   {
    "path": "gate/operator-decision-interface-reviews/reiyah.operator-decision-interface-mapping-review-1.2.7.json",
-   "bytes": 5356
+   "bytes": 5356,
+   "sha256": "sha256:eb99e50d531dbef329ccd778d5a68cb4d760481c4ead34bee0859e1d325f3e0d"
   },
   {
    "path": "gate/operator-decision-interface-reviews/reiyah.operator-decision-interface-r1-continuity-contract-review-1.2.8.json",
-   "bytes": 29737
+   "bytes": 29737,
+   "sha256": "sha256:d0ef793ed807b572d72c9b65b1652fa864b13470b493b557c38e1a7df22a4261"
   },
   {
    "path": "gate/operator-decision-interface-reviews/reiyah.operator-decision-interface-readiness-correction-contract-review-1.2.5.json",
-   "bytes": 32295
+   "bytes": 32295,
+   "sha256": "sha256:278362ef15ac5b497f2dcc3744b624526328814fe48e5926592c132068885cef"
   },
   {
    "path": "gate/operator-decision-interface-reviews/reiyah.operator-decision-interface-readiness-route-activation-contract-review-1.2.6.json",
-   "bytes": 25473
+   "bytes": 25473,
+   "sha256": "sha256:aa210dba542236427ae98fabd98d4a9842a471ca59708bedf83eb98bb1e858a5"
   },
   {
    "path": "gate/operator-decision-interface-reviews/reiyah.operator-decision-interface-readiness-worker-liveness-contract-review-1.2.7.json",
-   "bytes": 29630
+   "bytes": 29630,
+   "sha256": "sha256:cba48a34798715e9d20ed583f5e7423c0df205e8b5f7dc23da811c57918b1eb0"
   },
   {
    "path": "gate/operator-decision-interfaces/reiyah.operator-decision-interface-1.2.4.json",
-   "bytes": 47157
+   "bytes": 47157,
+   "sha256": "sha256:c719fbc041eb9e9e480e973ac576595114f6f1df6d018910fa820556fc87dfc1"
   },
   {
    "path": "gate/operator-decision-inventories/reiyah.operator-decision-inventory-extraction-rules-1.2.4.json",
-   "bytes": 6148
+   "bytes": 6148,
+   "sha256": "sha256:d4049fcf11d29ce897fb2bbb93af9dfe403352b5aa4653add1915a5fada1763a"
   },
   {
    "path": "gate/operator-decision-inventories/reiyah.operator-decision-inventory-mapping-1.2.4.json",
-   "bytes": 172554
+   "bytes": 172554,
+   "sha256": "sha256:e22e70793c4115402b47ff7948d971fb5654d8b1bffd2ca1531acc3aa6e41e2c"
   },
   {
    "path": "gate/decisions/OPERATOR_DECISION-1.1.1.template.json",
-   "bytes": 4176
+   "bytes": 4176,
+   "sha256": "sha256:17d86afdbebe64a211c24749e9d67850c75fad2edae30bcb6b9962fa94aea2b4"
   },
   {
    "path": "gate/decisions/OPERATOR_DECISION-1.1.2.template.json",
-   "bytes": 4176
+   "bytes": 4176,
+   "sha256": "sha256:c6038b20b5fc771b4e308a77b296c20143cb4e2bc498ac788296b634981dbd9d"
   },
   {
    "path": "gate/decisions/OPERATOR_DECISION-1.2.0.template.json",
-   "bytes": 3924
+   "bytes": 3924,
+   "sha256": "sha256:728ffa1765e3254fc607f4a5d59e334a33adfeebfb4b73c9ca5555c3985ba608"
   },
   {
    "path": "gate/decisions/OPERATOR_DECISION-1.2.3.template.json",
-   "bytes": 6241
+   "bytes": 6241,
+   "sha256": "sha256:5eacd95f6f44f487648da67b9650fc29e5d925395dff3e2d5d186a0bb7fb0f2b"
   },
   {
    "path": "gate/decisions/OPERATOR_DECISION-1.2.4.template.json",
-   "bytes": 4035
+   "bytes": 4035,
+   "sha256": "sha256:fd6734742e8015d37285e28f6ef1961efdfd7b84551cec1285a17fea42136d12"
   },
   {
    "path": "gate/decisions/OPERATOR_DECISION-1.2.5.template.json",
-   "bytes": 4583
+   "bytes": 4583,
+   "sha256": "sha256:9eedad4f5d3ddf4cb1484e9474ab26093965f83807c80277f855fcd35baab3e4"
   },
   {
    "path": "gate/decisions/OPERATOR_DECISION-1.2.6.template.json",
-   "bytes": 4696
+   "bytes": 4696,
+   "sha256": "sha256:3ccdce5ddfdececae44240e3c8f453434a39aafc7bf38d9432eff5074a963a12"
   },
   {
    "path": "gate/decisions/OPERATOR_DECISION.template.json",
-   "bytes": 3924
+   "bytes": 3924,
+   "sha256": "sha256:728ffa1765e3254fc607f4a5d59e334a33adfeebfb4b73c9ca5555c3985ba608"
   },
   {
    "path": "gate/validation-reports/gate-a-validation-1.0.0.json",
-   "bytes": 2513
+   "bytes": 2513,
+   "sha256": "sha256:19c624a97ff6518863e83fa9de8a383cca72003521dc1aac55f63e8574bbeaab"
   },
   {
    "path": "gate/validation-reports/gate-a-validation-1.1.0.json",
-   "bytes": 2826
+   "bytes": 2826,
+   "sha256": "sha256:89d96c947f909782c0a5ccc4f677114a8a2c9dd2f24e6a342a667f6526144db0"
   },
   {
    "path": "gate/validation-reports/gate-a-validation-1.1.1.json",
-   "bytes": 2826
+   "bytes": 2826,
+   "sha256": "sha256:76c0dcce583beb02b121776e14bc9df41833a26c5c49488270d96861b3e33806"
   },
   {
    "path": "gate/validation-reports/gate-a-validation-1.1.2.json",
-   "bytes": 2826
+   "bytes": 2826,
+   "sha256": "sha256:06fc3114522c16625da337fe25c71b1fd53abeeaf9c31a11748afc06eb5d66d8"
   },
   {
    "path": "gate/validation-reports/gate-a-validation-1.2.0.json",
-   "bytes": 257357
+   "bytes": 257357,
+   "sha256": "sha256:79d6f3578630994c54cbe341e2c62b79fe4606b4645b85499bcb76f018ad1961"
   },
   {
    "path": "gate/validation-reports/gate-a-validation-1.2.1.json",
-   "bytes": 20406
+   "bytes": 20406,
+   "sha256": "sha256:e0f26625402447c5157409a039195a7aa1911a925e9ec548c37d3346d2b33099"
   },
   {
    "path": "gate/validation-reports/gate-a-validation-1.2.3.json",
-   "bytes": 17292
+   "bytes": 17292,
+   "sha256": "sha256:24357b380dc1dd9d551cbbd06f421c44806a15845f4c27adb8fd731d65843333"
   },
   {
    "path": "gate/validation-reports/operator-decision-interface-r1-continuity-contract-1.2.8.json",
-   "bytes": 12517
+   "bytes": 12517,
+   "sha256": "sha256:5e4de2d56a86a386948f7f0c9d8c30d8252bcfb8dc881ca5307e1a6081747485"
   },
   {
    "path": "gate/validation-reports/operator-decision-interface-readiness-route-activation-contract-1.2.6.json",
-   "bytes": 6852
+   "bytes": 6852,
+   "sha256": "sha256:0d441a40418ec839bd99e018ae71fd24f56497833853cc7e02541c22fa7891c4"
   },
   {
    "path": "gate/validation-reports/operator-decision-interface-readiness-worker-liveness-contract-1.2.7.json",
-   "bytes": 10191
+   "bytes": 10191,
+   "sha256": "sha256:97858ba30d5a399d70735f5c743a113675c05e441a6ff6a19db766f8cba70877"
   },
   {
    "path": "gate/public-distribution-receipts/reiyah.public-distribution-receipt-1.1.0.json",
-   "bytes": 6857
+   "bytes": 6857,
+   "sha256": "sha256:d805ad1bab46e087338fb3c7ac049f9c1e9edbbd782fa6960db1f8e3eca57139"
   },
   {
    "path": "gate/public-distribution-receipts/reiyah.public-distribution-receipt-1.1.1.json",
-   "bytes": 7565
+   "bytes": 7565,
+   "sha256": "sha256:6156a35d3dfb2c4f0d46cbf48845867da6c942b69ed734a4056ae1e36910aa11"
   },
   {
    "path": "gate/public-distribution-receipts/reiyah.public-distribution-receipt-1.1.2.json",
-   "bytes": 7621
+   "bytes": 7621,
+   "sha256": "sha256:e7f3bedac49423d4ba042419056896c507d26ee2bd9a706981abf2131dcda19d"
   },
   {
    "path": "gate/public-distribution-receipts/reiyah.public-distribution-receipt-1.2.0.json",
-   "bytes": 9898
+   "bytes": 9898,
+   "sha256": "sha256:74817d54ec3085ef0f6ceb45f54db4c24e353aa48e20a44b5ab36c97bd9d9a99"
   },
   {
    "path": "validation/implementation-finding-map-1.2.3-implementation.json",
-   "bytes": 21231
+   "bytes": 21231,
+   "sha256": "sha256:416e67d40402c3e73d42c6f4c57aa7b15cb4678cbea743ce0830e778f12f7f18"
   },
   {
    "path": "validation/operator-decision-interface-contract-review-plan-1.2.4.json",
-   "bytes": 8084
+   "bytes": 8084,
+   "sha256": "sha256:f9978f811e9e99efc210cd6f90d762f2f5e4275546cb443672cadc45292d1901"
   },
   {
    "path": "validation/operator-decision-interface-finding-map-1.2.4.json",
-   "bytes": 27939
+   "bytes": 27939,
+   "sha256": "sha256:024fd4d20ec150c9916cc45b82f1902a4641737e424a3098eef4152b427c38e8"
   },
   {
    "path": "validation/operator-decision-interface-implementation-plan-1.2.4.json",
-   "bytes": 16089
+   "bytes": 16089,
+   "sha256": "sha256:ba74c3185d8b968759520e10a42bf7645e583d7997e66ecf757ae06eb04595e1"
   },
   {
    "path": "validation/operator-decision-interface-implementation-plan-1.2.5.json",
-   "bytes": 34041
+   "bytes": 34041,
+   "sha256": "sha256:794ecd214fcc3a8d3b6df0b450ce44ad3f036c932acc7222d4dcbb8a154c3596"
   },
   {
    "path": "validation/operator-decision-interface-implementation-plan-1.2.6.json",
-   "bytes": 25461
+   "bytes": 25461,
+   "sha256": "sha256:0eef7e3f058eaaa7885895ac4a0b2c581d26daeaeea92e918d6b851c367538ed"
   },
   {
    "path": "validation/operator-decision-interface-implementation-plan-1.2.7.json",
-   "bytes": 43284
+   "bytes": 43284,
+   "sha256": "sha256:4eeee33d40d2d772f2c25fc5bfe9eee76c869797bc44996d8c13a637c620cc9a"
   },
   {
    "path": "validation/operator-decision-interface-implementation-plan-1.2.8.json",
-   "bytes": 21796
+   "bytes": 21796,
+   "sha256": "sha256:e624de0cdabbdeb1c87656f733e707e80a77d503d237cae87ded528fc9df417c"
   },
   {
    "path": "validation/operator-decision-interface-plan-1.2.4.json",
-   "bytes": 10522
+   "bytes": 10522,
+   "sha256": "sha256:496493eeef5ca0b4d74ae46e064e074cc1528edc3be495569e8c8fe58e7238fb"
   },
   {
    "path": "validation/operator-decision-interface-r1-continuity-contract-review-plan-1.2.8.json",
-   "bytes": 28659
+   "bytes": 28659,
+   "sha256": "sha256:d0ae5b859335373799e143f45324a1f2499ece874b7820094caf23656e5f2ea6"
   },
   {
    "path": "validation/operator-decision-interface-r1-continuity-correction-plan-1.2.8.json",
-   "bytes": 9371
+   "bytes": 9371,
+   "sha256": "sha256:1ecab1521aeec34ad1824105f6304db8ea4aa13b20175410349540713129afa4"
   },
   {
    "path": "validation/operator-decision-interface-readiness-correction-contract-review-plan-1.2.5.json",
-   "bytes": 8440
+   "bytes": 8440,
+   "sha256": "sha256:f3027e858fe1fa95528e9b420662be9d602beaff309bcb053d05d699feaa2875"
   },
   {
    "path": "validation/operator-decision-interface-readiness-correction-plan-1.2.5.json",
-   "bytes": 5975
+   "bytes": 5975,
+   "sha256": "sha256:ac8cbe36bbb1b37351dd0d3b40728a64b5d3181745231b0b64d90a81b3509853"
   },
   {
    "path": "validation/operator-decision-interface-readiness-input-seal-truth-correction-plan-1.2.9.json",
-   "bytes": 20491
+   "bytes": 20491,
+   "sha256": "sha256:27a903dfd0ec7907f4a206381aaed873debaef3a9f259e0387bf7a2dba5333d5"
   },
   {
    "path": "validation/operator-decision-interface-readiness-route-activation-contract-review-plan-1.2.6.json",
-   "bytes": 16650
+   "bytes": 16650,
+   "sha256": "sha256:2d0f934cf370bb6f3818112b0839e4f8f5ada8104d52fe5c473472638f387db5"
   },
   {
    "path": "validation/operator-decision-interface-readiness-route-activation-plan-1.2.6.json",
-   "bytes": 8084
+   "bytes": 8084,
+   "sha256": "sha256:fcb4972769e0a98145498c04fb1ca17d8d43693a74c3a8d55eb734923d8f5450"
   },
   {
    "path": "validation/operator-decision-interface-readiness-worker-liveness-contract-review-plan-1.2.7.json",
-   "bytes": 28088
+   "bytes": 28088,
+   "sha256": "sha256:4fbabf3d3d07907dc62ed7fa9fa90ab87bb05689a66547b89e8e796945f7f709"
   },
   {
    "path": "validation/operator-decision-interface-readiness-worker-liveness-correction-plan-1.2.7.json",
-   "bytes": 9939
+   "bytes": 9939,
+   "sha256": "sha256:88f7deea6347b33c6e4221dbe570e6b14b88f55ced4af5555e18f8f8b0d803d4"
   },
   {
    "path": "validation/operator-decision-interface-ready-plan-1.2.6.json",
-   "bytes": 8904
+   "bytes": 8904,
+   "sha256": "sha256:4c9ca0b0ed84aac716bc51401a81838d384d94ec3e61c290c9bf692768d4b034"
   },
   {
    "path": "validation/operator-decision-interface-ready-plan-1.2.7.json",
-   "bytes": 4972
+   "bytes": 4972,
+   "sha256": "sha256:2aabbad9b75b1cf37caa5e86c65c1bf89f73f6eb759a3729583cec13477b2ea9"
   },
   {
    "path": "validation/operator-decision-interface-toolchain-lock-1.2.4.json",
-   "bytes": 14669
+   "bytes": 14669,
+   "sha256": "sha256:2f3337e699337a069ca6d63f553f11e8873e2bcc50219ca35bd7a2624234524c"
   },
   {
    "path": "validation/operator-decision-interface-toolchain-lock-1.2.5.json",
-   "bytes": 60627
+   "bytes": 60627,
+   "sha256": "sha256:82c8941dbdd4a63945461ed239da4b6819ed4665f213297b68fab9d93d1f6652"
   },
   {
    "path": "validation/operator-decision-interface-toolchain-lock-1.2.6.json",
-   "bytes": 65633
+   "bytes": 65633,
+   "sha256": "sha256:e4459a042efa1bca64bba43b833e511d8f3602dfce6c729a1a5680929277245f"
   },
   {
    "path": "validation/operator-decision-interface-toolchain-lock-1.2.7.json",
-   "bytes": 62653
+   "bytes": 62653,
+   "sha256": "sha256:07b75e4ec9ec81c1972d2aa386032df781e51d74675225654c1824fd7fba2e3f"
   },
   {
    "path": "validation/operator-decision-interface-toolchain-lock-1.2.8.json",
-   "bytes": 58812
+   "bytes": 58812,
+   "sha256": "sha256:fc9cbff4586e4af6cc8cf7c3f509dc4d337c55d52cb960ec1228598d4776cac6"
   },
   {
    "path": "validation/toolchain-lock-1.2.0.json",
-   "bytes": 7337
+   "bytes": 7337,
+   "sha256": "sha256:7e4ebb8aa6ac3794f30fa4b830dc3854d8a99979de1a474c03b5482ea323064b"
   },
   {
    "path": "validation/toolchain-lock-1.2.1.json",
-   "bytes": 2423
+   "bytes": 2423,
+   "sha256": "sha256:51dea8e6d5743f7da66173d9f1ed2694931343cb4ba4f7d20f2f756b26f84609"
   },
   {
    "path": "validation/toolchain-lock-1.2.2.json",
-   "bytes": 6166
+   "bytes": 6166,
+   "sha256": "sha256:5840dc54346511263dffcdf19c616688794ed23c2116c6e2baa092953301a76a"
   },
   {
    "path": "validation/toolchain-lock-1.2.3-implementation.json",
-   "bytes": 9112
+   "bytes": 9112,
+   "sha256": "sha256:f14792d9294c09be91444acbe7ffd40e3d86de7e9e278fa12dc64ba774b0b549"
   },
   {
    "path": "validation/toolchain-lock-1.2.3.json",
-   "bytes": 6859
+   "bytes": 6859,
+   "sha256": "sha256:85799a7776f74be5a535faf3be8369fb17f7c2548765a8545bc8f1f734ac0673"
   },
   {
    "path": "validation/validation-plan.json",
-   "bytes": 9095
+   "bytes": 9095,
+   "sha256": "sha256:e3a32444b52ad63a2ee3bf89db913a62f5530226de0b0d8fa99ff01cb1188168"
   },
   {
    "path": "evidence/frontier-discovery-register-1.1.0.json",
-   "bytes": 70081
+   "bytes": 70081,
+   "sha256": "sha256:0567b9d00f50783574201bc367869094ca8383fce3e6dd9f56b6108a764c3093"
   },
   {
    "path": "evidence/frontier-discovery-register-1.2.0.json",
-   "bytes": 119407
+   "bytes": 119407,
+   "sha256": "sha256:e5e7f68c3f93d43553408873ca4ab4f9eb93ae5cd637c473b4f847a458000fac"
   },
   {
    "path": "evidence/public-distribution-inventory-1.1.0.json",
-   "bytes": 8717
+   "bytes": 8717,
+   "sha256": "sha256:b1f63dd32dc3a1104520312723f8061b9fd729740f63a585bcad91d73d55370b"
   },
   {
    "path": "evidence/public-evidence-custody-profile-1.1.0.json",
-   "bytes": 5296
+   "bytes": 5296,
+   "sha256": "sha256:80bc6f977ca8810b18cc077976c4c8517dc6f93d70b5ebbf455b433d73e3978b"
   },
   {
    "path": "evidence/public-rights-revalidation-2026-08-23.json",
-   "bytes": 4629
+   "bytes": 4629,
+   "sha256": "sha256:1ef0b0e1a08272966cd3716d71d5f288facbfd35a3759399d9f312003969908c"
   },
   {
    "path": "evidence/public-rights-revalidation-2026-08-24-1.1.2.json",
-   "bytes": 4964
+   "bytes": 4964,
+   "sha256": "sha256:9551b7ebb61adcafc83cab5cac29ad7bdaf93292daf739275a0d255f16f431e9"
   },
   {
    "path": "evidence/public-rights-revalidation-2026-08-24.json",
-   "bytes": 4955
+   "bytes": 4955,
+   "sha256": "sha256:eb8c31af34d4068a5d63dbd0dac2f4a27600ca5c027a36ee73abed9d8fee9c20"
   },
   {
    "path": "evidence/public-rights-revalidation-2026-08-25-gate-a-static-correction-1.2.0.json",
-   "bytes": 8393
+   "bytes": 8393,
+   "sha256": "sha256:e68ca1c6b53b3f63e65663a1a999db95699cf4177bb5b0d134a6c0e85860bb13"
   },
   {
    "path": "evidence/source-ledger-1.1.0.json",
-   "bytes": 32634
+   "bytes": 32634,
+   "sha256": "sha256:61ea0ba90cba3bd68dba3283560c16b699f1e5d954062e1d53a18846c10d774c"
   },
   {
    "path": "evidence/source-ledger.json",
-   "bytes": 23378
+   "bytes": 23378,
+   "sha256": "sha256:02000d76611f719884ddebc29d4dc48ca31781af474c086c8ea00bfb0ce6b4c0"
   },
   {
    "path": "evidence/standards-crosswalk-1.1.0.json",
-   "bytes": 22977
+   "bytes": 22977,
+   "sha256": "sha256:82c034b57434d5242a2a09fac9b2c0d4442987cfe925a7631a737508681d5d7d"
   },
   {
    "path": "evidence/standards-crosswalk.json",
-   "bytes": 21223
+   "bytes": 21223,
+   "sha256": "sha256:1d1cf810b1cc5dfaf812e54c99925666f924e532d7550083f846119b3ed3d0e6"
   },
   {
    "path": "manifests/mission/reiyah-mission-1.0.0.json",
-   "bytes": 4523
+   "bytes": 4523,
+   "sha256": "sha256:5acb0cea515b294d98a073cc36155622037731007c498d93141eadbaf0b97b8c"
   },
   {
    "path": "manifests/mission/reiyah-mission-1.1.0.json",
-   "bytes": 5597
+   "bytes": 5597,
+   "sha256": "sha256:1d49a990391c8629c4dd919e73786f12de6c63092e43608d53d41dee4f52d4ed"
   },
   {
    "path": "manifests/protocol/harbor-gate-a-protocol-1.0.0.json",
-   "bytes": 29736
+   "bytes": 29736,
+   "sha256": "sha256:2e64bd49b9289f62c1afb1a8aed8483533deaade67fc4b1fc899ce1765d43e53"
   },
   {
    "path": "manifests/protocol/harbor-gate-a-protocol-1.1.0.json",
-   "bytes": 34673
+   "bytes": 34673,
+   "sha256": "sha256:6170bb4b3c21d56c5428e8b8afdfe7e7860b1ae360bf8cc520a6ea8938f268de"
   },
   {
    "path": "manifests/protocol/harbor-gate-a-protocol-1.2.0.json",
-   "bytes": 63718
+   "bytes": 63718,
+   "sha256": "sha256:d282e8a58de6a207129079498343b23bb634b45eaa38697794b77b9dadbad7ad"
   },
   {
    "path": "manifests/scientific/harbor-scientific-contract-profile-1.1.0.json",
-   "bytes": 237939
+   "bytes": 237939,
+   "sha256": "sha256:e24f0da63e4220092847b9e2c5617622e91b6cc212205807d948917224b43a92"
   },
   {
    "path": "manifests/scientific/harbor-scientific-contract-profile-1.2.0.json",
-   "bytes": 358540
+   "bytes": 358540,
+   "sha256": "sha256:4422e0301b20b8ec9cb30b5f3d500252567c4c5dc88aaf883d35a92dd9b7804b"
   },
   {
    "path": "fixtures/v1.2.1/continuity-fixture-catalog.json",
-   "bytes": 8195
+   "bytes": 8195,
+   "sha256": "sha256:d55920a8efab20cb58d6f51286a12f6bd3aeaa158ea787a7898df47016a11adf"
   },
   {
    "path": "fixtures/v1.2.2/dependence-fixture-catalog.json",
-   "bytes": 17440
+   "bytes": 17440,
+   "sha256": "sha256:e556118a9d16d5ae51376278e8211753babaac0f5c2bc6c8b1a444292592ac0e"
   },
   {
    "path": "fixtures/v1.2.2/distribution-fixture-catalog.json",
-   "bytes": 16443
+   "bytes": 16443,
+   "sha256": "sha256:1f7e4e498472076db4542cff3b3343be147fe5b29c05b9c9317b217fc170d22c"
   },
   {
    "path": "fixtures/v1.2.3/release-readiness-fixture-catalog.json",
-   "bytes": 8502
+   "bytes": 8502,
+   "sha256": "sha256:c5ff6bb0eb809148f6969ed7dcaf8416a1faeefb8be1c08fcf45d20c100ce973"
   },
   {
    "path": "fixtures/v1.2.4/operator-decision-interface-fixture-catalog.json",
-   "bytes": 457987
+   "bytes": 457987,
+   "sha256": "sha256:3ad12239b250504873cd38b2c630f277ff3a00ebe2210b9c016b7651ad220a3a"
   },
   {
    "path": "fixtures/v1.2.5/operator-decision-interface-fixture-catalog.json",
-   "bytes": 16720
+   "bytes": 16720,
+   "sha256": "sha256:779e2d19082e148d7e31ad2203897ccdc1c38cf80eeeff772029167ad7dbcca6"
   },
   {
    "path": "fixtures/v1.2.6/operator-decision-interface-fixture-catalog.json",
-   "bytes": 48176
+   "bytes": 48176,
+   "sha256": "sha256:b23914c7e99f6de8c6e1949e6ae3936eef190c492040064c4272ef75f1f7dbcb"
   },
   {
    "path": "fixtures/v1.2.7/operator-decision-interface-implementation-fixture-catalog.json",
-   "bytes": 67477
+   "bytes": 67477,
+   "sha256": "sha256:9d2561b59ef686e44b2f53943504ef1c92e357dcc06eb3b3fbbb2540bbfe90a2"
   },
   {
    "path": "fixtures/v1.2.7/operator-decision-interface-readiness-worker-liveness-fixture-catalog.json",
-   "bytes": 13459
+   "bytes": 13459,
+   "sha256": "sha256:26c96625d606152bc26dc31223883c886fe6c2e5004afb382633f1dbca79b81a"
   },
   {
    "path": "fixtures/v1.2.8/operator-decision-interface-implementation-fixture-catalog.json",
-   "bytes": 26944
+   "bytes": 26944,
+   "sha256": "sha256:3697613ad05fe222f0f92442609c5113513def5842068c94a707472ec6346f78"
   },
   {
    "path": "fixtures/v1.2.8/operator-decision-interface-r1-continuity-fixture-catalog.json",
-   "bytes": 20852
+   "bytes": 20852,
+   "sha256": "sha256:8ce4d142a97c4d38bacbe2354f2ab915c1b3306126277183a39c6dade548aaa9"
   },
   {
    "path": "fixtures/v1.2.9/operator-decision-interface-readiness-input-seal-truth-fixture-catalog.json",
-   "bytes": 36398
+   "bytes": 36398,
+   "sha256": "sha256:48c20e8d5a01e02e738bd52fbf01ea0c624b541bf25ef95ab42c26c77a4d8945"
   }
  ]
 }

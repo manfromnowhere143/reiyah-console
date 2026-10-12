@@ -110,6 +110,8 @@ function Stage({ ev, onEvidence, covered, onInitialReady }: {
       if (next.options.push !== false) {
         const url = new URL(location.href);
         url.searchParams.delete("at");
+        url.searchParams.delete("view");
+        url.searchParams.delete("inspect");
         if (next.frame.id === "harbor") url.searchParams.delete("st");
         else url.searchParams.set("st", next.frame.id);
         history.pushState({ st: next.frame.id }, "", url.pathname + url.search + url.hash);
