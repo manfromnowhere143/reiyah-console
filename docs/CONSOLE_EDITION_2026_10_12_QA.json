@@ -1,5 +1,5 @@
 {
-  "status": "compact_released_recovery_fix_in_validation",
+  "status": "production_released_browser_interaction_review_outstanding",
   "source_checks": {
     "kind": "console_reader_regression",
     "browser_testing": false,
@@ -192,7 +192,7 @@
     ]
   },
   "visual_restoration": {
-    "status": "implemented_pending_visual_review",
+    "status": "released_browser_review_outstanding",
     "restored_renderer": "original Harbor Canvas/OffscreenCanvas/WebGL",
     "receipt_fold": "historical, edition and synthetic manifests kept separate",
     "new_figures": [
@@ -341,7 +341,7 @@
     }
   },
   "interface_recovery": {
-    "status": "validated_pending_release",
+    "status": "released_browser_review_outstanding",
     "regressions": {
       "kind": "controlled_runtime_regressions",
       "browser_test": false,
@@ -425,6 +425,53 @@
     "build": "passed",
     "reader_regressions_passed": 20,
     "local_files_matched": 605,
-    "build_marker": "cba59c9046"
+    "build_marker": "cba59c9046",
+    "production_application_commit": "b56731bc6d3fa501e9134a94475aafa88bb3b614"
+  },
+  "current_production": {
+    "application_commit": "b56731bc6d3fa501e9134a94475aafa88bb3b614",
+    "deployment_id": "dpl_7TtVGEvUooic6LoB8KEJXTW2yFrg",
+    "deployment_url": "https://reiyah-32u91mi69-daniels-projects-ca65133a.vercel.app",
+    "aliases": [
+      "https://reiyah.danielwahnich.dev",
+      "https://reiyah.vercel.app",
+      "https://reiyah-daniels-projects-ca65133a.vercel.app"
+    ],
+    "build_marker": "cba59c9046",
+    "worker_stamp": "89257138e924cba6",
+    "source_metadata_verified": "server_side_commit_repository_ref_filter",
+    "authenticated_prealias_files_matched": 4,
+    "public_readback": {
+      "at": "2026-10-12T10:25:15.431126+00:00",
+      "kind": "publisher_http_byte_comparison",
+      "files": 605,
+      "matched": 605,
+      "entry_urls_matched": 16,
+      "release_headers": [
+        {
+          "route": "/",
+          "status": 200,
+          "cache_control": "no-cache"
+        },
+        {
+          "route": "/build.json",
+          "status": 200,
+          "cache_control": "no-cache"
+        },
+        {
+          "route": "/sw.js",
+          "status": 200,
+          "cache_control": "no-cache"
+        }
+      ]
+    },
+    "browser_test": false,
+    "layout_verified": false,
+    "independent_transport_verification": false,
+    "rollback_deployment_id": "dpl_8UoP7Xi4WNhS3k2wUxsAcRqFLMwf",
+    "pull_request": "https://github.com/manfromnowhere143/reiyah-console/pull/3",
+    "pull_request_state": "MERGED",
+    "authorization": "Repeated explicit operator production deployment instruction, 2026-10-12",
+    "existing_tab_action": "Refresh once to receive the recovery and focus changes"
   }
 }

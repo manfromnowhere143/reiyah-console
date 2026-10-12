@@ -4,6 +4,57 @@ Living handoff for the next session. This repo is **reiyah-console** (the Harbor
 Instrument UI), separate from the Reiyah **engine** repo (`~/workspace/reiyah`,
 which has the Gate-A baton/denylist — none of that applies here; normal git).
 
+## Production closeout, 12 October 2026
+
+The restoration, all eight compact Findings chapters, deployment recovery and
+site-wide focus-intent correction are published. This entry supersedes the
+pending-release actions in the historical entries below. PRs #1, #2 and #3 are
+merged; the deployed application commit is
+`b56731bc6d3fa501e9134a94475aafa88bb3b614`.
+
+Vercel deployment `dpl_7TtVGEvUooic6LoB8KEJXTW2yFrg`
+(`https://reiyah-32u91mi69-daniels-projects-ca65133a.vercel.app`) serves
+[reiyah.danielwahnich.dev](https://reiyah.danielwahnich.dev),
+[reiyah.vercel.app](https://reiyah.vercel.app) and the existing generated project
+alias. It was deployed with explicit source metadata and `--prod --skip-domain`;
+the CLI still assigned the generated project alias automatically. The correct
+project, READY state and server-side commit/repository/ref metadata filter were
+checked before explicitly assigning all three existing Reiyah aliases. No
+Sentinel deployment or domain was changed.
+
+Authenticated deployment readback matched the HTML, build marker, service worker
+and main JavaScript before explicit alias assignment. Public readback at
+10:25:15 UTC matched **605/605 files** to the local build and matched the HTML at
+all **16 Findings entry URLs** across the two public domains. `/`, `/build.json`
+and `/sw.js` returned `Cache-Control: no-cache`. Build marker: `cba59c9046`;
+worker stamp: `89257138e924cba6`. These are publisher HTTP byte comparisons, not
+independent transport or browser interaction verification. An unauthenticated
+deployment URL initially returned the Vercel access page; authenticated readback
+resolved that access issue without changing the build.
+
+Validation remains 20/20 reader regressions, 15/15 controlled interface/runtime
+regressions, 552 file bindings, 17/17 server component render checks and a passing
+production build. The browser connection is unavailable: fresh viewport,
+keyboard/modal, physical Safari and VoiceOver checks remain outstanding. The
+exact exception from Daniel's screenshots was not captured. Retired-module HTTP
+failures explain a plausible update-related cause, not proof of every reported
+failure. An already-open tab needs one ordinary refresh to receive this fix.
+
+Release observations are retained in the owned candidate's parent directory:
+`recovery-production-readback.json`,
+`recovery-authenticated-prealias-check.json`,
+`recovery-metadata-filtered-list.txt` and `PRODUCTION_CLOSEOUT.json`.
+The compact release `dpl_8UoP7Xi4WNhS3k2wUxsAcRqFLMwf` is the immediate rollback
+target. The documentation closeout does not change the deployed application.
+The canonical Console's 51 pre-existing uncommitted files are preserved; the
+engine and its artifacts were not changed.
+
+Next: when the Browser connection is available, complete the retained interaction
+and viewport matrix against this production release, especially Encounter,
+historical/current receipts, all eight Findings, pointer-to-keyboard transitions,
+modal return focus, narrow/reduced-motion layouts and offline/update recovery.
+Local preview remains `http://127.0.0.1:4620/`.
+
 ## Update recovery and consistent focus intent, 12 October 2026
 
 The operator reported “Station unavailable” on multiple views and a successful
