@@ -96,7 +96,7 @@ export function ReceiptHost() {
   const dialog = useRef<HTMLDialogElement>(null);
   const token = useRef(newLayerToken());
   const seq = useRef(0);
-  const close = () => { seq.current++; setReq(null); };
+  const close = () => { dialog.current?.close(); seq.current++; setReq(null); };
   useEffect(() => onLayerClaim(t => { if (t !== token.current) close(); }), []);
   useEffect(() => {
     const onOpen = (e: Event) => {
@@ -117,7 +117,7 @@ export function ReceiptHost() {
   }, []);
   useEffect(() => { if (req && dialog.current && !dialog.current.open) dialog.current.showModal(); }, [req]);
   if (!req) return null;
-  return createPortal(<dialog ref={dialog} className="receipt-dialog" aria-label="Evidence receipt" onCancel={e=>{e.preventDefault();close();}} onClick={e=>{if(e.target===e.currentTarget)close();}}>
+  return createPortal(<dialog ref={dialog} className="receipt-dialog" role="dialog" aria-modal="true" aria-label="Evidence receipt" onCancel={e=>{e.preventDefault();close();}} onClick={e=>{if(e.target===e.currentTarget)close();}}>
     <div className="receipt-content">
       <div className="eyebrow">Evidence receipt</div><h2>The bytes behind this reading.</h2>
       <p className="receipt-path">{req.path}</p>

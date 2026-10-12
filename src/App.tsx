@@ -143,7 +143,7 @@ function Stage({ ev, onEvidence, covered, onInitialReady }: {
     const onPop = () => go(urlStation(), { push: false });
     const onKey = (e: KeyboardEvent) => {
       if (covered) return;
-      if (e.defaultPrevented || (e.target instanceof Element && e.target.closest("input, textarea, select, [contenteditable='true'], [role='dialog']"))) return;
+      if (e.defaultPrevented || (e.target instanceof Element && e.target.closest("input, textarea, select, [contenteditable='true'], [role='dialog'], dialog"))) return;
       if (!["Escape", "ArrowRight", "ArrowLeft"].includes(e.key)) return;
       e.preventDefault();
       if (e.key === "Escape") { go("harbor"); return; }

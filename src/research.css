@@ -189,7 +189,7 @@
   text-underline-offset: 4px;
 }
 .source-line .digest {
-  min-height: 40px;
+  min-height: 44px;
   backdrop-filter: none;
   -webkit-backdrop-filter: none;
   background: var(--panel);
