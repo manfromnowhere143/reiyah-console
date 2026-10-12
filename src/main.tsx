@@ -4,6 +4,7 @@ import App from "./App";
 import "./instrument.css";
 import "./research.css";
 import "./cinematic.css";
+import "./findings.css";
 
 /* The module executed — the bundle is healthy, so the boot watchdog's
    recovery guard is cleared. A later genuine failure can then self-heal

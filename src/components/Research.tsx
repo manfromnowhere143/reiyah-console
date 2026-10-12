@@ -11,8 +11,10 @@ export function EditionLabel() {
     </span>
   );
 }
-export function ShareReading() {
-  const [status, setStatus] = useState("Copy reading link");
+export function ShareReading({ compact = false }: { compact?: boolean }) {
+  const [status, setStatus] = useState(
+    compact ? "Copy link" : "Copy reading link",
+  );
   return (
     <button
       className="share-reading"

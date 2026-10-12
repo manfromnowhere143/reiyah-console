@@ -1,5 +1,5 @@
 {
-  "status": "candidate_pending_browser_review",
+  "status": "restoration_released_compact_followup_ready",
   "source_checks": {
     "kind": "console_reader_regression",
     "browser_testing": false,
@@ -107,7 +107,7 @@
     "physical_Safari": false,
     "VoiceOver": false
   },
-  "production_released": false,
+  "production_released": true,
   "engine_commit": "5be5c3dc5444ccfe98cd5a203a74d5d7d4834561",
   "whitespace": {
     "authored_changes": "passed",
@@ -212,6 +212,125 @@
     },
     "main_js_gzip_kb": 97.95,
     "browser_review": false,
-    "production_promoted": false
+    "production_promoted": true
+  },
+  "production_restoration": {
+    "application_commit": "6c11e4807cd4ee94e69ffda74969fac5a47cbb7f",
+    "deployment_id": "dpl_GF2EpAGB2Vskca2dmtGjivhBvvE8",
+    "url": "https://reiyah.danielwahnich.dev",
+    "http_readback": {
+      "files": 604,
+      "matched": 604,
+      "kind": "publisher_http_byte_comparison"
+    },
+    "browser_review": false
+  },
+  "compact_findings": {
+    "status": "implemented_pending_publication",
+    "chapters": 8,
+    "correction_selections": 6,
+    "source_payloads_changed": false,
+    "native_method_reader": true,
+    "geometry_uses_available_css_pixels": true,
+    "reader_tests_passed": 20,
+    "edition_file_bindings": 552,
+    "component_render_checks": {
+      "kind": "server_component_render_with_retained_data",
+      "browser_test": false,
+      "layout_test": false,
+      "passed": 17,
+      "total": 17,
+      "results": [
+        {
+          "study": "batching",
+          "view": "batch1",
+          "passed": true
+        },
+        {
+          "study": "batching",
+          "view": "batch2",
+          "passed": true
+        },
+        {
+          "study": "batching",
+          "view": "corrected",
+          "passed": true
+        },
+        {
+          "study": "empty",
+          "view": "native",
+          "passed": true
+        },
+        {
+          "study": "empty",
+          "view": "corrected",
+          "passed": true
+        },
+        {
+          "study": "motion",
+          "view": "",
+          "passed": true
+        },
+        {
+          "study": "review",
+          "view": "",
+          "passed": true
+        },
+        {
+          "study": "reference",
+          "view": "",
+          "passed": true
+        },
+        {
+          "study": "resolution",
+          "view": "image",
+          "passed": true
+        },
+        {
+          "study": "resolution",
+          "view": "policy",
+          "passed": true
+        },
+        {
+          "study": "value",
+          "view": "",
+          "passed": true
+        },
+        {
+          "study": "corrections",
+          "view": "reiyah.gate-b.claim.evidence-cost-pooled",
+          "passed": true
+        },
+        {
+          "study": "corrections",
+          "view": "reiyah.gate-b.claim.evidence-cost-worst-group",
+          "passed": true
+        },
+        {
+          "study": "corrections",
+          "view": "reiyah.gate-b.claim.result-g-derivation",
+          "passed": true
+        },
+        {
+          "study": "corrections",
+          "view": "reiyah.gate-b.claim.selected-coincidence-population-bound",
+          "passed": true
+        },
+        {
+          "study": "corrections",
+          "view": "reiyah.gate-b.claim.universal-kind-independence-law",
+          "passed": true
+        },
+        {
+          "study": "corrections",
+          "view": "reiyah.gate-b.claim.cross-agent-safety-evidence-credit",
+          "passed": true
+        }
+      ]
+    },
+    "browser_review": false,
+    "layout_verified": false,
+    "very_short_or_enlarged_text": "accessible_overflow_retained",
+    "release_authorization": "Explicit operator deployment instruction, repeated after compact refinement feedback, 2026-10-12"
   }
 }

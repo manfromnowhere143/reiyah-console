@@ -4,6 +4,53 @@ Living handoff for the next session. This repo is **reiyah-console** (the Harbor
 Instrument UI), separate from the Reiyah **engine** repo (`~/workspace/reiyah`,
 which has the Gate-A baton/denylist — none of that applies here; normal git).
 
+## Production restoration and compact Findings, 12 October 2026
+
+Daniel explicitly instructed production deployment after reviewing the restored
+Console, then requested that all eight Findings chapters become smaller, aligned
+and fit their page. He subsequently said “i love it” and explicitly repeated the
+production deployment order for this refinement. These operator instructions
+supersede the earlier pending-promotion instruction below. They are authorization
+to release, not a completed browser/viewport/accessibility test.
+
+The restored application at `6c11e4807cd4ee94e69ffda74969fac5a47cbb7f` is on
+GitHub main; PR #1 is merged. Vercel production
+`dpl_GF2EpAGB2Vskca2dmtGjivhBvvE8` serves both
+[the custom domain](https://reiyah.danielwahnich.dev) and
+[the Vercel alias](https://reiyah.vercel.app). All 604 served files matched the
+local production build byte for byte. This is publisher HTTP readback, not
+independent transport or visual verification.
+
+The compact follow-up replaces the scrolling Findings article/sidebar stack
+with one consistent composition: eight visible chapter controls, a measured
+visual, its numerical result and a limitation footer. At narrower widths the
+chapter controls wrap into two rows. SVG geometry adapts to available CSS pixel
+height without scaling its labels. Full methods, source links and receipt access
+open in a native modal reader, with Escape and return-focus handling. The
+Corrections selector exposes all six currently withdrawn interpretations,
+including the older evidence-budget conversions; the reader preserves their
+complete refutations. Switching chapters resets its execution-setting control.
+Harbor's scene, receipt Fold and every other station remain unchanged.
+
+Evidence payloads are unchanged. Reader regressions pass 20/20; all 552 bound
+files pass; 17 server-render checks exercise every study/control state and all
+six correction selections against the retained data. The latter are component
+render checks with a resolved data adapter, not browser or interaction tests.
+The build passes. No fresh visual/viewport, physical Safari or VoiceOver pass is
+claimed: the Browser runtime still reports “No browser is available.” Layout
+rules target a compact single-page reading; overflow remains available at very
+short windows or enlarged text so essential limitations are never clipped.
+
+The owned candidate and local review remain at the location recorded below,
+with `http://127.0.0.1:4620/?st=findings&at=batching` serving the final build.
+Canonical Console's 51 pre-existing uncommitted files remain byte-identical;
+no engine file, controller state or evidence artifact changed.
+
+Next: publish the compact application commit, deploy under the repeated operator
+order, compare the complete production files and record the resulting deployment.
+Retain the restored production above as the rollback target. Complete the actual
+viewport/keyboard/modal check when a Browser connection becomes available.
+
 ## Visual restoration after operator review, 12 October 2026
 
 Daniel rejected the first candidate's visual direction: replacing the living
