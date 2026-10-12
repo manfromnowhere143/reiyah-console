@@ -91,5 +91,15 @@
       "research/decision-value/0.1.0/README.md",
       "research/grid-fidelity/0.1.0/README.md"
     ]
+  },
+  "preview": {
+    "preview": "https://reiyah-87hyuug23-daniels-projects-ca65133a.vercel.app",
+    "application_commit": "778b7b58f949b5abf35fe537483dc0c5d56e9cd9",
+    "authenticated_Vercel_CLI_readback": true,
+    "matched": 578,
+    "count": 578,
+    "html_matches_after_removing_Vercel_preview_feedback_script": true,
+    "browser_review": false,
+    "production_promoted": false
   }
 }

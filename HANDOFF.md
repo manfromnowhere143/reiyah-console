@@ -33,6 +33,15 @@ Console. The one-confirmation packet is counterexample-only, with `bounds: null`
 it must never be drawn as a complete enclosure. Evidence is in
 [the QA record](docs/CONSOLE_EDITION_2026_10_12_QA.json).
 
+The candidate is published in [draft PR #1](https://github.com/manfromnowhere143/reiyah-console/pull/1).
+[Review preview](https://reiyah-87hyuug23-daniels-projects-ca65133a.vercel.app)
+serves application commit `778b7b58f949b5abf35fe537483dc0c5d56e9cd9`.
+Vercel sign-in may be required. All 578 served application/evidence files match
+the local build; HTML matches after removing Vercel's injected preview-feedback
+script. This is authenticated publisher readback, not independent transport
+verification. Production and main remain unchanged. The keyboard follow-up keeps
+native receipt Escape/focus behavior separate from global station navigation.
+
 **Release work remains.** The Browser runtime initialized but reported no connected
 browser; discovery returned an empty list. The operator has been asked to connect
 it while independent work continues. No fresh browser captures, interaction test,
