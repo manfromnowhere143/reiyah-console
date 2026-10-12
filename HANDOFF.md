@@ -54,10 +54,30 @@ Local preview: `http://127.0.0.1:4630/`. Evidence includes `review4/`,
 Intermediate failed runs and their corrections are retained. Canonical Console's
 pre-existing `HANDOFF.md` and `docs/reviews/` changes were preserved.
 
-Standing explicit deployment authorization remains. Publish this candidate to
-Reiyah's own Vercel project, verify exact source metadata and deployed bytes,
-then record the deployment below. Keep `dpl_F9c4vmA8eUBoZ3y8p2oS1pg9LhrJ` as
-rollback. Do not change Sentinel or any sibling project's deployments.
+Published and deployed under the standing operator instruction. PR #5 is merged;
+application commit `2d9eef2d73388c95862a7a053f2581be28958b7b`. Both the feature and
+merge commit preserve Daniel's configured author and committer identity.
+Deployment `dpl_8URb2aZXaS1pSp1wgycpdJa6Z6s5`
+(`https://reiyah-o894bqrtl-daniels-projects-ca65133a.vercel.app`) is READY in the
+existing Reiyah project and serves all three existing aliases, including
+[reiyah.danielwahnich.dev](https://reiyah.danielwahnich.dev).
+
+Exact repository/ref/commit metadata and four authenticated entry-file digests
+were verified before explicit alias assignment. Public readback at 12:21:20 UTC
+matched 819/819 files and 16/16 Findings entry URLs across the two public domains.
+HTML, build marker and worker retain no-cache. Build `0ec007402b`; worker stamp
+`c25a3fadbc421b10`. These are publisher byte comparisons. Separately, the actual
+public site passed 63 station/viewport checks: all 21 stations at 1440×900, 390×844
+and 375×667, with zero runtime errors, outer overflow or dock movement.
+The final Same Hazard reflow also passes all six local sizes, including 320px.
+
+Keep `dpl_F9c4vmA8eUBoZ3y8p2oS1pg9LhrJ` as rollback. Sentinel and sibling
+deployments were untouched. Canonical dirty files remain unchanged. Two newly
+bundled immutable engine documents retain trailing blank lines; byte custody
+takes precedence over whitespace normalization. Authored Console changes pass
+whitespace checks. Final production records and closeout are in the owner above.
+Next: operator visual review and physical Safari/VoiceOver observations. Existing
+tabs need one ordinary refresh to receive the release.
 
 ## Mobile receipts and Harbor pause rendering, 12 October 2026
 
