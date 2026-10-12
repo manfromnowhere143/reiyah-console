@@ -54,19 +54,37 @@ self.addEventListener("fetch", (e) => {
     return;
   }
 
-  /* hashed assets: cache-first, immutable */
+  /* The release probe must never fall back to a stale build marker. */
+  if (url.pathname === "/build.json") {
+    e.respondWith(fetch(req, { cache: "no-store" }));
+    return;
+  }
+
+  /* Cache only usable assets. A preview server can answer a retired .js path
+     with its HTML fallback; a CDN can answer 404. Neither is an immutable
+     code asset, and older workers may already have stored such a response. */
   if (url.pathname.startsWith("/assets/")) {
-    e.respondWith(
-      caches.match(req).then(
-        (hit) =>
-          hit ||
-          fetch(req).then((res) => {
-            const copy = res.clone();
-            caches.open(ASSETS).then((c) => c.put(req, copy));
-            return res;
-          })
-      )
-    );
+    const usable = (res) => {
+      if (!res?.ok) return false;
+      const mime = (res.headers.get("Content-Type") || "").split(";")[0].trim().toLowerCase();
+      if (/\.m?js$/.test(url.pathname)) return /^(text|application)\/(javascript|ecmascript)$/.test(mime);
+      if (/\.css$/.test(url.pathname)) return mime === "text/css";
+      return !!mime && mime !== "text/html";
+    };
+    e.respondWith((async () => {
+      let cache;
+      try {
+        cache = await caches.open(ASSETS);
+        const hit = await cache.match(req);
+        if (usable(hit)) return hit;
+        if (hit) await cache.delete(req);
+      } catch { /* unavailable storage must not block the network */ }
+      const res = await fetch(req);
+      if (cache && usable(res)) {
+        try { await cache.put(req, res.clone()); } catch { /* quota is optional */ }
+      }
+      return res;
+    })());
     return;
   }
 

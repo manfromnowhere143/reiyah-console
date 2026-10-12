@@ -5,6 +5,7 @@ import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import { claimLayer, newLayerToken, onLayerClaim } from "../lib/layers";
 import { prove, type Proof, type LiveState, getEvidenceGeneration } from "../lib/evidence";
+import { isModuleLoadError, recoverFromDeployment } from "../lib/deploymentRecovery";
 import { Fold } from "./Fold";
 import type { ReceiptTree } from "../lib/receiptTree";
 import { useStationReadiness } from "./StationFrame";
@@ -134,12 +135,14 @@ export function ReceiptHost() {
               : null;
             if (generation === seq.current) setFold(tree);
           } catch (e) {
+            if (isModuleLoadError(e) && await recoverFromDeployment(undefined, () => generation === seq.current)) return;
             if (generation === seq.current) {
               setFold(null);
               setFoldError(String((e as Error).message));
             }
           }
         } catch (e) {
+          if (isModuleLoadError(e) && await recoverFromDeployment(undefined, () => generation === seq.current)) return;
           if (generation === seq.current)
             setProof({ reason: String((e as Error).message) });
         }
@@ -233,9 +236,12 @@ export function ReceiptHost() {
                   !(proof && "reason" in proof)
                     ? "Computing the receipt…"
                     : foldError
-                      ? "The manifest fold could not be computed."
+                      ? isModuleLoadError(foldError)
+                        ? "The diagram’s code could not be loaded. Reload to restore the receipt view."
+                        : "The manifest fold could not be computed. The direct file check is shown separately."
                       : "This record has a direct digest receipt. No inclusion fold is claimed."}
                 </p>
+                {isModuleLoadError(foldError) && <button className="research-button" onClick={() => location.reload()}>Reload receipt view</button>}
               </div>
             )}
           </figure>

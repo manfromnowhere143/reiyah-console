@@ -16,6 +16,7 @@ import { ReceiptHost } from "./components/primitives";
 import { Harbor } from "./stations/Harbor";
 import { Dock } from "./components/Dock";
 import { STATION_CODE, cachedStation, prefetchNeighbours, type StationComponent } from "./lib/prefetch";
+import { recoverFromDeployment } from "./lib/deploymentRecovery";
 import { StationFrame, useStationReadiness, type Navigate, type NavigationOptions } from "./components/StationFrame";
 
 /* every station but the Harbor is its own code chunk, fetched when first
@@ -29,7 +30,11 @@ function LoadedStation({ id, stationProps }: { id: string; stationProps: Record<
     let alive = true;
     STATION_CODE[id]()
       .then((component) => { if (alive) setCode({ component }); })
-      .catch((error: unknown) => { if (alive) setCode({ error: error instanceof Error ? error : new Error(String(error)) }); });
+      .catch(async (error: unknown) => {
+        if (!alive) return;
+        const recovering = await recoverFromDeployment(id, () => alive);
+        if (alive && !recovering) setCode({ error: error instanceof Error ? error : new Error(String(error)) });
+      });
     return () => { alive = false; };
   }, [id, code.component]);
   if (code.error) throw code.error;

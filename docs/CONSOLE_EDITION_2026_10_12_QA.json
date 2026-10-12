@@ -1,5 +1,5 @@
 {
-  "status": "restoration_released_compact_followup_ready",
+  "status": "compact_released_recovery_fix_in_validation",
   "source_checks": {
     "kind": "console_reader_regression",
     "browser_testing": false,
@@ -226,7 +226,7 @@
     "browser_review": false
   },
   "compact_findings": {
-    "status": "implemented_pending_publication",
+    "status": "released",
     "chapters": 8,
     "correction_selections": 6,
     "source_payloads_changed": false,
@@ -331,6 +331,100 @@
     "browser_review": false,
     "layout_verified": false,
     "very_short_or_enlarged_text": "accessible_overflow_retained",
-    "release_authorization": "Explicit operator deployment instruction, repeated after compact refinement feedback, 2026-10-12"
+    "release_authorization": "Explicit operator deployment instruction, repeated after compact refinement feedback, 2026-10-12",
+    "production": {
+      "application_commit": "d43ab8fea0fe41f684845aeea5db8d8012efd976",
+      "deployment_id": "dpl_8UoP7Xi4WNhS3k2wUxsAcRqFLMwf",
+      "files_matched": 604,
+      "entry_urls_matched": 16,
+      "browser_test": false
+    }
+  },
+  "interface_recovery": {
+    "status": "validated_pending_release",
+    "regressions": {
+      "kind": "controlled_runtime_regressions",
+      "browser_test": false,
+      "passed": 15,
+      "total": 15,
+      "results": [
+        {
+          "name": "Changed build recovers the requested station without obsolete reading state",
+          "passed": true
+        },
+        {
+          "name": "Receipt recovery preserves the exact reading URL",
+          "passed": true
+        },
+        {
+          "name": "The same build, offline state and invalid markers do not trigger reloads",
+          "passed": true
+        },
+        {
+          "name": "A canceled navigation cannot reload a superseded destination",
+          "passed": true
+        },
+        {
+          "name": "The durable guard stops repeated reloads across instances",
+          "passed": true
+        },
+        {
+          "name": "Unavailable session storage disables automatic recovery",
+          "passed": true
+        },
+        {
+          "name": "Concurrent module failures share one probe and one navigation",
+          "passed": true
+        },
+        {
+          "name": "Module errors remain distinct from integrity and arithmetic errors",
+          "passed": true
+        },
+        {
+          "name": "Pointer autofocus and keyboard navigation retain distinct focus intent",
+          "passed": true
+        },
+        {
+          "name": "An HTML response at a JavaScript URL is not cached",
+          "passed": true
+        },
+        {
+          "name": "A missing code response is not cached",
+          "passed": true
+        },
+        {
+          "name": "A poisoned old asset entry is discarded and replaced with JavaScript",
+          "passed": true
+        },
+        {
+          "name": "A valid cached module remains available without a network request",
+          "passed": true
+        },
+        {
+          "name": "Cache storage failure does not prevent loading a valid module",
+          "passed": true
+        },
+        {
+          "name": "Release probes use the network rather than a cached marker",
+          "passed": true
+        }
+      ]
+    },
+    "user_reported_failures": [
+      "multiple station views unavailable",
+      "direct digest matched but Fold failed",
+      "pointer focus outlines persisted"
+    ],
+    "retired_module_http_probe": {
+      "local": "200 text/html at old JavaScript URLs",
+      "production": "404 at old JavaScript URLs",
+      "current_modules": "200 JavaScript"
+    },
+    "exact_user_browser_exception_captured": false,
+    "fresh_browser_review": false,
+    "build": "passed",
+    "reader_regressions_passed": 20,
+    "local_files_matched": 605,
+    "build_marker": "cba59c9046"
   }
 }

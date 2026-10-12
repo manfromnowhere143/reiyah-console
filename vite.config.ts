@@ -10,19 +10,49 @@ import path from "node:path";
 function sourceId(): string {
   const h = createHash("sha256");
   const walk = (d: string) => {
-    for (const e of fs.readdirSync(d, { withFileTypes: true }).sort((a, b) => a.name.localeCompare(b.name))) {
+    for (const e of fs
+      .readdirSync(d, { withFileTypes: true })
+      .sort((a, b) => a.name.localeCompare(b.name))) {
       const q = path.join(d, e.name);
-      if (e.isDirectory()) walk(q); else { h.update(q); h.update(fs.readFileSync(q)); }
+      if (e.isDirectory()) walk(q);
+      else {
+        h.update(q);
+        h.update(fs.readFileSync(q));
+      }
     }
   };
   h.update(fs.readFileSync("public/snapshot/manifest.json"));
-  walk("src"); h.update(fs.readFileSync("index.html")); h.update(fs.readFileSync("package-lock.json"));
+  walk("src");
+  h.update(fs.readFileSync("index.html"));
+  h.update(fs.readFileSync("package-lock.json"));
   return h.digest("hex").slice(0, 10);
 }
 
+const buildId = sourceId();
+
 export default defineConfig({
-  define: { __BUILD_ID__: JSON.stringify(sourceId()), __SNAPSHOT_SHA__: JSON.stringify("sha256:" + createHash("sha256").update(fs.readFileSync("public/snapshot/manifest.json")).digest("hex")) },
-  plugins: [react()],
+  define: {
+    __BUILD_ID__: JSON.stringify(buildId),
+    __SNAPSHOT_SHA__: JSON.stringify(
+      "sha256:" +
+        createHash("sha256")
+          .update(fs.readFileSync("public/snapshot/manifest.json"))
+          .digest("hex"),
+    ),
+  },
+  plugins: [
+    react(),
+    {
+      name: "harbor-build-marker",
+      generateBundle() {
+        this.emitFile({
+          type: "asset",
+          fileName: "build.json",
+          source: JSON.stringify({ build: buildId }) + "\n",
+        });
+      },
+    },
+  ],
   server: {
     port: 4610,
     proxy: {

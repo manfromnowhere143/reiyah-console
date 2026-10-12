@@ -1,3 +1,4 @@
+import { isModuleLoadError } from "../lib/deploymentRecovery";
 import { Component, createContext, useContext, useLayoutEffect, useRef, type ReactNode, type RefObject } from "react";
 
 export interface NavigationOptions {
@@ -91,7 +92,10 @@ class StationErrorBoundary extends Component<{ children: ReactNode; gate: Readin
     return <>
       <div className="ipanel blocked" role="alert">
         <h2>Station unavailable</h2>
-        <p>This station could not be loaded. Choose another station or reload to try again.</p>
+        <p>{isModuleLoadError(this.state.error)
+          ? "The code for this view could not be loaded. A site update or interrupted connection may require a reload."
+          : "This station could not be loaded. Reload to try again, or choose another station."}</p>
+        <button className="research-button station-recovery" onClick={() => location.reload()}>Reload this view</button>
       </div>
       <LayoutReady gate={this.props.gate} />
     </>;

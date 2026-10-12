@@ -4,6 +4,54 @@ Living handoff for the next session. This repo is **reiyah-console** (the Harbor
 Instrument UI), separate from the Reiyah **engine** repo (`~/workspace/reiyah`,
 which has the Gate-A baton/denylist — none of that applies here; normal git).
 
+## Update recovery and consistent focus intent, 12 October 2026
+
+The operator reported “Station unavailable” on multiple views and a successful
+README digest check whose Fold could not be computed, then requested a site-wide
+fix for pointer interactions leaving focus borders visible. The compact release
+`d43ab8fea0fe41f684845aeea5db8d8012efd976` was already deployed as
+`dpl_8UoP7Xi4WNhS3k2wUxsAcRqFLMwf`; all 604 production files and 16 Findings
+entry URLs on both aliases matched its build. The screenshots are real failures;
+that HTTP check is not a browser interaction test.
+
+Investigation reproduced retired Encounter and receiptTree chunk requests:
+the local preview returned HTTP 200 HTML at those JavaScript paths, and the
+current production alias returned 404. The current chunks returned JavaScript.
+This is consistent with an already-open tab crossing a build replacement;
+the exact browser exception was unavailable, so do not describe the screenshots
+as an independently captured runtime reproduction. Vite documents this
+[deployment/import failure mode](https://vite.dev/guide/build.html#load-error-handling).
+The old worker also cached unsuccessful and HTML asset responses.
+
+The follow-up adds a no-cache build marker and guarded recovery on a visible
+station import or a receipt-module failure. It navigates only after a different
+build is confirmed, preserves the intended station/reading URL, respects
+canceled navigation, coalesces concurrent probes and durably blocks repeat
+reloads. Offline, invalid markers, the same build and unavailable guard storage
+do not auto-reload. Integrity/compute failures retain their distinct states.
+The worker now rejects cached HTML/non-success code responses, discards poisoned
+entries, tolerates unavailable cache storage and bypasses cache for build probes.
+An explicit reload action remains available when a view cannot load.
+
+Focus handling previously tracked pointer/keyboard intent only inside the Field
+Index. A shared capture-phase input handler now applies to controls throughout
+the document and portal/native dialogs. Pointer-induced programmatic focus keeps
+focus and tab order without a lingering outline; keyboard and trusted assistive
+activation retain focus cues. Text fields keep their editing focus treatment.
+The global focus rule no longer changes a button's border radius. The design
+retains native [:focus-visible](https://developer.mozilla.org/en-US/docs/Web/CSS/:focus-visible)
+as its keyboard cue; no blur-on-click workaround or universal outline removal
+is used.
+
+Validation: `npm run test:interface` exercises 15 actual-runtime controlled
+regressions for build recovery, loop/cancellation guards, input intent and worker
+cache behavior. All 15 pass, as do the 20 reader regressions and the production
+build. All 605 locally served files match that build. These are not browser
+tests. Publish the correction under the standing explicit deploy order, compare
+the served files, and record the final deployment. The Browser
+connection still reports no available browser; physical interaction verification
+remains outstanding, and should not be inferred from the operator screenshots.
+
 ## Production restoration and compact Findings, 12 October 2026
 
 Daniel explicitly instructed production deployment after reviewing the restored

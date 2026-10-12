@@ -1,0 +1,30 @@
+/* Keep focus, tab order and keyboard cues. Only a real pointer interaction
+   suppresses rings on non-editable controls, including portal/native dialogs.
+   Text inputs retain their focus treatment for pointer and keyboard editing. */
+html[data-input-modality="pointer"]
+  :is(button, a, summary, [role="button"], [tabindex]):not(
+    input,
+    textarea,
+    select,
+    [contenteditable],
+    [tabindex="-1"]
+  ):focus {
+  outline: none;
+}
+html[data-input-modality="keyboard"]
+  :is(button, a, summary, [role="button"], [tabindex]):not(
+    input,
+    textarea,
+    select,
+    [contenteditable],
+    [tabindex="-1"]
+  ):focus-visible {
+  outline: 2px solid var(--ink-soft);
+  outline-offset: 3px;
+}
+.station-recovery {
+  margin-top: 14px;
+}
+.fold-unavailable .research-button {
+  margin-top: 12px;
+}
