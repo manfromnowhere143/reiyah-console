@@ -744,7 +744,22 @@
 
 /* The Fold returns as the centre of a receipt, with exact identity beside it. */
 .receipt-dialog {
-  width: min(980px, calc(100vw - 32px));
+  --receipt-gap: 16px;
+  --receipt-top: max(var(--receipt-gap), env(safe-area-inset-top, 0px));
+  --receipt-right: max(var(--receipt-gap), env(safe-area-inset-right, 0px));
+  --receipt-bottom: max(var(--receipt-gap), env(safe-area-inset-bottom, 0px));
+  --receipt-left: max(var(--receipt-gap), env(safe-area-inset-left, 0px));
+  --receipt-height: min(var(--app-h, 100dvh), 100dvh);
+  --receipt-padding: clamp(20px, 3vw, 38px);
+  position: fixed;
+  inset: var(--receipt-top) var(--receipt-right)
+    max(var(--receipt-bottom), calc(100dvh - var(--receipt-height) + var(--receipt-bottom)))
+    var(--receipt-left);
+  margin: auto;
+  width: min(980px, calc(100% - var(--receipt-left) - var(--receipt-right)));
+  max-width: none;
+  max-height: calc(var(--receipt-height) - var(--receipt-top) - var(--receipt-bottom));
+  overflow: hidden;
   border-radius: 16px;
   background: var(--void);
   box-shadow:
@@ -756,13 +771,34 @@
   backdrop-filter: blur(8px);
 }
 .receipt-cinematic {
-  padding: clamp(20px, 3vw, 38px);
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  max-height: calc(var(--receipt-height) - var(--receipt-top) - var(--receipt-bottom) - 2px);
+  padding: 0;
 }
 .receipt-heading {
   display: flex;
   align-items: flex-start;
   justify-content: space-between;
   gap: 24px;
+  flex: none;
+  padding: var(--receipt-padding) var(--receipt-padding) 0;
+}
+.receipt-heading > div {
+  min-width: 0;
+}
+.receipt-scroll {
+  min-width: 0;
+  min-height: 0;
+  overflow: auto;
+  overscroll-behavior: contain;
+  scrollbar-width: thin;
+  padding: 0 var(--receipt-padding) var(--receipt-padding);
+  scroll-padding: 12px;
+}
+html[data-input-modality] .receipt-dialog .receipt-scroll:focus-visible {
+  outline-offset: -3px;
 }
 .receipt-heading h2 {
   font: 500 clamp(2rem, 3.5vw, 3.2rem) / 1 "Big Shoulders";
@@ -792,6 +828,8 @@
   gap: clamp(20px, 3vw, 40px);
 }
 .receipt-fold {
+  grid-column: 1;
+  grid-row: 1;
   min-width: 0;
   margin: 0;
 }
@@ -829,6 +867,9 @@
   font: 0.65rem/1.7 "B612 Mono";
 }
 .receipt-facts {
+  grid-column: 2;
+  grid-row: 1;
+  min-width: 0;
   border-left: 1px solid var(--line);
   padding-left: clamp(16px, 2.5vw, 32px);
 }
@@ -857,6 +898,12 @@
   font: 0.65rem "Instrument Sans";
   margin-bottom: 0.35rem;
 }
+.receipt-details {
+  min-width: 0;
+}
+.receipt-details > summary {
+  display: none;
+}
 .fold-unavailable {
   min-height: 280px;
   display: flex;
@@ -873,7 +920,7 @@
   max-width: 32ch;
   text-align: center;
 }
-.receipt-cinematic > .research-limit {
+.receipt-scroll > .research-limit {
   margin: 1.5rem 0 0;
   font-size: 0.7rem !important;
 }
@@ -930,14 +977,91 @@
   }
   .receipt-grid {
     grid-template-columns: 1fr;
+    gap: 16px;
   }
   .receipt-facts {
+    grid-column: 1;
+    grid-row: 1;
     border-left: 0;
-    border-top: 1px solid var(--line);
-    padding: 12px 0 0;
+    border-top: 0;
+    padding: 0;
+  }
+  .receipt-fold {
+    grid-row: 2;
+  }
+  .receipt-outcome h3 {
+    margin: 0 0 8px;
+    font-size: 1rem;
+  }
+  .receipt-outcome > span {
+    align-self: flex-start;
+    line-height: 1.5rem;
+  }
+  .receipt-details > summary {
+    display: list-item;
+    min-height: 44px;
+    padding: 12px 4px;
+    border-block: 1px solid var(--line);
+    cursor: pointer;
+    font: 500 0.8rem/1.5 "Instrument Sans";
+  }
+  .receipt-details[open] > summary {
+    border-bottom-color: transparent;
+  }
+  .receipt-facts dl {
+    font-size: 0.75rem;
+    line-height: 1.6;
+    margin: 0 0 12px;
+  }
+  .receipt-facts dt {
+    font-size: 0.75rem;
+  }
+  .fold-caption {
+    flex-wrap: wrap;
+    gap: 4px 12px;
+    font-size: 0.7rem;
+  }
+  .fold-caption > span {
+    overflow-wrap: anywhere;
+  }
+  .fold-caption .share-reading {
+    min-height: 44px;
+    padding-inline: 4px;
   }
   .receipt-fold .fold {
-    height: 230px;
+    height: clamp(116px, 22dvh, 190px);
+    margin: 4px 0 10px;
+  }
+  .receipt-fold figcaption {
+    font-size: 0.75rem;
+    line-height: 1.5;
+  }
+  .computed-root {
+    margin-top: 10px;
+    padding-top: 8px;
+  }
+  .computed-root > span,
+  .computed-root code {
+    font-size: 0.7rem;
+    line-height: 1.5;
+  }
+  .computed-root code {
+    margin-top: 4px;
+  }
+  .fold-unavailable {
+    min-height: clamp(110px, 20dvh, 190px);
+  }
+  .fold-glyph {
+    font-size: 2.5rem;
+  }
+  .fold-unavailable p {
+    margin: 8px 0;
+  }
+  .receipt-scroll > .research-limit {
+    margin-top: 14px;
+    padding-left: 10px;
+    font-size: 0.75rem !important;
+    line-height: 1.5;
   }
 }
 @media (max-width: 640px) {
@@ -1085,12 +1209,28 @@
     font-size: 0.85rem;
   }
   .receipt-dialog {
-    width: calc(100vw - 16px);
-    max-height: calc(100dvh - 16px);
+    --receipt-gap: 8px;
+    --receipt-padding: 16px;
     border-radius: 12px;
   }
-  .receipt-cinematic {
-    padding: 18px;
+  .receipt-heading {
+    gap: 12px;
+    padding-bottom: 8px;
+  }
+  .receipt-heading .eyebrow {
+    font-size: 0.6rem;
+    letter-spacing: 0.08em;
+  }
+  .receipt-heading h2 {
+    font-size: 1.8rem;
+    line-height: 1.03;
+    margin: 0.45rem 0 0;
+  }
+  .receipt-path {
+    font-size: 0.7rem;
+    line-height: 1.5;
+    margin: 0 0 12px;
+    padding-bottom: 10px;
   }
 }
 @media (prefers-contrast: more) {

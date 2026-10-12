@@ -126,11 +126,17 @@ export function createHarborEngine(
     const { dpr, dark, reduced } = env;
     const post = env.post ?? "canvas";
     const w = env.w, h = env.h;
+    // Canvas dimensions are integers. Comparing against fractional DPR
+    // products resets every buffer on every frame at e.g. 125% scaling.
+    // Match the worker's device grid and map CSS geometry to that exact grid.
+    const wDev = Math.max(1, Math.round(w * dpr));
+    const hDev = Math.max(1, Math.round(h * dpr));
     for (const cv of [trailCv, mainCv, output]) {
-      if (cv.width !== w * dpr || cv.height !== h * dpr) { cv.width = w * dpr; cv.height = h * dpr; }
+      if (cv.width !== wDev) cv.width = wDev;
+      if (cv.height !== hDev) cv.height = hDev;
     }
-    tctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-    mctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    tctx.setTransform(wDev / Math.max(1, w), 0, 0, hDev / Math.max(1, h), 0, 0);
+    mctx.setTransform(wDev / Math.max(1, w), 0, 0, hDev / Math.max(1, h), 0, 0);
 
     const INK = dark ? "255,255,255" : "16,18,21";
     const RED = dark ? "227,25,55" : "214,23,50";

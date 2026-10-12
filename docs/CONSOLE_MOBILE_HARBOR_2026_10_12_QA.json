@@ -1,0 +1,27 @@
+{
+  "artifact_id": "reiyah.console.mobile-harbor-qa",
+  "version": "0.1.0",
+  "date": "2026-10-12",
+  "status": "validated_pending_release_browser_review_outstanding",
+  "source_base": "ce79867f9f0cdc9d17fe95ed38d496debb2a2859",
+  "scope": [
+    "mobile_receipt_containment",
+    "pause_alpha_compositing",
+    "defined_vignette",
+    "fractional_DPR_stability"
+  ],
+  "build": "passed",
+  "reader_regressions": 20,
+  "interface_regressions": 15,
+  "graphics_regressions": 6,
+  "graphics_baseline_rejections": 5,
+  "edition_bindings": 552,
+  "browser_visual_review": false,
+  "GPU_shader_execution": false,
+  "physical_mobile_review": false,
+  "source_payloads_changed": false,
+  "new_dependencies": 0,
+  "new_GPU_passes": 0,
+  "major_visual_redesign": false,
+  "rollback_deployment_id": "dpl_7TtVGEvUooic6LoB8KEJXTW2yFrg"
+}

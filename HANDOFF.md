@@ -4,6 +4,47 @@ Living handoff for the next session. This repo is **reiyah-console** (the Harbor
 Instrument UI), separate from the Reiyah **engine** repo (`~/workspace/reiyah`,
 which has the Gate-A baton/denylist — none of that applies here; normal git).
 
+## Mobile receipts and Harbor pause rendering, 12 October 2026
+
+Daniel explicitly requested simultaneous engine research and Console work, including
+parallel agents. The Console scope is mobile receipt containment, the bright
+Harbor pause artifact on a dark ground, and a graphics improvement only if its
+visual suitability is established. Engine research remains in its separate owner.
+
+The receipt now has safe-area-aware bounds, a dynamic/measured viewport height
+cap and an always-reachable 44px close control. A single inner region can scroll
+at short heights or enlarged text. Mobile puts the integrity result first and
+uses a native disclosure for complete digest/source details; the Fold adapts to
+the available height. No digest, root, inclusion statement or limitation is
+truncated. Desktop retains the two-column receipt. File-check failures now have
+a distinct heading rather than continuing to say they are being checked.
+
+Harbor's texture upload requested straight alpha while its base shader applied
+premultiplied source-over. Pausing cleared the accumulated trail and exposed the
+mismatch on translucent light/glass fills. The upload now requests premultiplied
+alpha. A reversed-edge smoothstep vignette is replaced with a defined inverted
+ramp. Canvas dimensions now use the worker's integer device-pixel grid, avoiding
+repeated context resets at fractional DPR. The road/cabin renderer, effect
+strengths, 2D fallback and scene identity are preserved. No new GPU passes,
+dependencies or image assets were added. Broader photorealistic redesign is
+withheld because the user conditioned it on demonstrated visual suitability.
+
+Validation: production build and TypeScript pass, as do 20 reader regressions,
+15 interface regressions, 6 controlled graphics checks and 552 edition bindings.
+The same graphics checks reject five defects against the previous source while
+its existing worker pause behavior passes. These use recorded Canvas/WebGL/RAF
+interfaces, not GPU shader execution. The official Browser selection and
+discovery report no available browser. Actual mobile geometry, GPU appearance,
+Safari and VoiceOver remain unverified; do not equate the source diagnosis with
+a captured reproduction of Daniel's device.
+
+Owned candidate: `~/.codex/reports/reiyah/console-mobile-harbor-2026-10-12-9m3f9k_w/candidate`.
+Its parent retains `mobile-receipt-review.json`, `harbor-rendering-review.json`,
+the baseline rejection record and integration logs. Base:
+`ce79867f9f0cdc9d17fe95ed38d496debb2a2859`. Publish under the standing release
+order, verify exact source/deployment identity and served bytes, then record
+production receipt. Keep `dpl_7TtVGEvUooic6LoB8KEJXTW2yFrg` as rollback.
+
 ## Production closeout, 12 October 2026
 
 The restoration, all eight compact Findings chapters, deployment recovery and

@@ -18,7 +18,8 @@
     "test:evidence": "node --experimental-vm-modules tests/evidence-reader.mjs",
     "publish:edition": "node tools/publish-edition.mjs",
     "test:edition": "node tools/check-edition.mjs",
-    "test:interface": "node tests/interface-recovery.mjs"
+    "test:interface": "node tests/interface-recovery.mjs",
+    "test:graphics": "node tests/harbor-rendering.mjs"
   },
   "dependencies": {
     "react": "^19.0.0",

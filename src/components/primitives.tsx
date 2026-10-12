@@ -96,6 +96,7 @@ export function ReceiptHost() {
   const [fold, setFold] = useState<ReceiptTree | null | undefined>(undefined);
   const [foldError, setFoldError] = useState("");
   const [replay, setReplay] = useState(0);
+  const [detailsOpen, setDetailsOpen] = useState(false);
   const dialog = useRef<HTMLDialogElement>(null);
   const token = useRef(newLayerToken());
   const seq = useRef(0);
@@ -121,6 +122,7 @@ export function ReceiptHost() {
       setFold(undefined);
       setFoldError("");
       setReplay(0);
+      setDetailsOpen(matchMedia("(min-width: 851px)").matches);
       (async () => {
         try {
           const pr = await prove(r.id, r.sha);
@@ -158,6 +160,14 @@ export function ReceiptHost() {
     if (req && dialog.current && !dialog.current.open)
       dialog.current.showModal();
   }, [req]);
+  useEffect(() => {
+    // Keep the established desktop receipt open; a phone gets an optional
+    // exact-byte reader instead of stacking every digest beneath the Fold.
+    const wide = matchMedia("(min-width: 851px)");
+    const resize = () => setDetailsOpen(wide.matches);
+    wide.addEventListener("change", resize);
+    return () => wide.removeEventListener("change", resize);
+  }, []);
   if (!req) return null;
   return createPortal(
     <dialog
@@ -193,112 +203,123 @@ export function ReceiptHost() {
             ×
           </button>
         </header>
-        <p className="receipt-path">{req.path}</p>
-        <div className="receipt-grid">
-          <figure className="receipt-fold">
-            {fold ? (
-              <>
-                <div className="fold-caption">
-                  <span>{fold.scope}</span>
-                  <button
-                    className="share-reading"
-                    onClick={() => setReplay((n) => n + 1)}
-                  >
-                    Replay fold ↺
-                  </button>
-                </div>
-                <Fold
-                  key={`${req.id}|${req.sha}|${replay}`}
-                  tree={fold.tree}
-                  leafId={req.id}
-                  verified={fold.verified}
-                  label={fold.scope}
-                />
-                <figcaption>
-                  {fold.tree.leafCount} manifest digests →{" "}
-                  {fold.tree.layers.length - 1} folds → one computed root.
-                  <br />
-                  The selected record’s path is illuminated.
-                </figcaption>
-                <div className="computed-root">
-                  <span>Root computed here · not an independent signature</span>
-                  <code>{fold.tree.rootHex}</code>
-                </div>
-              </>
-            ) : (
-              <div className="fold-unavailable" role="status">
-                <span className="fold-glyph" aria-hidden="true">
-                  ◇
+        <div className="receipt-scroll" role="region" tabIndex={0} aria-label="Receipt content">
+          <p className="receipt-path">{req.path}</p>
+          <div className="receipt-grid">
+            <div className="receipt-facts" aria-live="polite">
+              <div
+                className="receipt-outcome"
+                data-match={
+                  proof && "equal" in proof ? String(proof.equal) : undefined
+                }
+              >
+                <span aria-hidden="true">
+                  {proof && "equal" in proof ? (proof.equal ? "◆" : "×") : "◇"}
                 </span>
-                <p>
-                  {fold === undefined &&
-                  !foldError &&
-                  !(proof && "reason" in proof)
-                    ? "Computing the receipt…"
-                    : foldError
-                      ? isModuleLoadError(foldError)
-                        ? "The diagram’s code could not be loaded. Reload to restore the receipt view."
-                        : "The manifest fold could not be computed. The direct file check is shown separately."
-                      : "This record has a direct digest receipt. No inclusion fold is claimed."}
-                </p>
-                {isModuleLoadError(foldError) && <button className="research-button" onClick={() => location.reload()}>Reload receipt view</button>}
+                <h3>
+                  {proof && "equal" in proof
+                    ? proof.equal
+                      ? "The bytes match."
+                      : "Digest mismatch."
+                    : proof && "reason" in proof
+                      ? "The file check failed."
+                      : "Checking the bytes."}
+                </h3>
               </div>
-            )}
-          </figure>
-          <div className="receipt-facts" aria-live="polite">
-            <div
-              className="receipt-outcome"
-              data-match={
-                proof && "equal" in proof ? String(proof.equal) : undefined
-              }
-            >
-              <span aria-hidden="true">
-                {proof && "equal" in proof ? (proof.equal ? "◆" : "×") : "◇"}
-              </span>
-              <h3>
-                {proof && "equal" in proof
-                  ? proof.equal
-                    ? "The bytes match."
-                    : "Digest mismatch."
-                  : "Checking the bytes."}
-              </h3>
-            </div>
-            <dl>
-              <dt>Displayed digest</dt>
-              <dd>{req.sha}</dd>
-              {proof && "equal" in proof ? (
-                <>
-                  <dt>Recomputed in this browser</dt>
-                  <dd>{proof.clientSha256}</dd>
-                  <dt>Exact length</dt>
-                  <dd>{proof.byteLength.toLocaleString()} bytes</dd>
-                  {fold && (
+              <details
+                className="receipt-details"
+                open={detailsOpen}
+                onToggle={(e) => setDetailsOpen(e.currentTarget.open)}
+              >
+                <summary>Exact bytes &amp; source</summary>
+                <dl>
+                  <dt>Displayed digest</dt>
+                  <dd>{req.sha}</dd>
+                  {proof && "equal" in proof ? (
                     <>
-                      <dt>Manifest inclusion</dt>
-                      <dd>
-                        {fold.verified
-                          ? "Selected digest reaches the computed root"
-                          : "Inclusion does not verify"}
-                      </dd>
-                      <dt>Source</dt>
-                      <dd>{fold.binding}</dd>
+                      <dt>Recomputed in this browser</dt>
+                      <dd>{proof.clientSha256}</dd>
+                      <dt>Exact length</dt>
+                      <dd>{proof.byteLength.toLocaleString()} bytes</dd>
+                      {fold && (
+                        <>
+                          <dt>Manifest inclusion</dt>
+                          <dd>
+                            {fold.verified
+                              ? "Selected digest reaches the computed root"
+                              : "Inclusion does not verify"}
+                          </dd>
+                          <dt>Source</dt>
+                          <dd>{fold.binding}</dd>
+                        </>
+                      )}
+                    </>
+                  ) : (
+                    <>
+                      <dt>Status</dt>
+                      <dd>{proof ? proof.reason : "Recomputing SHA-256…"}</dd>
                     </>
                   )}
+                </dl>
+              </details>
+            </div>
+            <figure className="receipt-fold">
+              {fold ? (
+                <>
+                  <div className="fold-caption">
+                    <span>{fold.scope}</span>
+                    <button
+                      className="share-reading"
+                      onClick={() => setReplay((n) => n + 1)}
+                    >
+                      Replay fold ↺
+                    </button>
+                  </div>
+                  <Fold
+                    key={`${req.id}|${req.sha}|${replay}`}
+                    tree={fold.tree}
+                    leafId={req.id}
+                    verified={fold.verified}
+                    label={fold.scope}
+                  />
+                  <figcaption>
+                    {fold.tree.leafCount} manifest digests →{" "}
+                    {fold.tree.layers.length - 1} folds → one computed root.
+                    <br />
+                    The selected record’s path is illuminated.
+                  </figcaption>
+                  <div className="computed-root">
+                    <span>Root computed here · not an independent signature</span>
+                    <code>{fold.tree.rootHex}</code>
+                  </div>
                 </>
               ) : (
-                <>
-                  <dt>Status</dt>
-                  <dd>{proof ? proof.reason : "Recomputing SHA-256…"}</dd>
-                </>
+                <div className="fold-unavailable" role="status">
+                  <span className="fold-glyph" aria-hidden="true">
+                    ◇
+                  </span>
+                  <p>
+                    {fold === undefined &&
+                    !foldError &&
+                    !(proof && "reason" in proof)
+                      ? "Computing the receipt…"
+                      : foldError
+                        ? isModuleLoadError(foldError)
+                          ? "The diagram’s code could not be loaded. Reload to restore the receipt view."
+                          : "The manifest fold could not be computed. The direct file check is shown separately."
+                        : "This record has a direct digest receipt. No inclusion fold is claimed."}
+                  </p>
+                  {isModuleLoadError(foldError) && <button className="research-button" onClick={() => location.reload()}>Reload receipt view</button>}
+                </div>
               )}
-            </dl>
+            </figure>
           </div>
+          <p className="research-limit">
+            Integrity identifies these bytes. The fold combines manifest digests;
+            it does not re-fetch every record or establish physical truth,
+            independent replication or operator acceptance.
+          </p>
         </div>
-        <p className="research-limit">
-          Integrity identifies these bytes. The fold combines manifest digests;
-          it does not re-fetch every record or establish physical truth,
-          independent replication or operator acceptance.
-        </p>
       </div>
     </dialog>,
     document.body,

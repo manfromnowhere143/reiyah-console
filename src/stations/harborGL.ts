@@ -3,7 +3,7 @@
    The 2D engine renders the scene (premultiplied alpha) into an OffscreenCanvas;
    this uploads it as a texture and runs true material passes on the GPU:
      1. base     — composite the scene over the theme ground (premultiplied
-                    over-operator), producing an opaque HDR-ish base.
+                    over-operator), producing an opaque base.
      2. bright    — threshold bright-pass at half resolution.
      3. blur      — separable Gaussian, ping-ponged (H, V) x2 for a wide bloom.
      4. composite — radial chromatic dispersion of the base, additive bloom with
@@ -114,7 +114,8 @@ void main(){
   col = min(col, 0.82) + 0.18 * (1.0 - exp(-over * 3.0));
   // radial vignette
   float d2 = dot(c, c);
-  float vig = smoothstep(0.62, 0.12, d2);
+  // GLSL leaves reversed smoothstep edges undefined. Invert the defined ramp.
+  float vig = 1.0 - smoothstep(0.12, 0.62, d2);
   col *= mix(1.0, vig, uVig);
   // procedural film grain (in-shader, animated)
   float n = hash(uv * uRes + uTime * 60.0);
@@ -196,9 +197,12 @@ export function createHarborGL(gl: GL): HarborGL | null {
       gl.disable(gl.DEPTH_TEST);
       gl.activeTexture(gl.TEXTURE0);
 
-      // upload the scene (canvas is premultiplied; keep it premultiplied)
+      // FRAG_BASE uses premultiplied source-over. Explicitly request that
+      // upload representation: false unpremultiplies translucent Canvas RGB.
+      // Pause clears the opaque trail, so a mismatch here turns faint white
+      // headlights/glass into full-white areas before bloom even runs.
       gl.bindTexture(gl.TEXTURE_2D, sceneTex);
-      gl.pixelStorei(gl.UNPACK_PREMULTIPLY_ALPHA_WEBGL, false);
+      gl.pixelStorei(gl.UNPACK_PREMULTIPLY_ALPHA_WEBGL, true);
       gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, true);
       gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, scene);
 
