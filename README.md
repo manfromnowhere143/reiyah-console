@@ -17,12 +17,15 @@ Engine commit `5be5c3dc5444ccfe98cd5a203a74d5d7d4834561`, as of 11 October 2026.
 artifacts. The wider catalog has 1,238 source paths; records marked **Source link**
 open the exact engine commit and are not locally verified by the Console.
 
-- **Harbor:** one cabin-framed loss enclosure, reference selection and evidence inspection.
+- **Harbor:** the original animated road, cabin, evidence objects and GPU finish,
+  with current findings in the instruments. The reference comparison opens in its
+  own inspector; motion illustrates the historical index, not a running evaluator.
 - **Findings:** batching, empty outputs, motion consistency, review procedure,
   reference sensitivity, resolution limits, equal-information comparison and corrections.
 - **The Comparison:** actual locally reproduced engine packets for the published
   synthetic example. Sufficiency and a counterexample are rendered differently.
-- **Research:** searchable study and artifact library, with explicit local/source-link coverage.
+- **Research:** a selectable map of the 197 local records, a searchable library,
+  readable source text and explicit local/source-link coverage.
 - The eighteen existing route identities remain available. The former “Law” route
   is labeled **The Contrasts**, with the withdrawn interpretation explicitly corrected.
 
@@ -60,8 +63,11 @@ build-bound manifest and content-addressed payloads.
 A receipt recomputes the digest of the bytes associated with the **displayed**
 reading. A later source version cannot certify an earlier displayed value. Receipt
 results are keyed by record and digest; a superseded request cannot update the
-current dialog. Merkle inclusion applies to historical named surfaces only. Other
-records explicitly report that this particular inclusion proof is not applicable.
+current dialog. The animated **Fold** is restored for historical named surfaces
+  and extended to research-edition and synthetic-replay manifests, each with its
+  own identity. These roots are computed locally from manifest digests, not
+  independent signatures. Records outside those sets retain their direct digest
+  receipt without an invented inclusion proof.
 
 ## Navigation and accessibility
 
@@ -73,7 +79,9 @@ with ⌘K. Reading links include the edition, selected study and figure state.
 
 Primary content reflows and details can scroll. Complete lists no longer withhold
 rows behind a noninteractive “+N.” Quantitative marks have readable labels and a
-text equivalent; the cabin is decorative. Receipts use a native modal dialog.
+text equivalent. The cabin is an illustrative setting; the objects identify
+records from the historical index. Receipts and the Harbor inspector use native
+modal dialogs. The scene supports pause, reduced motion and hidden-page rest.
 The Encounter fixture blocks on missing source records, supports keyboard seeking
 and stops scheduling frames while idle. These implementation properties still
 require the release browser checks described below.

@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { Digest, useSurfaceState, Blocked } from "./primitives";
-import { EDITION, editionText, sourceUrl, rational } from "../lib/edition";
-import { drawCabin, drawWorld } from "../lib/roadScene";
+import { EDITION, editionText, sourceUrl } from "../lib/edition";
+import { RecordText } from "./RecordText";
 
 export function EditionLabel() {
   return (
@@ -66,46 +66,6 @@ export function Segments({
       ))}
     </div>
   );
-}
-export function CabinGround() {
-  const ref = useRef<HTMLCanvasElement>(null);
-  useEffect(() => {
-    const c = ref.current;
-    if (!c) return;
-    const ctx = c.getContext("2d");
-    if (!ctx) return;
-    const draw = () => {
-      const { width: w, height: h } = c.getBoundingClientRect();
-      if (!w || !h) return;
-      const d = Math.min(devicePixelRatio || 1, 2);
-      c.width = Math.round(w * d);
-      c.height = Math.round(h * d);
-      ctx.setTransform(d, 0, 0, d, 0, 0);
-      const dark = document.documentElement.dataset.ground === "dark";
-      drawWorld(ctx, {
-        w,
-        h,
-        dark,
-        horizon: h * 0.45,
-        dashes: 4,
-        headlight: false,
-      });
-      drawCabin(ctx, w, h, dark, w * 0.045, h * 0.12);
-    };
-    const ro = new ResizeObserver(draw);
-    ro.observe(c);
-    const mo = new MutationObserver(draw);
-    mo.observe(document.documentElement, {
-      attributes: true,
-      attributeFilter: ["data-ground"],
-    });
-    draw();
-    return () => {
-      ro.disconnect();
-      mo.disconnect();
-    };
-  }, []);
-  return <canvas ref={ref} className="cabin-ground" aria-hidden="true" />;
 }
 export function IntervalFigure({
   lower,
@@ -185,7 +145,7 @@ export function IntervalFigure({
               y2="116"
               className="enclosure"
             />
-            {[lower, upper].map((v, i) => (
+            {[...new Set([lower, upper])].map((v, i) => (
               <g key={i}>
                 <line
                   x1={x(v)}
@@ -269,86 +229,8 @@ export function PairBars({
     </figure>
   );
 }
-export function BatchFigure({
-  data,
-  view,
-  onChange,
-}: {
-  data: any;
-  view: string;
-  onChange: (v: string) => void;
-}) {
-  const corrected = view === "corrected",
-    two = view === "batch2";
-  const source = corrected
-    ? data.corrected_primary_TVD
-    : two
-      ? data.native_primary_TVD.chunk_2_or_64_order_1_2
-      : data.native_primary_TVD.chunk_1;
-  const a = rational(source.A),
-    b = rational(source.B);
-  return (
-    <>
-      <Segments
-        label="Processing configuration"
-        value={view}
-        onChange={onChange}
-        options={[
-          { id: "batch1", label: "Batch of 1" },
-          { id: "batch2", label: "Batch of 2" },
-          { id: "corrected", label: "Local correction" },
-        ]}
-      />
-      <div
-        className="batch-flow"
-        aria-label={
-          two
-            ? "Both images enter one batch. Only the final image contributes to the native mean."
-            : "Both images contribute to the mean."
-        }
-      >
-        <div className={`image-contribution ${two ? "excluded" : ""}`}>
-          <span>Image 01</span>
-          <div className="target-box">
-            <i />
-          </div>
-          <small>{two ? "omitted from mean" : "contribution retained"}</small>
-        </div>
-        <div className="flow-join" aria-hidden="true">
-          {two ? "→" : "+"}
-        </div>
-        <div className="image-contribution">
-          <span>Image 02</span>
-          <div className="target-box">
-            <i />
-          </div>
-          <small>contribution retained</small>
-        </div>
-        <div className="flow-result">
-          <span>Reported preference</span>
-          <strong>{a < b ? "A" : "B"}</strong>
-          <small>lower error</small>
-        </div>
-      </div>
-      <PairBars
-        max={0.5}
-        rows={[
-          { name: "Candidate A", value: a, tone: a < b ? "selected" : "" },
-          { name: "Candidate B", value: b, tone: b < a ? "selected" : "" },
-        ]}
-        caption="Mean total variation distance · scale 0–0.50 · lower is better"
-      />
-      <p className="figure-takeaway">
-        {corrected
-          ? "Every eligible detection contributes. A retains the lower error."
-          : two
-            ? "The predictions stayed fixed. The reported ranking reversed."
-            : "A has the lower reported error. Change only the batch size."}
-      </p>
-    </>
-  );
-}
 export function DocumentReader({ path }: { path: string }) {
+  const [raw, setRaw] = useState(false);
   const state = useSurfaceState(() => editionText(path), [path]);
   if (state.phase === "loading")
     return <p role="status">Reading the bound record…</p>;
@@ -357,9 +239,20 @@ export function DocumentReader({ path }: { path: string }) {
   return (
     <div className="record-reader">
       <SourceLine path={path} sha={file.sha256} />
-      <pre className={path.endsWith(".md") ? "record-prose" : "record-code"}>
-        {text}
-      </pre>
+      {path.endsWith(".md") && (
+        <button
+          className="share-reading"
+          onClick={() => setRaw((v) => !v)}
+          aria-pressed={raw}
+        >
+          {raw ? "Read formatted record" : "Show exact source text"}
+        </button>
+      )}
+      {path.endsWith(".md") && !raw ? (
+        <RecordText text={text} path={path} />
+      ) : (
+        <pre className="record-code">{text}</pre>
+      )}
     </div>
   );
 }

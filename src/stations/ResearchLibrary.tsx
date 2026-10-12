@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from "react";
 import { Blocked, useSurfaceState } from "../components/primitives";
 import { EditionLabel, DocumentReader, Segments } from "../components/Research";
 import { editionManifest, sourceUrl } from "../lib/edition";
+import { RecordMap } from "../components/EvidenceGraphics";
 import { getAt, setAt } from "../lib/urlstate";
 export function ResearchLibrary() {
   const m = useSurfaceState(editionManifest, []),
@@ -63,6 +64,7 @@ export function ResearchLibrary() {
           bindings · source links for the wider published archive.
         </p>
       </header>
+      <RecordMap files={m.data.files} selected={selected} onSelect={choose} />
       <div className="library-layout">
         <aside className="library-index">
           <label className="library-search">

@@ -4,6 +4,57 @@ Living handoff for the next session. This repo is **reiyah-console** (the Harbor
 Instrument UI), separate from the Reiyah **engine** repo (`~/workspace/reiyah`,
 which has the Gate-A baton/denylist — none of that applies here; normal git).
 
+## Visual restoration after operator review, 12 October 2026
+
+Daniel rejected the first candidate's visual direction: replacing the living
+road/cabin with a static comparison page and disconnecting the Fold removed
+important parts of Reiyah's identity. He explicitly asked to retain the integrated
+research while restoring or improving the original visual experience. The earlier
+implementation entry below is historical and does not constitute visual acceptance.
+
+The local candidate now restores the original Harbor engine, OffscreenCanvas
+worker and WebGL finish. It adds pause/visibility handling, context-loss recovery,
+a current reference reading and direct access to Findings, Comparison and Research.
+The architecture motion is explicitly illustrative; no live driving or evaluator
+run is implied. The historical index identity remains separate from the edition.
+
+The Fold is reconnected to the native receipt dialog and extended to the current
+edition and synthetic replay manifests. A replay control, full computed root,
+source identity and direct digest comparison accompany the animation. Its root is
+computed from manifest digests; it is not an independent signature or a claim that
+all files were fetched. Mismatched bytes never receive a verified fold.
+
+New graphics explain retained image contributions, crossing metric rankings,
+finite-world identifiability, the exact matching graph and the 197-record library.
+Studies retain all eight findings and their limitations. The library can format
+headings, lists, tables and source excerpts without executing HTML or fetching
+remote images; exact source text and receipts remain available.
+
+Validation: build passes, main JavaScript is about 98 kB gzip; 20 actual-reader
+regressions pass (including six new receipt-fold cases); all 552 file bindings
+pass. The Node test harness uses host-realm typed arrays for its real WebCrypto
+implementation; no digest comparison was mocked or weakened. No new browser,
+keyboard, visual, physical Safari or VoiceOver pass is claimed. The Browser
+runtime reports no available browser; Daniel was asked to connect it. Do not use
+an unrelated browser-control backend to bypass that boundary.
+
+Local review: `http://127.0.0.1:4620/`, served from this owned candidate's `dist/`.
+All 604 served files were byte-compared with the build and matched. This is an
+HTTP readback, not visual verification.
+The previous Vercel preview described below predates this restoration. Main and
+production remain unchanged. Review this local build with Daniel and, when a
+Browser connection exists, complete the existing interaction/viewport matrix
+before promoting it. In particular inspect Harbor, both receipt source families,
+both comparison states, every finding, library selection, modal focus/history,
+320px reflow, both grounds, pause/reduced motion and context-loss fallback.
+
+Design references revisited: Apple's [materials guidance](https://developer.apple.com/design/human-interface-guidelines/materials)
+keeps glass in controls/navigation; the [WWDC26 WebKit notes](https://webkit.org/blog/17967/news-from-wwdc26-webkit-in-safari-27-beta/)
+emphasize rendering correctness and progressive enhancement. The existing
+Canvas/WebGL scene and native SVG/DOM drawing fit this workload; this change adds
+no new renderer or animation-library dependency. None of this establishes a
+state-of-the-art performance or usability result.
+
 ## Current research edition candidate, 12 October 2026
 
 The operator explicitly authorized implementing and publishing the UI upgrade.

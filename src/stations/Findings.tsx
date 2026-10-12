@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import { Blocked, useSurfaceState } from "../components/primitives";
 import {
-  BatchFigure,
   EditionLabel,
   PairBars,
   Segments,
@@ -12,6 +11,8 @@ import {
 } from "../components/Research";
 import { editionJson, rational } from "../lib/edition";
 import { STUDIES, studyPath } from "../lib/studies";
+import { BatchFigure } from "../components/BatchFigure";
+import { MotionCrossing, WorldAperture } from "../components/EvidenceGraphics";
 import { getAt, setAt } from "../lib/urlstate";
 
 export function Findings() {
@@ -35,15 +36,16 @@ export function Findings() {
   }, []);
   const study = STUDIES.find((s) => s.id === selected)!;
   const data = useSurfaceState(async () => {
-    const [continuation, readme, value, corrections, resolution] =
+    const [continuation, readme, value, corrections, resolution, fixtures] =
       await Promise.all([
         editionJson("docs/CONTINUATION.json"),
         editionJson("research/releases/2026-10-11/evidence.json"),
         editionJson("research/value-disproof/0.1.0/results.json"),
         editionJson("evidence/claim-status-register-2026-10-10.json"),
         editionJson("research/resolution-identifiability/0.1.0/result.json"),
+        editionJson("research/metric-aggregation-control/0.1.0/fixtures.json"),
       ]);
-    return { continuation, readme, value, corrections, resolution };
+    return { continuation, readme, value, corrections, resolution, fixtures };
   }, []);
   const choose = (id: string) => {
     setSelected(id);
@@ -68,6 +70,7 @@ export function Findings() {
   if (study.id === "batching")
     figure = (
       <BatchFigure
+        fixtures={data.data.fixtures.data}
         data={d}
         view={
           ["batch1", "batch2", "corrected"].includes(view) ? view : "batch1"
@@ -124,40 +127,7 @@ export function Findings() {
   } else if (study.id === "motion")
     figure = (
       <>
-        <div className="metric-pair">
-          <PairBars
-            max={100}
-            unit="%"
-            rows={[
-              {
-                name: "Vision · reference agreement",
-                value: d.native_accuracy.vision * 100,
-              },
-              {
-                name: "Trajectory · reference agreement",
-                value: d.native_accuracy.trajectory * 100,
-                tone: "selected",
-              },
-            ]}
-            caption="Answer accuracy · 14,000 answers per file"
-          />
-          <PairBars
-            max={100}
-            unit="%"
-            rows={[
-              {
-                name: "Vision · physics consistency",
-                value: d.native_WPCR.vision * 100,
-                tone: "selected",
-              },
-              {
-                name: "Trajectory · physics consistency",
-                value: d.native_WPCR.trajectory * 100,
-              },
-            ]}
-            caption="WPCR · applicable clips × triggered-rule coverage"
-          />
-        </div>
+        <MotionCrossing data={d} />
         <div className="opportunity-strip">
           <span>
             <b>{d.primary_disagreements.vision}</b> vision
@@ -270,19 +240,7 @@ export function Findings() {
             { id: "policy", label: "Include policy record" },
           ]}
         />
-        <div className="worlds-figure">
-          <div>
-            <span>World 01</span>
-            <h2>A acceptable</h2>
-            <p>{richer ? "Original policy" : "Same image"}</p>
-          </div>
-          <div className="world-bridge">{richer ? "≠" : "="}</div>
-          <div>
-            <span>World 02</span>
-            <h2>B acceptable</h2>
-            <p>{richer ? "Revised policy" : "Same image"}</p>
-          </div>
-        </div>
+        <WorldAperture distinct={richer} />
         <p className="figure-takeaway">{r.state.replaceAll("_", " ")}.</p>
         <p>
           {richer
@@ -353,18 +311,24 @@ export function Findings() {
       </div>
     );
   return (
-    <section className="research-station" aria-label="Research findings">
+    <section
+      className="research-station findings-cinematic"
+      aria-label="Research findings"
+    >
       <div className="research-top">
         <EditionLabel />
         <ShareReading />
       </div>
       <nav className="study-nav" aria-label="Select finding">
-        {STUDIES.map((s) => (
+        {STUDIES.map((s, i) => (
           <button
             key={s.id}
             aria-current={selected === s.id ? "page" : undefined}
             onClick={() => choose(s.id)}
           >
+            <span className="study-number">
+              {String(i + 1).padStart(2, "0")}
+            </span>
             {s.label}
           </button>
         ))}
@@ -372,11 +336,22 @@ export function Findings() {
       <div className="finding-layout">
         <article className="finding-main">
           <header>
-            <div className="eyebrow">{study.kind}</div>
+            <div className="eyebrow">
+              Study {String(STUDIES.indexOf(study) + 1).padStart(2, "0")} /{" "}
+              {study.kind}
+            </div>
             <h1>{study.title}</h1>
             <p className="research-deck">{study.subtitle}</p>
           </header>
-          <div className="finding-figure">{figure}</div>
+          <div className="finding-figure" key={study.id}>
+            {figure}
+          </div>
+          {study.id === "batching" && (
+            <SourceLine
+              path={data.data.fixtures.file.path}
+              sha={data.data.fixtures.file.sha256}
+            />
+          )}
           <p className="research-limit">{study.limit}</p>
           <SourceLine
             path={data.data.continuation.file.path}
@@ -384,8 +359,19 @@ export function Findings() {
           />
         </article>
         <aside className="finding-reading">
+          <div className="study-spine" aria-hidden="true">
+            {STUDIES.map((s, i) => (
+              <span key={s.id} data-current={s.id === study.id}>
+                <i />
+                {String(i + 1).padStart(2, "0")}
+              </span>
+            ))}
+          </div>
           <div className="reading-top">
-            <h2>The retained study</h2>
+            <span className="eyebrow">
+              EVIDENCE / {String(STUDIES.indexOf(study) + 1).padStart(2, "0")}
+            </span>
+            <h2>Behind the finding.</h2>
             <button
               className="research-button"
               aria-expanded={detail}

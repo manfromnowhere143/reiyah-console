@@ -4,9 +4,9 @@
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import { claimLayer, newLayerToken, onLayerClaim } from "../lib/layers";
-import { getMerkle, prove, proveInclusion, type Proof, type LiveState, type InclusionProof, getEvidenceGeneration } from "../lib/evidence";
-import type { MerkleTree } from "../lib/merkle";
+import { prove, type Proof, type LiveState, getEvidenceGeneration } from "../lib/evidence";
 import { Fold } from "./Fold";
+import type { ReceiptTree } from "../lib/receiptTree";
 import { useStationReadiness } from "./StationFrame";
 
 /* ---------- FitList: a list that is measured, not hoped ----------
@@ -92,41 +92,211 @@ export function Digest({ id, sha, path }: { id: string; sha: string; path: strin
 export function ReceiptHost() {
   const [req, setReq] = useState<ReceiptReq | null>(null);
   const [proof, setProof] = useState<Proof | { reason: string } | null>(null);
-  const [incl, setIncl] = useState<InclusionProof | null | undefined>(undefined);
+  const [fold, setFold] = useState<ReceiptTree | null | undefined>(undefined);
+  const [foldError, setFoldError] = useState("");
+  const [replay, setReplay] = useState(0);
   const dialog = useRef<HTMLDialogElement>(null);
   const token = useRef(newLayerToken());
   const seq = useRef(0);
-  const close = () => { dialog.current?.close(); seq.current++; setReq(null); };
-  useEffect(() => onLayerClaim(t => { if (t !== token.current) close(); }), []);
+  const close = () => {
+    dialog.current?.close();
+    seq.current++;
+    setReq(null);
+  };
+  useEffect(
+    () =>
+      onLayerClaim((t) => {
+        if (t !== token.current) close();
+      }),
+    [],
+  );
   useEffect(() => {
     const onOpen = (e: Event) => {
-      const r = (e as CustomEvent<ReceiptReq>).detail, generation = ++seq.current;
-      claimLayer(token.current); setReq(r); setProof(null); setIncl(undefined);
+      const r = (e as CustomEvent<ReceiptReq>).detail,
+        generation = ++seq.current;
+      claimLayer(token.current);
+      setReq(r);
+      setProof(null);
+      setFold(undefined);
+      setFoldError("");
+      setReplay(0);
       (async () => {
         try {
           const pr = await prove(r.id, r.sha);
           if (generation !== seq.current) return;
-          setProof(pr); proven.set(`${r.id}|${r.sha}`, pr.equal); receiptBus.dispatchEvent(new Event("result"));
-          const inclusion = pr.equal ? await proveInclusion(r.id, pr.clientSha256) : null;
-          if (generation === seq.current) setIncl(inclusion);
-        } catch (e) { if (generation === seq.current) setProof({reason:String((e as Error).message)}); }
+          setProof(pr);
+          proven.set(`${r.id}|${r.sha}`, pr.equal);
+          receiptBus.dispatchEvent(new Event("result"));
+          try {
+            const { receiptTree } = await import("../lib/receiptTree");
+            const tree = pr.equal
+              ? await receiptTree(r.id, pr.clientSha256)
+              : null;
+            if (generation === seq.current) setFold(tree);
+          } catch (e) {
+            if (generation === seq.current) {
+              setFold(null);
+              setFoldError(String((e as Error).message));
+            }
+          }
+        } catch (e) {
+          if (generation === seq.current)
+            setProof({ reason: String((e as Error).message) });
+        }
       })();
     };
     receiptBus.addEventListener("open", onOpen);
-    return () => { seq.current++; receiptBus.removeEventListener("open", onOpen); };
+    return () => {
+      seq.current++;
+      receiptBus.removeEventListener("open", onOpen);
+    };
   }, []);
-  useEffect(() => { if (req && dialog.current && !dialog.current.open) dialog.current.showModal(); }, [req]);
+  useEffect(() => {
+    if (req && dialog.current && !dialog.current.open)
+      dialog.current.showModal();
+  }, [req]);
   if (!req) return null;
-  return createPortal(<dialog ref={dialog} className="receipt-dialog" role="dialog" aria-modal="true" aria-label="Evidence receipt" onCancel={e=>{e.preventDefault();close();}} onClick={e=>{if(e.target===e.currentTarget)close();}}>
-    <div className="receipt-content">
-      <div className="eyebrow">Evidence receipt</div><h2>The bytes behind this reading.</h2>
-      <p className="receipt-path">{req.path}</p>
-      <dl><dt>Displayed digest</dt><dd>{req.sha}</dd>
-      {proof && "equal" in proof ? <><dt>Recomputed digest</dt><dd>{proof.clientSha256}</dd><dt>Result</dt><dd className={proof.equal?'ok':'red'}>{proof.equal?'Matches the displayed record':'Mismatch · do not use this reading'}</dd><dt>Length</dt><dd>{proof.byteLength.toLocaleString()} bytes</dd><dt>Historical surface inclusion</dt><dd>{incl === undefined ? 'Checking…' : incl ? (incl.verified ? `Included among ${incl.leafCount} historical surfaces` : 'Not included') : 'Not applicable · record is bound by its own source manifest'}</dd></> : <><dt>Status</dt><dd>{proof ? proof.reason : 'Recomputing SHA-256…'}</dd></>}
-      </dl><p className="research-limit">Integrity identifies these bytes. It does not establish physical truth, independent replication or operator acceptance.</p>
-      <button className="research-button" autoFocus onClick={close}>Close receipt</button>
-    </div>
-  </dialog>,document.body);
+  return createPortal(
+    <dialog
+      ref={dialog}
+      className="receipt-dialog"
+      role="dialog"
+      aria-modal="true"
+      aria-label="Evidence receipt"
+      onCancel={(e) => {
+        e.preventDefault();
+        close();
+      }}
+      onClick={(e) => {
+        if (e.target === e.currentTarget) close();
+      }}
+    >
+      <div className="receipt-content receipt-cinematic">
+        <header className="receipt-heading">
+          <div>
+            <div className="eyebrow">Reiyah / Evidence receipt</div>
+            <h2>
+              From this record.
+              <br />
+              To the whole.
+            </h2>
+          </div>
+          <button
+            className="receipt-close"
+            autoFocus
+            onClick={close}
+            aria-label="Close receipt"
+          >
+            ×
+          </button>
+        </header>
+        <p className="receipt-path">{req.path}</p>
+        <div className="receipt-grid">
+          <figure className="receipt-fold">
+            {fold ? (
+              <>
+                <div className="fold-caption">
+                  <span>{fold.scope}</span>
+                  <button
+                    className="share-reading"
+                    onClick={() => setReplay((n) => n + 1)}
+                  >
+                    Replay fold ↺
+                  </button>
+                </div>
+                <Fold
+                  key={`${req.id}|${req.sha}|${replay}`}
+                  tree={fold.tree}
+                  leafId={req.id}
+                  verified={fold.verified}
+                  label={fold.scope}
+                />
+                <figcaption>
+                  {fold.tree.leafCount} manifest digests →{" "}
+                  {fold.tree.layers.length - 1} folds → one computed root.
+                  <br />
+                  The selected record’s path is illuminated.
+                </figcaption>
+                <div className="computed-root">
+                  <span>Root computed here · not an independent signature</span>
+                  <code>{fold.tree.rootHex}</code>
+                </div>
+              </>
+            ) : (
+              <div className="fold-unavailable" role="status">
+                <span className="fold-glyph" aria-hidden="true">
+                  ◇
+                </span>
+                <p>
+                  {fold === undefined &&
+                  !foldError &&
+                  !(proof && "reason" in proof)
+                    ? "Computing the receipt…"
+                    : foldError
+                      ? "The manifest fold could not be computed."
+                      : "This record has a direct digest receipt. No inclusion fold is claimed."}
+                </p>
+              </div>
+            )}
+          </figure>
+          <div className="receipt-facts" aria-live="polite">
+            <div
+              className="receipt-outcome"
+              data-match={
+                proof && "equal" in proof ? String(proof.equal) : undefined
+              }
+            >
+              <span aria-hidden="true">
+                {proof && "equal" in proof ? (proof.equal ? "◆" : "×") : "◇"}
+              </span>
+              <h3>
+                {proof && "equal" in proof
+                  ? proof.equal
+                    ? "The bytes match."
+                    : "Digest mismatch."
+                  : "Checking the bytes."}
+              </h3>
+            </div>
+            <dl>
+              <dt>Displayed digest</dt>
+              <dd>{req.sha}</dd>
+              {proof && "equal" in proof ? (
+                <>
+                  <dt>Recomputed in this browser</dt>
+                  <dd>{proof.clientSha256}</dd>
+                  <dt>Exact length</dt>
+                  <dd>{proof.byteLength.toLocaleString()} bytes</dd>
+                  {fold && (
+                    <>
+                      <dt>Manifest inclusion</dt>
+                      <dd>
+                        {fold.verified
+                          ? "Selected digest reaches the computed root"
+                          : "Inclusion does not verify"}
+                      </dd>
+                      <dt>Source</dt>
+                      <dd>{fold.binding}</dd>
+                    </>
+                  )}
+                </>
+              ) : (
+                <>
+                  <dt>Status</dt>
+                  <dd>{proof ? proof.reason : "Recomputing SHA-256…"}</dd>
+                </>
+              )}
+            </dl>
+          </div>
+        </div>
+        <p className="research-limit">
+          Integrity identifies these bytes. The fold combines manifest digests;
+          it does not re-fetch every record or establish physical truth,
+          independent replication or operator acceptance.
+        </p>
+      </div>
+    </dialog>,
+    document.body,
+  );
 }
 
 /* ---------- Truth pill ---------- */

@@ -3,6 +3,133 @@
   "source_checks": {
     "kind": "console_reader_regression",
     "browser_testing": false,
+    "passed": 20,
+    "total": 20,
+    "results": [
+      {
+        "name": "Valid sealed bytes load and receipts match displayed digest",
+        "passed": true
+      },
+      {
+        "name": "Equal-length non-index alteration blocks before parsing",
+        "passed": true
+      },
+      {
+        "name": "Path records use expected catalog digests and support receipts",
+        "passed": true
+      },
+      {
+        "name": "Altered path bytes and catalog index both fail closed",
+        "passed": true
+      },
+      {
+        "name": "Altered root manifest cannot establish a sealed source",
+        "passed": true
+      },
+      {
+        "name": "Altered lane and schema manifests reject their root bindings",
+        "passed": true
+      },
+      {
+        "name": "Measurement reader retains equal-length tamper rejection",
+        "passed": true
+      },
+      {
+        "name": "Live measurement and catalog readers observe new generations",
+        "passed": true
+      },
+      {
+        "name": "Receipt retains the exact displayed generation after live change",
+        "passed": true
+      },
+      {
+        "name": "A receipt cannot certify newer unseen bytes for an old displayed digest",
+        "passed": true
+      },
+      {
+        "name": "Current edition matches all 52 continuation bindings and the source receipt",
+        "passed": true
+      },
+      {
+        "name": "Altered edition manifest and record are rejected",
+        "passed": true
+      },
+      {
+        "name": "Synthetic packets preserve sufficiency versus counterexample-only scope",
+        "passed": true
+      },
+      {
+        "name": "Live-to-sealed fallback discards live manifest and catalog caches",
+        "passed": true
+      },
+      {
+        "name": "Edition fold verifies the displayed record against its own manifest",
+        "passed": true
+      },
+      {
+        "name": "A changed digest cannot illuminate a verified edition path",
+        "passed": true
+      },
+      {
+        "name": "An absent record does not receive a manifest fold",
+        "passed": true
+      },
+      {
+        "name": "Corrupt edition manifest cannot produce a receipt tree",
+        "passed": true
+      },
+      {
+        "name": "Synthetic replay fold remains separate from the research edition",
+        "passed": true
+      },
+      {
+        "name": "Historical index fold retains its original surface identity",
+        "passed": true
+      }
+    ]
+  },
+  "edition_checks": {
+    "kind": "console_edition_integrity",
+    "checked_files": 552,
+    "local_research_records": 197,
+    "continuation_bindings": 52,
+    "claim_count": 60,
+    "batch_figure_arithmetic": "matches_authored_fixtures",
+    "historical_experiments_replayed": false,
+    "browser_review": false,
+    "passed": true
+  },
+  "build": "passed",
+  "browser": {
+    "connection": "No browser is available; discovery list empty",
+    "fresh_visual_review": false,
+    "navigation": false,
+    "physical_Safari": false,
+    "VoiceOver": false
+  },
+  "production_released": false,
+  "engine_commit": "5be5c3dc5444ccfe98cd5a203a74d5d7d4834561",
+  "whitespace": {
+    "authored_changes": "passed",
+    "byte_preserved_source_EOF_exceptions": [
+      "research/decision-value/0.1.0/README.md",
+      "research/grid-fidelity/0.1.0/README.md"
+    ]
+  },
+  "preview": {
+    "preview": "https://reiyah-87hyuug23-daniels-projects-ca65133a.vercel.app",
+    "application_commit": "778b7b58f949b5abf35fe537483dc0c5d56e9cd9",
+    "authenticated_Vercel_CLI_readback": true,
+    "matched": 578,
+    "count": 578,
+    "html_matches_after_removing_Vercel_preview_feedback_script": true,
+    "browser_review": false,
+    "production_promoted": false,
+    "status": "predates_visual_restoration"
+  },
+  "previous_source_checks": {
+    "kind": "console_reader_regression",
+    "browser_testing": false,
     "passed": 14,
     "total": 14,
     "results": [
@@ -64,41 +191,26 @@
       }
     ]
   },
-  "edition_checks": {
-    "kind": "console_edition_integrity",
-    "checked_files": 552,
-    "local_research_records": 197,
-    "continuation_bindings": 52,
-    "claim_count": 60,
-    "batch_figure_arithmetic": "matches_authored_fixtures",
-    "historical_experiments_replayed": false,
-    "browser_review": false,
-    "passed": true
-  },
-  "build": "passed",
-  "browser": {
-    "connection": "No browser is available; discovery list empty",
-    "fresh_visual_review": false,
-    "navigation": false,
-    "physical_Safari": false,
-    "VoiceOver": false
-  },
-  "production_released": false,
-  "engine_commit": "5be5c3dc5444ccfe98cd5a203a74d5d7d4834561",
-  "whitespace": {
-    "authored_changes": "passed",
-    "byte_preserved_source_EOF_exceptions": [
-      "research/decision-value/0.1.0/README.md",
-      "research/grid-fidelity/0.1.0/README.md"
-    ]
-  },
-  "preview": {
-    "preview": "https://reiyah-87hyuug23-daniels-projects-ca65133a.vercel.app",
-    "application_commit": "778b7b58f949b5abf35fe537483dc0c5d56e9cd9",
-    "authenticated_Vercel_CLI_readback": true,
-    "matched": 578,
-    "count": 578,
-    "html_matches_after_removing_Vercel_preview_feedback_script": true,
+  "visual_restoration": {
+    "status": "implemented_pending_visual_review",
+    "restored_renderer": "original Harbor Canvas/OffscreenCanvas/WebGL",
+    "receipt_fold": "historical, edition and synthetic manifests kept separate",
+    "new_figures": [
+      "batch contribution circuit",
+      "metric rank crossing",
+      "finite-world observation aperture",
+      "anchor matching graph",
+      "local record map"
+    ],
+    "source_payloads_changed": false,
+    "local_http_readback": {
+      "url": "http://127.0.0.1:4620/",
+      "kind": "local_http_readback",
+      "files": 604,
+      "matched": 604,
+      "browser_review": false
+    },
+    "main_js_gzip_kb": 97.95,
     "browser_review": false,
     "production_promoted": false
   }

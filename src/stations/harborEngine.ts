@@ -2,8 +2,8 @@
    real domain Reiyah exists for: driving forward, the committed artifacts
    stream toward you as sensed objects, each passing through the six kinds
    (OBS -> BEL -> DEC -> INT -> OUT -> EVD); the gate rejects known-bad fixtures
-   in-world; a sensing reticle watches the road ahead. Every object is a real,
-   digest-verified record. No DOM or window references — every per-frame input
+   in-world; a sensing reticle watches the road ahead. Every object names a record in the verified historical index; its motion
+   is illustrative and no evaluator is running. No DOM or window references — every per-frame input
    arrives through `env` or the input setters — so the same engine runs in a
    Web Worker over an OffscreenCanvas (with the WebGL2 post feeding on its
    scene) and, where that is unsupported, on the main thread as a fallback. */
@@ -117,7 +117,7 @@ export function createHarborEngine(
   };
   for (let i = 0; i < 7; i++) { spawn(); packets[i].t = i * 0.13; }
 
-  let last = 0, started = false;
+  let last = 0, started = false, sceneTime = 0;
 
   const frame = (now: number, env: HarborEnv) => {
     if (!started) { last = now; started = true; }
@@ -139,11 +139,12 @@ export function createHarborEngine(
     const FADE = dark ? "rgba(5,5,7,0.30)" : "rgba(244,243,238,0.32)";
     const TA = dark ? "0.94" : "0.82";
     const surge = !!pulseAt && now - pulseAt < 2000;
-    const t = now / 1000;
+    if (!reduced) sceneTime += rdt;
+    const t = sceneTime;
 
     timeScale += ((mouse.over ? 0.4 : 1) - timeScale) * Math.min(1, rdt * 6);
     const dt = rdt * (reduced ? 0 : timeScale) * (surge ? 1.7 : 1);
-    const flow = reduced ? 0 : t * 0.28; // forward motion for the lane dashes
+    const flow = t * 0.28; // forward motion for the lane dashes
 
     /* ---- perspective of the road ---- */
     const horizon = Math.round(h * 0.40);
@@ -217,7 +218,7 @@ export function createHarborEngine(
     }
     /* the count in flight: the engine's own state, exact */
     mctx.textAlign = "right"; mctx.fillStyle = `rgba(${INK},${hudA})`;
-    mctx.fillText(`in flight · ${packets.filter((p) => p.fall === 0).length}`, w - edge, horizon - 8);
+    mctx.fillText(`illustrated · ${packets.filter((p) => p.fall === 0).length}`, w - edge, horizon - 8);
 
     /* ---- objects (the real artifacts) approaching through the kinds ---- */
     for (let i = 0; i < 6; i++) kindGlow[i] = Math.max(0, kindGlow[i] - rdt * 2.2);
@@ -336,12 +337,12 @@ export function createHarborEngine(
     mctx.setLineDash([]);
     mctx.font = monoSmall; mctx.textAlign = "right";
     const gx = Math.max(cx - ghw - 8, edge + (compact ? 60 : 150));
-    mctx.fillStyle = `rgba(${INK},${hudA})`; mctx.fillText(compact ? "GATE" : "GATE · fails closed", gx, gy - 5);
+    mctx.fillStyle = `rgba(${INK},${hudA})`; mctx.fillText(compact ? "GATE" : "FIXTURE GATE · illustrated", gx, gy - 5);
     if (now - lastRejectAt < 2400) {
       const fa = 1 - (now - lastRejectAt) / 2400;
       mctx.fillStyle = `rgba(${RED},${(0.9 * fa).toFixed(2)})`;
       const rule = compact ? lastRejectRule.slice(0, 18) : lastRejectRule;
-      mctx.fillText(`rejected · ${rule}`, gx, gy + 9);
+      mctx.fillText(`expected rejection · ${rule}`, gx, gy + 9);
     }
     void badTotal;
     mctx.restore(); tctx.restore();

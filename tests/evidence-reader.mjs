@@ -26,6 +26,11 @@ async function instance(transport) {
   const context = vm.createContext({
     fetch: transport,
     crypto: crypto.webcrypto,
+    // Node WebCrypto consumes host-realm BufferSource values. Keep the VM
+    // typed arrays in that realm; this does not replace the real digest.
+    ArrayBuffer,
+    Uint8Array,
+    DataView,
     TextEncoder,
     TextDecoder,
     URL,
@@ -314,6 +319,76 @@ await test("Live-to-sealed fallback discards live manifest and catalog caches", 
     read(`public/snapshot/gateb/raw/${id}`).toString(),
   );
   assert.notEqual((await x.e.fetchCatalog())[0].path, "local-only");
+});
+await test("Edition fold verifies the displayed record against its own manifest", async () => {
+  const x = await instance(sealed());
+  const edition = await x.load("src/lib/edition.ts");
+  const r = await edition.editionText("docs/CONTINUATION.json");
+  const { receiptTree } = await x.load("src/lib/receiptTree.ts");
+  const fold = await receiptTree(
+    "edition/docs/CONTINUATION.json",
+    r.file.sha256,
+  );
+  assert.equal(fold.verified, true);
+  assert.equal(
+    fold.tree.leafCount,
+    (await edition.editionManifest()).files.length,
+  );
+  assert.equal(fold.scope, "Research edition records");
+});
+await test("A changed digest cannot illuminate a verified edition path", async () => {
+  const x = await instance(sealed());
+  const { receiptTree } = await x.load("src/lib/receiptTree.ts");
+  const fold = await receiptTree(
+    "edition/docs/CONTINUATION.json",
+    "sha256:" + "0".repeat(64),
+  );
+  assert.equal(fold.verified, false);
+});
+await test("An absent record does not receive a manifest fold", async () => {
+  const x = await instance(sealed());
+  const { receiptTree } = await x.load("src/lib/receiptTree.ts");
+  assert.equal(
+    await receiptTree("edition/not-a-record.json", "sha256:" + "0".repeat(64)),
+    null,
+  );
+});
+await test("Corrupt edition manifest cannot produce a receipt tree", async () => {
+  const x = await instance(
+    sealed({
+      [`/editions/${binding.commit}/manifest.json`]: () =>
+        json({ commit: binding.commit, files: [], catalog: [] }),
+    }),
+  );
+  const { receiptTree } = await x.load("src/lib/receiptTree.ts");
+  await assert.rejects(
+    () =>
+      receiptTree("edition/docs/CONTINUATION.json", "sha256:" + "0".repeat(64)),
+    /edition_manifest_digest_mismatch/,
+  );
+});
+await test("Synthetic replay fold remains separate from the research edition", async () => {
+  const x = await instance(sealed());
+  const { exampleJson } = await x.load("src/lib/example.ts");
+  const r = await exampleJson("confirmed.json");
+  const { receiptTree } = await x.load("src/lib/receiptTree.ts");
+  const fold = await receiptTree("example/confirmed.json", r.sha);
+  assert.equal(fold.verified, true);
+  assert.equal(fold.tree.leafCount, 4);
+  assert.equal(fold.scope, "Synthetic replay records");
+});
+await test("Historical index fold retains its original surface identity", async () => {
+  const x = await instance(sealed());
+  await x.e.fetchSummary();
+  const r = await x.e.fetchSurface("index");
+  const { receiptTree } = await x.load("src/lib/receiptTree.ts");
+  const fold = await receiptTree("index", r.meta.sha256);
+  assert.equal(fold.verified, true);
+  assert.equal(fold.scope, "Historical snapshot surfaces");
+  assert.equal(
+    fold.tree.leafCount,
+    root.surfaces.filter((s) => s.state === "observed" && s.sha256).length,
+  );
 });
 console.log(
   JSON.stringify(

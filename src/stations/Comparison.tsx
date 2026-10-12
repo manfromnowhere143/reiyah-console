@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Blocked, Digest, useSurfaceState } from "../components/primitives";
 import {
   EditionLabel,
@@ -7,6 +7,7 @@ import {
   DocumentReader,
   ShareReading,
 } from "../components/Research";
+import { MatchingGraph } from "../components/EvidenceGraphics";
 import { exampleJson } from "../lib/example";
 import { editionJson, rational } from "../lib/edition";
 export function Comparison() {
@@ -16,6 +17,16 @@ export function Comparison() {
         : "insufficient",
     ),
     [inspect, setInspect] = useState(false);
+  useEffect(() => {
+    const pop = () =>
+      setWhich(
+        new URLSearchParams(location.search).get("view") === "confirmed"
+          ? "confirmed"
+          : "insufficient",
+      );
+    window.addEventListener("popstate", pop);
+    return () => window.removeEventListener("popstate", pop);
+  }, []);
   const state = useSurfaceState(async () => {
     const [yes, no, input] = await Promise.all([
       exampleJson("confirmed.json"),
@@ -36,7 +47,7 @@ export function Comparison() {
   const tolerance = exact(state.data.input.data.loss.tolerance);
   return (
     <section
-      className="research-station"
+      className="research-station comparison-cinematic"
       aria-label="Conditional comparison engine"
     >
       <div className="research-top">
@@ -70,31 +81,10 @@ export function Comparison() {
               { id: "confirmed", label: "Confirm both objects" },
             ]}
           />
-          <div
-            className="matching-figure"
-            aria-label={`Two equally weighted anchors. Each output has one detection. Only B matches the reference object. ${r.supplied_observations} reference objects hypothetically confirmed.`}
-          >
-            {[0, 1].map((i) => (
-              <div key={i} className="matching-anchor">
-                <span>Anchor 0{i + 1} · weight ½</span>
-                <div className="matching-node-row">
-                  <b>A</b>
-                  <span className="matching-empty">unmatched</span>
-                </div>
-                <div className="matching-node-row">
-                  <b>B</b>
-                  <i className="matching-edge" />
-                  <span
-                    className={`reference-node ${i === 1 && !sufficient ? "uncertain" : ""}`}
-                  >
-                    {i === 1 && !sufficient
-                      ? "presence unresolved"
-                      : "confirmed present"}
-                  </span>
-                </div>
-              </div>
-            ))}
-          </div>
+          <MatchingGraph
+            anchors={state.data.input.data.anchors}
+            confirmed={sufficient}
+          />
           {r.bounds ? (
             <IntervalFigure
               lower={exact(r.bounds.lower)}
@@ -151,7 +141,12 @@ export function Comparison() {
           </div>
         </article>
         <aside className="finding-reading">
-          <h2>The implemented engine</h2>
+          <div className="eyebrow">THE COMPUTATION</div>
+          <h2>
+            Two outputs.
+            <br />
+            One shared world.
+          </h2>
           <p>
             Qualify two outputs, keep them on the same reference world, bound
             their loss difference, and check a proposed certificate. Missing
