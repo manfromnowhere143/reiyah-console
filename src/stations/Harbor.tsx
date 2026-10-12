@@ -78,6 +78,8 @@ export function Harbor({
     d.sharp_family_interval.length !== 2
   )
     return <Blocked reason="comparison_contract_unavailable" />;
+  const referenceX = (value: number) =>
+    8 + ((value - d.sharp_family_interval[0]) / (d.sharp_family_interval[1] - d.sharp_family_interval[0])) * 84;
   const select = (v: string) => {
     setSelection(v);
     const u = new URL(location.href);
@@ -121,74 +123,33 @@ export function Harbor({
     >
       <HarborScene ev={ev} pulse={pulse} />
       <header className="harbor-identity">
-        <div className="eyebrow">HARBOR / Reiyah</div>
-        <h1>
-          The evidence
-          <br />
-          behind the decision.
-        </h1>
+        <div className="eyebrow">HARBOR / Evidence instrument</div>
+        <h1>The evidence behind the decision.</h1>
         <p>Observation. Belief. Decision. Consequence.</p>
-        <div className="harbor-index-proof">
-          <span>
-            {(ev.index?.artifacts?.length ?? 0).toLocaleString()} historical
-            artifact identities
-          </span>
-          <Digest
-            id="index"
-            sha={ev.indexSha256}
-            path="gate/GATE_A_EVIDENCE_INDEX.json"
-          />
-        </div>
       </header>
       <button
         ref={trigger}
         className="harbor-reference"
         onClick={open}
         aria-expanded={inspect}
+        aria-label={`Inspect the current reference finding: ${d.delta_original} under COCO and ${d.delta_revised} under COCO-ReM`}
       >
-        <span className="eyebrow">Current finding / Reference choice</span>
+        <span className="harbor-reference-top">
+          <span className="eyebrow">Current finding</span>
+          <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M4 12 12 4M5 4h7v7" /></svg>
+        </span>
+        <span className="harbor-reference-title">Fixed predictions. Two references.</span>
         <span className="reference-contrast">
-          <b>+{d.delta_original}</b>
-          <i aria-hidden="true">↔</i>
-          <b>{d.delta_revised}</b>
+          <span><small>COCO-ReM</small><b>{d.delta_revised}</b></span>
+          <svg className="reference-mini-axis" viewBox="0 0 100 26" aria-hidden="true">
+            <path className="reference-axis-track" d={`M8 13h84M${referenceX(0)} 7v12`} />
+            <path className="reference-axis-span" d={`M${referenceX(d.delta_revised)} 13H${referenceX(d.delta_original)}`} />
+            <circle cx={referenceX(d.delta_revised)} cy="13" r="3" /><circle cx={referenceX(d.delta_original)} cy="13" r="3" />
+          </svg>
+          <span><small>COCO</small><b>+{d.delta_original}</b></span>
         </span>
-        <span>The same predictions. Opposite preferences.</span>
-        <span className="harbor-reference-action">
-          Inspect the comparison <span aria-hidden="true">↗</span>
-        </span>
+        <span className="harbor-reference-action">Opposite preferences <span>Inspect ↗</span></span>
       </button>
-      <nav
-        className="harbor-instruments"
-        aria-label="Explore the current research"
-      >
-        <button onClick={() => go("findings")}>
-          <span className="instrument-number">01</span>
-          <span>
-            <small>THE FINDINGS</small>
-            <strong>Follow the evidence.</strong>
-            <em>Eight visual studies</em>
-          </span>
-          <span aria-hidden="true">↗</span>
-        </button>
-        <button onClick={() => go("comparison")}>
-          <span className="instrument-number">02</span>
-          <span>
-            <small>THE ENGINE</small>
-            <strong>Change what is known.</strong>
-            <em>Explore checked synthetic packets</em>
-          </span>
-          <span aria-hidden="true">↗</span>
-        </button>
-        <button onClick={() => go("research")}>
-          <span className="instrument-number">03</span>
-          <span>
-            <small>THE RESEARCH</small>
-            <strong>Open the record.</strong>
-            <em>{result.data.manifest.files.length} locally bound records</em>
-          </span>
-          <span aria-hidden="true">↗</span>
-        </button>
-      </nav>
       {inspect && (
         <dialog
           ref={inspector}
@@ -286,8 +247,12 @@ export function Harbor({
         </dialog>
       )}
       <footer className="harbor-foot">
+        <div className="harbor-index-proof">
+          <span>{(ev.index?.artifacts?.length ?? 0).toLocaleString()} bound artifact identities</span>
+          <Digest id="index" sha={ev.indexSha256} path="gate/GATE_A_EVIDENCE_INDEX.json" />
+        </div>
+        <span>Illustrated evidence flow · no live vehicle</span>
         <EditionLabel />
-        <span>Saved evidence · no live vehicle</span>
       </footer>
     </section>
   );

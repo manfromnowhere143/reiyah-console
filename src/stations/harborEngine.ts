@@ -92,7 +92,7 @@ export function createHarborEngine(
   const par = { x: 0, y: 0 };
   const kindGlow = [0, 0, 0, 0, 0, 0];
   const mouse = { x: -1, y: -1, over: false };
-  let lastRejectAt = 0, lastRejectRule = "";
+  let lastRejectAt = Number.NEGATIVE_INFINITY, lastRejectRule = "";
 
   let pulseAt = 0;
   let ruleMap: Record<string, string> = {};
@@ -117,7 +117,7 @@ export function createHarborEngine(
   };
   for (let i = 0; i < 7; i++) { spawn(); packets[i].t = i * 0.13; }
 
-  let last = 0, started = false, sceneTime = 0;
+  let last = 0, started = false, sceneTime = 0, previousDark: boolean | undefined;
 
   const frame = (now: number, env: HarborEnv) => {
     if (!started) { last = now; started = true; }
@@ -142,7 +142,6 @@ export function createHarborEngine(
     const RED = dark ? "227,25,55" : "214,23,50";
     const OK = dark ? "126,166,255" : "47,102,214";
     const DIM = dark ? "150,157,166" : "120,128,138";
-    const FADE = dark ? "rgba(5,5,7,0.30)" : "rgba(244,243,238,0.32)";
     const TA = dark ? "0.94" : "0.82";
     const surge = !!pulseAt && now - pulseAt < 2000;
     if (!reduced) sceneTime += rdt;
@@ -153,7 +152,7 @@ export function createHarborEngine(
     const flow = t * 0.28; // forward motion for the lane dashes
 
     /* ---- perspective of the road ---- */
-    const horizon = Math.round(h * 0.40);
+    const horizon = Math.round(h * 0.38);
     const cx = w / 2;
     const edge = w * (w < 560 ? 0.06 : 0.075) + 12;   // clear of the A-pillars
     const compact = w < 560;
@@ -170,16 +169,22 @@ export function createHarborEngine(
     const groundH = h - horizon;
     const yAt = (p: number) => horizon + groundH * (p * p);
     const fAt = (y: number) => (y - horizon) / groundH;               // 0 at horizon, 1 at ego
-    const halfAt = (f: number) => 22 + (w * 0.52 - 22) * f;           // road half-width
+    const halfAt = (f: number) => w * 0.64 * f;                     // same vanishing point as the material road
     const project = (p: number, lane: number) => {
       const y = yAt(p); const f = fAt(y);
       return { x: cx + lane * halfAt(f) * 0.82, y, f };
     };
 
     /* ============ TRAIL LAYER: motion, speed, the world in flight ============ */
-    tctx.fillStyle = FADE;
-    tctx.fillRect(0, 0, w, h);
-    if (reduced) tctx.clearRect(0, 0, w, h);
+    if (previousDark !== dark) tctx.clearRect(0, 0, w, h);
+    previousDark = dark;
+    // Transparent, time-correct decay: trails sit over the road material.
+    // Pause freezes this layer, rather than changing its opacity or lighting.
+    if (!reduced) {
+      tctx.save(); tctx.globalCompositeOperation = "destination-out";
+      tctx.fillStyle = `rgba(0,0,0,${1 - Math.exp(-rdt * 22)})`;
+      tctx.fillRect(0, 0, w, h); tctx.restore();
+    }
 
     /* ============ CRISP LAYER ============ */
     mctx.clearRect(0, 0, w, h);
@@ -194,11 +199,14 @@ export function createHarborEngine(
     };
 
     /* the world: the same night road every station looks through */
-    drawWorld(mctx as CanvasRenderingContext2D, { w, h, dark, horizon, phase: flow % 1, headlight: true, dashes: 9 });
+    drawWorld(mctx as CanvasRenderingContext2D, { w, h, dark, horizon, phase: flow % 1, travel: flow, headlight: true, detail: "harbor" });
+    // The trail already carries its own camera parallax in device pixels.
+    mctx.save(); mctx.setTransform(1, 0, 0, 1, 0, 0);
+    mctx.drawImage(trailCv as CanvasImageSource, 0, 0); mctx.restore();
 
     /* ---- the reticle is the mark: the Aware Iris watches the road ahead,
        open toward what it cannot see, the pupil turned toward the gap ---- */
-    const scan = reduced ? 0.5 : (Math.sin(t * 1.1) * 0.5 + 0.5);
+    const scan = Math.sin(t * 1.1) * 0.5 + 0.5;
     const rr = 11 + scan * 5;
     if (surge && dark) { mctx.globalCompositeOperation = "lighter"; glow(cx, horizon, 34, OK, 0.12); mctx.globalCompositeOperation = "source-over"; }
     mctx.strokeStyle = `rgba(${INK},0.9)`; mctx.lineWidth = Math.max(1.6, rr * 0.16); mctx.lineCap = "round";
@@ -208,8 +216,19 @@ export function createHarborEngine(
 
     /* ---- the six kinds as zones across the road: each record crosses them in
        order, observation to evidence, and a zone lights as one passes ---- */
-    const hudA = dark ? 0.62 : 0.55;
+    const hudA = dark ? 0.62 : 0.84;
     mctx.font = monoSmall; mctx.textAlign = "left";
+    const roadLabel = (text: string, x: number, y: number) => {
+      // Paper annotations need their own local contrast against day asphalt.
+      // A small backing under the text avoids bleaching the entire road.
+      if (!dark) {
+        const width = mctx.measureText(text).width;
+        const left = mctx.textAlign === "right" ? x - width : mctx.textAlign === "center" ? x - width / 2 : x;
+        mctx.save(); mctx.fillStyle = "rgba(244,245,236,0.76)";
+        mctx.fillRect(left - 3, y - 8, width + 6, 11); mctx.restore();
+      }
+      mctx.fillText(text, x, y);
+    };
     let lastLabelY = -99;
     for (let k = 0; k < 6; k++) {
       const zy = yAt(zoneP(k)), zf = fAt(zy), zhw = halfAt(zf) * 0.82, gk = kindGlow[k];
@@ -217,8 +236,8 @@ export function createHarborEngine(
       mctx.beginPath(); mctx.moveTo(cx - zhw, zy); mctx.lineTo(cx + zhw, zy); mctx.stroke();
       /* a zone name only where it has room; the line still marks the zone */
       if (zy - lastLabelY >= 12) {
-        mctx.fillStyle = `rgba(${gk > 0.2 ? OK : INK},${(hudA * 0.8 + gk * 0.3).toFixed(2)})`;
-        mctx.fillText(KINDS[k], Math.min(cx + zhw + 8, w - edge - 30), zy + 3);
+        mctx.fillStyle = `rgba(${gk > 0.2 ? OK : INK},${(dark ? hudA * 0.8 + gk * 0.3 : 0.94).toFixed(2)})`;
+        roadLabel(KINDS[k], Math.min(cx + zhw + 8, w - edge - 30), zy + 3);
         lastLabelY = zy;
       }
     }
@@ -268,7 +287,7 @@ export function createHarborEngine(
       for (let k = 0; k < 6; k++) if (Math.abs(pk.t - zoneP(k)) < 0.03) kindGlow[k] = 1;
 
       /* the motion streak (speed) on the trail layer */
-      if (pk.seen && pr.f > 0.04) {
+      if (!reduced && pk.seen && pr.f > 0.04) {
         tctx.strokeStyle = `rgba(${pk.bad ? RED : DIM},${(0.12 + pr.f * 0.3).toFixed(3)})`;
         tctx.lineWidth = Math.max(0.6, s * 0.4);
         tctx.beginPath(); tctx.moveTo(pk.px, pk.py); tctx.lineTo(pr.x, pr.y); tctx.stroke();
@@ -286,19 +305,32 @@ export function createHarborEngine(
       const rgb = pk.bad ? RED : (pk.t > zoneP(4) ? OK : INK);
       if (dark && pr.f > 0.14) {
         mctx.globalCompositeOperation = "lighter";
-        glow(pr.x, pr.y, s * 2.2, rgb, (0.04 + pr.f * 0.16) * pr.f);
+        glow(pr.x, pr.y, s * 2.2, rgb, (0.02 + pr.f * 0.07) * pr.f);
         mctx.globalCompositeOperation = "source-over";
       }
-      /* the wet road returns each object's light beneath it */
+      /* A broken reflection and a soft contact footprint ground the glyph.
+         Role shapes remain abstract record identities, never fake vehicles. */
       if (pr.f > 0.2) {
-        const rg = mctx.createLinearGradient(0, pr.y + s, 0, pr.y + s + s * 3.2);
-        rg.addColorStop(0, `rgba(${rgb},${(0.22 * pr.f).toFixed(3)})`); rg.addColorStop(1, `rgba(${rgb},0)`);
-        mctx.fillStyle = rg; mctx.fillRect(pr.x - s * 0.55, pr.y + s, s * 1.1, s * 3.2);
+        for (let band = 0; band < 6; band++) {
+          const spread = 1 - band / 7, width = s * (0.7 + band * 0.15);
+          mctx.fillStyle = `rgba(${rgb},${(spread * 0.095 * pr.f).toFixed(3)})`;
+          mctx.fillRect(pr.x - width / 2 + Math.sin(band * 2.4) * s * 0.12, pr.y + s * (1.1 + band * 0.35), width, Math.max(0.5, s * 0.08));
+        }
       }
-      /* a ground shadow beneath near objects: they stand on the road */
       if (pr.f > 0.25) {
-        mctx.fillStyle = `rgba(${dark ? "0,0,0" : INK},${(0.10 * pr.f).toFixed(3)})`;
-        mctx.beginPath(); mctx.ellipse(pr.x, pr.y + s * 1.15, s * 1.1, s * 0.28, 0, 0, TAU); mctx.fill();
+        mctx.save(); mctx.translate(pr.x, pr.y + s * 1.1); mctx.scale(1, 0.27);
+        const shadow = mctx.createRadialGradient(0, 0, 0, 0, 0, s * 1.6);
+        shadow.addColorStop(0, `rgba(0,0,0,${dark ? 0.34 : 0.18})`); shadow.addColorStop(1, "rgba(0,0,0,0)");
+        mctx.fillStyle = shadow; mctx.fillRect(-s * 1.6, -s * 1.6, s * 3.2, s * 3.2); mctx.restore();
+      }
+      // An opaque shaded face retains the exact role silhouette while giving
+      // near records volume. Distant records remain clean subpixel outlines.
+      if (pr.f > 0.08) {
+        const face = mctx.createLinearGradient(pr.x - s, pr.y - s, pr.x + s, pr.y + s);
+        face.addColorStop(0, dark ? "rgba(108,132,149,0.9)" : "rgba(250,250,241,0.96)");
+        face.addColorStop(0.38, dark ? "rgba(39,56,71,0.94)" : "rgba(215,224,222,0.97)");
+        face.addColorStop(1, dark ? "rgba(10,18,26,0.98)" : "rgba(151,165,166,0.96)");
+        mctx.fillStyle = face; drawShape(mctx, pk.shape, pr.x, pr.y, s); mctx.fill();
       }
       mctx.strokeStyle = `rgba(${rgb},${(0.5 + pr.f * 0.45).toFixed(2)})`;
       mctx.lineWidth = Math.max(1, s * 0.16);
@@ -343,12 +375,12 @@ export function createHarborEngine(
     mctx.setLineDash([]);
     mctx.font = monoSmall; mctx.textAlign = "right";
     const gx = Math.max(cx - ghw - 8, edge + (compact ? 60 : 150));
-    mctx.fillStyle = `rgba(${INK},${hudA})`; mctx.fillText(compact ? "GATE" : "FIXTURE GATE · illustrated", gx, gy - 5);
+    mctx.fillStyle = `rgba(${INK},${hudA})`; roadLabel(compact ? "GATE" : "FIXTURE GATE · illustrated", gx, gy - 5);
     if (now - lastRejectAt < 2400) {
       const fa = 1 - (now - lastRejectAt) / 2400;
       mctx.fillStyle = `rgba(${RED},${(0.9 * fa).toFixed(2)})`;
       const rule = compact ? lastRejectRule.slice(0, 18) : lastRejectRule;
-      mctx.fillText(`expected rejection · ${rule}`, gx, gy + 9);
+      roadLabel(`expected rejection · ${rule}`, gx, gy + 9);
     }
     void badTotal;
     mctx.restore(); tctx.restore();
@@ -383,7 +415,7 @@ export function createHarborEngine(
     }
 
     /* ---- the cabin frame: this is a view from inside ---- */
-    drawCabin(mctx as CanvasRenderingContext2D, w, h, dark, w * (w < 560 ? 0.06 : 0.075), env.dash ?? 0);
+    drawCabin(mctx as CanvasRenderingContext2D, w, h, dark, w * (w < 560 ? 0.06 : 0.075), env.dash ?? 0, true);
     mctx.textAlign = "center";
 
     /* ---- 2D post (fallback path only) ---- */
@@ -391,8 +423,8 @@ export function createHarborEngine(
       if (dark) {
         mctx.save();
         mctx.globalCompositeOperation = "lighter";
-        mctx.globalAlpha = 0.28;
-        mctx.filter = "blur(6px)";
+        mctx.globalAlpha = 0.10;
+        mctx.filter = "blur(4px)";
         mctx.drawImage(mainCv as CanvasImageSource, 0, 0, w, h);
         mctx.filter = "none";
         mctx.restore();
@@ -405,13 +437,12 @@ export function createHarborEngine(
         mctx.fillRect(0, 0, w, h);
       };
       if (dark) { vg("150,70,95", -4, 0.08); vg("70,95,140", 4, 0.08); vg("3,3,5", 0, 0.5); }
-      else { vg("196,120,120", -3, 0.05); vg("120,140,180", 3, 0.05); vg("210,208,198", 0, 0.4); }
+      else { vg("120,140,150", 0, 0.035); vg("28,34,35", 0, 0.12); }
     }
 
-    /* composite the trail + crisp layers onto the output (device space) */
+    /* present the assembled world + trails + records (device space) */
     octx.setTransform(1, 0, 0, 1, 0, 0);
     octx.clearRect(0, 0, output.width, output.height);
-    octx.drawImage(trailCv as CanvasImageSource, 0, 0);
     octx.drawImage(mainCv as CanvasImageSource, 0, 0);
     void raf0;
   };

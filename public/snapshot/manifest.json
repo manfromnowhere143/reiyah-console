@@ -222,11 +222,11 @@
  "bindings": {
   "catalog.json": "sha256:cf4dcb69395b3b7798e54cc7db93edec87f700af6b49e7ba7cad9aa577c9c1ad",
   "schemas-index.json": "sha256:71f4b9248ad839c7f5330136c6258db645cafa3b77546f0ae64f3d2199e849c4",
-  "gateb/manifest.json": "sha256:a8d0bdb8549a347d17dc751ac752fe1429a4af94c1df110ffb4c86a4a08e3237"
+  "gateb/manifest.json": "sha256:1f87790d66195f9bd9b9fb633f052bded435d6274d969ceb5a8a9e689012ac6d"
  },
  "research_edition": {
-  "commit": "5be5c3dc5444ccfe98cd5a203a74d5d7d4834561",
-  "as_of": "2026-10-11",
-  "sha256": "sha256:927630df6be67848b4e51c015b4210986513981b678b686d070257556c7e01ea"
+  "commit": "152b53a9b3bc3118128d474484ee8fea855cddde",
+  "as_of": "2026-10-12",
+  "sha256": "sha256:1c0393532c523617ec7047c478852e73de33d8ffdf6b4599870e73b74ab03576"
  }
 }

@@ -4,7 +4,7 @@
 
 export type Rail = "research" | "engine" | "measurement" | "audit";
 export const RAILS: Array<{ id: Rail; name: string; kicker: string }> = [
-  { id: "research", name: "Current Research", kicker: "11 October 2026 · conditional results and limits" },
+  { id: "research", name: "Current Research", kicker: "12 October 2026 · conditional results and limits" },
   { id: "engine", name: "The Engine", kicker: "gate a · the sealed architecture" },
   { id: "measurement", name: "The Measurement", kicker: "gate b · public data, proposed" },
   { id: "audit", name: "The Audit", kicker: "the reference examined" },

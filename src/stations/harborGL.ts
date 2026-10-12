@@ -119,7 +119,9 @@ void main(){
   col *= mix(1.0, vig, uVig);
   // procedural film grain (in-shader, animated)
   float n = hash(uv * uRes + uTime * 60.0);
-  col += (n - 0.5) * uGrain;
+  // Keep deep shadows calm; grain belongs to a surface, not a luminous veil.
+  float grainLuma = dot(base, vec3(0.2126, 0.7152, 0.0722));
+  col += (n - 0.5) * uGrain * mix(0.22, 0.65, smoothstep(0.02, 0.45, grainLuma));
   o = vec4(col, 1.0);
 }`;
 
@@ -199,8 +201,8 @@ export function createHarborGL(gl: GL): HarborGL | null {
 
       // FRAG_BASE uses premultiplied source-over. Explicitly request that
       // upload representation: false unpremultiplies translucent Canvas RGB.
-      // Pause clears the opaque trail, so a mismatch here turns faint white
-      // headlights/glass into full-white areas before bloom even runs.
+      // A mismatch turns translucent headlights/glass into full-white areas
+      // before bloom. Keep this correct even when scene layers are transparent.
       gl.bindTexture(gl.TEXTURE_2D, sceneTex);
       gl.pixelStorei(gl.UNPACK_PREMULTIPLY_ALPHA_WEBGL, true);
       gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, true);

@@ -246,11 +246,11 @@ await test("A receipt cannot certify newer unseen bytes for an old displayed dig
     /displayed_digest_required/,
   );
 });
-await test("Current edition matches all 52 continuation bindings and the source receipt", async () => {
+await test("Current edition matches all 67 continuation bindings and the source receipt", async () => {
   const x = await instance(sealed()),
     ed = await x.load("src/lib/edition.ts");
   const m = await ed.editionManifest();
-  assert.equal(m.files.filter((f) => f.continuation_bound).length, 52);
+  assert.equal(m.files.filter((f) => f.continuation_bound).length, 67);
   const c = await ed.editionJson("docs/CONTINUATION.json");
   for (const f of c.data.evidence) {
     assert.equal(

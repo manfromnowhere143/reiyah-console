@@ -31,7 +31,7 @@ const get = (p) => {
   return json(`${base}/raw/${f.sha256.slice(7)}`);
 };
 const c = get("docs/CONTINUATION.json");
-assert.equal(c.evidence.length, 52);
+assert.equal(c.evidence.length, 67);
 for (const f of c.evidence)
   assert.equal(
     m.files.find((x) => x.path === f.path)?.sha256,

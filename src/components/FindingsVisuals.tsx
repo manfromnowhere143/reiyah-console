@@ -62,7 +62,7 @@ export function ContributionPlot({
           cy = h / 2;
         return (
           <>
-            {[h * 0.3, h * 0.76].map((y, i) => (
+            {[Math.max(28, h * 0.28), h - Math.max(28, h * 0.22)].map((y, i) => (
               <g
                 key={i}
                 className={
@@ -72,31 +72,31 @@ export function ContributionPlot({
                 }
               >
                 <path
-                  d={`M${input + 32} ${y} C${w * 0.55} ${y},${w * 0.55} ${cy},${output - 22} ${cy}`}
+                  d={`M${input + 40} ${y} C${w * 0.55} ${y},${w * 0.55} ${cy},${output - 22} ${cy}`}
                   className="circuit-trace"
                 />
                 <rect
-                  x={input - 31}
+                  x={input - 40}
                   y={y - 18}
-                  width="62"
+                  width="80"
                   height="28"
                   rx="3"
                   className="image-plane"
                 />
                 <rect
-                  x={input - 10}
+                  x={input + 4}
                   y={y - 14}
                   width="20"
                   height="18"
                   className="detection-outline"
                 />
                 <text
-                  x={input}
-                  y={y - 24}
+                  x={input - 21}
+                  y={y + 1}
                   textAnchor="middle"
                   className="graphic-kicker"
                 >
-                  IMAGE 0{i + 1}
+                  0{i + 1}
                 </text>
                 <text
                   x={input}
@@ -156,7 +156,7 @@ export function MotionPlot({ data: d }: { data: any }) {
       {(w, h) => {
         const x1 = 46,
           x2 = w - 46,
-          y = (v: number) => h - 16 - (v * (h - 72)) / 100;
+          y = (v: number) => h - 18 - (v * (h - 56)) / 100;
         return (
           <>
             <text x={x1} y="13" textAnchor="middle" className="graphic-kicker">

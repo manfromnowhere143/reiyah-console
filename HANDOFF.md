@@ -4,6 +4,61 @@ Living handoff for the next session. This repo is **reiyah-console** (the Harbor
 Instrument UI), separate from the Reiyah **engine** repo (`~/workspace/reiyah`,
 which has the Gate-A baton/denylist — none of that applies here; normal git).
 
+## Spatial instrument and compact research views, 12 October 2026
+
+Daniel requested a scene-led Harbor, smaller typography, compact Findings and
+Comparison, floating borderless motion controls and spatial Encounter graphics.
+The bottom dock is unchanged. The existing procedural renderer remains the
+visual foundation, now with terrain, material contrast, soft reflected light,
+contact shadows and shaded record faces. No generated image or dependency was
+added. See [the design record](docs/reviews/2026-10-12-spatial-instrument.md).
+
+Encounter uses the same world, record-sequence depth planes, exact pause/seek
+and seven accessible stage controls. Direct selection now shows its exact
+record at full opacity; it no longer freezes between disclosures. Its joint
+miss remains explicitly an unmeasured concept. Fractional-DPR backing sizes
+are integral. Short landscape places the scene beside its narration/controls.
+Harbor starts paused under reduced motion; explicit Play is honored, and an OS
+preference change stops it. There is no bright pause wash in captured WebGL or
+forced-2D checks.
+
+Findings and Comparison have smaller headings, measured graphics and bounded
+method dialogs. Old minimum heights and overriding typography caused phone
+overflow; these are corrected. The historical stations retain their correction
+banners and complete data in bounded reading panes. Small-screen Monitor labels
+and Same Hazard coefficients now have room and accessible numeric equivalents.
+Very short landscape and enlarged text retain scrolling rather than hiding
+records. The mobile receipt's persistent close control and computed Fold remain.
+
+Research edition: `152b53a9b3bc3118128d474484ee8fea855cddde`, as of 12 October.
+212 local records, 67 continuation bindings, 1,252 catalog paths. The publisher
+read exact public engine Git objects; no engine checkout or artifact changed.
+All earlier edition directories and archive identities are retained.
+
+Validation: TypeScript/build; 20 reader, 15 interface and 13 controlled graphics
+regressions; 567 file bindings. Fresh isolated Chrome checked 126 station/viewport
+combinations; the last Controls width defect was corrected and rechecked at all
+six sizes. All desktop and portrait station shells fit. 95 research states and
+72 dialogs pass, with critical scope visible at 320, 375 and 390px. 560 scene checks
+pass across 10 scenarios, including actual WebGL, forced 2D, both grounds,
+DPR 1.25, all seven stage selections, keyboard slider and paused pixel checks.
+The scene report binds build 7303d58ee9; the later change only reflows Same Hazard
+labels and is checked separately. Screenshots were visually inspected and
+findings corrected. These are local Chromium observations. Physical Safari,
+VoiceOver and mobile GPU performance remain unverified.
+
+Owner: `~/.codex/reports/reiyah/console-scene-design-2026-10-12-1xh0kxi5/`.
+Candidate branch: `design/harbor-surface-1xh0kxi5`, base `8b22c8f4`.
+Local preview: `http://127.0.0.1:4630/`. Evidence includes `review4/`,
+`readings3/`, `scene-review/`, targeted final captures and individual check logs.
+Intermediate failed runs and their corrections are retained. Canonical Console's
+pre-existing `HANDOFF.md` and `docs/reviews/` changes were preserved.
+
+Standing explicit deployment authorization remains. Publish this candidate to
+Reiyah's own Vercel project, verify exact source metadata and deployed bytes,
+then record the deployment below. Keep `dpl_F9c4vmA8eUBoZ3y8p2oS1pg9LhrJ` as
+rollback. Do not change Sentinel or any sibling project's deployments.
+
 ## Mobile receipts and Harbor pause rendering, 12 October 2026
 
 Daniel explicitly requested simultaneous engine research and Console work, including

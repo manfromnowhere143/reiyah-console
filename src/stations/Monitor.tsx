@@ -7,7 +7,7 @@
    Every figure is parsed from a retained transcript and carries its digest;
    every claim is shown under the newest register's own status, including
    the inconclusive ones; the lane's non-claims are verbatim. */
-import { useLayoutEffect, useRef, useState } from "react";
+import { useId, useLayoutEffect, useRef, useState } from "react";
 import { claimShort, fetchLane, fetchLaneText, parseAAcv, parseAB, parseRegister, parseV, parseX, parseZcv, registerPath, type LaneFile } from "../lib/gateb";
 import { Blocked, Digest, FitList, Stat, Station, useSurfaceState } from "../components/primitives";
 
@@ -30,6 +30,7 @@ function useBox(key: unknown) {
 }
 
 export function Monitor() {
+  const plotId = useId();
   const state = useSurfaceState(async () => {
     const lane = await fetchLane();
     if (!lane.present) return { lane, d: null };
@@ -61,16 +62,20 @@ export function Monitor() {
   const mon = v && mbox.w > 0 ? (() => {
     const W = mbox.w, H = mbox.h, mobile = W < 560, top = 16, bottom = H - 24, left = 36, right = W - 14;
     const xx = (p: number) => left + ((right - left) * p) / 100, yy = (p: number) => bottom - ((bottom - top) * p) / 100;
+    const naiveEnd = mobile && xx(v.unanimousNaive) > W * .6;
+    const monitorEnd = mobile && xx(v.unanimousMonitor) > W * .6;
     return (
-      <svg width={W} height={H} viewBox={`0 0 ${W} ${H}`} className="mchart monitor" aria-label="Predicted risk against actual wrong rate on held-out data">
+      <svg width={W} height={H} viewBox={`0 0 ${W} ${H}`} className="mchart monitor" role="img" aria-labelledby={`${plotId}-title`} aria-describedby={`${plotId}-description`}>
+        <title id={`${plotId}-title`}>Predicted risk against actual wrong rate on held-out data</title>
+        <desc id={`${plotId}-description`}>Risk is predicted from the outputs alone. On unanimous items, the naive rule predicts {v.unanimousNaive}% risk, the monitor predicts {v.unanimousMonitor}% risk, and the observed wrong rate is {v.unanimousActual}%. These are saved Result V measurements; they do not establish task transfer or live deployment.</desc>
         <line x1={xx(0)} y1={yy(0)} x2={xx(100)} y2={yy(100)} className="mondiag" />
         <line x1={xx(0)} x2={xx(100)} y1={bottom} y2={bottom} className="monax" /><line x1={left} x2={left} y1={top} y2={bottom} className="monax" />
         {[0, 25, 50, 75, 100].map((p) => <g key={p}><text x={xx(p)} y={bottom + 12} className="mlab dim" textAnchor="middle">{p}%</text><text x={left - 5} y={yy(p) + 3} className="mlab dim" textAnchor="end">{p}%</text></g>)}
-        <text x={xx(50)} y={H - 2} className="mlab" textAnchor="middle">predicted risk of joint failure, read from the outputs alone</text>
+        <text x={xx(50)} y={H - 2} className="mlab" textAnchor="middle">{mobile ? "predicted joint-failure risk" : "predicted risk of joint failure, read from the outputs alone"}</text>
         <text x={12} y={yy(50)} className="mlab" textAnchor="middle" transform={`rotate(-90 12 ${yy(50)})`}>actual wrong rate</text>
         {v.bands.map((b) => <g key={b.band} className="mser s0"><circle cx={xx(b.predicted)} cy={yy(b.actual)} r={mobile ? 4 : 5} className="mdot" />{!mobile && b.band >= 3 && <text x={xx(b.predicted) + 8} y={yy(b.actual) - 6} className="mlab" textAnchor="start">band {b.band} · n {b.n}</text>}</g>)}
-        <g className="monnaive"><circle cx={xx(v.unanimousNaive)} cy={yy(v.unanimousActual)} r={6} /><text x={xx(v.unanimousNaive) + 14} y={yy(v.unanimousActual) - 18} className="mlab" textAnchor="start">the naive rule on unanimous items · says {v.unanimousNaive.toFixed(0)}% · actually wrong {v.unanimousActual.toFixed(1)}%</text></g>
-        <g className="mser s0"><circle cx={xx(v.unanimousMonitor)} cy={yy(v.unanimousActual)} r={mobile ? 4 : 5} className="mdot" /><text x={xx(v.unanimousMonitor) + 10} y={yy(v.unanimousActual) + 16} className="mlab" textAnchor="start">the monitor on the same items · {v.unanimousMonitor.toFixed(1)}%</text></g>
+        <g className="monnaive"><circle cx={xx(v.unanimousNaive)} cy={yy(v.unanimousActual)} r={6} /><text x={xx(v.unanimousNaive) + (naiveEnd ? -9 : mobile ? 10 : 14)} y={mobile ? Math.max(top + 8, yy(v.unanimousActual) - 14) : yy(v.unanimousActual) - 18} className="mlab" textAnchor={naiveEnd ? "end" : "start"}>{mobile ? `naive ${v.unanimousNaive.toFixed(0)}%` : `the naive rule on unanimous items · says ${v.unanimousNaive.toFixed(0)}% · actually wrong ${v.unanimousActual.toFixed(1)}%`}</text></g>
+        <g className="mser s0"><circle cx={xx(v.unanimousMonitor)} cy={yy(v.unanimousActual)} r={mobile ? 4 : 5} className="mdot" /><text x={xx(v.unanimousMonitor) + (monitorEnd ? -9 : 10)} y={mobile ? Math.min(bottom - 4, yy(v.unanimousActual) + 16) : yy(v.unanimousActual) + 16} className="mlab" textAnchor={monitorEnd ? "end" : "start"}>{mobile ? `monitor ${v.unanimousMonitor.toFixed(1)}%` : `the monitor on the same items · ${v.unanimousMonitor.toFixed(1)}%`}</text></g>
       </svg>
     );
   })() : null;
@@ -98,6 +103,7 @@ export function Monitor() {
           <div className="ipanel wspanel">
             <div className="ilabel">the reliability · predicted risk against actual, held out · Result V · the naive rule calls unanimity certainty</div>
             <div className="mbox" ref={mbox.ref}>{mon ?? <div className="note">Result V not present or not in its known shape</div>}</div>
+            {v && <p className="monitor-caption">Unanimous items · observed wrong {v.unanimousActual.toFixed(1)}% · naive risk {v.unanimousNaive.toFixed(0)}% · monitor risk {v.unanimousMonitor.toFixed(1)}%.</p>}
           </div>
           <div className="monside">
             <div className="ipanel wspanel fillpanel">

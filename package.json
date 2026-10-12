@@ -19,7 +19,10 @@
     "publish:edition": "node tools/publish-edition.mjs",
     "test:edition": "node tools/check-edition.mjs",
     "test:interface": "node tests/interface-recovery.mjs",
-    "test:graphics": "node tests/harbor-rendering.mjs"
+    "test:graphics": "node tests/harbor-rendering.mjs",
+    "test:design": "node tools/design-check.mjs",
+    "test:readings": "node tools/reading-check.mjs",
+    "test:scenes": "node tools/scene-check.mjs"
   },
   "dependencies": {
     "react": "^19.0.0",
